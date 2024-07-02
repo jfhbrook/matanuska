@@ -12,7 +12,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestLogger } from './debug';
 
 import { App } from './app';
-import { Config, Argv, Env } from './config';
+import { Config } from './config';
 import { ConsoleHost } from './host';
 import { Editor } from './editor';
 import { Executor } from './executor';
@@ -23,16 +23,10 @@ import { Executor } from './executor';
     { provide: 'env', useValue: process.env },
     { provide: 'exitFn', useValue: process.exit },
     {
-      provide: Config,
-      useFactory: (argv: Argv, env: Env) => {
-        return Config.load(argv, env);
-      },
-      inject: ['argv', 'env'],
-    },
-    {
       provide: 'Host',
       useClass: ConsoleHost,
     },
+    Config,
     Editor,
     Executor,
     App,

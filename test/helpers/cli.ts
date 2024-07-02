@@ -37,10 +37,6 @@ export async function run(argv: Argv, env: Env): Promise<RunResult> {
           useValue: env,
         },
         {
-          provide: Config,
-          useValue: Config.load(argv, env),
-        },
-        {
           provide: 'exitFn',
           useValue: (exitCode: number): void => {
             resolve({
@@ -49,6 +45,7 @@ export async function run(argv: Argv, env: Env): Promise<RunResult> {
             });
           },
         },
+        Config,
         Editor,
         Executor,
         App,
