@@ -37,6 +37,8 @@ export function commandRunner(
     visitExitCmd: invalid('exit'),
     visitLetCmd: invalid('let'),
     visitAssignCmd: invalid('assign'),
+    visitShortIfCmd: invalid('if'),
+    visitIfCmd: invalid('if'),
   };
 }
 

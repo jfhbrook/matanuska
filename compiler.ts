@@ -5,6 +5,7 @@ import {
   ParseError,
   ParseWarning,
   mergeParseErrors,
+  NotImplementedError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
 import { Token, TokenKind } from './tokens';
@@ -28,6 +29,8 @@ import {
   Exit,
   Let,
   Assign,
+  ShortIf,
+  If,
 } from './ast/cmd';
 import {
   Expr,
@@ -406,6 +409,14 @@ export class LineCompiler implements CmdVisitor<void>, ExprVisitor<void> {
     });
   }
 
+  visitShortIfCmd(_if: ShortIf): void {
+    throw new NotImplementedError('ShortIf');
+  }
+
+  visitIfCmd(_if: If): void {
+    throw new NotImplementedError('If');
+  }
+
   // Expressions
 
   visitUnaryExpr(unary: Unary): void {
@@ -628,6 +639,14 @@ export class CommandCompiler implements CmdVisitor<CompileResult<CompiledCmd>> {
 
   visitAssignCmd(assign: Assign): CompileResult<CompiledCmd> {
     return this.compiled(assign);
+  }
+
+  visitShortIfCmd(if_: ShortIf): CompileResult<CompiledCmd> {
+    return this.compiled(if_);
+  }
+
+  visitIfCmd(if_: If): CompileResult<CompiledCmd> {
+    return this.compiled(if_);
   }
 }
 

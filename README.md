@@ -58,6 +58,7 @@ gaps.
 - Complete Print syntax
   - Print can take multiple arguments
   - Print can also take a channel config
+- Rename non-interactive commands to "instructions"?
 - Switch typescript to `module: "nodenext"`
   - use require() for node modules
   - use mjs for own modules

@@ -1,6 +1,8 @@
 import { Expr, Variable } from './expr';
+import { Line } from './index';
 
 export interface CmdVisitor<R> {
+  visitRemCmd(node: Rem): R;
   visitLetCmd(node: Let): R;
   visitAssignCmd(node: Assign): R;
   visitExpressionCmd(node: Expression): R;
@@ -13,7 +15,8 @@ export interface CmdVisitor<R> {
   visitRenumCmd(node: Renum): R;
   visitRunCmd(node: Run): R;
   visitSaveCmd(node: Save): R;
-  visitRemCmd(node: Rem): R;
+  visitShortIfCmd(node: ShortIf): R;
+  visitIfCmd(node: If): R;
 }
 
 export abstract class Cmd {
@@ -23,6 +26,20 @@ export abstract class Cmd {
   ) {}
 
   abstract accept<R>(visitor: CmdVisitor<R>): R;
+}
+
+export class Rem extends Cmd {
+  constructor(
+    public remark: string,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: CmdVisitor<R>): R {
+    return visitor.visitRemCmd(this);
+  }
 }
 
 export class Let extends Cmd {
@@ -180,9 +197,11 @@ export class Save extends Cmd {
   }
 }
 
-export class Rem extends Cmd {
+export class ShortIf extends Cmd {
   constructor(
-    public remark: string,
+    public condition: Expr,
+    public then: Cmd[],
+    public else_: Cmd[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -190,6 +209,22 @@ export class Rem extends Cmd {
   }
 
   accept<R>(visitor: CmdVisitor<R>): R {
-    return visitor.visitRemCmd(this);
+    return visitor.visitShortIfCmd(this);
+  }
+}
+
+export class If extends Cmd {
+  constructor(
+    public condition: Expr,
+    public then: Line[],
+    public else_: Line[] | If,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: CmdVisitor<R>): R {
+    return visitor.visitIfCmd(this);
   }
 }
