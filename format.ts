@@ -48,12 +48,14 @@ import {
   Renum,
   Save,
   Run,
-  End,
   Exit as ExitCmd,
   Let,
   Assign,
   ShortIf,
   If,
+  Else,
+  ElseIf,
+  End,
 } from './ast/cmd';
 import { Tree, TreeVisitor, CommandGroup, Line, Input, Program } from './ast';
 import { Token } from './tokens';
@@ -180,10 +182,12 @@ export abstract class Formatter
   abstract visitRunCmd(run: Run): string;
   abstract visitLetCmd(let_: Let): string;
   abstract visitAssignCmd(assign: Assign): string;
-  abstract visitEndCmd(end: End): string;
   abstract visitExitCmd(exit: ExitCmd): string;
   abstract visitShortIfCmd(if_: ShortIf): string;
   abstract visitIfCmd(if_: If): string;
+  abstract visitElseCmd(else_: Else): string;
+  abstract visitElseIfCmd(elseIf: ElseIf): string;
+  abstract visitEndCmd(end: End): string;
 
   abstract visitCommandGroupTree(node: CommandGroup): string;
   abstract visitLineTree(node: Line): string;
@@ -633,10 +637,6 @@ export class DefaultFormatter extends Formatter {
     return 'Run';
   }
 
-  visitEndCmd(_end: End): string {
-    return 'End';
-  }
-
   visitExitCmd(exit: ExitCmd): string {
     return `Exit(${this.format(exit.expression)})`;
   }
@@ -660,26 +660,19 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitIfCmd(if_: If): string {
-    let formatted = `If (${this.format(if_.condition)}) {\n`;
+    return `If (${this.format(if_.condition)})`;
+  }
 
-    for (const line of if_.then) {
-      formatted += indent(1, `${this.format(line)},\n`);
-    }
+  visitElseCmd(_else: Else): string {
+    return `Else`;
+  }
 
-    if (if_.else_ instanceof If) {
-      formatted += '} Else ';
-      formatted += this.format(if_.else_);
-    } else if (if_.else_.length) {
-      formatted += '} Else {\n';
-      for (const line of if_.else_) {
-        formatted += indent(1, `${this.format(line)},\n`);
-      }
-      formatted += '}';
-    } else {
-      formatted += '}';
-    }
+  visitElseIfCmd(elseIf: ElseIf): string {
+    return `ElseIf (${this.format(elseIf.condition)})`;
+  }
 
-    return formatted;
+  visitEndCmd(_end: End): string {
+    return 'End';
   }
 
   formatStack<V>(stack: Stack<V>): string {

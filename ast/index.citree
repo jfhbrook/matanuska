@@ -16,7 +16,6 @@ type Expr in './expr' {
 
 type Cmd in './cmd' {
   import { Expr, Variable } from './expr'
-  import { Line } from './index'
 
   Cmd        => offsetStart: number = -1, offsetEnd: number = -1
   Rem        => remark: string
@@ -25,15 +24,17 @@ type Cmd in './cmd' {
   Expression => expression: Expr
   Print      => expression: Expr
   Exit       => expression: Expr | null
-  End!
   New        => filename: Expr | null
   Load       => filename: Expr, run: boolean
   List!
   Renum!
   Run!
   Save       => filename: Expr | null
+  End!
   ShortIf    => condition: Expr, then: Cmd[], else_: Cmd[]
-  If         => condition: Expr, then: Line[], else_: Line[] | If
+  If         => condition: Expr
+  Else!
+  ElseIf     => condition: Expr
 }
 
 type Tree in './index' {

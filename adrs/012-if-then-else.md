@@ -67,27 +67,17 @@ semantics of `return` in that context are too challenging.
 This implies the following AST structures:
 
 ```
-// One-line if - note that 'else' can be length 0 or contain another ShortIf
 ShortIf => condition: Expr, then: Cmd[], else: Cmd[]
 
-// multi-line "if <condition> then" ...
-// "else if" is supported by nesting an If command inside the "else" branch.
-If => condition: Expr, then: Line[], else: Line[] | If
-```
-
-The alternative to this form of `If` is one that doesn't nest the lines:
-
-```
 If     => condition: Expr
 Else!
 ElseIf => condition: Expr
-End!
+End
 ```
 
-It definitely leads to a simpler AST. However, I'd like to nest the lines
-because it makes it easier to ensure that GOTOs can't jump inside of
-multi-line if/else statements. This is to be avoided because it will completely
-break any context management being done by the runtime.
+Note that these commands do *not* attempt to generate a nested AST, delegating
+building the structure to the compiler. This is necessary because the parser
+needs to parse and insert lines into the editor *in isolation*.
 
 ## The Future
 

@@ -25,12 +25,14 @@ import {
   Renum,
   Save,
   Run,
-  End,
   Exit,
   Let,
   Assign,
   ShortIf,
   If,
+  Else,
+  ElseIf,
+  End,
 } from './ast/cmd';
 import {
   Expr,
@@ -368,16 +370,6 @@ export class LineCompiler implements CmdVisitor<void>, ExprVisitor<void> {
     return this.interactive('run', run);
   }
 
-  visitEndCmd(_end: End): void {
-    tracer.spanSync('end', () => {
-      // TODO: I'm currently treating 'end' as a synonym for 'return nil'.
-      // But perhaps it should behave differently? In MSX it also cleans up
-      // open file handles.
-      this.emitByte(OpCode.Nil);
-      this.emitByte(OpCode.Return);
-    });
-  }
-
   visitExitCmd(exit: Exit): void {
     tracer.spanSync('exit', () => {
       if (exit.expression) {
@@ -415,6 +407,18 @@ export class LineCompiler implements CmdVisitor<void>, ExprVisitor<void> {
 
   visitIfCmd(_if: If): void {
     throw new NotImplementedError('If');
+  }
+
+  visitElseCmd(_else: Else): void {
+    throw new NotImplementedError('Else');
+  }
+
+  visitElseIfCmd(_elseIf: ElseIf): void {
+    throw new NotImplementedError('ElseIf');
+  }
+
+  visitEndCmd(_end: End): void {
+    throw new NotImplementedError('End');
   }
 
   // Expressions
@@ -625,10 +629,6 @@ export class CommandCompiler implements CmdVisitor<CompileResult<CompiledCmd>> {
     return this.interactive(run, []);
   }
 
-  visitEndCmd(end: End): CompileResult<CompiledCmd> {
-    return this.compiled(end);
-  }
-
   visitExitCmd(exit: Exit): CompileResult<CompiledCmd> {
     return this.compiled(exit);
   }
@@ -647,6 +647,18 @@ export class CommandCompiler implements CmdVisitor<CompileResult<CompiledCmd>> {
 
   visitIfCmd(if_: If): CompileResult<CompiledCmd> {
     return this.compiled(if_);
+  }
+
+  visitElseCmd(else_: Else): CompileResult<CompiledCmd> {
+    return this.compiled(else_);
+  }
+
+  visitElseIfCmd(elseIf: ElseIf): CompileResult<CompiledCmd> {
+    return this.compiled(elseIf);
+  }
+
+  visitEndCmd(end: End): CompileResult<CompiledCmd> {
+    return this.compiled(end);
   }
 }
 

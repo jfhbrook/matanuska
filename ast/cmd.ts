@@ -1,5 +1,4 @@
 import { Expr, Variable } from './expr';
-import { Line } from './index';
 
 export interface CmdVisitor<R> {
   visitRemCmd(node: Rem): R;
@@ -8,15 +7,17 @@ export interface CmdVisitor<R> {
   visitExpressionCmd(node: Expression): R;
   visitPrintCmd(node: Print): R;
   visitExitCmd(node: Exit): R;
-  visitEndCmd(node: End): R;
   visitNewCmd(node: New): R;
   visitLoadCmd(node: Load): R;
   visitListCmd(node: List): R;
   visitRenumCmd(node: Renum): R;
   visitRunCmd(node: Run): R;
   visitSaveCmd(node: Save): R;
+  visitEndCmd(node: End): R;
   visitShortIfCmd(node: ShortIf): R;
   visitIfCmd(node: If): R;
+  visitElseCmd(node: Else): R;
+  visitElseIfCmd(node: ElseIf): R;
 }
 
 export abstract class Cmd {
@@ -114,16 +115,6 @@ export class Exit extends Cmd {
   }
 }
 
-export class End extends Cmd {
-  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: CmdVisitor<R>): R {
-    return visitor.visitEndCmd(this);
-  }
-}
-
 export class New extends Cmd {
   constructor(
     public filename: Expr | null,
@@ -197,6 +188,16 @@ export class Save extends Cmd {
   }
 }
 
+export class End extends Cmd {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: CmdVisitor<R>): R {
+    return visitor.visitEndCmd(this);
+  }
+}
+
 export class ShortIf extends Cmd {
   constructor(
     public condition: Expr,
@@ -216,8 +217,6 @@ export class ShortIf extends Cmd {
 export class If extends Cmd {
   constructor(
     public condition: Expr,
-    public then: Line[],
-    public else_: Line[] | If,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -226,5 +225,29 @@ export class If extends Cmd {
 
   accept<R>(visitor: CmdVisitor<R>): R {
     return visitor.visitIfCmd(this);
+  }
+}
+
+export class Else extends Cmd {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: CmdVisitor<R>): R {
+    return visitor.visitElseCmd(this);
+  }
+}
+
+export class ElseIf extends Cmd {
+  constructor(
+    public condition: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: CmdVisitor<R>): R {
+    return visitor.visitElseIfCmd(this);
   }
 }

@@ -53,6 +53,9 @@ import {
   Let,
   ShortIf,
   If,
+  Else,
+  ElseIf,
+  End,
 } from '../ast/cmd';
 import { Line, Program } from '../ast';
 import { FILENAME } from './helpers/files';
@@ -417,45 +420,10 @@ function formatTestSuite<F extends Formatter>(formatter: F): void {
           [new Print(new StringLiteral('true'))],
           [new Print(new StringLiteral('false'))],
         ),
-        new If(
-          new BoolLiteral(true),
-          [
-            new Line(20, 1, '20   print "true"', [
-              new Print(new StringLiteral('hello world')),
-            ]),
-          ],
-          [],
-        ),
-        new If(
-          new BoolLiteral(true),
-          [
-            new Line(20, 1, '20   print "true"', [
-              new Print(new StringLiteral('hello world')),
-            ]),
-          ],
-          [
-            new Line(20, 1, '20   print "false"', [
-              new Print(new StringLiteral('hello world')),
-            ]),
-          ],
-        ),
-        new If(
-          new BoolLiteral(true),
-          [
-            new Line(20, 1, '20   print "true"', [
-              new Print(new StringLiteral('true')),
-            ]),
-          ],
-          new If(
-            new BoolLiteral(true),
-            [
-              new Line(20, 1, '40   print "false, but true"', [
-                new Print(new StringLiteral('false, but true')),
-              ]),
-            ],
-            [],
-          ),
-        ),
+        new If(new BoolLiteral(true)),
+        new Else(),
+        new ElseIf(new BoolLiteral(true)),
+        new End(),
       ];
 
       for (const cmd of COMMANDS) {
