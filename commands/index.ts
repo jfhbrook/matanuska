@@ -33,10 +33,14 @@ export function commandRunner(
     visitRenumCmd,
     visitSaveCmd,
     visitRunCmd,
-    visitEndCmd: invalid('end'),
     visitExitCmd: invalid('exit'),
     visitLetCmd: invalid('let'),
     visitAssignCmd: invalid('assign'),
+    visitShortIfCmd: invalid('if'),
+    visitIfCmd: invalid('if'),
+    visitElseCmd: invalid('else'),
+    visitElseIfCmd: invalid('else if'),
+    visitEndCmd: invalid('end'),
   };
 }
 

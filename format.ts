@@ -48,10 +48,14 @@ import {
   Renum,
   Save,
   Run,
-  End,
   Exit as ExitCmd,
   Let,
   Assign,
+  ShortIf,
+  If,
+  Else,
+  ElseIf,
+  End,
 } from './ast/cmd';
 import { Tree, TreeVisitor, CommandGroup, Line, Input, Program } from './ast';
 import { Token } from './tokens';
@@ -178,8 +182,12 @@ export abstract class Formatter
   abstract visitRunCmd(run: Run): string;
   abstract visitLetCmd(let_: Let): string;
   abstract visitAssignCmd(assign: Assign): string;
-  abstract visitEndCmd(end: End): string;
   abstract visitExitCmd(exit: ExitCmd): string;
+  abstract visitShortIfCmd(if_: ShortIf): string;
+  abstract visitIfCmd(if_: If): string;
+  abstract visitElseCmd(else_: Else): string;
+  abstract visitElseIfCmd(elseIf: ElseIf): string;
+  abstract visitEndCmd(end: End): string;
 
   abstract visitCommandGroupTree(node: CommandGroup): string;
   abstract visitLineTree(node: Line): string;
@@ -629,10 +637,6 @@ export class DefaultFormatter extends Formatter {
     return 'Run';
   }
 
-  visitEndCmd(_end: End): string {
-    return 'End';
-  }
-
   visitExitCmd(exit: ExitCmd): string {
     return `Exit(${this.format(exit.expression)})`;
   }
@@ -643,6 +647,32 @@ export class DefaultFormatter extends Formatter {
 
   visitAssignCmd(assign: Assign): string {
     return `Assign(${this.format(assign.variable)}, ${this.format(assign.value)})`;
+  }
+
+  visitShortIfCmd(if_: ShortIf): string {
+    let formatted = `ShortIf (${this.format(if_.condition)}) { `;
+    formatted += if_.then.map((c) => this.format(c)).join(' : ') + ' }';
+    if (if_.else_.length) {
+      formatted +=
+        ' { ' + if_.else_.map((c) => this.format(c)).join(' : ') + ' }';
+    }
+    return formatted;
+  }
+
+  visitIfCmd(if_: If): string {
+    return `If (${this.format(if_.condition)})`;
+  }
+
+  visitElseCmd(_else: Else): string {
+    return `Else`;
+  }
+
+  visitElseIfCmd(elseIf: ElseIf): string {
+    return `ElseIf (${this.format(elseIf.condition)})`;
+  }
+
+  visitEndCmd(_end: End): string {
+    return 'End';
   }
 
   formatStack<V>(stack: Stack<V>): string {

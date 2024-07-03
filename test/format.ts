@@ -51,6 +51,11 @@ import {
   Save,
   Run,
   Let,
+  ShortIf,
+  If,
+  Else,
+  ElseIf,
+  End,
 } from '../ast/cmd';
 import { Line, Program } from '../ast';
 import { FILENAME } from './helpers/files';
@@ -359,10 +364,6 @@ function formatTestSuite<F extends Formatter>(formatter: F): void {
       t.matchSnapshot(formatter.format(new NilLiteral()));
     });
 
-    t.test('it formats a Cmd', async (t: Test) => {
-      t.matchSnapshot(formatter.format(new Print(new StringLiteral('hello'))));
-    });
-
     t.test('it formats a Line', async (t: Test) => {
       t.matchSnapshot(
         formatter.format(
@@ -387,6 +388,7 @@ function formatTestSuite<F extends Formatter>(formatter: F): void {
 
     t.test('commands', async (t: Test) => {
       const COMMANDS = [
+        new Print(new StringLiteral('hello')),
         new ExitCmd(new IntLiteral(0)),
         new Rem('a witty remark'),
         new New(null),
@@ -408,6 +410,20 @@ function formatTestSuite<F extends Formatter>(formatter: F): void {
           ),
           new IntLiteral(1),
         ),
+        new ShortIf(
+          new BoolLiteral(true),
+          [new Print(new StringLiteral('true'))],
+          [],
+        ),
+        new ShortIf(
+          new BoolLiteral(true),
+          [new Print(new StringLiteral('true'))],
+          [new Print(new StringLiteral('false'))],
+        ),
+        new If(new BoolLiteral(true)),
+        new Else(),
+        new ElseIf(new BoolLiteral(true)),
+        new End(),
       ];
 
       for (const cmd of COMMANDS) {
