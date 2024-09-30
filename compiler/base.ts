@@ -177,6 +177,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   private lines: Line[] = [];
   private currentInstrNo: number = -1;
   private currentLine: number = 0;
+  private _last: Instr | null | undefined = undefined;
 
   private filename: string;
   private routineType: RoutineType = RoutineType.Command;
@@ -323,15 +324,53 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return this.lines[this.currentLine].instructions[this.currentInstrNo];
   }
 
-  private createSyntaxError(instr: Instr, message: string): SyntaxError {
+  private last(): Instr | null {
+    if (typeof this._last !== 'undefined') {
+      return this._last;
+    }
+
+    for (let i = this.lines.length - 1; i >= 0; i--) {
+      const line = this.lines[i];
+      const j = line.instructions.length - 1;
+      if (j >= 0) {
+        this._last = line[j];
+        return line[j];
+      }
+    }
+    this._last = null;
+    return null;
+  }
+
+  private getInstrOffsets(instr: Instr | null): [number, number] {
+    let offsetStart: number;
+    let offsetEnd: number;
+    if (instr) {
+      offsetStart = instr.offsetStart;
+      offsetEnd = instr.offsetEnd;
+    } else {
+      const last = this.last();
+      if (last) {
+        offsetStart = last.offsetEnd;
+        offsetEnd = last.offsetEnd;
+      } else {
+        offsetStart = 0;
+        offsetEnd = 0;
+      }
+    }
+
+    return [offsetStart, offsetEnd];
+  }
+
+  private createSyntaxError(instr: Instr | null, message: string): SyntaxError {
+    const [offsetStart, offsetEnd] = this.getInstrOffsets(instr);
     return new SyntaxError(message, {
       filename: this.filename,
       row: this.rowNo,
       isLine: this.routineType !== RoutineType.Command,
       lineNo: this.lineNo,
       cmdNo: this.routineType === RoutineType.Command ? null : this.lineNo,
-      offsetStart: instr.offsetStart,
-      offsetEnd: instr.offsetEnd,
+      offsetStart,
+      offsetEnd,
       source: this.lineSource,
     });
   }
