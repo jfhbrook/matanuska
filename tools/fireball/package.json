@@ -1,0 +1,23 @@
+{
+  "name": "@matanuska/fireball",
+  "version": "1.0.0",
+  "description": "A local Jaeger service in a bottle",
+  "main": "dist/index.js",
+  "bin": {
+    "citree": "dist/main.js"
+  },
+  "scripts": {
+    "format": "prettier --write \"**/*.ts\"",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "npm run build && node --enable-source-maps ./dist/main.js",
+    "test": "tests-of-the-sierra-madre",
+    "lint": "eslint \"src/**.ts\" --fix",
+    "check": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "Josh Holbrook",
+  "license": "MIT",
+  "devDependencies": {
+    "tests-of-the-sierra-madre": "^1.0.1"
+  }
+}
