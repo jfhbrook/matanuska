@@ -1,13 +1,11 @@
-import { readFile, writeFile } from 'fs/promises';
-
 import minimist from 'minimist';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { version: VERSION } = require('../package.json');
 
-const EXIT_SOFTWARE = 70;
-const EXIT_NOINPUT = 66;
-const EXIT_CANTCREATE = 73;
+// const EXIT_SOFTWARE = 70;
+// const EXIT_NOINPUT = 66;
+// const EXIT_CANTCREATE = 73;
 
 const USAGE = `Usage: fireball
 
@@ -32,10 +30,12 @@ function usage(message: string) {
   process.exit(70);
 }
 
+/*
 function error(err: any, code: number): never {
   console.error(err);
   process.exit(code);
 }
+*/
 
 export function parseArgs(argv: typeof process.argv): void {
   const args = minimist(argv, {
