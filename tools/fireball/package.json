@@ -9,12 +9,13 @@
   "scripts": {
     "install": "npm run install:terraform",
     "install:terraform": "terraform -chdir=modules/fireball init",
-    "upgrade:terraform": "npm run install:terraform -- -upgrade",
+    "update:terraform": "npm run install:terraform -- -upgrade",
+    "update:config": "bash ./scripts/update-config.sh",
     "format": "prettier --write \"**/*.ts\" && terraform fmt -recursive ./modules",
     "build": "tsc -p tsconfig.build.json",
     "start": "npm run build && node --enable-source-maps ./dist/main.js",
     "test": "tests-of-the-sierra-madre",
-    "lint": "eslint \"src/**.ts\" --fix",
+    "lint": "eslint \"src/**.ts\" --fix && shellcheck ./scripts/*.sh",
     "check": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
