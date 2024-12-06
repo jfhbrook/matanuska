@@ -7,7 +7,10 @@
     "citree": "dist/main.js"
   },
   "scripts": {
-    "format": "prettier --write \"**/*.ts\"",
+    "install": "npm run install:terraform",
+    "install:terraform": "terraform -chdir=modules/fireball init",
+    "upgrade:terraform": "npm run install:terraform -- -upgrade",
+    "format": "prettier --write \"**/*.ts\" && terraform fmt -recursive ./modules",
     "build": "tsc -p tsconfig.build.json",
     "start": "npm run build && node --enable-source-maps ./dist/main.js",
     "test": "tests-of-the-sierra-madre",
