@@ -15,3 +15,9 @@ variable "legacy" {
   type        = bool
   default     = false
 }
+
+variable "version" {
+  description = "Jaeger version"
+  type        = string
+  default     = "2.0.0"
+}

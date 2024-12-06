@@ -17,7 +17,7 @@ locals {
 }
 
 data "docker_image" "jaeger" {
-  name = "jaegertracing/jaeger:2.0.0"
+  name = "jaegertracing/jaeger:${var.version}"
 }
 
 resource "docker_volume" "config" {
