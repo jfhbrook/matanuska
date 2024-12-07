@@ -27,6 +27,10 @@ resource "docker_volume" "config" {
 resource "docker_container" "jaeger" {
   image = data.docker_image.jaeger.id
   name  = "fireball"
+  command = [
+    "--set", "receivers.otlp.protocols.http.endpoint=0.0.0.0:4318",
+    "--set", "receivers.otlp.protocols.grpc.endpoint=0.0.0.0:4317"
+  ]
 
   volumes {
     volume_name    = docker_volume.config.name
