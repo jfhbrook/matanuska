@@ -16,7 +16,7 @@ variable "legacy" {
   default     = false
 }
 
-variable "version" {
+variable "jaeger_version" {
   description = "Jaeger version"
   type        = string
   default     = "2.0.0"

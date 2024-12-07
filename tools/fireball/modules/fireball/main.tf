@@ -17,7 +17,7 @@ locals {
 }
 
 data "docker_image" "jaeger" {
-  name = "jaegertracing/jaeger:${var.version}"
+  name = "jaegertracing/jaeger:${var.jaeger_version}"
 }
 
 resource "docker_volume" "config" {
@@ -34,9 +34,11 @@ resource "docker_container" "jaeger" {
     host_path      = "${path.cwd}/.fireball/etc/jaeger"
   }
 
-  dynamic ports {
+  dynamic "ports" {
     for_each = toset(local.ports)
-    internal = each.key
-    external = each.key
+    content {
+      internal = ports.key
+      external = ports.key
+    }
   }
 }
