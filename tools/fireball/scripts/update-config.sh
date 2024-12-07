@@ -3,9 +3,12 @@
 set -euo pipefail
 
 JAEGER_VERSION="${JAEGER_VERSION:-2.0.0}"
-JAEGER_BACKEND="${JAEGER_BACKEND:=badger}"
 
-CONFIG_URL="https://raw.githubusercontent.com/jaegertracing/jaeger/refs/tags/v${JAEGER_VERSION}/cmd/jaeger/config-${JAEGER_BACKEND}.yaml"
+if [ "${JAEGER_VERSION}" == "2.0.0" ]; then
+  CONFIG_URL="https://raw.githubusercontent.com/jaegertracing/jaeger/refs/tags/v${JAEGER_VERSION}/docker-compose/monitor/jaeger-v2-config.yml"
+else
+  CONFIG_URL="https://raw.githubusercontent.com/jaegertracing/jaeger/refs/tags/v${JAEGER_VERSION}/cmd/jaeger/config-spm.yaml"
+fi
 UI_CONFIG_URL="https://raw.githubusercontent.com/jaegertracing/jaeger/refs/tags/v${JAEGER_VERSION}/cmd/jaeger/config-ui.json"
 
 mkdir -p ./etc/jaeger
