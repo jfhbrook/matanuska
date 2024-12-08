@@ -20,11 +20,16 @@ import { ConsoleHost } from './host';
 import { Editor } from './editor';
 import { Executor } from './executor';
 
+async function exit(code: number) {
+  await telemetry.shutdown();
+  process.exit(code);
+}
+
 @Module({
   providers: [
     { provide: 'argv', useValue: process.argv.slice(2) },
     { provide: 'env', useValue: process.env },
-    { provide: 'exitFn', useValue: process.exit },
+    { provide: 'exitFn', useValue: exit },
     {
       provide: Config,
       useFactory: (argv: Argv, env: Env) => {
