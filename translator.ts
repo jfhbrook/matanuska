@@ -17,6 +17,7 @@ const tracer = trace.getTracer('main');
 //
 async function repl(executor: Executor, host: Host) {
   while (true) {
+    const span = tracer.startSpan('read-eval-print');
     try {
       const input = await executor.prompt();
       await executor.eval(input);
@@ -31,6 +32,8 @@ async function repl(executor: Executor, host: Host) {
       }
 
       throw RuntimeFault.fromError(err, null);
+    } finally {
+      span.end();
     }
   }
 }
@@ -77,8 +80,13 @@ export class Translator {
     try {
       await executor.using(async () => {
         if (config.script) {
-          await executor.load(config.script);
-          await executor.run();
+          const span = tracer.startSpan('script');
+          try {
+            await executor.load(config.script);
+            await executor.run();
+          } finally {
+            span.end();
+          }
         } else {
           await repl(executor, host);
         }

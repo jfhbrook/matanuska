@@ -8,7 +8,6 @@ if (MATBAS.build === 'debug') {
   telemetry.start();
 }
 
-import { Span, trace } from '@opentelemetry/api';
 import { Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
@@ -49,12 +48,9 @@ async function exit(code: number) {
 export class Container {}
 
 export async function main(): Promise<void> {
-  const tracer = trace.getTracer('main');
-  return tracer.startActiveSpan('main', async (_: Span) => {
-    const deps = await NestFactory.createApplicationContext(Container, {
-      logger: new NestLogger(),
-    });
-    const translator = deps.get(Translator);
-    await translator.start();
+  const deps = await NestFactory.createApplicationContext(Container, {
+    logger: new NestLogger(),
   });
+  const translator = deps.get(Translator);
+  await translator.start();
 }
