@@ -1,9 +1,11 @@
 import * as dotenv from 'dotenv';
+import { telemetry } from './telemetry';
 
 import MATBAS from 'consts:matbas';
 
 if (MATBAS.build === 'debug') {
   dotenv.config();
+  telemetry.start();
 }
 
 import { Module } from '@nestjs/common';
