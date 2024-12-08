@@ -4,7 +4,7 @@
   "description": "A local Jaeger service in a bottle",
   "main": "dist/index.js",
   "bin": {
-    "citree": "dist/main.js"
+    "fireball": "dist/main.js"
   },
   "scripts": {
     "install": "npm run install:terraform",
