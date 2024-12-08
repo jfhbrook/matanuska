@@ -140,6 +140,7 @@ export default async function main(
       if (!detach) {
         process.once('SIGINT', () => {
           run('destroy');
+          process.exit(0);
         });
         tail(getName());
       }
