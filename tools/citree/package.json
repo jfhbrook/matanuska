@@ -1,5 +1,5 @@
 {
-  "name": "@jfhbrook/citree",
+  "name": "@matanuska/citree",
   "version": "1.0.2",
   "description": "A DSL for generating ASTs in TypeScript",
   "main": "dist/index.js",
