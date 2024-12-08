@@ -1,7 +1,11 @@
-import { getTracer, showChunk } from '../debug';
+import { trace } from '@opentelemetry/api';
+
+import { showChunk } from '../debug';
 import { errorType } from '../errors';
 import { SyntaxError, ParseError, ParseWarning } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
+import { formatter } from '../format';
+import { addEvent } from '../telemetry';
 import { Token, TokenKind } from '../tokens';
 import { Value } from '../value';
 // import { Type } from './value/types';
@@ -52,7 +56,7 @@ import { Short, shortToBytes } from '../bytecode/short';
 import { Chunk } from '../bytecode/chunk';
 import { OpCode } from '../bytecode/opcodes';
 
-const tracer = getTracer('compiler');
+const tracer = trace.getTracer('main');
 
 export enum RoutineType {
   Command,
@@ -227,7 +231,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
    */
   @runtimeMethod
   compile(): CompileResult<Chunk> {
-    return tracer.spanSync('compile', () => {
+    const span = tracer.startSpan('compile');
+    try {
       let instr: Instr | null = this.advance();
       while (instr) {
         try {
@@ -259,7 +264,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
       showChunk(this.chunk);
       return [this.chunk, null];
-    });
+    } finally {
+      span.end();
+    }
   }
 
   /**
@@ -300,9 +307,13 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
       this.currentLine++;
       this.currentInstrNo = 0;
     }
-    tracer.trace(`current line: ${this.lineNo}`);
-    tracer.trace(`current row: ${this.rowNo}`);
-    tracer.trace(`current instr: ${this.currentInstrNo}`);
+
+    addEvent('advance', {
+      lineNo: this.lineNo,
+      rowNo: this.rowNo,
+      currentInstrNo: this.currentInstrNo,
+    });
+
     if (this.done) {
       return null;
     }
@@ -350,19 +361,22 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private interactive(name: string, instr: Instr): never {
-    return tracer.spanSync(name, () => {
+    const span = tracer.startSpan(name);
+    try {
       this.syntaxError(
         instr,
         `Cannot run interactive command in scripts: ${name}`,
       );
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private synchronize(): void {
-    return tracer.spanSync('synchronize', () => {
-      this.currentLine++;
-      this.currentInstrNo = 0;
-    });
+    const span = tracer.startSpan('synchronize');
+    this.currentLine++;
+    this.currentInstrNo = 0;
+    span.end();
   }
 
   private get lineNo(): number {
@@ -399,11 +413,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private emitByte(byte: number): void {
-    tracer.spanSync('emitByte', () => {
-      tracer.trace('byte', byte);
-      tracer.trace('lineNo', this.lineNo);
-      this.currentChunk.writeOp(byte, this.lineNo);
+    addEvent('emitByte', {
+      byte,
+      lineNo: this.lineNo,
     });
+    this.currentChunk.writeOp(byte, this.lineNo);
   }
 
   private emitBytes(...bytes: number[]): void {
@@ -413,19 +427,24 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private emitConstant(value: Value): void {
-    return tracer.spanSync('emitConstant', () => {
-      tracer.trace('value:', value);
-      this.emitBytes(OpCode.Constant, this.makeConstant(value));
+    const span = tracer.startSpan('emitConstant', {
+      attributes: { value: formatter.format(value) },
     });
+    this.emitBytes(OpCode.Constant, this.makeConstant(value));
+    span.end();
   }
 
   private emitIdent(ident: Token): Short {
-    return tracer.spanSync('emitIdent', () => {
-      tracer.trace('ident:', ident.value);
+    const span = tracer.startSpan('emitIdent', {
+      attributes: { ident: formatter.format(ident.value) },
+    });
+    try {
       const constant = this.makeConstant(ident.value as Value);
       this.emitBytes(OpCode.Constant, constant);
       return constant;
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private emitJump(code: OpCode): Short {
@@ -466,21 +485,25 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   //
 
   private instruction(instr: Instr): void {
-    tracer.spanSync('instruction', () => {
-      tracer.trace('instr', instr);
-      instr.accept(this);
+    addEvent('instruction', {
+      instr: formatter.format(instr),
     });
+    instr.accept(this);
   }
 
   visitPrintInstr(print: Print): void {
-    tracer.spanSync('print', () => {
+    const span = tracer.startSpan('print');
+    try {
       print.expression.accept(this);
       this.emitByte(OpCode.Print);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitExpressionInstr(expr: Expression): void {
-    tracer.spanSync('expression', () => {
+    const span = tracer.startSpan('expression');
+    try {
       this.isExpressionCmd = true;
       expr.expression.accept(this);
 
@@ -488,7 +511,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
       if (this.routineType === RoutineType.Program) {
         this.emitByte(OpCode.Pop);
       }
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitRemInstr(_rem: Rem): void {}
@@ -518,28 +543,35 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitEndInstr(_end: End): void {
-    tracer.spanSync('end', () => {
+    const span = tracer.startSpan('end');
+    try {
       // TODO: I'm currently treating 'end' as a synonym for 'return nil'.
       // But perhaps it should behave differently? In MSX it also cleans up
       // open file handles.
       this.emitByte(OpCode.Nil);
       this.emitByte(OpCode.Return);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitExitInstr(exit: Exit): void {
-    tracer.spanSync('exit', () => {
+    const span = tracer.startSpan('exit');
+    try {
       if (exit.expression) {
         exit.expression.accept(this);
       } else {
         this.emitConstant(0);
       }
       this.emitByte(OpCode.Exit);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitLetInstr(let_: Let): void {
-    return tracer.spanSync('let', () => {
+    const span = tracer.startSpan('let');
+    try {
       const target = this.emitIdent(let_.variable.ident);
       if (let_.value) {
         let_.value.accept(this);
@@ -547,15 +579,20 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
         this.emitByte(OpCode.Nil);
       }
       this.emitBytes(OpCode.DefineGlobal, target);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitAssignInstr(assign: Assign): void {
-    return tracer.spanSync('assign', () => {
+    const span = tracer.startSpan('assign');
+    try {
       const target = this.emitIdent(assign.variable.ident);
       assign.value.accept(this);
       this.emitBytes(OpCode.SetGlobal, target);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitShortIfInstr(if_: ShortIf): void {
@@ -614,7 +651,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   //
 
   visitUnaryExpr(unary: Unary): void {
-    tracer.spanSync('unary', () => {
+    const span = tracer.startSpan('unary');
+    try {
       unary.expr.accept(this);
       switch (unary.op) {
         case TokenKind.Minus:
@@ -623,11 +661,14 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
         default:
           this.syntaxError(this.peek() as Instr, 'Invalid unary operator');
       }
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitBinaryExpr(binary: Binary): void {
-    tracer.spanSync('binary', () => {
+    const span = tracer.startSpan('binary');
+    try {
       binary.left.accept(this);
       binary.right.accept(this);
       switch (binary.op) {
@@ -664,56 +705,84 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
         default:
           this.syntaxError(this.peek() as Instr, 'Invalid binary operator');
       }
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitLogicalExpr(_logical: Logical): void {
-    tracer.spanSync('logical', () => {});
+    const span = tracer.startSpan('binary');
+    try {
+      return;
+    } finally {
+      span.end();
+    }
   }
 
   visitGroupExpr(group: Group): void {
-    tracer.spanSync('group', () => {
+    const span = tracer.startSpan('group');
+    try {
       group.expr.accept(this);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitVariableExpr(variable: Variable): void {
-    tracer.spanSync('variable', () => {
+    const span = tracer.startSpan('group');
+    try {
       const ident = this.emitIdent(variable.ident);
       this.emitBytes(OpCode.GetGlobal, ident);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitIntLiteralExpr(int: IntLiteral): void {
-    tracer.spanSync('int literal', () => {
+    const span = tracer.startSpan('int literal');
+    try {
       this.emitConstant(int.value);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitRealLiteralExpr(real: RealLiteral): void {
-    tracer.spanSync('real literal', () => {
+    const span = tracer.startSpan('real literal');
+    try {
       this.emitConstant(real.value);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitBoolLiteralExpr(bool: BoolLiteral): void {
-    tracer.spanSync('bool literal', () => {
+    const span = tracer.startSpan('bool literal');
+    try {
       this.emitConstant(bool.value);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitStringLiteralExpr(str: StringLiteral): void {
-    tracer.spanSync('string literal', () => {
+    const span = tracer.startSpan('string literal');
+    try {
       this.emitConstant(str.value);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   visitPromptLiteralExpr(_ps: PromptLiteral): void {}
 
   visitNilLiteralExpr(_: NilLiteral): void {
-    tracer.spanSync('nil literal', () => {
+    const span = tracer.startSpan('nil literal');
+    try {
       this.emitByte(OpCode.Nil);
-    });
+    } finally {
+      span.end();
+    }
   }
 }
 

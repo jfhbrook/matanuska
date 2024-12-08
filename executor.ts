@@ -2,8 +2,8 @@ import * as readline from 'node:readline/promises';
 import * as path from 'node:path';
 
 import { Injectable, Inject } from '@nestjs/common';
+import { trace } from '@opentelemetry/api';
 
-import { getTracer } from './debug';
 import { Chunk } from './bytecode/chunk';
 import { commandRunner, ReturnValue } from './commands';
 import { compileCommands, compileProgram, CompiledCmd } from './compiler';
@@ -25,7 +25,7 @@ import { Prompt } from './shell';
 
 import { Line, Cmd, Program } from './ast';
 
-const tracer = getTracer('main');
+const tracer = trace.getTracer('main');
 
 @Injectable()
 export class Executor {
@@ -57,7 +57,7 @@ export class Executor {
    * Initialize the commander.
    */
   async init(): Promise<void> {
-    tracer.open('Executor#init');
+    const span = tracer.startSpan('init');
     // Ensure the commander's state is clean before initializing.
     await this.close(false);
 
@@ -96,21 +96,21 @@ export class Executor {
     this.readline.on('history', (history) => {
       this.history = history;
     });
-    tracer.close();
+    span.end();
   }
 
   /**
    * Close the commander.
    */
   async close(saveHistory: boolean = true): Promise<void> {
-    tracer.open('Executor#close');
+    const span = tracer.startSpan('close');
     let p: Promise<void> = Promise.resolve();
 
     if (this._readline) {
       const rl = this._readline;
       p = new Promise((resolve, _reject) => {
         rl.once('close', () => {
-          tracer.close();
+          span.end();
           resolve();
         });
       });

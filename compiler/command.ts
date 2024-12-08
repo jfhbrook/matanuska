@@ -1,4 +1,4 @@
-// import { getTracer } from '../debug';
+// import { trace } from '@opentelemetry/api';
 import {
   SyntaxError,
   ParseError,
@@ -34,7 +34,7 @@ import { Chunk } from '../bytecode/chunk';
 
 import { CompileResult, CompilerOptions, compileInstruction } from './base';
 
-// const tracer = getTracer('compiler');
+// const tracer = trace.getTracer('main');
 
 export type CompiledCmd = [Instr | null, Array<Chunk | null>];
 
