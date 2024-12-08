@@ -116,7 +116,7 @@ export enum ExitCode {
 /**
  * A function that exits the app.
  */
-export type ExitFn = ((exitCode: number) => void) | typeof process.exit;
+export type ExitFn = (exitCode: number) => Promise<void>;
 
 /**
  * Objects implementing this interface have an exit code corresponding to

@@ -1,4 +1,6 @@
-import { getTracer, showTree } from './debug';
+import { trace } from '@opentelemetry/api';
+
+import { showTree } from './debug';
 import { errorType } from './errors';
 import {
   SyntaxError,
@@ -8,7 +10,9 @@ import {
   sortParseError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
+import { formatter } from './format';
 import { Scanner } from './scanner';
+import { addEvent } from './telemetry';
 import { Token, TokenKind } from './tokens';
 
 import { Source } from './ast/source';
@@ -50,7 +54,7 @@ import {
 import { Cmd, Line, Input, Program } from './ast';
 import { sortLines } from './ast/util';
 
-const tracer = getTracer('parser');
+const tracer = trace.getTracer('main');
 
 export interface Params {
   arguments: Expr[];
@@ -102,6 +106,7 @@ export class Parser {
   constructor() {}
 
   init(source: string, filename: string, isProgram: boolean) {
+    const span = tracer.startSpan('init');
     this.filename = filename;
     this.scanner = new Scanner(source, filename);
     this.previous = null;
@@ -121,7 +126,8 @@ export class Parser {
     this.line = new Source(ws1, '', '', this.current.text);
     this.isShortIf = false;
 
-    tracer.trace('current', this.current);
+    span.setAttribute('current', formatter.format(this.current));
+    span.end();
   }
 
   /**
@@ -220,24 +226,29 @@ export class Parser {
   }
 
   private advance(): Token {
-    this.previous = this.current;
-    this.current = this.next;
+    const span = tracer.startSpan('advance');
+    try {
+      this.previous = this.current;
+      this.current = this.next;
 
-    this.line.source += this.trailingWs + this.current.text;
+      this.line.source += this.trailingWs + this.current.text;
 
-    const [ws, next] = this.nextToken();
-    this.leadingWs = this.trailingWs;
-    this.trailingWs = ws;
-    this.next = next;
+      const [ws, next] = this.nextToken();
+      this.leadingWs = this.trailingWs;
+      this.trailingWs = ws;
+      this.next = next;
 
-    if (this.current.kind === TokenKind.Illegal) {
-      this.syntaxError(this.current, `Illegal token ${this.current.text}`);
+      if (this.current.kind === TokenKind.Illegal) {
+        this.syntaxError(this.current, `Illegal token ${this.current.text}`);
+      }
+
+      span.setAttribute('previous', this.previous ? this.previous.text : '');
+      span.setAttribute('current', this.current ? this.current.text : '');
+
+      return this.previous as Token;
+    } finally {
+      span.end();
     }
-
-    tracer.trace('previous', this.previous ? this.previous.text : null);
-    tracer.trace('current', this.current ? this.current.text : null);
-
-    return this.previous as Token;
   }
 
   private get done(): boolean {
@@ -250,8 +261,12 @@ export class Parser {
   }
 
   private syntaxError(token: Token, message: string): never {
-    tracer.trace('kind', token.kind);
-    tracer.trace('message', message);
+    const span = tracer.startSpan('syntaxError', {
+      attributes: {
+        kind: token.kind,
+        message: message,
+      },
+    });
     const exc = new SyntaxError(message, {
       filename: this.filename,
       row: token.row,
@@ -264,6 +279,7 @@ export class Parser {
     });
     this.isError = true;
     this.lineErrors.push(exc);
+    span.end();
     throw new Synchronize();
   }
 
@@ -283,7 +299,8 @@ export class Parser {
   }
 
   private rows(): Row[] {
-    return tracer.spanSync('rows', () => {
+    const span = tracer.startSpan('rows');
+    try {
       const rows: Row[] = [];
       while (!this.done) {
         const parsed = this.row();
@@ -292,11 +309,14 @@ export class Parser {
         }
       }
       return rows;
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private row(): Row | null {
-    return tracer.spanSync('row', () => {
+    const span = tracer.startSpan('row');
+    try {
       const rowNo = this.current.row;
 
       let cmds: Instr[];
@@ -320,11 +340,14 @@ export class Parser {
       }
       this.cmdNo += 10;
       return new Cmd(this.cmdNo, rowNo, source, cmds);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private lineNumber(): void {
-    return tracer.spanSync('lineNumber', () => {
+    const span = tracer.startSpan('lineNumber');
+    try {
       const prevLineNo = this.lineNo;
       if (this.match(TokenKind.DecimalLiteral)) {
         this.lineNo = this.previous!.value as number;
@@ -356,19 +379,24 @@ export class Parser {
         }
       }
 
-      tracer.trace('lineNo', this.lineNo);
-    });
+      span.setAttribute('lineNo', this.lineNo || '<none>');
+    } finally {
+      span.end();
+    }
   }
 
   private rowEnding(): Source {
-    return tracer.spanSync('rowEnding', () => {
+    const span = tracer.startSpan('rowEnding');
+    try {
       const line = this.line.clone();
       if (line.source.endsWith('\n')) {
         line.source = line.source.slice(0, -1);
       }
 
       for (const error of this.lineErrors) {
-        tracer.trace('set source to line', line);
+        span.addEvent('set source to line', {
+          line: formatter.format(line),
+        });
         error.source = line;
         this.errors.push(error);
       }
@@ -385,16 +413,21 @@ export class Parser {
 
       const nextLine = new Source(this.leadingWs, '', '', this.current.text);
 
-      tracer.trace('reset line', nextLine.toString());
+      span.addEvent('reset line', {
+        nextLine: formatter.format(nextLine),
+      });
       this.line = nextLine;
       this.isLine = false;
 
       return line;
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private syncNextInstr() {
-    return tracer.spanSync('syncNextInstr', () => {
+    const span = tracer.startSpan('syncNextInstr');
+    try {
       // Remarks can be handled in the next attempt at parsing a command
       while (
         ![
@@ -407,11 +440,14 @@ export class Parser {
         // TODO: Illegal, UnterminatedString
         this.advance();
       }
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private syncNextRow(): void {
-    return tracer.spanSync('syncNextRow', () => {
+    const span = tracer.startSpan('syncNextRow');
+    try {
       while (
         ![TokenKind.LineEnding, TokenKind.Eof, TokenKind.Rem].includes(
           this.current.kind,
@@ -422,7 +458,9 @@ export class Parser {
       }
 
       this.rowEnding();
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private get isLineEnding(): boolean {
@@ -430,7 +468,8 @@ export class Parser {
   }
 
   private instructions(): Instr[] {
-    return tracer.spanSync('instructions', () => {
+    const span = tracer.startSpan('instructions');
+    try {
       if (this.isLineEnding) {
         return [];
       }
@@ -453,13 +492,15 @@ export class Parser {
           throw err;
         }
       }
-
       return instrs;
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private instruction(): Instr | null {
-    return tracer.spanSync('instruction', () => {
+    const span = tracer.startSpan('instruction');
+    try {
       const { offsetStart } = this.current;
 
       let instr: Instr;
@@ -512,24 +553,25 @@ export class Parser {
       instr.offsetEnd = offsetEnd;
 
       return instr;
-    });
+    } finally {
+      span.end();
+    }
   }
 
   // TODO: What's the syntax of print? lol
   private print(): Instr {
-    return tracer.spanSync('print', () => {
-      return new Print(this.expression());
-    });
+    addEvent('print');
+    return new Print(this.expression());
   }
 
   private new(): Instr {
-    return tracer.spanSync('new', () => {
-      return new New(this.optionalExpression());
-    });
+    addEvent('new');
+    return new New(this.optionalExpression());
   }
 
   private load(): Instr {
-    return tracer.spanSync('load', () => {
+    const span = tracer.startSpan('load');
+    try {
       const { arguments: args, flags } = this.params({
         arguments: ['filename'],
         flags: ['run'],
@@ -537,58 +579,60 @@ export class Parser {
 
       const filename = args[0];
       return new Load(filename, flags.run || false);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private list(): Instr {
-    return tracer.spanSync('list', () => {
-      return new List();
-    });
+    addEvent('list');
+    return new List();
   }
 
   private renum(): Instr {
-    return tracer.spanSync('renum', () => {
-      return new Renum();
-    });
+    addEvent('renum');
+    return new Renum();
   }
 
   private save(): Instr {
-    return tracer.spanSync('save', () => {
+    const span = tracer.startSpan('save');
+    try {
       return new Save(this.optionalExpression());
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private run(): Instr {
-    return tracer.spanSync('run', () => {
-      return new Run();
-    });
+    addEvent('run');
+    return new Run();
   }
 
   private end(): Instr {
+    addEvent('end');
     // TODO: Should end take an exit code?
-    return tracer.spanSync('end', () => {
-      return new End();
-    });
+    return new End();
   }
 
   private exit(): Instr {
-    return tracer.spanSync('exit', () => {
-      const expr = this.optionalExpression();
-      if (expr) {
-        return new Exit(expr);
-      }
-      return new Exit(null);
-    });
+    addEvent('exit');
+    const expr = this.optionalExpression();
+    if (expr) {
+      return new Exit(expr);
+    }
+    return new Exit(null);
   }
 
   private expressionStatement(): Instr {
-    return tracer.spanSync('expressionStatement', () => {
-      return new Expression(this.expression());
-    });
+    const span = tracer.startSpan('expressionStatement');
+    const expr = this.expression();
+    span.end();
+    return new Expression(expr);
   }
 
   private let(): Instr {
-    return tracer.spanSync('let', () => {
+    const span = tracer.startSpan('let');
+    try {
       let variable: Variable;
       if (
         this.match(
@@ -608,11 +652,14 @@ export class Parser {
         value = this.expression();
       }
       return new Let(variable, value);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private if_(): Instr {
-    return tracer.spanSync('if', () => {
+    const span = tracer.startSpan('if');
+    try {
       const condition = this.ifCondition();
 
       // A bare "if" with a multi-line block
@@ -622,7 +669,9 @@ export class Parser {
       }
 
       return this.shortIf(condition);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private ifCondition(): Expr {
@@ -634,7 +683,8 @@ export class Parser {
   }
 
   private shortIf(condition: Expr): Instr {
-    return tracer.spanSync('shortIf', () => {
+    const span = tracer.startSpan('shortIf');
+    try {
       const prevShortIf = this.isShortIf;
       this.isShortIf = true;
 
@@ -650,11 +700,14 @@ export class Parser {
       this.isShortIf = prevShortIf;
 
       return new ShortIf(condition, then, else_);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private else_(): Instr {
-    return tracer.spanSync('else', () => {
+    const span = tracer.startSpan('else');
+    try {
       if (this.isShortIf) {
         this.syntaxError(this.previous!, "Unexpected 'else'");
       }
@@ -664,29 +717,35 @@ export class Parser {
       }
 
       return new Else();
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private elseIf(): Instr {
-    return tracer.spanSync('else if', () => {
-      const condition = this.ifCondition();
-
-      return new ElseIf(condition);
-    });
+    const span = tracer.startSpan('else if');
+    try {
+      return new ElseIf(this.ifCondition());
+    } finally {
+      span.end();
+    }
   }
 
   private endIf(): Instr {
-    return tracer.spanSync('endif', () => {
+    const span = tracer.startSpan('endif');
+    try {
       if (this.isShortIf) {
         this.syntaxError(this.previous!, "Unexpected 'endif'");
       }
-
       return new EndIf();
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private assign(): Instr | null {
-    return tracer.spanSync('assign', () => {
+    const span = tracer.startSpan('assign');
+    try {
       // We can't match here because we need to check the *next* token
       // before advancing...
       if (
@@ -705,11 +764,14 @@ export class Parser {
       }
 
       return null;
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private params(spec: ParamsSpec): Params {
-    return tracer.spanSync('params', () => {
+    const span = tracer.startSpan('params');
+    try {
       const args = spec.arguments || [];
       const argv: Params = { arguments: [], flags: {}, options: {} };
       const flagNames: Set<string> = new Set(spec.flags || []);
@@ -752,11 +814,14 @@ export class Parser {
       }
 
       return argv;
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private optionalExpression(): Expr | null {
-    return tracer.spanSync('optionalExpression', () => {
+    const span = tracer.startSpan('optionalExpression');
+    try {
       for (const tok of [
         TokenKind.Colon,
         TokenKind.LineEnding,
@@ -767,13 +832,18 @@ export class Parser {
         }
       }
       return this.expression();
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private expression(): Expr {
-    return tracer.spanSync('expression', () => {
+    const span = tracer.startSpan('expression');
+    try {
       return this.or();
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private operator<E extends Expr>(
@@ -794,27 +864,34 @@ export class Parser {
   }
 
   private or(): Expr {
-    return tracer.spanSync('or', () => {
+    const span = tracer.startSpan('or');
+    try {
       return this.operator(
         [TokenKind.Or],
         this.and.bind(this),
         (l, o, r) => new Logical(l, o, r),
       );
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private and(): Expr {
-    return tracer.spanSync('and', () => {
+    const span = tracer.startSpan('and');
+    try {
       return this.operator(
         [TokenKind.And],
         this.equality.bind(this),
         (l, o, r) => new Logical(l, o, r),
       );
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private equality(): Expr {
-    return tracer.spanSync('equality', () => {
+    const span = tracer.startSpan('equality');
+    try {
       return this.operator(
         [TokenKind.Eq, TokenKind.EqEq, TokenKind.BangEq, TokenKind.Ne],
         this.comparison.bind(this),
@@ -836,41 +913,53 @@ export class Parser {
           return new Binary(left, op, right);
         },
       );
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private comparison(): Expr {
-    return tracer.spanSync('comparison', () => {
+    const span = tracer.startSpan('comparison');
+    try {
       return this.operator(
         [TokenKind.Gt, TokenKind.Ge, TokenKind.Lt, TokenKind.Le],
         this.term.bind(this),
         (l, o, r) => new Binary(l, o, r),
       );
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private term(): Expr {
-    return tracer.spanSync('term', () => {
+    const span = tracer.startSpan('term');
+    try {
       return this.operator(
         [TokenKind.Minus, TokenKind.Plus],
         this.factor.bind(this),
         (l, o, r) => new Binary(l, o, r),
       );
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private factor(): Expr {
-    return tracer.spanSync('factor', () => {
+    const span = tracer.startSpan('factor');
+    try {
       return this.operator(
         [TokenKind.Slash, TokenKind.Star],
         this.unary.bind(this),
         (l, o, r) => new Binary(l, o, r),
       );
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private unary(): Expr {
-    return tracer.spanSync('unary', () => {
+    const span = tracer.startSpan('unary');
+    try {
       if (this.match(TokenKind.Not, TokenKind.Minus)) {
         const op = this.previous!.kind;
         const right = this.unary();
@@ -879,11 +968,14 @@ export class Parser {
       }
 
       return this.primary();
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private primary(): Expr {
-    return tracer.spanSync('primary', () => {
+    const span = tracer.startSpan('primary');
+    try {
       if (
         this.match(
           TokenKind.DecimalLiteral,
@@ -924,33 +1016,43 @@ export class Parser {
 
         this.syntaxError(token, msg);
       }
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private variable(): Variable {
-    return tracer.spanSync('variable', () => {
-      return new Variable(this.previous!);
-    });
+    addEvent('variable');
+    return new Variable(this.previous!);
   }
 
   private group(): Expr {
-    return tracer.spanSync('group', () => {
+    const span = tracer.startSpan('group');
+    try {
       const expr: Expr = this.expression();
       this.consume(TokenKind.RParen, 'Expected `)` after expression');
       return new Group(expr);
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private string(): StringLiteral {
-    return tracer.spanSync('string', () => {
+    const span = tracer.startSpan('string');
+    try {
       return new StringLiteral(this.parseStringEscapeCodes(false));
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private prompt(): PromptLiteral {
-    return tracer.spanSync('prompt', () => {
+    const span = tracer.startSpan('prompt');
+    try {
       return new PromptLiteral(this.parseStringEscapeCodes(true));
-    });
+    } finally {
+      span.end();
+    }
   }
 
   private parseStringEscapeCodes(isPrompt: boolean): string {

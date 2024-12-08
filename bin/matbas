@@ -10,4 +10,10 @@ export __MATBAS_DOLLAR_ZERO="${0}"
 
 SCRIPT="$(dirname "$(dirname "${BASH_SOURCE[0]}")")/dist/main.js"
 
-exec node --enable-source-maps "${SCRIPT}" "$@"
+if [[ "${MATBAS_BUILD}" == 'debug' ]] && [ -n "${DEBUG_TRACE}" ]; then
+  DEPRECATION_FLAG='--trace-deprecation'
+else
+  DEPRECATION_FLAG='--no-deprecation'
+fi
+
+exec node "${DEPRECATION_FLAG}" --enable-source-maps "${SCRIPT}" "$@"

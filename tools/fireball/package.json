@@ -1,0 +1,27 @@
+{
+  "name": "@matanuska/fireball",
+  "version": "1.0.0",
+  "description": "A local Jaeger service in a bottle",
+  "main": "dist/index.js",
+  "bin": {
+    "fireball": "dist/main.js"
+  },
+  "scripts": {
+    "install": "npm run install:terraform",
+    "install:terraform": "terraform -chdir=modules/fireball init",
+    "update:terraform": "npm run install:terraform -- -upgrade",
+    "update:config": "bash ./scripts/update-config.sh",
+    "format": "prettier --write \"**/*.ts\" && terraform fmt -recursive ./modules",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "npm run build && node --enable-source-maps ./dist/main.js",
+    "test": "tests-of-the-sierra-madre",
+    "lint": "eslint \"src/**.ts\" --fix && shellcheck ./scripts/*.sh",
+    "check": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "Josh Holbrook",
+  "license": "MIT",
+  "devDependencies": {
+    "tests-of-the-sierra-madre": "^1.0.1"
+  }
+}

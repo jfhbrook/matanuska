@@ -1,21 +1,23 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { trace } from '@opentelemetry/api';
 
-import { getTracer } from './debug';
 import { Config } from './config';
 import { BaseException } from './exceptions';
+import { Exit, ExitCode } from './exit';
 import type { ExitFn } from './exit';
 import { Executor } from './executor';
 import { BaseFault, RuntimeFault, UsageFault } from './faults';
 import type { Host } from './host';
-import { Exit, ExitCode } from './exit';
+import { addEvent } from './telemetry';
 
-const tracer = getTracer('main');
+const tracer = trace.getTracer('main');
 
 //
 // Run the REPL.
 //
 async function repl(executor: Executor, host: Host) {
   while (true) {
+    const span = tracer.startSpan('read-eval-print');
     try {
       const input = await executor.prompt();
       await executor.eval(input);
@@ -30,6 +32,8 @@ async function repl(executor: Executor, host: Host) {
       }
 
       throw RuntimeFault.fromError(err, null);
+    } finally {
+      span.end();
     }
   }
 }
@@ -47,14 +51,14 @@ export class Translator {
   ) {}
 
   public async start(): Promise<void> {
-    tracer.open('main');
+    const span = tracer.startSpan('start');
     const { host, exit, config, executor } = this;
     let error: any = null;
 
     host.setLevel(config.level);
 
     function errorExit(error: any): void {
-      tracer.close();
+      span.end();
       exit(
         typeof error.exitCode === 'number' ? error.exitCode : ExitCode.Software,
       );
@@ -76,8 +80,13 @@ export class Translator {
     try {
       await executor.using(async () => {
         if (config.script) {
-          await executor.load(config.script);
-          await executor.run();
+          const span = tracer.startSpan('script');
+          try {
+            await executor.load(config.script);
+            await executor.run();
+          } finally {
+            span.end();
+          }
         } else {
           await repl(executor, host);
         }
@@ -115,7 +124,9 @@ export function reportError(err: any, host: Host): void {
   // Handle intentional exits.
   if (err instanceof Exit) {
     // TODO: Should the user be able to access this log in a release build?
-    tracer.trace(`Exit ${err.exitCode}`);
+    addEvent('exit', {
+      code: err.exitCode,
+    });
     if (err.message.length) {
       host.writeLine(err.message);
     }
