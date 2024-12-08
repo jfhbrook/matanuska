@@ -3,7 +3,7 @@ import { Attributes, trace, Span } from '@opentelemetry/api';
 
 //#if _MATBAS_BUILD == 'debug'
 import VERSIONS from 'consts:versions';
-import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { Resource } from '@opentelemetry/resources';
 import {
@@ -29,7 +29,9 @@ if (!NO_TRACE) {
       [ATTR_SERVICE_NAME]: 'matbas',
       [ATTR_SERVICE_VERSION]: VERSIONS.matbas,
     }),
-    traceExporter: new ConsoleSpanExporter(),
+    traceExporter: new OTLPTraceExporter({
+      url: 'http://localhost:4317/v1/traces',
+    }),
     instrumentations: [getNodeAutoInstrumentations()],
   };
 }
