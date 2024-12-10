@@ -1,14 +1,16 @@
-import { getTracer } from '../debug';
+// import { trace as _trace, Span } from '@opentelemetry/api';
+
 import { Editor } from '../editor';
 import { Executor } from '../executor';
 import { errorType } from '../errors';
 import { RuntimeFault } from '../faults';
+// import { formatter } from '../format';
 import { Host } from '../host';
 import { Value } from '../value';
 import { Program } from '../ast';
 import { Instr, InstrVisitor } from '../ast/instr';
 
-const tracer = getTracer('main');
+// const tracer = _trace.getTracer('main');
 
 /**
  * The return value of a command. Null is used to indicate no returned
@@ -64,17 +66,19 @@ export async function noop<C extends Instr>(_cmd: C): Promise<ReturnValue> {
   return null;
 }
 
+/*
 export function trace<C extends Instr>(
-  name: string,
+  _name: string,
   command: InteractiveCommand<C>,
 ): InteractiveCommand<C> {
   return async function traced(
     this: CommandRunner,
     cmd: C,
   ): Promise<ReturnValue> {
-    return tracer.span(`Evaluating ${name}`, async () => {
-      tracer.trace('with args:', this.args);
-      return await command.call(this, cmd);
-    });
+    for (let i = 0; i < this.args.length; i++) {
+      span.setAttribute(`arg_${i}`, formatter.format(this.args[i]));
+    }
+    return await command.call(this, cmd);
   };
 }
+*/

@@ -1,7 +1,10 @@
-import { getTracer, showChunk } from '../debug';
+// import { trace } from '@opentelemetry/api';
+
+import { showChunk } from '../debug';
 import { errorType } from '../errors';
 import { SyntaxError, ParseError, ParseWarning } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
+// import { formatter } from '../format';
 import { Token, TokenKind } from '../tokens';
 import { Value } from '../value';
 // import { Type } from './value/types';
@@ -51,8 +54,6 @@ import { Block } from './block';
 import { Short, shortToBytes } from '../bytecode/short';
 import { Chunk } from '../bytecode/chunk';
 import { OpCode } from '../bytecode/opcodes';
-
-const tracer = getTracer('compiler');
 
 export enum RoutineType {
   Command,
@@ -227,39 +228,37 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
    */
   @runtimeMethod
   compile(): CompileResult<Chunk> {
-    return tracer.spanSync('compile', () => {
-      let instr: Instr | null = this.advance();
-      while (instr) {
-        try {
-          this.instruction(instr);
-          instr = this.advance();
-        } catch (err) {
-          if (err instanceof Synchronize) {
-            this.synchronize();
-            instr = this.peek();
-            continue;
-          }
-          throw err;
-        }
-      }
-
+    let instr: Instr | null = this.advance();
+    while (instr) {
       try {
-        this.checkBlocksClosed();
+        this.instruction(instr);
+        instr = this.advance();
       } catch (err) {
-        if (!(err instanceof Synchronize)) {
-          throw err;
+        if (err instanceof Synchronize) {
+          this.synchronize();
+          instr = this.peek();
+          continue;
         }
+        throw err;
       }
+    }
 
-      if (this.isError) {
-        throw new ParseError(this.errors);
+    try {
+      this.checkBlocksClosed();
+    } catch (err) {
+      if (!(err instanceof Synchronize)) {
+        throw err;
       }
+    }
 
-      this.emitReturn();
+    if (this.isError) {
+      throw new ParseError(this.errors);
+    }
 
-      showChunk(this.chunk);
-      return [this.chunk, null];
-    });
+    this.emitReturn();
+
+    showChunk(this.chunk);
+    return [this.chunk, null];
   }
 
   /**
@@ -300,9 +299,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
       this.currentLine++;
       this.currentInstrNo = 0;
     }
-    tracer.trace(`current line: ${this.lineNo}`);
-    tracer.trace(`current row: ${this.rowNo}`);
-    tracer.trace(`current instr: ${this.currentInstrNo}`);
+
     if (this.done) {
       return null;
     }
@@ -350,19 +347,15 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private interactive(name: string, instr: Instr): never {
-    return tracer.spanSync(name, () => {
-      this.syntaxError(
-        instr,
-        `Cannot run interactive command in scripts: ${name}`,
-      );
-    });
+    this.syntaxError(
+      instr,
+      `Cannot run interactive command in scripts: ${name}`,
+    );
   }
 
   private synchronize(): void {
-    return tracer.spanSync('synchronize', () => {
-      this.currentLine++;
-      this.currentInstrNo = 0;
-    });
+    this.currentLine++;
+    this.currentInstrNo = 0;
   }
 
   private get lineNo(): number {
@@ -399,11 +392,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private emitByte(byte: number): void {
-    tracer.spanSync('emitByte', () => {
-      tracer.trace('byte', byte);
-      tracer.trace('lineNo', this.lineNo);
-      this.currentChunk.writeOp(byte, this.lineNo);
-    });
+    this.currentChunk.writeOp(byte, this.lineNo);
   }
 
   private emitBytes(...bytes: number[]): void {
@@ -413,19 +402,13 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private emitConstant(value: Value): void {
-    return tracer.spanSync('emitConstant', () => {
-      tracer.trace('value:', value);
-      this.emitBytes(OpCode.Constant, this.makeConstant(value));
-    });
+    this.emitBytes(OpCode.Constant, this.makeConstant(value));
   }
 
   private emitIdent(ident: Token): Short {
-    return tracer.spanSync('emitIdent', () => {
-      tracer.trace('ident:', ident.value);
-      const constant = this.makeConstant(ident.value as Value);
-      this.emitBytes(OpCode.Constant, constant);
-      return constant;
-    });
+    const constant = this.makeConstant(ident.value as Value);
+    this.emitBytes(OpCode.Constant, constant);
+    return constant;
   }
 
   private emitJump(code: OpCode): Short {
@@ -466,29 +449,22 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   //
 
   private instruction(instr: Instr): void {
-    tracer.spanSync('instruction', () => {
-      tracer.trace('instr', instr);
-      instr.accept(this);
-    });
+    instr.accept(this);
   }
 
   visitPrintInstr(print: Print): void {
-    tracer.spanSync('print', () => {
-      print.expression.accept(this);
-      this.emitByte(OpCode.Print);
-    });
+    print.expression.accept(this);
+    this.emitByte(OpCode.Print);
   }
 
   visitExpressionInstr(expr: Expression): void {
-    tracer.spanSync('expression', () => {
-      this.isExpressionCmd = true;
-      expr.expression.accept(this);
+    this.isExpressionCmd = true;
+    expr.expression.accept(this);
 
-      // NOTE: In commands, save the result to return later.
-      if (this.routineType === RoutineType.Program) {
-        this.emitByte(OpCode.Pop);
-      }
-    });
+    // NOTE: In commands, save the result to return later.
+    if (this.routineType === RoutineType.Program) {
+      this.emitByte(OpCode.Pop);
+    }
   }
 
   visitRemInstr(_rem: Rem): void {}
@@ -518,44 +494,36 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitEndInstr(_end: End): void {
-    tracer.spanSync('end', () => {
-      // TODO: I'm currently treating 'end' as a synonym for 'return nil'.
-      // But perhaps it should behave differently? In MSX it also cleans up
-      // open file handles.
-      this.emitByte(OpCode.Nil);
-      this.emitByte(OpCode.Return);
-    });
+    // TODO: I'm currently treating 'end' as a synonym for 'return nil'.
+    // But perhaps it should behave differently? In MSX it also cleans up
+    // open file handles.
+    this.emitByte(OpCode.Nil);
+    this.emitByte(OpCode.Return);
   }
 
   visitExitInstr(exit: Exit): void {
-    tracer.spanSync('exit', () => {
-      if (exit.expression) {
-        exit.expression.accept(this);
-      } else {
-        this.emitConstant(0);
-      }
-      this.emitByte(OpCode.Exit);
-    });
+    if (exit.expression) {
+      exit.expression.accept(this);
+    } else {
+      this.emitConstant(0);
+    }
+    this.emitByte(OpCode.Exit);
   }
 
   visitLetInstr(let_: Let): void {
-    return tracer.spanSync('let', () => {
-      const target = this.emitIdent(let_.variable.ident);
-      if (let_.value) {
-        let_.value.accept(this);
-      } else {
-        this.emitByte(OpCode.Nil);
-      }
-      this.emitBytes(OpCode.DefineGlobal, target);
-    });
+    const target = this.emitIdent(let_.variable.ident);
+    if (let_.value) {
+      let_.value.accept(this);
+    } else {
+      this.emitByte(OpCode.Nil);
+    }
+    this.emitBytes(OpCode.DefineGlobal, target);
   }
 
   visitAssignInstr(assign: Assign): void {
-    return tracer.spanSync('assign', () => {
-      const target = this.emitIdent(assign.variable.ident);
-      assign.value.accept(this);
-      this.emitBytes(OpCode.SetGlobal, target);
-    });
+    const target = this.emitIdent(assign.variable.ident);
+    assign.value.accept(this);
+    this.emitBytes(OpCode.SetGlobal, target);
   }
 
   visitShortIfInstr(if_: ShortIf): void {
@@ -614,106 +582,88 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   //
 
   visitUnaryExpr(unary: Unary): void {
-    tracer.spanSync('unary', () => {
-      unary.expr.accept(this);
-      switch (unary.op) {
-        case TokenKind.Minus:
-          this.emitByte(OpCode.Neg);
-          break;
-        default:
-          this.syntaxError(this.peek() as Instr, 'Invalid unary operator');
-      }
-    });
+    unary.expr.accept(this);
+    switch (unary.op) {
+      case TokenKind.Minus:
+        this.emitByte(OpCode.Neg);
+        break;
+      default:
+        this.syntaxError(this.peek() as Instr, 'Invalid unary operator');
+    }
   }
 
   visitBinaryExpr(binary: Binary): void {
-    tracer.spanSync('binary', () => {
-      binary.left.accept(this);
-      binary.right.accept(this);
-      switch (binary.op) {
-        case TokenKind.Plus:
-          this.emitByte(OpCode.Add);
-          break;
-        case TokenKind.Minus:
-          this.emitByte(OpCode.Sub);
-          break;
-        case TokenKind.Star:
-          this.emitByte(OpCode.Mul);
-          break;
-        case TokenKind.Slash:
-          this.emitByte(OpCode.Div);
-          break;
-        case TokenKind.EqEq:
-          this.emitByte(OpCode.Eq);
-          break;
-        case TokenKind.Gt:
-          this.emitByte(OpCode.Gt);
-          break;
-        case TokenKind.Ge:
-          this.emitByte(OpCode.Ge);
-          break;
-        case TokenKind.Lt:
-          this.emitByte(OpCode.Lt);
-          break;
-        case TokenKind.Le:
-          this.emitByte(OpCode.Le);
-          break;
-        case TokenKind.Ne:
-          this.emitByte(OpCode.Ne);
-          break;
-        default:
-          this.syntaxError(this.peek() as Instr, 'Invalid binary operator');
-      }
-    });
+    binary.left.accept(this);
+    binary.right.accept(this);
+    switch (binary.op) {
+      case TokenKind.Plus:
+        this.emitByte(OpCode.Add);
+        break;
+      case TokenKind.Minus:
+        this.emitByte(OpCode.Sub);
+        break;
+      case TokenKind.Star:
+        this.emitByte(OpCode.Mul);
+        break;
+      case TokenKind.Slash:
+        this.emitByte(OpCode.Div);
+        break;
+      case TokenKind.EqEq:
+        this.emitByte(OpCode.Eq);
+        break;
+      case TokenKind.Gt:
+        this.emitByte(OpCode.Gt);
+        break;
+      case TokenKind.Ge:
+        this.emitByte(OpCode.Ge);
+        break;
+      case TokenKind.Lt:
+        this.emitByte(OpCode.Lt);
+        break;
+      case TokenKind.Le:
+        this.emitByte(OpCode.Le);
+        break;
+      case TokenKind.Ne:
+        this.emitByte(OpCode.Ne);
+        break;
+      default:
+        this.syntaxError(this.peek() as Instr, 'Invalid binary operator');
+    }
   }
 
   visitLogicalExpr(_logical: Logical): void {
-    tracer.spanSync('logical', () => {});
+    return;
   }
 
   visitGroupExpr(group: Group): void {
-    tracer.spanSync('group', () => {
-      group.expr.accept(this);
-    });
+    group.expr.accept(this);
   }
 
   visitVariableExpr(variable: Variable): void {
-    tracer.spanSync('variable', () => {
-      const ident = this.emitIdent(variable.ident);
-      this.emitBytes(OpCode.GetGlobal, ident);
-    });
+    const ident = this.emitIdent(variable.ident);
+    this.emitBytes(OpCode.GetGlobal, ident);
   }
 
   visitIntLiteralExpr(int: IntLiteral): void {
-    tracer.spanSync('int literal', () => {
-      this.emitConstant(int.value);
-    });
+    this.emitConstant(int.value);
   }
 
   visitRealLiteralExpr(real: RealLiteral): void {
-    tracer.spanSync('real literal', () => {
-      this.emitConstant(real.value);
-    });
+    this.emitConstant(real.value);
   }
 
   visitBoolLiteralExpr(bool: BoolLiteral): void {
-    tracer.spanSync('bool literal', () => {
-      this.emitConstant(bool.value);
-    });
+    this.emitConstant(bool.value);
   }
 
   visitStringLiteralExpr(str: StringLiteral): void {
-    tracer.spanSync('string literal', () => {
-      this.emitConstant(str.value);
-    });
+    this.emitConstant(str.value);
   }
 
   visitPromptLiteralExpr(_ps: PromptLiteral): void {}
 
   visitNilLiteralExpr(_: NilLiteral): void {
-    tracer.spanSync('nil literal', () => {
-      this.emitByte(OpCode.Nil);
-    });
+    this.emitByte(OpCode.Nil);
   }
 }
 

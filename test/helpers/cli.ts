@@ -41,7 +41,7 @@ export async function run(
         },
         {
           provide: 'exitFn',
-          useValue: (exitCode: number): void => {
+          useValue: async (exitCode: number): Promise<void> => {
             resolve({
               exitCode,
               host,
