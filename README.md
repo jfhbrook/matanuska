@@ -22,7 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- fix build - now requires `terraform`
 - [tokei](https://github.com/XAMPPRocky/tokei) for stats
 - for/while/goto
   - [ ] ADR for for/while/goto
