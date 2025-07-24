@@ -32,6 +32,14 @@ Node.js loads modules in three different ways:
 
 JavaScript more generally can operate on an object using `with`. This is somewhat similar to `namespace`, but rather than taking a namespace, it takes the object which contains that namespace.
 
+### Steel
+
+[Steel](https://github.com/mattwparas/steel) is a Scheme dialect. Its module system is documented here:
+
+<https://mattwparas.github.io/steel/book/reference/modules.html>
+
+What's noteworthy is that it uses the `require` keyword to import modules, but the `provide` keyword to export entities. Since `export` is reserved for environment exports, use of this `provide` keyword could be compelling.
+
 ### BASIC8
 
 <https://paladin-t.github.io/b8/docs/manual>
