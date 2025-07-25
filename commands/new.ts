@@ -5,10 +5,10 @@ import { New } from '../ast/instr';
 import { CommandRunner, ReturnValue } from './base';
 
 /**
- * An interactive expression.
+ * A new program.
  *
- * Interactive expressions are evaluated in the runtime, but their value
- * is returned to the Executor so that it can inspect and print it.
+ * Create a new file, and open it in the editor. By default, the filename will
+ * be 'untitled.bas'.
  */
 export default async function new_(
   this: CommandRunner,
