@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function report {
-  tokei . -s lines "$@"
+  tokei . -s lines
 }
 
 function named-report {
@@ -12,7 +12,7 @@ function named-report {
   name="$(basename "${path}")"
 
   echo "# Line Counts: ${name}"
-  report "$@"
+  report
   echo
 }
 
@@ -58,17 +58,15 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [ -n "${FULL}" ]; then
-  named-report --exclude README.md --exclude adrs
-  markdown-report
+report .
+echo ''
+markdown-report
+echo ''
 
+if [ -n "${FULL}" ]; then
   for package in ./packages/*; do
     (cd "${package}" && named-report)
   done
-
-  echo ''
-  artifact-report
-else
-  report .
 fi
 
+artifact-report

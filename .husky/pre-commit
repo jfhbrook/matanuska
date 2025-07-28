@@ -3,3 +3,4 @@
 npm run check
 npm test
 npm run lint:staged
+npm run report -- --short
