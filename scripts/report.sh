@@ -43,13 +43,13 @@ function artifact-report {
   echo '======================='
 }
 
-FULL=1
+FULL=''
 ARGV=()
 
 while [[ $# -gt 0 ]]; do
   case "${1}" in
-    --short)
-      FULL=''
+    --full)
+      FULL=1
       shift
       ;;
     *)
