@@ -18,17 +18,35 @@ exports[`given a DefaultFormatter > instructions 8`] = `"Run"`;
 
 exports[`given a DefaultFormatter > instructions 9`] = `"Let(i%, 1)"`;
 
-exports[`given a DefaultFormatter > instructions 10`] = `"ShortIf (true) { Print('true') }"`;
+exports[`given a DefaultFormatter > instructions 10`] = `"Assign(i%, 1)"`;
 
-exports[`given a DefaultFormatter > instructions 11`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
+exports[`given a DefaultFormatter > instructions 11`] = `"ShortIf (true) { Print('true') }"`;
 
-exports[`given a DefaultFormatter > instructions 12`] = `"If (true)"`;
+exports[`given a DefaultFormatter > instructions 12`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
 
-exports[`given a DefaultFormatter > instructions 13`] = `"Else"`;
+exports[`given a DefaultFormatter > instructions 13`] = `"If (true)"`;
 
-exports[`given a DefaultFormatter > instructions 14`] = `"ElseIf (true)"`;
+exports[`given a DefaultFormatter > instructions 14`] = `"Else"`;
 
-exports[`given a DefaultFormatter > instructions 15`] = `"End"`;
+exports[`given a DefaultFormatter > instructions 15`] = `"ElseIf (true)"`;
+
+exports[`given a DefaultFormatter > instructions 16`] = `"EndIf"`;
+
+exports[`given a DefaultFormatter > instructions 17`] = `"For(i%, 1)"`;
+
+exports[`given a DefaultFormatter > instructions 18`] = `"Next"`;
+
+exports[`given a DefaultFormatter > instructions 19`] = `"EndFor"`;
+
+exports[`given a DefaultFormatter > instructions 20`] = `"While (true)"`;
+
+exports[`given a DefaultFormatter > instructions 21`] = `"EndWhile"`;
+
+exports[`given a DefaultFormatter > instructions 22`] = `"Repeat"`;
+
+exports[`given a DefaultFormatter > instructions 23`] = `"Until (false)"`;
+
+exports[`given a DefaultFormatter > instructions 24`] = `"End"`;
 
 exports[`given a DefaultFormatter > it formats a BaseException 1`] = `
 "Traceback:
@@ -41,7 +59,7 @@ exports[`given a DefaultFormatter > it formats a BaseFault 1`] = `
 
 --- Internal Stack Trace ---
 BaseFault: message
-    at {{CWD}}/test/format.spec.ts:274:40
+    at {{CWD}}/test/format.spec.ts:283:40
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
     at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
@@ -127,7 +145,7 @@ exports[`given a DefaultFormatter > it formats a RuntimeFault 1`] = `
 --- Internal Stack Trace ---
 AssertionError [ERR_ASSERTION]: underlying assertion
     at new AssertionError (node:internal/assert/assertion_error:376:5)
-    at {{CWD}}/test/format.spec.ts:278:26
+    at {{CWD}}/test/format.spec.ts:287:26
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
     at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
@@ -309,17 +327,35 @@ exports[`given a Inspector > instructions 8`] = `"Run"`;
 
 exports[`given a Inspector > instructions 9`] = `"Let(i%, 1)"`;
 
-exports[`given a Inspector > instructions 10`] = `"ShortIf (true) { Print('true') }"`;
+exports[`given a Inspector > instructions 10`] = `"Assign(i%, 1)"`;
 
-exports[`given a Inspector > instructions 11`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
+exports[`given a Inspector > instructions 11`] = `"ShortIf (true) { Print('true') }"`;
 
-exports[`given a Inspector > instructions 12`] = `"If (true)"`;
+exports[`given a Inspector > instructions 12`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
 
-exports[`given a Inspector > instructions 13`] = `"Else"`;
+exports[`given a Inspector > instructions 13`] = `"If (true)"`;
 
-exports[`given a Inspector > instructions 14`] = `"ElseIf (true)"`;
+exports[`given a Inspector > instructions 14`] = `"Else"`;
 
-exports[`given a Inspector > instructions 15`] = `"End"`;
+exports[`given a Inspector > instructions 15`] = `"ElseIf (true)"`;
+
+exports[`given a Inspector > instructions 16`] = `"EndIf"`;
+
+exports[`given a Inspector > instructions 17`] = `"For(i%, 1)"`;
+
+exports[`given a Inspector > instructions 18`] = `"Next"`;
+
+exports[`given a Inspector > instructions 19`] = `"EndFor"`;
+
+exports[`given a Inspector > instructions 20`] = `"While (true)"`;
+
+exports[`given a Inspector > instructions 21`] = `"EndWhile"`;
+
+exports[`given a Inspector > instructions 22`] = `"Repeat"`;
+
+exports[`given a Inspector > instructions 23`] = `"Until (false)"`;
+
+exports[`given a Inspector > instructions 24`] = `"End"`;
 
 exports[`given a Inspector > it formats a BaseException 1`] = `
 "Traceback:
@@ -332,7 +368,7 @@ exports[`given a Inspector > it formats a BaseFault 1`] = `
 
 --- Internal Stack Trace ---
 BaseFault: message
-    at {{CWD}}/test/format.spec.ts:274:40
+    at {{CWD}}/test/format.spec.ts:283:40
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
     at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
@@ -418,7 +454,7 @@ exports[`given a Inspector > it formats a RuntimeFault 1`] = `
 --- Internal Stack Trace ---
 AssertionError [ERR_ASSERTION]: underlying assertion
     at new AssertionError (node:internal/assert/assertion_error:376:5)
-    at {{CWD}}/test/format.spec.ts:278:26
+    at {{CWD}}/test/format.spec.ts:287:26
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
     at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
     at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)

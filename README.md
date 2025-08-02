@@ -29,7 +29,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Add new structures to citree
   - [x] Stub out visitors
   - [x] Add `next` to citree + visitors
-  - [ ] Format tests
+  - [x] Format tests
   - [ ] Support new structures in parser
     - [ ] `for`
     - [ ] `next`

@@ -52,10 +52,19 @@ import {
   Save,
   Run,
   Let,
+  Assign,
   ShortIf,
   If,
   Else,
   ElseIf,
+  EndIf,
+  For,
+  Next,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
   End,
 } from '../ast/instr';
 import { Line, Program } from '../ast';
@@ -420,6 +429,20 @@ function formatTestSuite<F extends Formatter>(formatter: F): void {
           ),
           new IntLiteral(1),
         ),
+        new Assign(
+          new Variable(
+            new Token({
+              kind: TokenKind.IntIdent,
+              index: 0,
+              row: 1,
+              offsetStart: 0,
+              offsetEnd: 1,
+              text: 'i%',
+              value: null,
+            }),
+          ),
+          new IntLiteral(1),
+        ),
         new ShortIf(
           new BoolLiteral(true),
           [new Print(new StringLiteral('true'))],
@@ -433,6 +456,27 @@ function formatTestSuite<F extends Formatter>(formatter: F): void {
         new If(new BoolLiteral(true)),
         new Else(),
         new ElseIf(new BoolLiteral(true)),
+        new EndIf(),
+        new For(
+          new Variable(
+            new Token({
+              kind: TokenKind.IntIdent,
+              index: 0,
+              row: 1,
+              offsetStart: 5,
+              offsetEnd: 6,
+              text: 'i%',
+              value: null,
+            }),
+          ),
+          new IntLiteral(1),
+        ),
+        new Next(),
+        new EndFor(),
+        new While(new BoolLiteral(true)),
+        new EndWhile(),
+        new Repeat(),
+        new Until(new BoolLiteral(false)),
         new End(),
       ];
 
