@@ -192,6 +192,10 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
     this.shiftInstr(for_);
     for_.variable.accept(this);
     for_.value.accept(this);
+    for_.stop.accept(this);
+    if (for_.step !== null) {
+      for_.step.accept(this);
+    }
   }
 
   visitNextInstr(next: Next): void {
