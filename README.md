@@ -30,6 +30,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Stub out visitors
   - [x] Add `next` to citree + visitors
   - [x] Format tests
+  - [x] Add `to` and `step` to `For` instruction AST
   - [ ] Support new structures in parser
     - [ ] `for`
     - [ ] `next`
@@ -38,7 +39,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
     - [ ] `endwhile`
     - [ ] `repeat`
     - [ ] `until`
-  - [ ] Add `to` and `step` to `For` instruction
 - Logical operators
   - [x] Support through the parser
 - GOTO

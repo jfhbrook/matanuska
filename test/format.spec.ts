@@ -470,6 +470,8 @@ function formatTestSuite<F extends Formatter>(formatter: F): void {
             }),
           ),
           new IntLiteral(1),
+          new IntLiteral(10),
+          null,
         ),
         new Next(),
         new EndFor(),

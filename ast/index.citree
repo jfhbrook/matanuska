@@ -36,7 +36,7 @@ type Instr in './instr' {
   Else!
   ElseIf     => condition: Expr
   EndIf!
-  For        => variable: Variable, value: Expr
+  For        => variable: Variable, value: Expr, stop: Expr, step: Expr | null
   Next!
   EndFor!
   While      => condition: Expr

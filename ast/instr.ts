@@ -274,6 +274,8 @@ export class For extends Instr {
   constructor(
     public variable: Variable,
     public value: Expr,
+    public stop: Expr,
+    public step: Expr | null,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
