@@ -19,6 +19,9 @@ export interface InstrVisitor<R> {
   visitElseInstr(node: Else): R;
   visitElseIfInstr(node: ElseIf): R;
   visitEndIfInstr(node: EndIf): R;
+  visitForInstr(node: For): R;
+  visitWhileInstr(node: While): R;
+  visitRepeatInstr(node: Repeat): R;
 }
 
 export abstract class Instr {
@@ -260,5 +263,51 @@ export class EndIf extends Instr {
 
   accept<R>(visitor: InstrVisitor<R>): R {
     return visitor.visitEndIfInstr(this);
+  }
+}
+
+export class For extends Instr {
+  constructor(
+    public variable: Variable,
+    public value: Expr,
+    public loop: Instr[],
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitForInstr(this);
+  }
+}
+
+export class While extends Instr {
+  constructor(
+    public condition: Expr,
+    public loop: Instr[],
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitWhileInstr(this);
+  }
+}
+
+export class Repeat extends Instr {
+  constructor(
+    public condition: Expr,
+    public loop: Instr[],
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitRepeatInstr(this);
   }
 }

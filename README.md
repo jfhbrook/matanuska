@@ -27,6 +27,12 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Add new keywords to tokens
   - [x] Support new keywords in scanner
   - [ ] Add new structures to citree
+  - [ ] Stub out visitors
+    - [ ] `LineCompiler`
+    - [ ] `Block`
+    - [ ] `CommandCompiler`
+    - [ ] `InstrShifter` in editor
+    - [ ] `Formatter`
   - [ ] Support new structures in parser
 - Logical operators
   - [x] Support through the parser
