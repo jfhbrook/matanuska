@@ -28,13 +28,15 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Support new keywords in scanner
   - [x] Add new structures to citree
   - [x] Stub out visitors
-  - [ ] Add `next` to citree + visitors
-    - [ ] `LineCompiler`
-    - [ ] `Block`
-    - [ ] `CommandCompiler`
-    - [ ] `InstrShifter` in editor
-    - [ ] `Formatter`
+  - [x] Add `next` to citree + visitors
   - [ ] Support new structures in parser
+    - [ ] `for`
+    - [ ] `next`
+    - [ ] `endfor`
+    - [ ] `while`
+    - [ ] `endwhile`
+    - [ ] `repeat`
+    - [ ] `until`
 - Logical operators
   - [x] Support through the parser
 - GOTO

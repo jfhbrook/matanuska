@@ -45,6 +45,7 @@ import {
   ElseIf,
   EndIf,
   For,
+  Next,
   EndFor,
   While,
   EndWhile,
@@ -191,6 +192,10 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
     this.shiftInstr(for_);
     for_.variable.accept(this);
     for_.value.accept(this);
+  }
+
+  visitNextInstr(next: Next): void {
+    this.shiftInstr(next);
   }
 
   visitEndForInstr(endFor: EndFor): void {

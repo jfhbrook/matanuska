@@ -59,6 +59,7 @@ import {
   ElseIf,
   EndIf,
   For,
+  Next,
   EndFor,
   While,
   EndWhile,
@@ -198,6 +199,7 @@ export abstract class Formatter
   abstract visitElseIfInstr(elseIf: ElseIf): string;
   abstract visitEndIfInstr(endif_: EndIf): string;
   abstract visitForInstr(for_: For): string;
+  abstract visitNextInstr(next: Next): string;
   abstract visitEndForInstr(endFor: For): string;
   abstract visitWhileInstr(while_: While): string;
   abstract visitEndWhileInstr(endWhile: EndWhile): string;
@@ -697,6 +699,10 @@ export class DefaultFormatter extends Formatter {
 
   visitForInstr(for_: For): string {
     return `For(${this.format(for_.variable)}, ${this.format(for_.value)})`;
+  }
+
+  visitNextInstr(_next: Next): string {
+    return 'Next';
   }
 
   visitEndForInstr(_endFor: EndFor): string {

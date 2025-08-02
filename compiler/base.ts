@@ -41,6 +41,7 @@ import {
   ElseIf,
   EndIf,
   For,
+  Next,
   EndFor,
   While,
   EndWhile,
@@ -595,6 +596,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitForInstr(for_: For): void {
     this.syntaxFault(for_, 'Unimplemented: for');
+  }
+
+  visitNextInstr(next: Next): void {
+    this.syntaxFault(next, 'Unimplemented: next');
   }
 
   visitEndForInstr(endFor: EndFor): void {

@@ -27,6 +27,7 @@ import {
   ElseIf,
   EndIf,
   For,
+  Next,
   EndFor,
   While,
   EndWhile,
@@ -167,6 +168,10 @@ export class CommandCompiler
 
   visitForInstr(for_: For): CompileResult<CompiledCmd> {
     return this.invalid(for_, 'for');
+  }
+
+  visitNextInstr(next: Next): CompileResult<CompiledCmd> {
+    return this.invalid(next, 'next');
   }
 
   visitEndForInstr(endFor: EndFor): CompileResult<CompiledCmd> {

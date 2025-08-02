@@ -20,6 +20,7 @@ export interface InstrVisitor<R> {
   visitElseIfInstr(node: ElseIf): R;
   visitEndIfInstr(node: EndIf): R;
   visitForInstr(node: For): R;
+  visitNextInstr(node: Next): R;
   visitEndForInstr(node: EndFor): R;
   visitWhileInstr(node: While): R;
   visitEndWhileInstr(node: EndWhile): R;
@@ -281,6 +282,16 @@ export class For extends Instr {
 
   accept<R>(visitor: InstrVisitor<R>): R {
     return visitor.visitForInstr(this);
+  }
+}
+
+export class Next extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitNextInstr(this);
   }
 }
 
