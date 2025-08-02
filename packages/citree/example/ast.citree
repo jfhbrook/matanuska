@@ -36,9 +36,12 @@ type Instr in './instr' {
   Else!
   ElseIf     => condition: Expr
   EndIf!
-  For        => variable: Variable, value: Expr, loop: Instr[]
-  While      => condition: Expr, loop: Instr[]
-  Repeat     => condition: Expr, loop: Instr[]
+  For        => variable: Variable, value: Expr
+  EndFor!
+  While      => condition: Expr
+  EndWhile!
+  Repeat!
+  Until      => condition: Expr
 }
 
 type Tree in './index' {

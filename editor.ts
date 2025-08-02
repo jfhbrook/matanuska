@@ -44,6 +44,12 @@ import {
   Else,
   ElseIf,
   EndIf,
+  For,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
 } from './ast/instr';
 
 type LineNo = number;
@@ -179,6 +185,34 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitEndIfInstr(endIf: EndIf): void {
     this.shiftInstr(endIf);
+  }
+
+  visitForInstr(for_: For): void {
+    this.shiftInstr(for_);
+    for_.variable.accept(this);
+    for_.value.accept(this);
+  }
+
+  visitEndForInstr(endFor: EndFor): void {
+    this.shiftInstr(endFor);
+  }
+
+  visitWhileInstr(while_: While): void {
+    this.shiftInstr(while_);
+    while_.condition.accept(this);
+  }
+
+  visitEndWhileInstr(endWhile: EndWhile): void {
+    this.shiftInstr(endWhile);
+  }
+
+  visitRepeatInstr(repeat: Repeat): void {
+    this.shiftInstr(repeat);
+  }
+
+  visitUntilInstr(until: Until): void {
+    this.shiftInstr(until);
+    until.condition.accept(this);
   }
 
   visitUnaryExpr(unary: Unary): void {

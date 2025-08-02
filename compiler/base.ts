@@ -40,6 +40,12 @@ import {
   Else,
   ElseIf,
   EndIf,
+  For,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
 } from '../ast/instr';
 import {
   Expr,
@@ -585,6 +591,30 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   endIf(endJump: Short): void {
     this.patchJump(endJump);
+  }
+
+  visitForInstr(for_: For): void {
+    this.syntaxFault(for_, 'Unimplemented: for');
+  }
+
+  visitEndForInstr(endFor: EndFor): void {
+    this.syntaxFault(endFor, 'Unimplemented: endfor');
+  }
+
+  visitWhileInstr(while_: While): void {
+    this.syntaxFault(while_, 'Unimplemented: while');
+  }
+
+  visitEndWhileInstr(endWhile: EndWhile): void {
+    this.syntaxFault(endWhile, 'Unimplemented: endwhile');
+  }
+
+  visitRepeatInstr(repeat: Repeat): void {
+    this.syntaxFault(repeat, 'Unimplemented: repeat');
+  }
+
+  visitUntilInstr(until: Until): void {
+    this.syntaxFault(until, 'Unimplemented: until');
   }
 
   //

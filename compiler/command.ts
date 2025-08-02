@@ -26,6 +26,12 @@ import {
   Else,
   ElseIf,
   EndIf,
+  For,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
 } from '../ast/instr';
 import { Expr } from '../ast/expr';
 
@@ -70,7 +76,7 @@ export class CommandCompiler
   // An instruction which can *not* be executed as a command. This is distinct
   // from an invalid *interactive* command, which may be executed in the
   // runtime.
-  private invalid(cmd: string, instr: Instr): never {
+  private invalid(instr: Instr, cmd: string): never {
     const { filename, cmdNo, cmdSource } = this.options;
 
     const exc = new SyntaxError(`Invalid command: ${cmd}`, {
@@ -144,19 +150,43 @@ export class CommandCompiler
   }
 
   visitIfInstr(if_: If): CompileResult<CompiledCmd> {
-    return this.invalid('if', if_);
+    return this.invalid(if_, 'if');
   }
 
   visitElseInstr(else_: Else): CompileResult<CompiledCmd> {
-    return this.invalid('else', else_);
+    return this.invalid(else_, 'else');
   }
 
   visitElseIfInstr(elseIf: ElseIf): CompileResult<CompiledCmd> {
-    return this.invalid('else if', elseIf);
+    return this.invalid(elseIf, 'else if');
   }
 
-  visitEndIfInstr(endif: EndIf): CompileResult<CompiledCmd> {
-    return this.invalid('endif', endif);
+  visitEndIfInstr(endIf: EndIf): CompileResult<CompiledCmd> {
+    return this.invalid(endIf, 'endif');
+  }
+
+  visitForInstr(for_: For): CompileResult<CompiledCmd> {
+    return this.invalid(for_, 'for');
+  }
+
+  visitEndForInstr(endFor: EndFor): CompileResult<CompiledCmd> {
+    return this.invalid(endFor, 'endfor');
+  }
+
+  visitWhileInstr(while_: While): CompileResult<CompiledCmd> {
+    return this.invalid(while_, 'while');
+  }
+
+  visitEndWhileInstr(endWhile: EndWhile): CompileResult<CompiledCmd> {
+    return this.invalid(endWhile, 'endwhile');
+  }
+
+  visitRepeatInstr(repeat: Repeat): CompileResult<CompiledCmd> {
+    return this.invalid(repeat, 'repeat');
+  }
+
+  visitUntilInstr(until: Until): CompileResult<CompiledCmd> {
+    return this.invalid(until, 'until');
   }
 }
 

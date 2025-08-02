@@ -26,8 +26,9 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] ADR for for/while/goto
   - [x] Add new keywords to tokens
   - [x] Support new keywords in scanner
-  - [ ] Add new structures to citree
-  - [ ] Stub out visitors
+  - [x] Add new structures to citree
+  - [x] Stub out visitors
+  - [ ] Add `next` to citree + visitors
     - [ ] `LineCompiler`
     - [ ] `Block`
     - [ ] `CommandCompiler`

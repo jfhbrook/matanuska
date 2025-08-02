@@ -58,6 +58,12 @@ import {
   Else,
   ElseIf,
   EndIf,
+  For,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
 import { Token } from './tokens';
@@ -191,6 +197,12 @@ export abstract class Formatter
   abstract visitElseInstr(else_: Else): string;
   abstract visitElseIfInstr(elseIf: ElseIf): string;
   abstract visitEndIfInstr(endif_: EndIf): string;
+  abstract visitForInstr(for_: For): string;
+  abstract visitEndForInstr(endFor: For): string;
+  abstract visitWhileInstr(while_: While): string;
+  abstract visitEndWhileInstr(endWhile: EndWhile): string;
+  abstract visitRepeatInstr(repeat: Repeat): string;
+  abstract visitUntilInstr(until: Until): string;
 
   abstract visitCmdTree(node: Cmd): string;
   abstract visitLineTree(node: Line): string;
@@ -681,6 +693,30 @@ export class DefaultFormatter extends Formatter {
 
   visitEndIfInstr(_endif: EndIf): string {
     return 'EndIf';
+  }
+
+  visitForInstr(for_: For): string {
+    return `For(${this.format(for_.variable)}, ${this.format(for_.value)})`;
+  }
+
+  visitEndForInstr(_endFor: EndFor): string {
+    return 'EndFor';
+  }
+
+  visitWhileInstr(while_: While): string {
+    return `While (${this.format(while_.condition)})`;
+  }
+
+  visitEndWhileInstr(_endWhile: EndWhile): string {
+    return `EndWhile`;
+  }
+
+  visitRepeatInstr(_repeat: Repeat): string {
+    return `Repeat`;
+  }
+
+  visitUntilInstr(until: Until): string {
+    return `Until (${this.format(until.condition)})`;
   }
 
   formatStack<V>(stack: Stack<V>): string {
