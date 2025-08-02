@@ -22,10 +22,15 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- for/while/goto
-  - [ ] ADR for for/while/goto
+- for/while
+  - [x] ADR for for/while/goto
+  - [x] Add new keywords to tokens
+  - [x] Support new keywords in scanner
+  - [ ] Add new structures to citree
+  - [ ] Support new structures in parser
 - Logical operators
   - [x] Support through the parser
+- GOTO
 - Complete Print/Format syntax
   - Support ECMA-55?
   - Complete ADR
