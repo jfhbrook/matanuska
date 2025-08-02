@@ -31,14 +31,17 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Add `next` to citree + visitors
   - [x] Format tests
   - [x] Add `to` and `step` to `For` instruction AST
-  - [ ] Support new structures in parser
-    - [ ] `for`
-    - [ ] `next`
-    - [ ] `endfor`
-    - [ ] `while`
-    - [ ] `endwhile`
-    - [ ] `repeat`
-    - [ ] `until`
+  - [x] Support new structures in parser
+  - [ ] Support new structures in compiler
+    - [ ] `ForBlock`
+    - [ ] `WhileBlock`
+    - [ ] `RepeatBlock`
+    - [ ] `LineCompiler`
+      - [ ] `for`
+      - [ ] `while`
+      - [ ] `repeat`
+    - [ ] Tests
+  - [ ] Examples + testing
 - Logical operators
   - [x] Support through the parser
 - GOTO
