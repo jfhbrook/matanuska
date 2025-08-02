@@ -183,7 +183,7 @@ for (const x of xs) {
 Standard `for` loops will have the following syntax:
 
 ```basic
-10 FOR x%=1 TO 10
+10 FOR x%=1 TO 10 [STEP 1]
 20   PRINT x%
 30   NEXT
 40 ENDFOR
@@ -198,7 +198,7 @@ Second, `NEXT` will be supported optionally in a way that mirrors `continue` in 
 Note that, in this case, we _will_ support BASIC's syntax with regard to the `TO` keyword. However, in the future, Matanuska will likely support an additional `for` loop structure that mirrors `for...of` in JavaScript:
 
 ```basic
-10 FOR x% of xs%
+10 FOR x% OF xs%
 20   ...
 30 ENDFOR
 ```
