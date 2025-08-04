@@ -33,14 +33,21 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Add `to` and `step` to `For` instruction AST
   - [x] Support new structures in parser
   - [ ] Support new structures in compiler
-    - [ ] `ForBlock`
-    - [ ] `WhileBlock`
-    - [ ] `RepeatBlock`
-    - [ ] `LineCompiler`
-      - [ ] `for`
-      - [ ] `while`
-      - [ ] `repeat`
-    - [ ] Tests
+    - [x] `ForBlock`
+    - [x] `WhileBlock`
+    - [x] `RepeatBlock`
+    - [x] `LineCompiler`
+      - [x] `for`
+      - [x] `while`
+      - [x] `repeat`
+  - [ ] Break up tests
+    - [ ] `compiler.spec.ts`
+    - [ ] `exceptions.spec.ts`
+    - [ ] `parser.spec.ts`
+  - [ ] Tests for looping in compiler
+    - [ ] `for`
+    - [ ] `while`
+    - [ ] `repeat`
   - [ ] Examples + testing
 - Logical operators
   - [x] Support through the parser
