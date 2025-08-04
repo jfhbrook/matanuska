@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`non-numbered invalid string escape 1`] = `
+"<input>:<R1>:1 (at the beginning): warning: Invalid escape sequence \`\\q\` in string '\\q'
+  '\\q'
+   ^"
+`;
+
+exports[`numbered invalid string escape 1`] = `
+"<input>:100:5: warning: Invalid escape sequence \`\\q\` in string '\\q'
+  100 '\\q'
+       ^"
+`;

@@ -43,7 +43,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Break up tests
     - [ ] `compiler.spec.ts`
     - [ ] `exceptions.spec.ts`
-    - [ ] `parser.spec.ts`
+    - [x] `parser.spec.ts`
   - [ ] Tests for looping in compiler
     - [ ] `for`
     - [ ] `while`

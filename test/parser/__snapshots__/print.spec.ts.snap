@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`print > non-numbered, without arguments 1`] = `
+"<input>:<R1>:5 (at the beginning): error: Unexpected token <EOF>
+  print
+       ^"
+`;
+
+exports[`print > numbered, without arguments 1`] = `
+"<input>:100:9: error: Unexpected token <EOF>
+  100 print
+           ^"
+`;
