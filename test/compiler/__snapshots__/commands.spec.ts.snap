@@ -29,15 +29,3 @@ exports[`interactive compiler > expression 1`] = `
   ],
 ]
 `;
-
-exports[`syntax errors > *1 1`] = `
-"<input>:<R1>:0 (after line 100): error: Invalid unary operator
-  *1
-  ^"
-`;
-
-exports[`syntax errors > 1 $ 1 1`] = `
-"<input>:<R1>:0 (after line 100): error: Invalid binary operator
-  1 $ 1
-  ^"
-`;
