@@ -32,7 +32,10 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Format tests
   - [x] Add `to` and `step` to `For` instruction AST
   - [x] Support new structures in parser
-  - [ ] Support new structures in compiler
+  - [x] Break up tests
+    - [x] `compiler.spec.ts`
+    - [x] `parser.spec.ts`
+  - [x] Support new structures in compiler
     - [x] `ForBlock`
     - [x] `WhileBlock`
     - [x] `RepeatBlock`
@@ -40,10 +43,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
       - [x] `for`
       - [x] `while`
       - [x] `repeat`
-  - [ ] Break up tests
-    - [ ] `compiler.spec.ts`
-    - [ ] `exceptions.spec.ts`
-    - [x] `parser.spec.ts`
   - [ ] Tests for looping in compiler
     - [ ] `for`
     - [ ] `while`
