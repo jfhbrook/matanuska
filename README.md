@@ -34,6 +34,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Support new structures in parser
   - [x] Break up tests
     - [x] `compiler.spec.ts`
+    - [x] `exceptions.spec.ts`
     - [x] `parser.spec.ts`
   - [x] Support new structures in compiler
     - [x] `ForBlock`
