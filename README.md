@@ -22,34 +22,40 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [x] for/while
-- Logical operators
+- [ ] Add `tflint` and `terraform validate`
+- [ ] Break up format tests
+- [ ] Swap out `pino` for a different logger in grabthar
+  - its async behavior means logs are in the wrong order
+- [ ] Use [envinfo](https://www.npmjs.com/package/envinfo) in runtime fault output
+- [ ] Logical operators
   - [x] Support through the parser
-  - [ ] Confirm tests in parser
+  - [ ] Confirm parser tests
   - [ ] Support in compiler
   - [ ] Tests in compiler
-  - [ ] Tested examples
-- Complete Print/Format syntax
-  - Support ECMA-55?
-  - Complete ADR
-  - Print can take a channel config
-- Tests for editor `InstrShifter`
-- Expanded list
-  - `list 10`
-  - `list 10-20`
-- Functions
-  - [ ] ADR for functions (and maybe subroutines?)
-  - Local variables
-  - Closures
-  - Native functions
-- Path navigation - cd, ls, etc
+- [ ] Scope Related ADRs
+  - [ ] Local variables
+  - [ ] Closures
+  - [ ] Function syntax
+- [ ] Test/fix global variables
+  - The for loop reveals some weird bytecode
+  - The variable tests only cover let/assign, not access
+- [ ] Implement local variables
+  - [ ] Use local variables in `for` loop
+- [ ] Function support
+  - [ ] BASIC
+  - [ ] Native
+- [ ] Path navigation - `cd`, `ls`, `etc`
   - `cd` is a builtin ("native function")
   - `ls` and others are on the PATH, actually
-- Date/Time/Duration/TZData types
-  - Core library
-  - Host support
-  - (Language support can come later)
-- Shell commands
+- [ ] Expanded list
+  - `list 10`
+  - `list 10-20`
+- [ ] Tests for `InstrShifter` in editor
+- [ ] Support entering multiple lines in REPL
+  - [ ] ADR
+  - Probably a `Reader` class that handles `readline` stuff
+  - Probably track block nesting
+- [ ] Shell commands
   - Will need to research jobs in Bash
   - Investigate alt-shells
     - [fish](https://fishshell.com/)
@@ -61,65 +67,39 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - Runtime support for shell commands
   - Support \j in prompt rendering
   - (Pipes will come later)
-- Shell variable export
 - PS1/PS2 support
   - `SET PS1` and `SET PS2`?
-  - also `HISTSIZE` and `HISTFILESIZE`
-- Test/optimize global variables
-  - The for loop reveals some weird bytecode
-  - The variable tests only cover let/assign, not access
 
 ### Up Next
 
+- Complete Print/Format syntax
+  - Support ECMA-55?
+  - Complete ADR
+  - Print can take a channel config
+- Shell variable export
+- Date/Time/Duration/TZData types
+  - Core library
+  - Host support
+  - (Language support can come later)
 - Support `next` and `continue` keywords in loops
-- GOTO
-- Break up format tests
+- Support for `HISTSIZE` and `HISTFILESIZE`
+- Telemetry improvements
+- Pipes support
+- GOTOs
+  - Probably a second pass on the chunk
+  - Probably need to enforce being within current block/scope tree
+  - Will need to close appropriate scopes
 - Type-checking compiler
   - Implement type analogues to operations
   - Simulated stack in the compiler
-- Add `tflint` and `terraform validate`
 - Add trace events to parser and compiler
-- Swap out `pino` for a different logger in grabthar
-  - its async behavior means logs are in the wrong order
-- Telemetry improvements/fixes
-  - Audit/document OTEL related environment variables
-  - read-eval-print appears to fire "twice"
-    - No special requirements for root spans, as far as I can tell
-  - No traces when running script
-    - Appears that shutdown doesn't flush all traces
-    - Calling forceFlush on everything doesn't seem to do the trick
-    - May need to set tracer provider timeouts to 0 - see <https://github.com/jfhbrook/matanuska/blob/a325e0a045aac030222304aa621934c3727a3178/telemetry.ts>
-  - Custom otel diagnostic logger
-    - Note: The SDK will automatically incorporate a `DiagConsoleLogger` if you set `OTEL_LOG_LEVEL`: <https://github.com/open-telemetry/opentelemetry-js/blob/887ff1cd6e3f795f703e40a9fbe89b3cba7e88c3/experimental/packages/opentelemetry-sdk-node/src/sdk.ts#L127-L133>
-    - Also consider a `ConsoleSpanExporter`
-    - They recommend "info" as a "default" - debug is too chatty
+- Audit/document OTEL environment variables
 - Split matanuska into modules
-  - runtime/stack/etc
-  - bytecode
-  - compiler
-  - parser/scanner
-  - errors (exceptions/faults)
-  - constants
-    - type stubs
-    - vite configuration
-  - precompiler
-    - `MATBAS_BUILD` constant
-    - jscc vite configuration
-  - values + operations
-  - host
-  - shell
-  - commands
-- Get `npm run console` working again
-  - ts-node seems to depend on a commonjs build
-  - Setting `"type": "module"` in the package.json breaks commonjs completely
-  - `nodenext` module resolution requires that imports end in the file extension, but vite/swc have no such requirement, and it's a bitter pill to swallow
-  - ts-node _completely_ depends on tsc to do builds - making it use swc doesn't seem possible
-- grabthar improvements
+- `grabthar` improvements
   - swc cli build option
   - automatically update package.json
   - lint-staged and husky support
   - `grabthar clean`
-- Use [envinfo](https://www.npmjs.com/package/envinfo) in runtime fault output
 - Assert module
   - Wrap 'node:assert'
   - Throw RuntimeFault
