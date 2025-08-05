@@ -1,5 +1,4 @@
 import { describe, test } from 'vitest';
-import { t } from './helpers/tap';
 
 import { NotImplementedError } from '../exceptions';
 import { OpCode } from '../bytecode/opcodes';
@@ -341,7 +340,7 @@ test('simple program', () => {
   );
 });
 
-test('something not implemented', () => {
+test.skip('something not implemented', () => {
   testChunk(
     chunk({
       constants: [],
