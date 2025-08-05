@@ -22,40 +22,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- for/while
-  - [x] ADR for for/while/goto
-  - [x] Add new keywords to tokens
-  - [x] Support new keywords in scanner
-  - [x] Add new structures to citree
-  - [x] Stub out visitors
-  - [x] Add `next` to citree + visitors
-  - [x] Format tests
-  - [x] Add `to` and `step` to `For` instruction AST
-  - [x] Support new structures in parser
-  - [x] Break up tests
-    - [x] `compiler.spec.ts`
-    - [x] `exceptions.spec.ts`
-    - [ ] `format.spec.ts`
-    - [x] `parser.spec.ts`
-  - [x] Support new structures in compiler
-    - [x] `ForBlock`
-    - [x] `WhileBlock`
-    - [x] `RepeatBlock`
-    - [x] `LineCompiler`
-      - [x] `for`
-      - [x] `while`
-      - [x] `repeat`
-  - [x] Tests for looping in compiler
-    - [ ] `for`
-    - [x] `while`
-    - [x] `repeat`
-  - [ ] Tested xamples
-    - [ ] `for`
-    - [x] `while`
-    - [x] `repeat`
+- [x] for/while
 - Logical operators
   - [x] Support through the parser
-- GOTO
+  - [ ] Confirm tests in parser
+  - [ ] Support in compiler
+  - [ ] Tests in compiler
+  - [ ] Tested examples
 - Complete Print/Format syntax
   - Support ECMA-55?
   - Complete ADR
@@ -92,14 +65,18 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - PS1/PS2 support
   - `SET PS1` and `SET PS2`?
   - also `HISTSIZE` and `HISTFILESIZE`
-- Type-checking compiler
-  - Implement type analogues to operations
-  - Simulated stack in the compiler
+- Test/optimize global variables
+  - The for loop reveals some weird bytecode
+  - The variable tests only cover let/assign, not access
 
 ### Up Next
 
-- Optimize global access constants
-  - Look at the bytecode in the for loop. Something is whacky.
+- Support `next` and `continue` keywords in loops
+- GOTO
+- Break up format tests
+- Type-checking compiler
+  - Implement type analogues to operations
+  - Simulated stack in the compiler
 - Add `tflint` and `terraform validate`
 - Add trace events to parser and compiler
 - Swap out `pino` for a different logger in grabthar
