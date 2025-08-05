@@ -37,7 +37,7 @@ export const WHILE_PROGRAMS: TestCase[] = [
         OpCode.Print,
         // Loop to beginning
         OpCode.Loop,
-        ...shortToBytes(12), // TODO: Is this correct?
+        ...shortToBytes(12),
         // Exit
         OpCode.Nil,
         OpCode.Return,
@@ -71,7 +71,7 @@ export const REPEAT_PROGRAMS: TestCase[] = [
         1,
         // Jump to exit
         OpCode.JumpIfFalse,
-        ...shortToBytes(4), // TODO: Should this be 5?
+        ...shortToBytes(4),
         OpCode.Pop,
         // Loop to beginning
         OpCode.Loop,

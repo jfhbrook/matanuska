@@ -45,11 +45,14 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
       - [x] `for`
       - [x] `while`
       - [x] `repeat`
-  - [ ] Tests for looping in compiler
+  - [x] Tests for looping in compiler
     - [ ] `for`
-    - [ ] `while`
-    - [ ] `repeat`
-  - [ ] Examples + testing
+    - [x] `while`
+    - [x] `repeat`
+  - [ ] Tested xamples
+    - [ ] `for`
+    - [x] `while`
+    - [x] `repeat`
 - Logical operators
   - [x] Support through the parser
 - GOTO
