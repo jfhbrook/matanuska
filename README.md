@@ -22,9 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Add `tflint` and `terraform validate`
-  - [ ] entrypoint
-  - [ ] fireball
 - [ ] Break up format tests
 - [ ] Swap out `pino` for a different logger in grabthar
   - its async behavior means logs are in the wrong order
@@ -95,6 +92,9 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - Simulated stack in the compiler
 - Add trace events to parser and compiler
 - Audit/document OTEL environment variables
+- Add `tflint` and `terraform validate`
+  - [ ] entrypoint
+  - [ ] fireball
 - Split matanuska into modules
 - `grabthar` improvements
   - swc cli build option
