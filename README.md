@@ -98,6 +98,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
+- Optimize global access constants
+  - Look at the bytecode in the for loop. Something is whacky.
 - Add `tflint` and `terraform validate`
 - Add trace events to parser and compiler
 - Swap out `pino` for a different logger in grabthar
