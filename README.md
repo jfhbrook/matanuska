@@ -30,6 +30,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Confirm parser tests
   - [ ] Support in compiler
   - [ ] Tests in compiler
+- [ ] Consider using `end` keyword for loops/conditionals
+    - I think a bare `end` would close the program/global scope?
 - [ ] Scope Related ADRs
   - [ ] Local variables
   - [ ] Closures
