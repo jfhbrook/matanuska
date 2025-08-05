@@ -57,6 +57,13 @@ import {
   Else,
   ElseIf,
   EndIf,
+  For,
+  Next,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
 } from './ast/instr';
 import { Cmd, Line, Input, Program } from './ast';
 import { sortLines } from './ast/util';
@@ -492,6 +499,20 @@ export class Parser {
       instr = this.else_();
     } else if (this.match(TokenKind.EndIf)) {
       instr = this.endIf();
+    } else if (this.match(TokenKind.For)) {
+      instr = this.for_();
+    } else if (this.match(TokenKind.Next)) {
+      instr = this.nextInstr();
+    } else if (this.match(TokenKind.EndFor)) {
+      instr = this.endFor();
+    } else if (this.match(TokenKind.While)) {
+      instr = this.while_();
+    } else if (this.match(TokenKind.EndWhile)) {
+      instr = this.endWhile();
+    } else if (this.match(TokenKind.Repeat)) {
+      instr = this.repeat();
+    } else if (this.match(TokenKind.Until)) {
+      instr = this.until();
     } else {
       const assign = this.assign();
       if (assign) {
@@ -642,6 +663,51 @@ export class Parser {
       this.syntaxError(this.previous!, "Unexpected 'endif'");
     }
     return new EndIf();
+  }
+
+  private for_(): Instr {
+    const assign = this.assign() as Assign;
+
+    if (!assign) {
+      this.syntaxError(this.previous!, 'Expected assignment');
+    }
+
+    this.consume(TokenKind.To, "Expected 'to'");
+
+    const stop = this.expression();
+    let step: Expr | null = null;
+
+    if (this.match(TokenKind.Step)) {
+      step = this.expression();
+    }
+
+    return new For(assign.variable, assign.value, stop, step);
+  }
+
+  private nextInstr(): Instr {
+    return new Next();
+  }
+
+  private endFor(): Instr {
+    return new EndFor();
+  }
+
+  private while_(): Instr {
+    const condition = this.expression();
+    return new While(condition);
+  }
+
+  private endWhile(): Instr {
+    return new EndWhile();
+  }
+
+  private repeat(): Instr {
+    return new Repeat();
+  }
+
+  private until(): Instr {
+    const condition = this.expression();
+    return new Until(condition);
   }
 
   private assign(): Instr | null {

@@ -40,6 +40,13 @@ import {
   Else,
   ElseIf,
   EndIf,
+  For,
+  Next,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
 } from '../ast/instr';
 import {
   Expr,
@@ -116,19 +123,19 @@ class IfBlock extends Block {
   }
 
   visitElseInstr(else_: Else): void {
-    const endJump = this.compiler.else_(this.elseJump);
+    const endJump = this.compiler.beginElse(this.elseJump);
     this.next(else_, new ElseBlock(endJump));
   }
 
   visitElseIfInstr(elseIf: ElseIf): void {
-    const endJump = this.compiler.else_(this.elseJump);
-    const elseJump = this.compiler.if_(elseIf.condition);
+    const endJump = this.compiler.beginElse(this.elseJump);
+    const elseJump = this.compiler.beginIf(elseIf.condition);
     this.next(elseIf, new ElseIfBlock(elseJump, endJump));
   }
 
   visitEndIfInstr(_endIf: EndIf): void {
     // TODO: Optimize for no 'else'
-    const endJump = this.compiler.else_(this.elseJump);
+    const endJump = this.compiler.beginElse(this.elseJump);
     this.compiler.endIf(endJump);
     this.end();
   }
@@ -165,7 +172,7 @@ class ElseIfBlock extends IfBlock {
   }
 
   visitEndIfInstr(_endIf: EndIf): void {
-    const endJump = this.compiler.else_(this.elseJump);
+    const endJump = this.compiler.beginElse(this.elseJump);
     this.compiler.endIf(endJump);
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -175,6 +182,70 @@ class ElseIfBlock extends IfBlock {
       block.end();
       block = block.previous;
     }
+  }
+}
+
+//
+// For, while, and repeat/until
+//
+
+class ForBlock extends Block {
+  kind = 'for';
+
+  constructor(
+    public incrStart: Short,
+    public exitJump: Short,
+  ) {
+    super();
+  }
+
+  // TODO
+  visitNextInstr(next: Next): void {
+    super.visitNextInstr(next);
+  }
+
+  visitEndForInstr(_endFor: EndFor): void {
+    this.compiler.endFor(this.incrStart, this.exitJump);
+    this.end();
+  }
+}
+
+class WhileBlock extends Block {
+  kind = 'while';
+
+  constructor(
+    public loopStart: Short,
+    public exitJump: Short,
+  ) {
+    super();
+  }
+
+  // TODO
+  visitNextInstr(next: Next): void {
+    super.visitNextInstr(next);
+  }
+
+  visitEndWhileInstr(_endWhile: EndWhile): void {
+    this.compiler.endWhile(this.loopStart, this.exitJump);
+    this.end();
+  }
+}
+
+class RepeatBlock extends Block {
+  kind = 'repeat';
+
+  constructor(public startJump: Short) {
+    super();
+  }
+
+  // TODO
+  visitNextInstr(next: Next): void {
+    super.visitNextInstr(next);
+  }
+
+  visitUntilInstr(until: Until): void {
+    this.compiler.endRepeat(until, this.startJump);
+    this.end();
   }
 }
 
@@ -437,6 +508,14 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.chunk.code[jumpAddr + 1] = second;
   }
 
+  private emitLoop(start: number): void {
+    this.emitByte(OpCode.Loop);
+    // +2 to account for the bytes we just added
+    const offset = this.chunk.code.length - start + 2;
+    const [first, second] = shortToBytes(offset);
+    this.emitBytes(first, second);
+  }
+
   // NOTE: This is only used to emit implicit and bare returns. Valued
   // returns would be handled in visitReturnStmt.
   private emitReturn(): void {
@@ -521,9 +600,13 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitLetInstr(let_: Let): void {
-    const target = this.emitIdent(let_.variable.ident);
-    if (let_.value) {
-      let_.value.accept(this);
+    this.let_(let_.variable, let_.value);
+  }
+
+  private let_(variable: Variable, value: Expr | null): void {
+    const target = this.emitIdent(variable.ident);
+    if (value) {
+      value.accept(this);
     } else {
       this.emitByte(OpCode.Nil);
     }
@@ -531,19 +614,23 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitAssignInstr(assign: Assign): void {
-    const target = this.emitIdent(assign.variable.ident);
-    assign.value.accept(this);
+    this.assign(assign.variable, assign.value);
+  }
+
+  private assign(variable: Variable, value: Expr) {
+    const target = this.emitIdent(variable.ident);
+    value.accept(this);
     this.emitBytes(OpCode.SetGlobal, target);
   }
 
   visitShortIfInstr(if_: ShortIf): void {
-    const elseJump = this.if_(if_.condition);
+    const elseJump = this.beginIf(if_.condition);
 
     for (const instr of if_.then) {
       this.instruction(instr);
     }
 
-    const endJump = this.else_(elseJump);
+    const endJump = this.beginElse(elseJump);
 
     for (const instr of if_.else_) {
       this.instruction(instr);
@@ -553,11 +640,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitIfInstr(if_: If): void {
-    const elseJump = this.if_(if_.condition);
+    const elseJump = this.beginIf(if_.condition);
     this.block.begin(if_, new IfBlock(elseJump));
   }
 
-  if_(cond: Expr): Short {
+  beginIf(cond: Expr): Short {
     cond.accept(this);
     const elseJump = this.emitJump(OpCode.JumpIfFalse);
     this.emitByte(OpCode.Pop);
@@ -568,7 +655,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.block.handle(else_);
   }
 
-  else_(elseJump: Short): Short {
+  beginElse(elseJump: Short): Short {
     const endJump = this.emitJump(OpCode.Jump);
     this.patchJump(elseJump);
     this.emitByte(OpCode.Pop);
@@ -585,6 +672,117 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   endIf(endJump: Short): void {
     this.patchJump(endJump);
+  }
+
+  visitForInstr(for_: For): void {
+    const { variable, value, stop } = for_;
+    const step = for_.step || new IntLiteral(1);
+    const [incrStart, exitJump] = this.beginFor(variable, value!, stop, step);
+    this.block.begin(for_, new ForBlock(incrStart, exitJump));
+  }
+
+  beginFor(
+    variable: Variable,
+    value: Expr,
+    stop: Expr,
+    step: Expr,
+  ): [Short, Short] {
+    // i% <= stop
+    const cond = new Binary(variable, TokenKind.Le, stop);
+    // i% + step
+    const incr = new Binary(variable, TokenKind.Plus, step);
+
+    // TODO: begin scope
+
+    // Define the variable
+    this.let_(variable, value);
+
+    // Loop starts here
+    const loopStart = this.chunk.code.length;
+
+    // Evaluate the condition
+    cond.accept(this);
+
+    // Jump to the exit if condition false
+    const exitJump = this.emitJump(OpCode.JumpIfFalse);
+
+    // Pop the evaluated condition
+    this.emitByte(OpCode.Pop);
+
+    // Jump to the body
+    const bodyJump = this.emitJump(OpCode.Jump);
+
+    // We'll jump back to this increment later
+    const incrStart = this.chunk.code.length;
+    // Increment the variable
+    this.assign(variable, incr);
+    this.emitByte(OpCode.Pop);
+    // Go back to the start of the loop, where we eval
+    this.emitLoop(loopStart);
+
+    // Body starts here
+    this.patchJump(bodyJump);
+
+    return [incrStart, exitJump];
+  }
+
+  visitEndForInstr(endFor: EndFor): void {
+    this.block.handle(endFor);
+  }
+
+  endFor(incrStart: Short, exitJump: Short): void {
+    this.emitLoop(incrStart);
+    // TODO: end scope
+    this.patchJump(exitJump);
+  }
+
+  visitWhileInstr(while_: While): void {
+    const [loopStart, exitJump] = this.beginWhile(while_.condition);
+    this.block.begin(while_, new WhileBlock(loopStart, exitJump));
+  }
+
+  beginWhile(cond: Expr): [Short, Short] {
+    const loopStart = this.chunk.code.length;
+    cond.accept(this);
+
+    const exitJump = this.emitJump(OpCode.JumpIfFalse);
+
+    this.emitByte(OpCode.Pop);
+
+    return [loopStart, exitJump];
+  }
+
+  visitEndWhileInstr(endWhile: EndWhile): void {
+    this.block.handle(endWhile);
+  }
+
+  endWhile(loopStart: Short, exitJump: Short): void {
+    this.emitLoop(loopStart);
+    this.patchJump(exitJump);
+  }
+
+  visitRepeatInstr(repeat: Repeat): void {
+    const loopStart = this.chunk.code.length;
+    this.block.begin(repeat, new RepeatBlock(loopStart));
+  }
+
+  visitUntilInstr(until: Until): void {
+    this.block.handle(until);
+  }
+
+  endRepeat(until: Until, start: Short): void {
+    until.condition.accept(this);
+
+    const exitJump = this.emitJump(OpCode.JumpIfFalse);
+
+    this.emitByte(OpCode.Pop);
+    this.emitLoop(start);
+
+    this.patchJump(exitJump);
+  }
+
+  visitNextInstr(next: Next): void {
+    this.block.handle(next);
   }
 
   //

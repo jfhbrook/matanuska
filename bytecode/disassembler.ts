@@ -34,7 +34,7 @@ export function disassemble(chunk: Chunk): string {
 }
 
 const FORWARD = 1;
-// const BACKWARD = -1;
+const BACKWARD = -1;
 
 export function disassembleInstruction(chunk: Chunk, offset: number): string {
   const row = _disassembleInstruction(chunk, offset)[1];
@@ -159,7 +159,7 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
       row = jump('JUMP_IF_FALSE', FORWARD);
       break;
     case OpCode.Loop:
-      row = simple('LOOP');
+      row = jump('LOOP', BACKWARD);
       break;
     case OpCode.Return:
       row = simple('RETURN');

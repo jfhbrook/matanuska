@@ -22,14 +22,18 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- for/while/goto
-  - [ ] ADR for for/while/goto
+- [x] for/while
 - Logical operators
   - [x] Support through the parser
+  - [ ] Confirm tests in parser
+  - [ ] Support in compiler
+  - [ ] Tests in compiler
+  - [ ] Tested examples
 - Complete Print/Format syntax
   - Support ECMA-55?
   - Complete ADR
   - Print can take a channel config
+- Tests for editor `InstrShifter`
 - Expanded list
   - `list 10`
   - `list 10-20`
@@ -61,12 +65,18 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - PS1/PS2 support
   - `SET PS1` and `SET PS2`?
   - also `HISTSIZE` and `HISTFILESIZE`
-- Type-checking compiler
-  - Implement type analogues to operations
-  - Simulated stack in the compiler
+- Test/optimize global variables
+  - The for loop reveals some weird bytecode
+  - The variable tests only cover let/assign, not access
 
 ### Up Next
 
+- Support `next` and `continue` keywords in loops
+- GOTO
+- Break up format tests
+- Type-checking compiler
+  - Implement type analogues to operations
+  - Simulated stack in the compiler
 - Add `tflint` and `terraform validate`
 - Add trace events to parser and compiler
 - Swap out `pino` for a different logger in grabthar

@@ -32,7 +32,23 @@ export const KEYWORDS: Record<string, TokenKind> = {
   // variable definitions
   let: TokenKind.Let,
 
-  // TODO: control flow
+  // conditionals
+  if: TokenKind.If,
+  then: TokenKind.Then,
+  else: TokenKind.Else,
+  endif: TokenKind.EndIf,
+
+  // looping
+  for: TokenKind.For,
+  to: TokenKind.To,
+  step: TokenKind.Step,
+  next: TokenKind.Next,
+  endfor: TokenKind.EndFor,
+  while: TokenKind.While,
+  endwhile: TokenKind.EndWhile,
+  repeat: TokenKind.Repeat,
+  until: TokenKind.Until,
+
   // TODO: error handling
   // TODO: datetime
   // TODO: array operations
@@ -47,10 +63,6 @@ export const KEYWORDS: Record<string, TokenKind> = {
   // TODO:  events and lifecycle
   // TODO: modules
   // TODO: contexts (with, using)
-  if: TokenKind.If,
-  then: TokenKind.Then,
-  else: TokenKind.Else,
-  endif: TokenKind.EndIf,
 };
 
 export const EOF = '\0';

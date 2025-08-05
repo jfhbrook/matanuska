@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`accidentally an entire semicolon 1`] = `
+"<input>:<R1>:11 (at the beginning): error: Unexpected token ;
+  print 1 + 1;
+             ^"
+`;

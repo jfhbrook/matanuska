@@ -19,6 +19,13 @@ export interface InstrVisitor<R> {
   visitElseInstr(node: Else): R;
   visitElseIfInstr(node: ElseIf): R;
   visitEndIfInstr(node: EndIf): R;
+  visitForInstr(node: For): R;
+  visitNextInstr(node: Next): R;
+  visitEndForInstr(node: EndFor): R;
+  visitWhileInstr(node: While): R;
+  visitEndWhileInstr(node: EndWhile): R;
+  visitRepeatInstr(node: Repeat): R;
+  visitUntilInstr(node: Until): R;
 }
 
 export abstract class Instr {
@@ -260,5 +267,90 @@ export class EndIf extends Instr {
 
   accept<R>(visitor: InstrVisitor<R>): R {
     return visitor.visitEndIfInstr(this);
+  }
+}
+
+export class For extends Instr {
+  constructor(
+    public variable: Variable,
+    public value: Expr,
+    public stop: Expr,
+    public step: Expr | null,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitForInstr(this);
+  }
+}
+
+export class Next extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitNextInstr(this);
+  }
+}
+
+export class EndFor extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitEndForInstr(this);
+  }
+}
+
+export class While extends Instr {
+  constructor(
+    public condition: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitWhileInstr(this);
+  }
+}
+
+export class EndWhile extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitEndWhileInstr(this);
+  }
+}
+
+export class Repeat extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitRepeatInstr(this);
+  }
+}
+
+export class Until extends Instr {
+  constructor(
+    public condition: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitUntilInstr(this);
   }
 }

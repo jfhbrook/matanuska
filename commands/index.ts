@@ -43,6 +43,13 @@ export function commandRunner(
     visitElseInstr: invalid('else'),
     visitElseIfInstr: invalid('else if'),
     visitEndIfInstr: invalid('endif'),
+    visitForInstr: invalid('for'),
+    visitNextInstr: invalid('next'),
+    visitEndForInstr: invalid('endfor'),
+    visitWhileInstr: invalid('while'),
+    visitEndWhileInstr: invalid('endwhile'),
+    visitRepeatInstr: invalid('repeat'),
+    visitUntilInstr: invalid('until'),
   };
 }
 

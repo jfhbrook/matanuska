@@ -23,6 +23,13 @@ import {
   Else,
   ElseIf,
   EndIf,
+  For,
+  Next,
+  EndFor,
+  While,
+  EndWhile,
+  Repeat,
+  Until,
 } from '../ast/instr';
 
 import { LineCompiler } from './base';
@@ -177,5 +184,33 @@ export abstract class Block implements InstrVisitor<void> {
 
   visitEndIfInstr(endIf: EndIf): void {
     this.mismatched(endIf, 'endif');
+  }
+
+  visitForInstr(for_: For): void {
+    this.invalid(for_, 'for');
+  }
+
+  visitNextInstr(next: Next): void {
+    this.invalid(next, 'next');
+  }
+
+  visitEndForInstr(endFor: EndFor): void {
+    this.mismatched(endFor, 'endfor');
+  }
+
+  visitWhileInstr(while_: While): void {
+    this.invalid(while_, 'while');
+  }
+
+  visitEndWhileInstr(endWhile: EndWhile): void {
+    this.mismatched(endWhile, 'endwhile');
+  }
+
+  visitRepeatInstr(repeat: Repeat): void {
+    this.invalid(repeat, 'repeat');
+  }
+
+  visitUntilInstr(until: Until): void {
+    this.mismatched(until, 'until');
   }
 }

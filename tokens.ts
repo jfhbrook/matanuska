@@ -2,8 +2,6 @@ import { Formatter, Formattable } from './format';
 import { Value } from './value';
 
 export enum TokenKind {
-  // A subset of the MSX language, plus a few other things.
-  // ref: https://github.com/Konamiman/MSX2-Technical-Handbook/blob/master/md/Chapter2.md/
   LParen = '(',
   RParen = ')',
   Comma = ',',
@@ -82,14 +80,22 @@ export enum TokenKind {
   DefDbl = 'DEFDBL',
   DefStr = 'DEFSTR',
   Dim = 'DIM',
+  */
 
-  For = 'FOR',
-  To = 'TO',
-  Step = 'STEP',
+  For = 'for',
+  To = 'to',
+  Step = 'step',
+  Next = 'next',
+  EndFor = 'endfor',
+  While = 'while',
+  EndWhile = 'endwhile',
+  Repeat = 'repeat',
+  Until = 'until',
+
+  /*
   GoSub = 'GOSUB',
   GoTo = 'GOTO',
   Return = 'RETURN',
-  Next = 'NEXT',
   While = 'WHILE',
 
   Erl = 'ERL',

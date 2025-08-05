@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`bare expression starting with an integer 1`] = `
+"<input>:1:0: warning: Line numbers should be in factors of 10
+  1 + 1
+  ^
+<input>:1:2: error: Unexpected token +
+  1 + 1
+    ^"
+`;
+
+exports[`out of order program 1`] = `
+"/home/josh/script.bas:100:0: warning: Line numbers should be in order
+  100 print "goodbye"
+  ^"
+`;
+
+exports[`program with a negative line number 1`] = `
+"/home/josh/script.bas:<R2>:0 (after line 100): error: Expected line number
+  -100 "foo"
+  ^"
+`;
+
+exports[`program with non-numbered input 1`] = `
+"/home/josh/script.bas:<R2>:0 (after line 100): error: Expected line number
+  "foo"
+  ^"
+`;
