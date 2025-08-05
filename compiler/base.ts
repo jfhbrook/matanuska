@@ -213,7 +213,10 @@ class ForBlock extends Block {
 class WhileBlock extends Block {
   kind = 'while';
 
-  constructor(public exitJump: Short) {
+  constructor(
+    public loopStart: Short,
+    public exitJump: Short,
+  ) {
     super();
   }
 
@@ -223,7 +226,7 @@ class WhileBlock extends Block {
   }
 
   visitEndWhileInstr(_endWhile: EndWhile): void {
-    this.compiler.endWhile(this.exitJump);
+    this.compiler.endWhile(this.loopStart, this.exitJump);
     this.end();
   }
 }
@@ -507,6 +510,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   private emitLoop(start: number): void {
     this.emitByte(OpCode.Loop);
+    // +2 to account for the bytes we just added
     const offset = this.chunk.code.length - start + 2;
     const [first, second] = shortToBytes(offset);
     this.emitBytes(first, second);
@@ -733,31 +737,33 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitWhileInstr(while_: While): void {
-    const exitJump = this.beginWhile(while_.condition);
-    this.block.begin(while_, new WhileBlock(exitJump));
+    const [loopStart, exitJump] = this.beginWhile(while_.condition);
+    this.block.begin(while_, new WhileBlock(loopStart, exitJump));
   }
 
-  beginWhile(cond: Expr): Short {
+  beginWhile(cond: Expr): [Short, Short] {
+    const loopStart = this.chunk.code.length;
     cond.accept(this);
 
     const exitJump = this.emitJump(OpCode.JumpIfFalse);
 
     this.emitByte(OpCode.Pop);
 
-    return exitJump;
+    return [loopStart, exitJump];
   }
 
   visitEndWhileInstr(endWhile: EndWhile): void {
     this.block.handle(endWhile);
   }
 
-  endWhile(exit: Short): void {
-    this.emitLoop(exit);
+  endWhile(loopStart: Short, exitJump: Short): void {
+    this.emitLoop(loopStart);
+    this.patchJump(exitJump);
   }
 
   visitRepeatInstr(repeat: Repeat): void {
-    const start = this.chunk.code.length;
-    this.block.begin(repeat, new RepeatBlock(start));
+    const loopStart = this.chunk.code.length;
+    this.block.begin(repeat, new RepeatBlock(loopStart));
   }
 
   visitUntilInstr(until: Until): void {
