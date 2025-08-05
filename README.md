@@ -26,7 +26,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Break up format tests
 - [ ] Swap out `pino` for a different logger in grabthar
   - its async behavior means logs are in the wrong order
-- [ ] Use [envinfo](https://www.npmjs.com/package/envinfo) in runtime fault output
 - [ ] Logical operators
   - [x] Support through the parser
   - [ ] Confirm parser tests
@@ -108,6 +107,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - Arrays
   - Including array literals - BASIC assigns each index one at a time, or uses the `data` command
   - Consider using [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)
+- Environment info in runtime fault outputs
+  - [envinfo](https://www.npmjs.com/package/envinfo) for inspiration
+  - OS
+  - CPU
+  - Memory
+  - Build tool versions (cmake, make, etc) if compiling native code
+  - Will need to scrub from format test snapshot
 - Implement Acey Ducey
   - `center$(n)`
   - `rnd!` (random) function
