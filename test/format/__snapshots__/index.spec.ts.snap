@@ -1,0 +1,619 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`exceptions > given a DefaultFormatter > it formats a BaseException 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+BaseException: message"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a BaseWarning 1`] = `"/home/josh/script.bas:100: BaseWarning: message"`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a BaseWarning without a traceback 1`] = `"<unknown>:<?>: BaseWarning: message"`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a Exception 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+Exception: message"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a FileError with one file 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+FileError EACCES: message
+  Input File: /home/josh/script.bas"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a FileError with two files 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+FileError EACCES: message
+  Source File: /home/josh/script.bas
+  Destination File: another.bas"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a NotImplementedError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+NotImplementedError: message"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a RuntimeError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+RuntimeError: message"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a TypeError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+TypeError: message
+  Value: 123
+  From: integer
+  To: nil"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats a ZeroDivisionError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+ZeroDivisionError: Cannot divide 1 by 0"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats an AssertionError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+AssertionError: message"
+`;
+
+exports[`exceptions > given a DefaultFormatter > it formats an OsError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+OsError EADDRINUSE: message"
+`;
+
+exports[`exceptions > given a Inspector > it formats a BaseException 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+BaseException: message"
+`;
+
+exports[`exceptions > given a Inspector > it formats a BaseWarning 1`] = `"/home/josh/script.bas:100: BaseWarning: message"`;
+
+exports[`exceptions > given a Inspector > it formats a BaseWarning without a traceback 1`] = `"<unknown>:<?>: BaseWarning: message"`;
+
+exports[`exceptions > given a Inspector > it formats a Exception 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+Exception: message"
+`;
+
+exports[`exceptions > given a Inspector > it formats a FileError with one file 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+FileError EACCES: message
+  Input File: /home/josh/script.bas"
+`;
+
+exports[`exceptions > given a Inspector > it formats a FileError with two files 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+FileError EACCES: message
+  Source File: /home/josh/script.bas
+  Destination File: another.bas"
+`;
+
+exports[`exceptions > given a Inspector > it formats a NotImplementedError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+NotImplementedError: message"
+`;
+
+exports[`exceptions > given a Inspector > it formats a RuntimeError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+RuntimeError: message"
+`;
+
+exports[`exceptions > given a Inspector > it formats a TypeError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+TypeError: message
+  Value: [33m123[39m
+  From: integer
+  To: nil"
+`;
+
+exports[`exceptions > given a Inspector > it formats a ZeroDivisionError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+ZeroDivisionError: Cannot divide 1 by 0"
+`;
+
+exports[`exceptions > given a Inspector > it formats an AssertionError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+AssertionError: message"
+`;
+
+exports[`exceptions > given a Inspector > it formats an OsError 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100
+OsError EADDRINUSE: message"
+`;
+
+exports[`exit > given a DefaultFormatter > it formats an Exit with a message 1`] = `"Exit 0: message"`;
+
+exports[`exit > given a DefaultFormatter > it formats an Exit without message 1`] = `"Exit 0"`;
+
+exports[`exit > given a Inspector > it formats an Exit with a message 1`] = `"Exit [32m0[39m: message"`;
+
+exports[`exit > given a Inspector > it formats an Exit without message 1`] = `"Exit [32m0[39m"`;
+
+exports[`expr > given a DefaultFormatter > it formats a Binary expression 1`] = `
+"Binary(+) {
+  1,
+  1,
+}"
+`;
+
+exports[`expr > given a DefaultFormatter > it formats a BoolLiteral 1`] = `"true"`;
+
+exports[`expr > given a DefaultFormatter > it formats a NilLiteral 1`] = `"nil"`;
+
+exports[`expr > given a DefaultFormatter > it formats a PromptLiteral 1`] = `"'\\u@\\h:\\w\\$'"`;
+
+exports[`expr > given a DefaultFormatter > it formats a RealLiteral 1`] = `"123.456"`;
+
+exports[`expr > given a DefaultFormatter > it formats a StringLiteral 1`] = `"'hello'"`;
+
+exports[`expr > given a DefaultFormatter > it formats a Unary expression 1`] = `
+"Unary(-) {
+  1,
+}"
+`;
+
+exports[`expr > given a DefaultFormatter > it formats a Variable 1`] = `"i%"`;
+
+exports[`expr > given a DefaultFormatter > it formats an IntLiteral 1`] = `"12"`;
+
+exports[`expr > given a Inspector > it formats a Binary expression 1`] = `
+"Binary(+) {
+  1,
+  1,
+}"
+`;
+
+exports[`expr > given a Inspector > it formats a BoolLiteral 1`] = `"true"`;
+
+exports[`expr > given a Inspector > it formats a NilLiteral 1`] = `"nil"`;
+
+exports[`expr > given a Inspector > it formats a PromptLiteral 1`] = `"'\\u@\\h:\\w\\$'"`;
+
+exports[`expr > given a Inspector > it formats a RealLiteral 1`] = `"123.456"`;
+
+exports[`expr > given a Inspector > it formats a StringLiteral 1`] = `"'hello'"`;
+
+exports[`expr > given a Inspector > it formats a Unary expression 1`] = `
+"Unary(-) {
+  1,
+}"
+`;
+
+exports[`expr > given a Inspector > it formats a Variable 1`] = `"i%"`;
+
+exports[`expr > given a Inspector > it formats an IntLiteral 1`] = `"12"`;
+
+exports[`faults > given a DefaultFormatter > it formats a BaseFault 1`] = `
+"=== INTERNAL FAULT ===
+
+--- Internal Stack Trace ---
+BaseFault: message
+    at {{CWD}}/test/format/exceptions.ts:211:38
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
+    at startTests (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1208:3)"
+`;
+
+exports[`faults > given a DefaultFormatter > it formats a RuntimeFault 1`] = `
+"=== RUNTIME FAULT ===
+
+--- Internal Stack Trace ---
+AssertionError [ERR_ASSERTION]: underlying assertion
+    at new AssertionError (node:internal/assert/assertion_error:376:5)
+    at {{CWD}}/test/format/exceptions.ts:215:24
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
+
+--- Traceback ---
+Traceback:
+  File '/home/josh/script.bas', line 100
+
+--- Versions ---
+Matanuska BASIC: v0.0.1
+swc: v1.7.26
+vite: v1.7.26
+Node.js: NODE_VERSION
+
+This is a bug in Matanuska BASIC. If you copy this entire message and post it
+to the issues tracker:
+
+    https://github.com/jfhbrook/matanuska/issues
+
+the developers will do their best to fix it - and more importantly, they will
+owe you a beer, coffee or beverage of your choice. 🍻
+
+"
+`;
+
+exports[`faults > given a DefaultFormatter > it formats a UsageFault 1`] = `"Usage: lol"`;
+
+exports[`faults > given a Inspector > it formats a BaseFault 1`] = `
+"=== INTERNAL FAULT ===
+
+--- Internal Stack Trace ---
+BaseFault: message
+    at {{CWD}}/test/format/exceptions.ts:211:38
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
+    at startTests (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1208:3)"
+`;
+
+exports[`faults > given a Inspector > it formats a RuntimeFault 1`] = `
+"=== RUNTIME FAULT ===
+
+--- Internal Stack Trace ---
+AssertionError [ERR_ASSERTION]: underlying assertion
+    at new AssertionError (node:internal/assert/assertion_error:376:5)
+    at {{CWD}}/test/format/exceptions.ts:215:24
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
+    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
+
+--- Traceback ---
+Traceback:
+  File '/home/josh/script.bas', line 100
+
+--- Versions ---
+Matanuska BASIC: v0.0.1
+swc: v1.7.26
+vite: v1.7.26
+Node.js: NODE_VERSION
+
+This is a bug in Matanuska BASIC. If you copy this entire message and post it
+to the issues tracker:
+
+    https://github.com/jfhbrook/matanuska/issues
+
+the developers will do their best to fix it - and more importantly, they will
+owe you a beer, coffee or beverage of your choice. 🍻
+
+"
+`;
+
+exports[`faults > given a Inspector > it formats a UsageFault 1`] = `"Usage: lol"`;
+
+exports[`instr > given a DefaultFormatter > Assign 1`] = `"Assign(i%, 1)"`;
+
+exports[`instr > given a DefaultFormatter > Else 1`] = `"Else"`;
+
+exports[`instr > given a DefaultFormatter > ElseIf 1`] = `"ElseIf (true)"`;
+
+exports[`instr > given a DefaultFormatter > End 1`] = `"End"`;
+
+exports[`instr > given a DefaultFormatter > EndFor 1`] = `"EndFor"`;
+
+exports[`instr > given a DefaultFormatter > EndIf 1`] = `"EndIf"`;
+
+exports[`instr > given a DefaultFormatter > EndWhile 1`] = `"EndWhile"`;
+
+exports[`instr > given a DefaultFormatter > Exit 1`] = `"Exit(0)"`;
+
+exports[`instr > given a DefaultFormatter > For 1`] = `"For(i%, 1)"`;
+
+exports[`instr > given a DefaultFormatter > If 1`] = `"If (true)"`;
+
+exports[`instr > given a DefaultFormatter > Let 1`] = `"Let(i%, 1)"`;
+
+exports[`instr > given a DefaultFormatter > List 1`] = `"List"`;
+
+exports[`instr > given a DefaultFormatter > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
+
+exports[`instr > given a DefaultFormatter > New 1`] = `"New(null)"`;
+
+exports[`instr > given a DefaultFormatter > Next 1`] = `"Next"`;
+
+exports[`instr > given a DefaultFormatter > Print 1`] = `"Print('hello')"`;
+
+exports[`instr > given a DefaultFormatter > Rem 1`] = `"Rem(a witty remark)"`;
+
+exports[`instr > given a DefaultFormatter > Repeat 1`] = `"Repeat"`;
+
+exports[`instr > given a DefaultFormatter > Run 1`] = `"Run"`;
+
+exports[`instr > given a DefaultFormatter > Save 1`] = `"New(null)"`;
+
+exports[`instr > given a DefaultFormatter > ShortIf 1`] = `"ShortIf (true) { Print('true') }"`;
+
+exports[`instr > given a DefaultFormatter > ShortIf 2`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
+
+exports[`instr > given a DefaultFormatter > Until 1`] = `"Until (false)"`;
+
+exports[`instr > given a DefaultFormatter > While 1`] = `"While (true)"`;
+
+exports[`instr > given a Inspector > Assign 1`] = `"Assign(i%, 1)"`;
+
+exports[`instr > given a Inspector > Else 1`] = `"Else"`;
+
+exports[`instr > given a Inspector > ElseIf 1`] = `"ElseIf (true)"`;
+
+exports[`instr > given a Inspector > End 1`] = `"End"`;
+
+exports[`instr > given a Inspector > EndFor 1`] = `"EndFor"`;
+
+exports[`instr > given a Inspector > EndIf 1`] = `"EndIf"`;
+
+exports[`instr > given a Inspector > EndWhile 1`] = `"EndWhile"`;
+
+exports[`instr > given a Inspector > Exit 1`] = `"Exit(0)"`;
+
+exports[`instr > given a Inspector > For 1`] = `"For(i%, 1)"`;
+
+exports[`instr > given a Inspector > If 1`] = `"If (true)"`;
+
+exports[`instr > given a Inspector > Let 1`] = `"Let(i%, 1)"`;
+
+exports[`instr > given a Inspector > List 1`] = `"List"`;
+
+exports[`instr > given a Inspector > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
+
+exports[`instr > given a Inspector > New 1`] = `"New([1mnull[22m)"`;
+
+exports[`instr > given a Inspector > Next 1`] = `"Next"`;
+
+exports[`instr > given a Inspector > Print 1`] = `"Print('hello')"`;
+
+exports[`instr > given a Inspector > Rem 1`] = `"Rem(a witty remark)"`;
+
+exports[`instr > given a Inspector > Repeat 1`] = `"Repeat"`;
+
+exports[`instr > given a Inspector > Run 1`] = `"Run"`;
+
+exports[`instr > given a Inspector > Save 1`] = `"New([1mnull[22m)"`;
+
+exports[`instr > given a Inspector > ShortIf 1`] = `"ShortIf (true) { Print('true') }"`;
+
+exports[`instr > given a Inspector > ShortIf 2`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
+
+exports[`instr > given a Inspector > Until 1`] = `"Until (false)"`;
+
+exports[`instr > given a Inspector > While 1`] = `"While (true)"`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is a line > it formats a ParseError 1`] = `
+"/home/josh/script.bas:100:22: error: expected )
+  100 print someFn(ident
+                        ^
+/home/josh/script.bas:100:17: warning: identifier has no sigil
+  100 print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is a line > it formats a ParseWarning 1`] = `
+"/home/josh/script.bas:100:17: warning: identifier has no sigil
+  100 print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is a line > it formats a SyntaxError 1`] = `
+"/home/josh/script.bas:100:22: error: expected )
+  100 print someFn(ident
+                        ^"
+`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is a line > it formats a SyntaxWarning 1`] = `
+"/home/josh/script.bas:100:22: warning: expected )
+  100 print someFn(ident
+                        ^"
+`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is not a line > it formats a ParseError 1`] = `
+"/home/josh/script.bas:<R0>:22 (after line 100): error: expected )
+  print someFn(ident
+                        ^
+/home/josh/script.bas:<R0>:17 (after line 100): warning: identifier has no sigil
+  print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is not a line > it formats a ParseWarning 1`] = `
+"/home/josh/script.bas:<R0>:17 (after line 100): warning: identifier has no sigil
+  print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is not a line > it formats a SyntaxError 1`] = `
+"/home/josh/script.bas:<R0>:22 (after line 100): error: expected )
+  print someFn(ident
+                        ^"
+`;
+
+exports[`parser exceptions > given a DefaultFormatter > when it is not a line > it formats a SyntaxWarning 1`] = `
+"/home/josh/script.bas:<R0>:22 (after line 100): warning: expected )
+  print someFn(ident
+                        ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is a line > it formats a ParseError 1`] = `
+"/home/josh/script.bas:100:22: error: expected )
+  100 print someFn(ident
+                        ^
+/home/josh/script.bas:100:17: warning: identifier has no sigil
+  100 print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is a line > it formats a ParseWarning 1`] = `
+"/home/josh/script.bas:100:17: warning: identifier has no sigil
+  100 print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is a line > it formats a SyntaxError 1`] = `
+"/home/josh/script.bas:100:22: error: expected )
+  100 print someFn(ident
+                        ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is a line > it formats a SyntaxWarning 1`] = `
+"/home/josh/script.bas:100:22: warning: expected )
+  100 print someFn(ident
+                        ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is not a line > it formats a ParseError 1`] = `
+"/home/josh/script.bas:<R0>:22 (after line 100): error: expected )
+  print someFn(ident
+                        ^
+/home/josh/script.bas:<R0>:17 (after line 100): warning: identifier has no sigil
+  print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is not a line > it formats a ParseWarning 1`] = `
+"/home/josh/script.bas:<R0>:17 (after line 100): warning: identifier has no sigil
+  print someFn(ident
+                   ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is not a line > it formats a SyntaxError 1`] = `
+"/home/josh/script.bas:<R0>:22 (after line 100): error: expected )
+  print someFn(ident
+                        ^"
+`;
+
+exports[`parser exceptions > given a Inspector > when it is not a line > it formats a SyntaxWarning 1`] = `
+"/home/josh/script.bas:<R0>:22 (after line 100): warning: expected )
+  print someFn(ident
+                        ^"
+`;
+
+exports[`token > given a DefaultFormatter > it formats a Token 1`] = `
+"Token(<string>) {
+  index: 0,
+  row: 0,
+  offsetStart: 0,
+  offsetEnd: 9,
+  text: "'hello\\q'",
+  value: 'hello\\q',
+}"
+`;
+
+exports[`token > given a Inspector > it formats a Token 1`] = `
+"Token(<string>) {
+  index: 0,
+  row: 0,
+  offsetStart: 0,
+  offsetEnd: 9,
+  text: "'hello\\q'",
+  value: 'hello\\q',
+}"
+`;
+
+exports[`traceback > given a DefaultFormatter > it formats a Traceback 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100"
+`;
+
+exports[`traceback > given a Inspector > it formats a Traceback 1`] = `
+"Traceback:
+  File '/home/josh/script.bas', line 100"
+`;
+
+exports[`tree > given a DefaultFormatter > it formats a Line 1`] = `
+"Line(100) [
+  Print('hello world'),
+]"
+`;
+
+exports[`tree > given a DefaultFormatter > it formats a Program 1`] = `
+"Program(
+  Line(100) [
+    Print('hello world'),
+  ],
+)"
+`;
+
+exports[`tree > given a Inspector > it formats a Line 1`] = `
+"Line(100) [
+  Print('hello world'),
+]"
+`;
+
+exports[`tree > given a Inspector > it formats a Program 1`] = `
+"Program(
+  Line(100) [
+    Print('hello world'),
+  ],
+)"
+`;
+
+exports[`values > given a DefaultFormatter > given a DefaultFormatter > it formats a boolean 1`] = `"true"`;
+
+exports[`values > given a DefaultFormatter > given a DefaultFormatter > it formats a native value 1`] = `"Set(3) { 'a', 'b', 'c' }"`;
+
+exports[`values > given a DefaultFormatter > given a DefaultFormatter > it formats a null value 1`] = `"null"`;
+
+exports[`values > given a DefaultFormatter > given a DefaultFormatter > it formats a number 1`] = `"12345"`;
+
+exports[`values > given a DefaultFormatter > given a DefaultFormatter > it formats a string 1`] = `"hello"`;
+
+exports[`values > given a DefaultFormatter > given a DefaultFormatter > it formats an array of values 1`] = `
+"[
+  1,
+  'two',
+  true,
+]"
+`;
+
+exports[`values > given a DefaultFormatter > given a DefaultFormatter > it formats an undefined value 1`] = `"undefined"`;
+
+exports[`values > given a Inspector > given a Inspector > it formats a boolean 1`] = `"[33mtrue[39m"`;
+
+exports[`values > given a Inspector > given a Inspector > it formats a native value 1`] = `"Set(3) { [32m'a'[39m, [32m'b'[39m, [32m'c'[39m }"`;
+
+exports[`values > given a Inspector > given a Inspector > it formats a null value 1`] = `"[1mnull[22m"`;
+
+exports[`values > given a Inspector > given a Inspector > it formats a number 1`] = `"[33m12345[39m"`;
+
+exports[`values > given a Inspector > given a Inspector > it formats a string 1`] = `"[32m'hello'[39m"`;
+
+exports[`values > given a Inspector > given a Inspector > it formats an array of values 1`] = `
+"[
+  [33m1[39m,
+  [32m'two'[39m,
+  [33mtrue[39m,
+]"
+`;
+
+exports[`values > given a Inspector > given a Inspector > it formats an undefined value 1`] = `"[90mundefined[39m"`;
