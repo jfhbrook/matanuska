@@ -22,7 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Break up format tests
 - [ ] Swap out `pino` for a different logger in grabthar
   - its async behavior means logs are in the wrong order
 - [ ] Logical operators
