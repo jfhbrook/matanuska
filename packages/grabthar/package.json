@@ -20,9 +20,8 @@
   "license": "MIT",
   "dependencies": {
     "glob": "^11.0.0",
+    "kenny-loggins": "^2.0.0",
     "minimist": "^1.2.8",
-    "pino": "^9.4.0",
-    "pino-pretty": "^11.2.2",
     "shell-quote": "^1.8.1",
     "yaml": "^2.5.1"
   },

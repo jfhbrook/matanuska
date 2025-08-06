@@ -1,9 +1,8 @@
-import pino from 'pino';
-import pretty from 'pino-pretty';
+import { createLogger } from 'kenny-loggins';
 
 export const logger = new Proxy(
   {
-    logger: pino(),
+    logger: createLogger(),
   },
   {
     get(target, prop, _receiver) {
@@ -11,9 +10,9 @@ export const logger = new Proxy(
         case 'configure':
           return (options = {}) => {
             if (options.pretty) {
-              target.logger = pino(pretty({ colorize: true }));
+              target.logger = createLogger({ colors: true });
             } else {
-              target.logger = pino();
+              target.logger = createLogger();
             }
           };
         default:
