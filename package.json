@@ -94,12 +94,12 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.2",
     "typescript-eslint": "^8.8.0",
-    "unplugin-swc": "^1.5.1",
     "vite": "^5.4.8",
     "vitest": "^2.1.2"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.24.0",
+    "@swc/core-darwin-arm64": "^1.13.3",
     "@swc/core-linux-x64-gnu": "^1.7.30-nightly-20241002.1"
   }
 }
