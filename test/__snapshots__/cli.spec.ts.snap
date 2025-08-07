@@ -21,7 +21,17 @@ exports[`examples > 002-invalid-line-number.bas 1`] = `
 }
 `;
 
-exports[`examples > 003-if.bas 1`] = `
+exports[`examples > 003-logical.bas 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "false
+true
+",
+}
+`;
+
+exports[`examples > 004-if.bas 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
@@ -32,7 +42,7 @@ still 2!
 }
 `;
 
-exports[`examples > 004-if-else.bas 1`] = `
+exports[`examples > 005-if-else.bas 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
@@ -41,10 +51,10 @@ exports[`examples > 004-if-else.bas 1`] = `
 }
 `;
 
-exports[`examples > 005-open-block.bas 1`] = `
+exports[`examples > 006-open-block.bas 1`] = `
 {
   "exitCode": 0,
-  "stderr": "/home/josh/matanuska/examples/005-open-block.bas:40:4: error: else has not been closed
+  "stderr": "/home/josh/matanuska/examples/006-open-block.bas:40:4: error: else has not been closed
   40  else
       ^
 ",
@@ -52,7 +62,7 @@ exports[`examples > 005-open-block.bas 1`] = `
 }
 `;
 
-exports[`examples > 006-for.bas 1`] = `
+exports[`examples > 007-for.bas 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
@@ -70,7 +80,7 @@ exports[`examples > 006-for.bas 1`] = `
 }
 `;
 
-exports[`examples > 007-while.bas 1`] = `
+exports[`examples > 008-while.bas 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
@@ -79,7 +89,7 @@ exports[`examples > 007-while.bas 1`] = `
 }
 `;
 
-exports[`examples > 008-repeat.bas 1`] = `
+exports[`examples > 009-repeat.bas 1`] = `
 {
   "exitCode": 0,
   "stderr": "",

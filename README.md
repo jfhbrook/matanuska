@@ -22,19 +22,14 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Logical operators
-  - [x] Support through the parser
-  - [x] Support in compiler
-  - [x] Logical tests for parser
-  - [x] Logical tests for compiler
-  - [ ] Examples + test
-- [ ] ADR for operator precedence
 - [ ] Consider using `end` keyword for loops/conditionals
+  - [ ] ADR for `end` keyword
   - I think a bare `end` would close the program/global scope?
 - [ ] Scope Related ADRs
   - [ ] Local variables
   - [ ] Closures
   - [ ] Function syntax
+- [ ] operator precedence ADR
 - [ ] Test/fix global variables
   - The for loop reveals some weird bytecode
   - The variable tests only cover let/assign, not access
