@@ -5,6 +5,7 @@ import { formatter } from '../../format';
 import { Source } from '../../ast/source';
 import {
   Binary,
+  Logical,
   Group,
   Variable,
   IntLiteral,
@@ -30,11 +31,37 @@ const EXPRESSIONS: Array<[string, Instr]> = [
   ['"hello world"', new Expression(new StringLiteral('hello world'), 0, 13)],
   ["'hello world'", new Expression(new StringLiteral('hello world'), 0, 13)],
   [
+    'true and false',
+    new Expression(
+      new Logical(new BoolLiteral(true), TokenKind.And, new BoolLiteral(false)),
+      0,
+      14,
+    ),
+  ],
+  [
+    'true or false',
+    new Expression(
+      new Logical(new BoolLiteral(true), TokenKind.Or, new BoolLiteral(false)),
+      0,
+      13,
+    ),
+  ],
+  [
     '"\\"time machine\\""',
     new Expression(new StringLiteral('"time machine"'), 0, 18),
   ],
   ["'don\\'t'", new Expression(new StringLiteral("don't"), 0, 8)],
   ['(1)', new Expression(new Group(new IntLiteral(1)), 0, 3)],
+  [
+    '(1 + 1)',
+    new Expression(
+      new Group(
+        new Binary(new IntLiteral(1), TokenKind.Plus, new IntLiteral(1)),
+      ),
+      0,
+      7,
+    ),
+  ],
   [
     '(1 == 1)',
     new Expression(

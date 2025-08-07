@@ -25,7 +25,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Logical operators
   - [x] Support through the parser
   - [x] Support in compiler
-  - [ ] Logical tests for parser
+  - [x] Logical tests for parser
   - [ ] Logical tests for compiler
   - [ ] Examples + test
 - [ ] ADR for operator precedence
