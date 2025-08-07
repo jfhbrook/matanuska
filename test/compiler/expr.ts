@@ -1,6 +1,7 @@
 import { Expression } from '../../ast/instr';
 import {
   Binary,
+  Logical,
   Group,
   Variable,
   IntLiteral,
@@ -11,6 +12,7 @@ import {
   NilLiteral,
 } from '../../ast/expr';
 import { OpCode } from '../../bytecode/opcodes';
+import { shortToBytes } from '../../bytecode/short';
 import { Token, TokenKind } from '../../tokens';
 
 import { chunk } from '../helpers/bytecode';
@@ -94,7 +96,49 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   ],
 
   [
-    '100',
+    'true and false',
+    new Expression(
+      new Logical(new BoolLiteral(true), TokenKind.And, new BoolLiteral(false)),
+    ),
+    chunk({
+      constants: [true, false],
+      code: [
+        OpCode.Constant,
+        0,
+        OpCode.JumpIfFalse,
+        ...shortToBytes(3),
+        OpCode.Pop,
+        OpCode.Constant,
+        1,
+      ],
+      lines: [100, 100, 100, 100, 100, 100, 100, 100],
+    }),
+  ],
+
+  [
+    'true or false',
+    new Expression(
+      new Logical(new BoolLiteral(true), TokenKind.Or, new BoolLiteral(false)),
+    ),
+    chunk({
+      constants: [true, false],
+      code: [
+        OpCode.Constant,
+        0,
+        OpCode.JumpIfFalse,
+        ...shortToBytes(3),
+        OpCode.Jump,
+        ...shortToBytes(3),
+        OpCode.Pop,
+        OpCode.Constant,
+        1,
+      ],
+      lines: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+    }),
+  ],
+
+  [
+    '-1',
     new Expression(new Unary(TokenKind.Minus, new IntLiteral(1))),
     chunk({
       constants: [1],

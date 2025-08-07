@@ -26,7 +26,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Support through the parser
   - [x] Support in compiler
   - [x] Logical tests for parser
-  - [ ] Logical tests for compiler
+  - [x] Logical tests for compiler
   - [ ] Examples + test
 - [ ] ADR for operator precedence
 - [ ] Consider using `end` keyword for loops/conditionals
