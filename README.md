@@ -24,9 +24,11 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 - [ ] Logical operators
   - [x] Support through the parser
-  - [ ] Confirm parser tests
-  - [ ] Support in compiler
-  - [ ] Tests in compiler
+  - [x] Support in compiler
+  - [ ] Logical tests for parser
+  - [ ] Logical tests for compiler
+  - [ ] Examples + test
+- [ ] ADR for operator precedence
 - [ ] Consider using `end` keyword for loops/conditionals
   - I think a bare `end` would close the program/global scope?
 - [ ] Scope Related ADRs

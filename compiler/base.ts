@@ -795,6 +795,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
       case TokenKind.Minus:
         this.emitByte(OpCode.Neg);
         break;
+      case TokenKind.Not:
+        this.emitByte(OpCode.Not);
+        break;
       default:
         this.syntaxError(this.peek() as Instr, 'Invalid unary operator');
     }
@@ -839,8 +842,36 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     }
   }
 
-  visitLogicalExpr(_logical: Logical): void {
-    return;
+  visitLogicalExpr(logical: Logical): void {
+    // binary.right.accept(this);
+    switch (logical.op) {
+      case TokenKind.And:
+        this.emitAnd(logical);
+        break;
+      case TokenKind.Or:
+        this.emitOr(logical);
+        break;
+      default:
+        this.syntaxError(this.peek() as Instr, 'Invalid logical operator');
+    }
+  }
+
+  private emitAnd(logical: Logical): void {
+    logical.left.accept(this);
+    const endJump = this.emitJump(OpCode.JumpIfFalse);
+    this.emitByte(OpCode.Pop);
+    logical.right.accept(this);
+    this.patchJump(endJump);
+  }
+
+  private emitOr(logical: Logical): void {
+    logical.left.accept(this);
+    const elseJump = this.emitJump(OpCode.JumpIfFalse);
+    const endJump = this.emitJump(OpCode.Jump);
+    this.patchJump(elseJump);
+    this.emitByte(OpCode.Pop);
+    logical.right.accept(this);
+    this.patchJump(endJump);
   }
 
   visitGroupExpr(group: Group): void {
