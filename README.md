@@ -26,10 +26,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Local variables
   - [ ] Closures
   - [ ] Function syntax
-- [ ] operator precedence ADR
-- [ ] Test/fix global variables
-  - The for loop reveals some weird bytecode
-  - The variable tests only cover let/assign, not access
+- [ ] Operator precedence ADR
 - [ ] Implement local variables
   - [ ] Use local variables in `for` loop
 - [ ] Function support
@@ -147,6 +144,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### The Future
 
+- Optimize identifier constants - see ADR 019
 - Reimplement citree in Rust and [chumsky](https://docs.rs/chumsky/latest/chumsky/#example-brainfuck-parser)
 - String templates
 - Module system
