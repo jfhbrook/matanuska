@@ -1,6 +1,6 @@
 # ADR 018 - Looping Syntax
 
-### Status: Draft
+### Status: Accepted
 
 ### Josh Holbrook
 
