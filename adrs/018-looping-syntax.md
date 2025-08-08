@@ -91,6 +91,10 @@ For completeness, simple GOTO looks like so:
 
 ### BBC BASIC
 
+> /!\ NOTICE /!\
+>
+> This ADR misunderstands the use of the `end` keyword in BBC BASIC examples. They keyword is used the same way as `end` in MSX BASIC, and are included in the examples to present complete programs.
+
 BBC BASIC's `for` loops look a little different:
 
 ```basic
