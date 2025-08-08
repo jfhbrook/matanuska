@@ -16,6 +16,24 @@ Matanuska BASIC currently has per-block-type end blocks: `endif`, `endfor`, and 
 
 This ADR explores why this decision was initially made; what decisions in MSX BASIC influenced this decision, and whether or not to use `end` as a general purpose block end keyword.
 
+## A Note on Ruby
+
+Ruby is the main language I'm aware of that consistently uses an `end` keyword to end blocks. Some examples:
+
+```ruby
+if true
+    puts "true"
+end
+```
+
+```ruby
+while false
+    puts "false"
+end
+```
+
+I include these examples to motivate using the `end` keyword to close all loops by comparison to idioms from a modern language.
+
 ## Behavior in Other BASIC Dialects
 
 [According to msx.org](https://www.msx.org/wiki/END), the `end` command "Closes all open files (if any) and ends program execution." In the example, it is seen as a "top-level" instruction:

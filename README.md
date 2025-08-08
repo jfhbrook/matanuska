@@ -22,9 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Consider using `end` keyword for loops/conditionals
-  - [ ] ADR for `end` keyword
-  - I think a bare `end` would close the program/global scope?
 - [ ] Scope Related ADRs
   - [ ] Local variables
   - [ ] Closures
@@ -75,6 +72,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - Core library
   - Host support
   - (Language support can come later)
+- Consider using `end` keyword as general purpose block end keyword
+  - [ ] Finalize ADR
 - Support `next` and `continue` keywords in loops
 - Support for `HISTSIZE` and `HISTFILESIZE`
 - Telemetry improvements
