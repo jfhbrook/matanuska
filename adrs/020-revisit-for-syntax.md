@@ -1,6 +1,6 @@
 # ADR 020 - Revisiting For Loop Syntax
 
-### Status: Draft
+### Status: Accepted
 
 ### Josh Holbrook
 
