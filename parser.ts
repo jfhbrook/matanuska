@@ -58,8 +58,8 @@ import {
   ElseIf,
   EndIf,
   For,
+  Onward,
   Next,
-  EndFor,
   While,
   EndWhile,
   Repeat,
@@ -501,9 +501,9 @@ export class Parser {
       instr = this.endIf();
     } else if (this.match(TokenKind.For)) {
       instr = this.for_();
+    } else if (this.match(TokenKind.Onward)) {
+      instr = this.onward();
     } else if (this.match(TokenKind.Next)) {
-      instr = this.nextInstr();
-    } else if (this.match(TokenKind.EndFor)) {
       instr = this.endFor();
     } else if (this.match(TokenKind.While)) {
       instr = this.while_();
@@ -684,12 +684,12 @@ export class Parser {
     return new For(assign.variable, assign.value, stop, step);
   }
 
-  private nextInstr(): Instr {
-    return new Next();
+  private onward(): Instr {
+    return new Onward();
   }
 
   private endFor(): Instr {
-    return new EndFor();
+    return new Next();
   }
 
   private while_(): Instr {

@@ -27,8 +27,8 @@ import {
   ElseIf,
   EndIf,
   For,
+  Onward,
   Next,
-  EndFor,
   While,
   EndWhile,
   Repeat,
@@ -170,12 +170,12 @@ export class CommandCompiler
     return this.invalid(for_, 'for');
   }
 
-  visitNextInstr(next: Next): CompileResult<CompiledCmd> {
-    return this.invalid(next, 'next');
+  visitOnwardInstr(onward: Onward): CompileResult<CompiledCmd> {
+    return this.invalid(onward, 'onward');
   }
 
-  visitEndForInstr(endFor: EndFor): CompileResult<CompiledCmd> {
-    return this.invalid(endFor, 'endfor');
+  visitNextInstr(next: Next): CompileResult<CompiledCmd> {
+    return this.invalid(next, 'next');
   }
 
   visitWhileInstr(while_: While): CompileResult<CompiledCmd> {

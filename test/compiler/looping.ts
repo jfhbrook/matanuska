@@ -2,7 +2,7 @@ import { Source } from '../../ast/source';
 import {
   Print,
   For,
-  EndFor,
+  Next,
   While,
   EndWhile,
   Repeat,
@@ -37,7 +37,7 @@ const FOR_VARIABLE = new Variable(
 
 export const FOR_PROGRAMS: TestCase[] = [
   [
-    ['10 for i% = 1 to 10', '20   print i%', '30 endfor'].join('\n'),
+    ['10 for i% = 1 to 10', '20   print i%', '30 next'].join('\n'),
     new Program(FILENAME, [
       new Line(10, 1, new Source('', '10', ' ', 'for i% = 1 to 10'), [
         new For(FOR_VARIABLE, new IntLiteral(1), new IntLiteral(10), null),
@@ -45,7 +45,7 @@ export const FOR_PROGRAMS: TestCase[] = [
       new Line(20, 2, new Source('', '20', '  ', 'print i%'), [
         new Print(FOR_VARIABLE),
       ]),
-      new Line(30, 3, new Source('', '30', ' ', 'endfor'), [new EndFor()]),
+      new Line(30, 3, new Source('', '30', ' ', 'next'), [new Next()]),
     ]),
 
     chunk({

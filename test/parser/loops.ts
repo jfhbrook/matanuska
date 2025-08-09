@@ -11,8 +11,8 @@ import {
 import {
   Print,
   For,
+  Onward,
   Next,
-  EndFor,
   While,
   EndWhile,
   Repeat,
@@ -28,8 +28,8 @@ describe('for', () => {
     const source = [
       '10 for i% = 0 to 9',
       '20   print "hello world"',
-      '30   next',
-      '40 endfor',
+      '30   onward',
+      '40 next',
     ];
     const result = parseProgram(source.join('\n'), FILENAME);
 
@@ -60,10 +60,10 @@ describe('for', () => {
         new Line(20, 2, new Source('', '20', '   ', 'print "hello world"'), [
           new Print(new StringLiteral('hello world'), 5, 24),
         ]),
-        new Line(30, 3, new Source('', '30', '   ', 'next'), [new Next(5, 9)]),
-        new Line(40, 4, new Source('', '40', ' ', 'endfor'), [
-          new EndFor(3, 9),
+        new Line(30, 3, new Source('', '30', '   ', 'onward'), [
+          new Onward(5, 9),
         ]),
+        new Line(40, 4, new Source('', '40', ' ', 'next'), [new Next(3, 9)]),
       ]),
     );
   });
@@ -72,7 +72,7 @@ describe('for', () => {
     const source = [
       '10 for i% = 0 to 9 step 2',
       '20   print "hello world"',
-      '30 endfor',
+      '30 next',
     ];
     const result = parseProgram(source.join('\n'), FILENAME);
 
@@ -103,9 +103,7 @@ describe('for', () => {
         new Line(20, 2, new Source('', '20', '   ', 'print "hello world"'), [
           new Print(new StringLiteral('hello world'), 5, 24),
         ]),
-        new Line(30, 3, new Source('', '30', ' ', 'endfor'), [
-          new EndFor(3, 9),
-        ]),
+        new Line(30, 3, new Source('', '30', ' ', 'next'), [new Next(3, 7)]),
       ]),
     );
   });

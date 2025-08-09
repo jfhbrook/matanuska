@@ -24,8 +24,8 @@ import {
   ElseIf,
   EndIf,
   For,
+  Onward,
   Next,
-  EndFor,
   While,
   EndWhile,
   Repeat,
@@ -190,12 +190,12 @@ export abstract class Block implements InstrVisitor<void> {
     this.invalid(for_, 'for');
   }
 
-  visitNextInstr(next: Next): void {
-    this.invalid(next, 'next');
+  visitOnwardInstr(onward: Onward): void {
+    this.invalid(onward, 'onward');
   }
 
-  visitEndForInstr(endFor: EndFor): void {
-    this.mismatched(endFor, 'endfor');
+  visitNextInstr(next: Next): void {
+    this.mismatched(next, 'next');
   }
 
   visitWhileInstr(while_: While): void {
