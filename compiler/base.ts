@@ -204,7 +204,7 @@ class ForBlock extends Block {
     super.visitOnwardInstr(onward);
   }
 
-  visitNextInstr(_endFor: Next): void {
+  visitNextInstr(_next: Next): void {
     this.compiler.endFor(this.incrStart, this.exitJump);
     this.end();
   }

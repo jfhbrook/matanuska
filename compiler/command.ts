@@ -170,8 +170,8 @@ export class CommandCompiler
     return this.invalid(for_, 'for');
   }
 
-  visitOnwardInstr(next: Onward): CompileResult<CompiledCmd> {
-    return this.invalid(next, 'next');
+  visitOnwardInstr(onward: Onward): CompileResult<CompiledCmd> {
+    return this.invalid(onward, 'onward');
   }
 
   visitNextInstr(next: Next): CompileResult<CompiledCmd> {
