@@ -30,6 +30,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Local Variables ADR
   - [ ] ???
   - [ ] Implement in conditionals and loops
+- [ ] Refactor for loop syntax
+  - `for-next` branch
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
