@@ -41,8 +41,8 @@ import {
   ElseIf,
   EndIf,
   For,
+  Onward,
   Next,
-  EndFor,
   While,
   EndWhile,
   Repeat,
@@ -200,11 +200,11 @@ class ForBlock extends Block {
   }
 
   // TODO
-  visitNextInstr(next: Next): void {
-    super.visitNextInstr(next);
+  visitOnwardInstr(onward: Onward): void {
+    super.visitOnwardInstr(onward);
   }
 
-  visitEndForInstr(_endFor: EndFor): void {
+  visitNextInstr(_endFor: Next): void {
     this.compiler.endFor(this.incrStart, this.exitJump);
     this.end();
   }
@@ -221,8 +221,8 @@ class WhileBlock extends Block {
   }
 
   // TODO
-  visitNextInstr(next: Next): void {
-    super.visitNextInstr(next);
+  visitOnwardInstr(onward: Onward): void {
+    super.visitOnwardInstr(onward);
   }
 
   visitEndWhileInstr(_endWhile: EndWhile): void {
@@ -239,8 +239,8 @@ class RepeatBlock extends Block {
   }
 
   // TODO
-  visitNextInstr(next: Next): void {
-    super.visitNextInstr(next);
+  visitOnwardInstr(onward: Onward): void {
+    super.visitOnwardInstr(onward);
   }
 
   visitUntilInstr(until: Until): void {
@@ -726,8 +726,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return [incrStart, exitJump];
   }
 
-  visitEndForInstr(endFor: EndFor): void {
-    this.block.handle(endFor);
+  visitNextInstr(next: Next): void {
+    this.block.handle(next);
   }
 
   endFor(incrStart: Short, exitJump: Short): void {
@@ -781,8 +781,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.patchJump(exitJump);
   }
 
-  visitNextInstr(next: Next): void {
-    this.block.handle(next);
+  visitOnwardInstr(onward: Onward): void {
+    this.block.handle(onward);
   }
 
   //

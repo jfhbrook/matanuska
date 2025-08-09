@@ -46,9 +46,9 @@ One idea is to use the keyword `continue`. However, MSX BASIC uses `cont` to con
 
 It is likely that we would use a clever synonym. Some options:
 
-* `onward`
-* `forward`
-* `ahead`
+- `onward`
+- `forward`
+- `ahead`
 
 ## Next Keyword with Specified Variable
 
@@ -57,7 +57,6 @@ The variable arguments to `next` are used to match the `next` with the appropria
 ## Break Semantics
 
 The keyword `break` is available, at least from the perspective of MSX BASIC.
-
 
 ## Decision
 
