@@ -22,16 +22,30 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Scope Related ADRs
-  - [ ] Local variables
-  - [ ] Closures
-  - [ ] Function syntax
 - [ ] Operator precedence ADR
-- [ ] Implement local variables
-  - [ ] Use local variables in `for` loop
-- [ ] Function support
-  - [ ] BASIC
-  - [ ] Native
+- [ ] Missing runtime tests
+  - [ ] Jump
+  - [ ] Loop
+- [ ] Local Variables
+  - [ ] Local Variables ADR
+  - [ ] ???
+  - [ ] Implement in conditionals and loops
+- [ ] Functions
+  - [ ] Function syntax ADR
+  - [ ] Add keywords to tokens/scanner
+  - [ ] Add support to parser
+  - [ ] Parser tests for functions
+  - [ ] Add new op codes
+  - [ ] Add support in runtime
+  - [ ] Add support to disassembler
+  - [ ] Add support to compiler
+  - [ ] Compiler tests for functions
+  - [ ] Runtime tests
+  - [ ] Examples
+  - [ ] Native function support
+- [ ] Closures
+  - [ ] Closures ADR
+  - [ ] ???
 - [ ] Path navigation - `cd`, `ls`, `etc`
   - `cd` is a builtin ("native function")
   - `ls` and others are on the PATH, actually
