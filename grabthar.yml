@@ -41,3 +41,4 @@ lint:
         destructuredArrayIgnorePattern: ^_
         varsIgnorePattern: ^_
         ignoreRestSiblings: true
+    '@typescript-eslint/no-unused-expressions': 'error'

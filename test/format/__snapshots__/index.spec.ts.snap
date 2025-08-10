@@ -208,15 +208,15 @@ exports[`faults > given a DefaultFormatter > it formats a BaseFault 1`] = `
 --- Internal Stack Trace ---
 BaseFault: message
     at {{CWD}}/test/format/exceptions.ts:211:38
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
-    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
-    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
-    at startTests (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1208:3)"
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"
 `;
 
 exports[`faults > given a DefaultFormatter > it formats a RuntimeFault 1`] = `
@@ -226,14 +226,14 @@ exports[`faults > given a DefaultFormatter > it formats a RuntimeFault 1`] = `
 AssertionError [ERR_ASSERTION]: underlying assertion
     at new AssertionError (node:internal/assert/assertion_error:376:5)
     at {{CWD}}/test/format/exceptions.ts:215:24
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
-    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
-    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
 
 --- Traceback ---
 Traceback:
@@ -264,15 +264,15 @@ exports[`faults > given a Inspector > it formats a BaseFault 1`] = `
 --- Internal Stack Trace ---
 BaseFault: message
     at {{CWD}}/test/format/exceptions.ts:211:38
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
-    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
-    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
-    at startTests (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1208:3)"
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"
 `;
 
 exports[`faults > given a Inspector > it formats a RuntimeFault 1`] = `
@@ -282,14 +282,14 @@ exports[`faults > given a Inspector > it formats a RuntimeFault 1`] = `
 AssertionError [ERR_ASSERTION]: underlying assertion
     at new AssertionError (node:internal/assert/assertion_error:376:5)
     at {{CWD}}/test/format/exceptions.ts:215:24
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:146:14
-    at file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:533:11
-    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:61:7)
-    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:986:17)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1142:15)
-    at runFiles (file://{{CWD}}/node_modules/@vitest/runner/dist/index.js:1199:5)
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://{{CWD}}/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
 
 --- Traceback ---
 Traceback:
