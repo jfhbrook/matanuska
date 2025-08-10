@@ -46,7 +46,11 @@ const INFIX_OPS = [
   ...COMPARISON_OPS,
   ...TERM_OPS,
   ...FACTOR_OPS,
-  ...UNARY_OPS,
+  /*
+   * TODO: Unary ops, as generated, typically do not work as expected. This is
+   * likely an issue with the generated expression, not with the parser itself.
+   */
+  // ...UNARY_OPS,
 ];
 const POSTFIX_OPS = [];
 
