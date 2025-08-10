@@ -21,6 +21,6 @@
   "author": "Josh Holbrook",
   "license": "MIT",
   "devDependencies": {
-    "tests-of-the-sierra-madre": "^1.0.1"
+    "tests-of-the-sierra-madre": "^0.0.0"
   }
 }

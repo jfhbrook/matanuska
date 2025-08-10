@@ -38,7 +38,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.6.2",
     "source-map-support": "^0.5.21",
-    "tests-of-the-sierra-madre": "^1.0.1",
+    "tests-of-the-sierra-madre": "^0.0.0",
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",

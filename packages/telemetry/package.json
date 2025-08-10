@@ -34,7 +34,7 @@
     "prettier": "^3.6.2",
     "rollup-plugin-esbuild-minify": "^1.1.2",
     "source-map-support": "^0.5.21",
-    "tests-of-the-sierra-madre": "^1.0.1",
+    "tests-of-the-sierra-madre": "^0.0.0",
     "ts-loader": "^9.4.3",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
