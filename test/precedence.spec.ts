@@ -6,12 +6,12 @@ import { describe, test, expect } from 'vitest';
 import { FILENAME } from './helpers/files';
 import { parseProgram } from './helpers/parser';
 
+const EXPR =
+  '15 = - 14 + 13 * 12 or 11 / 10 < 9 != 8 <> 7 == 6 > 5 - 4 and 3 >= 2 >= not 1';
+
 describe('operator precedence', () => {
-  test('16 - 15 / 14 - 13 > 12 >= not 11 >= 10 = 9 and 8 or - 7 == 6 + 5 * 4 <> 3 != 2 < 1', () => {
-    const [ast, warning] = parseProgram(
-      `10 16 - 15 / 14 - 13 > 12 >= not 11 >= 10 = 9 and 8 or - 7 == 6 + 5 * 4 <> 3 != 2 < 1`,
-      FILENAME,
-    );
+  test(EXPR, () => {
+    const [ast, warning] = parseProgram(`10 ${EXPR}`, FILENAME);
 
     expect((ast.lines[0].instructions[0] as any).expression).toMatchSnapshot();
     expect(warning).toMatchSnapshot();

@@ -69,7 +69,6 @@ import { describe, test, expect } from 'vitest';
 import { FILENAME } from './helpers/files';
 import { parseProgram } from './helpers/parser';
 
-describe('operator precedence', () => {
 `;
 
   for (let _ = 0; _ < precedenceCount; _++) {
@@ -92,8 +91,11 @@ describe('operator precedence', () => {
     // TODO: It's difficult to tell at a glance whether the output of a
     // generated test is correct. In the future, it may be preferable to
     // recreate the source and match against that instead of the AST directly.
-    script += `  test('${expr}', () => {
-    const [ast, warning] = parseProgram(\`10 ${expr}\`, FILENAME);
+    script += `const EXPR = '${expr}';
+
+describe('operator precedence', () => {
+  test(EXPR, () => {
+    const [ast, warning] = parseProgram(\`10 \${EXPR}\`, FILENAME);
 
     expect('').toMatchSnapshot();
     // expect((ast.lines[0].instructions[0] as any).expression).toMatchSnapshot();
