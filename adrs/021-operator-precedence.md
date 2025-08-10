@@ -1,6 +1,6 @@
-# ADR ??? - Operator Precedence
+# ADR 021 - Operator Precedence
 
-### Status: Draft
+### Status: Accepted
 
 ### Josh Holbrook
 
@@ -89,4 +89,6 @@ This is similar to what's currently implemented in Matanuska BASIC (and in Lox),
 
 Testing of precendence is accomplished by the test in `./test/precedence.ts`. This test is generated with the `test-generator` package.
 
-This test is probably not comprehensive. But it does generate _a_ test case that will exercise an expression involving all supported operators.
+This test is probably not comprehensive. In fact, it currently fails to generate expressions with unary operators. This is probably an issue with the generated output, not unary parsing _per se_. But it does generate _a_ test case that will exercise an expression involving all supported operators.
+
+For more information on how to generate the precedence test, reference `./packages/test-generator/README.md`.
