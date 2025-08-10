@@ -22,10 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Operator precedence ADR
-- [ ] Missing runtime tests
-  - [ ] Jump
-  - [ ] Loop
 - [ ] Local Variables
   - [ ] Local Variables ADR
   - [ ] ???
@@ -69,12 +65,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - Runtime support for shell commands
   - Support \j in prompt rendering
   - (Pipes will come later)
-- PS1/PS2 support
+- [ ] PS1/PS2 support
   - `SET PS1` and `SET PS2`?
+- [ ] Runtime tests for `Jump` and `Loop`
 
 ### Up Next
 
-- Investigate/fix `not` issue in `precedence.ts`
+- Investigate infix operator issue in `precedence.ts`
   - A clean generation of `precedence.ts` will (probably) trigger parse errors
   - Probably a bug in `test-generator`, not parsing per se
 - Complete Print/Format syntax
