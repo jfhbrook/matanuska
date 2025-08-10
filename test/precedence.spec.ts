@@ -7,9 +7,9 @@ import { FILENAME } from './helpers/files';
 import { parseProgram } from './helpers/parser';
 
 describe('operator precedence', () => {
-  test('9 > 8 == -7 and 6 + 5 or 4 * 3 - 2 / 1', () => {
+  test('16 - 15 / 14 - 13 > 12 >= not 11 >= 10 = 9 and 8 or - 7 == 6 + 5 * 4 <> 3 != 2 < 1', () => {
     const [ast, warning] = parseProgram(
-      `10 9 > 8 == -7 and 6 + 5 or 4 * 3 - 2 / 1`,
+      `10 16 - 15 / 14 - 13 > 12 >= not 11 >= 10 = 9 and 8 or - 7 == 6 + 5 * 4 <> 3 != 2 < 1`,
       FILENAME,
     );
 

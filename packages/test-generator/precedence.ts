@@ -24,8 +24,30 @@ function isPostfix(op: any): op is PostfixOp {
 }
 */
 
-const PREFIX_OPS = ['-'];
-const INFIX_OPS = '+ - * / and or == >'.split(' ');
+//
+// Operators currently supported by Matanuska BASIC
+//
+const OR_OPS = ['or'];
+const AND_OPS = ['and'];
+const EQUALITY_OPS = ['=', '==', '<>', '!='];
+const COMPARISON_OPS = ['>', '<', '>=', '>='];
+const TERM_OPS = ['+', '-'];
+const FACTOR_OPS = ['*', '/'];
+const UNARY_OPS = ['not', '-'];
+
+//
+// Organize operators based on prefix, infix and postfix semantics
+//
+const PREFIX_OPS = [...UNARY_OPS];
+const INFIX_OPS = [
+  ...OR_OPS,
+  ...AND_OPS,
+  ...EQUALITY_OPS,
+  ...COMPARISON_OPS,
+  ...TERM_OPS,
+  ...FACTOR_OPS,
+  ...UNARY_OPS,
+];
 const POSTFIX_OPS = [];
 
 const ops: Op[] = [
@@ -53,7 +75,7 @@ describe('operator precedence', () => {
     let i = 2;
     for (const op of ops) {
       if (isPrefix(op)) {
-        expr = op.prefix + expr;
+        expr = `${op.prefix} ${expr}`;
       } else if (isInfix(op)) {
         expr = `${i} ${op.infix} ${expr}`;
         i++;

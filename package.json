@@ -21,6 +21,7 @@
     "build:citree": "cp ast/index.citree packages/citree/example/ast.citree && npm run build -w packages/citree && npm run snap -w packages/citree",
     "build:ast": "citree ast/index.citree",
     "build:entrypoint": "entrypoint ./bin/matbas",
+    "build:test-generator": "npm run build -w packages/test-generator",
     "build:test": "npm run build:test-generator && dotenv -e test.env -- test-generator ./test",
     "build:test:activate": "npm run build:test-generator && dotenv -e test.env -- test-generator --activate ./test",
     "check": "npm run build:ast && grabthar check",

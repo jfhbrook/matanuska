@@ -74,6 +74,9 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
+- Investigate/fix `not` issue in `precedence.ts`
+  - A clean generation of `precedence.ts` will (probably) trigger parse errors
+  - Probably a bug in `test-generator`, not parsing per se
 - Complete Print/Format syntax
   - Support ECMA-55?
   - Complete ADR

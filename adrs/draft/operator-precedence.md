@@ -87,4 +87,6 @@ This is similar to what's currently implemented in Matanuska BASIC (and in Lox),
 
 ## Testing
 
-This behavior is tested in `precedence.ts`. The tests are generated with `test-generator`.
+Testing of precendence is accomplished by the test in `./test/precedence.ts`. This test is generated with the `test-generator` package.
+
+This test is probably not comprehensive. But it does generate _a_ test case that will exercise an expression involving all supported operators.

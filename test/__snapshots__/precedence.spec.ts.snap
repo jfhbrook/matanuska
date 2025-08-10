@@ -1,54 +1,99 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`operator precedence > 9 > 8 == -7 and 6 + 5 or 4 * 3 - 2 / 1 1`] = `
+exports[`operator precedence > 16 - 15 / 14 - 13 > 12 >= not 11 >= 10 = 9 and 8 or - 7 == 6 + 5 * 4 <> 3 != 2 < 1 1`] = `
 Logical {
   "left": Logical {
     "left": Binary {
       "left": Binary {
-        "left": IntLiteral {
-          "value": 9,
+        "left": Binary {
+          "left": Binary {
+            "left": Binary {
+              "left": Binary {
+                "left": IntLiteral {
+                  "value": 16,
+                },
+                "op": "-",
+                "right": Binary {
+                  "left": IntLiteral {
+                    "value": 15,
+                  },
+                  "op": "/",
+                  "right": IntLiteral {
+                    "value": 14,
+                  },
+                },
+              },
+              "op": "-",
+              "right": IntLiteral {
+                "value": 13,
+              },
+            },
+            "op": ">",
+            "right": IntLiteral {
+              "value": 12,
+            },
+          },
+          "op": ">=",
+          "right": Unary {
+            "expr": IntLiteral {
+              "value": 11,
+            },
+            "op": "not",
+          },
         },
-        "op": ">",
+        "op": ">=",
         "right": IntLiteral {
-          "value": 8,
+          "value": 10,
         },
       },
       "op": "==",
-      "right": Unary {
-        "expr": IntLiteral {
-          "value": 7,
-        },
-        "op": "-",
+      "right": IntLiteral {
+        "value": 9,
       },
     },
     "op": "and",
-    "right": Binary {
-      "left": IntLiteral {
-        "value": 6,
-      },
-      "op": "+",
-      "right": IntLiteral {
-        "value": 5,
-      },
+    "right": IntLiteral {
+      "value": 8,
     },
   },
   "op": "or",
   "right": Binary {
     "left": Binary {
-      "left": IntLiteral {
-        "value": 4,
+      "left": Binary {
+        "left": Unary {
+          "expr": IntLiteral {
+            "value": 7,
+          },
+          "op": "-",
+        },
+        "op": "==",
+        "right": Binary {
+          "left": IntLiteral {
+            "value": 6,
+          },
+          "op": "+",
+          "right": Binary {
+            "left": IntLiteral {
+              "value": 5,
+            },
+            "op": "*",
+            "right": IntLiteral {
+              "value": 4,
+            },
+          },
+        },
       },
-      "op": "*",
+      "op": "<>",
       "right": IntLiteral {
         "value": 3,
       },
     },
-    "op": "-",
+    "op": "<>",
     "right": Binary {
       "left": IntLiteral {
         "value": 2,
       },
-      "op": "/",
+      "op": "<",
       "right": IntLiteral {
         "value": 1,
       },
@@ -57,4 +102,4 @@ Logical {
 }
 `;
 
-exports[`operator precedence > 9 > 8 == -7 and 6 + 5 or 4 * 3 - 2 / 1 2`] = `null`;
+exports[`operator precedence > 16 - 15 / 14 - 13 > 12 >= not 11 >= 10 = 9 and 8 or - 7 == 6 + 5 * 4 <> 3 != 2 < 1 2`] = `[ParseWarning]`;
