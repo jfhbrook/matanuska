@@ -18,7 +18,7 @@ const NOOP_CMDS: Array<[string, Instr]> = [['rem', new Rem('A witty remark.')]];
 test('invalid commands', async () => {
   await topic.swear(async ({ executor, editor, host }) => {
     for (const [name, instr] of INVALID_CMDS) {
-      t.rejects(
+      await t.rejects(
         () => instr.accept(commandRunner(executor, editor, host, [])),
         RuntimeFault,
         `${name} is an invalid command`,
