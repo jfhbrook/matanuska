@@ -7,7 +7,7 @@ import { FILENAME } from './helpers/files';
 import { parseProgram } from './helpers/parser';
 
 const EXPR =
-  '15 = - 14 + 13 * 12 or 11 / 10 < 9 != 8 <> 7 == 6 > 5 - 4 and 3 >= 2 >= not 1';
+  '15 = - 14 + 13 * 12 or 11 / 10 < 9 != 8 <> 7 == 6 > 5 - 4 and 3 >= 2 >= 1';
 
 describe('operator precedence', () => {
   test(EXPR, () => {

@@ -148,6 +148,16 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   ],
 
   [
+    '+1',
+    new Expression(new Unary(TokenKind.Plus, new IntLiteral(1))),
+    chunk({
+      constants: [1],
+      code: [OpCode.Constant, 0],
+      lines: [100, 100],
+    }),
+  ],
+
+  [
     'i% + 1',
     new Expression(
       new Binary(

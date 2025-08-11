@@ -16,11 +16,12 @@ Operator precedence is encoded in the parser. Matanuska's parser uses recursive 
 | ----------- | ------------------------------------- |
 | or          | `or`                                  |
 | and         | `and`                                 |
+| not         | `not`                                 |
 | equalities  | `=`, `==`, `<>`, `!=`                 |
 | comparisons | `>`, `<`, `>=`, `<=`                  |
 | terms       | `+`, `-` (minus)                      |
 | factors     | `/`, `*`                              |
-| unaries     | `not`, `-` (negative)                 |
+| unaries     | `+`, (positive), `-` (negative)       |
 | primaries   | literals, variables, `(...)` (groups) |
 
 ## Reserved Operators

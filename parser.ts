@@ -833,8 +833,16 @@ export class Parser {
   private and(): Expr {
     return this.infixOperator(
       [TokenKind.And],
-      this.equality.bind(this),
+      this.not.bind(this),
       (l, o, r) => new Logical(l, o, r),
+    );
+  }
+
+  private not(): Expr {
+    return this.prefixOperator(
+      [TokenKind.Not],
+      this.equality.bind(this),
+      (o, e) => new Unary(o, e),
     );
   }
 
@@ -888,7 +896,7 @@ export class Parser {
 
   private unary(): Expr {
     return this.prefixOperator(
-      [TokenKind.Not, TokenKind.Minus],
+      [TokenKind.Minus],
       this.primary.bind(this),
       (o, e) => new Unary(o, e),
     );

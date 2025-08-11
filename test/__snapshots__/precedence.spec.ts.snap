@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`operator precedence > 15 = - 14 + 13 * 12 or 11 / 10 < 9 != 8 <> 7 == 6 > 5 - 4 and 3 >= 2 >= not 1 1`] = `
+exports[`operator precedence > 15 = - 14 + 13 * 12 or 11 / 10 < 9 != 8 <> 7 == 6 > 5 - 4 and 3 >= 2 >= 1 1`] = `
 Logical {
   "left": Binary {
     "left": IntLiteral {
@@ -85,15 +85,12 @@ Logical {
         },
       },
       "op": ">=",
-      "right": Unary {
-        "expr": IntLiteral {
-          "value": 1,
-        },
-        "op": "not",
+      "right": IntLiteral {
+        "value": 1,
       },
     },
   },
 }
 `;
 
-exports[`operator precedence > 15 = - 14 + 13 * 12 or 11 / 10 < 9 != 8 <> 7 == 6 > 5 - 4 and 3 >= 2 >= not 1 2`] = `[ParseWarning]`;
+exports[`operator precedence > 15 = - 14 + 13 * 12 or 11 / 10 < 9 != 8 <> 7 == 6 > 5 - 4 and 3 >= 2 >= 1 2`] = `[ParseWarning]`;
