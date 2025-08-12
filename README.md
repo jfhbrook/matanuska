@@ -22,14 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Fix precedence of `not`
-  - [x] `not` parses at higher precedence
-  - [x] Tests for infix precedence
-  - [x] Tests for infix left-associativity
-  - [x] Tests for `-1 - 1` and `1 - -1`
-  - [x] Tests for `- -1` and `not not true`
-  - [x] Tests for `not {expr}`, etc
-  - [ ] Clean up old precedence tests
 - [ ] Local Variables
   - [ ] Local Variables ADR
   - [ ] ???

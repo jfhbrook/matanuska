@@ -3,11 +3,11 @@ import * as path from 'path';
 
 import { Config, loadConfig } from './config';
 import { formatFile } from './format';
-import { generatePrecedenceTest } from './precedence';
+// import { generatePrecedenceTest } from './precedence';
 import { activate } from './activate';
 
 export const GENERATORS: Array<[string, (c: Config) => string]> = [
-  ['precedence.spec.ts', generatePrecedenceTest],
+  // ['precedence.spec.ts', generatePrecedenceTest],
 ];
 
 export async function main(
