@@ -7,8 +7,6 @@ type PrefixOp = { prefix: string };
 type InfixOp = { infix: string };
 // type PostfixOp = { postfix: string };
 
-// type Op = PrefixOp | InfixOp | PostfixOp;
-
 const OR_OPS = infix(['or']);
 const AND_OPS = infix(['and']);
 const NOT_OPS = prefix(['not']);
@@ -17,20 +15,6 @@ const COMPARISON_OPS = infix(['>', '<', '>=', '>=']);
 const TERM_OPS = infix(['+', '-']);
 const FACTOR_OPS = infix(['*', '/']);
 const UNARY_OPS = prefix(['+', '-']);
-
-/*
-function isPrefix(op: any): op is PrefixOp {
-  return op.prefix;
-}
-
-function isInfix(op: any): op is InfixOp {
-  return op.infix;
-}
-
-function isPostfix(op: any): op is PostfixOp {
-  return op.postfix;
-}
-*/
 
 function prefix(ops: string[]): PrefixOp[] {
   return ops.map((o): PrefixOp => ({ prefix: o }));
