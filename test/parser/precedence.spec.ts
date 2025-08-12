@@ -3,7 +3,7 @@ import { describe, test, expect } from 'vitest';
 import { FILENAME } from '../helpers/files';
 import { parseProgram } from '../helpers/parser';
 
-// type PrefixOp = { prefix: string };
+type PrefixOp = { prefix: string };
 type InfixOp = { infix: string };
 // type PostfixOp = { postfix: string };
 
@@ -11,12 +11,12 @@ type InfixOp = { infix: string };
 
 const OR_OPS = infix(['or']);
 const AND_OPS = infix(['and']);
-// const NOT_OPS = prefix(['not']);
+const NOT_OPS = prefix(['not']);
 const EQUALITY_OPS = infix(['=', '==', '<>', '!=']);
 const COMPARISON_OPS = infix(['>', '<', '>=', '>=']);
 const TERM_OPS = infix(['+', '-']);
 const FACTOR_OPS = infix(['*', '/']);
-// const UNARY_OPS = prefix(['-']);
+const UNARY_OPS = prefix(['-']);
 
 /*
 function isPrefix(op: any): op is PrefixOp {
@@ -32,11 +32,9 @@ function isPostfix(op: any): op is PostfixOp {
 }
 */
 
-/*
 function prefix(ops: string[]): PrefixOp[] {
   return ops.map((o): PrefixOp => ({ prefix: o }));
 }
-*/
 
 function infix(ops: string[]): InfixOp[] {
   return ops.map((o): InfixOp => ({ infix: o }));
@@ -118,5 +116,29 @@ function infixLeftAssociativeTest(ops: InfixOp[]): void {
 describe('infix left-associativity', () => {
   for (const cases of [FACTOR_OPS, TERM_OPS, COMPARISON_OPS, EQUALITY_OPS]) {
     infixLeftAssociativeTest(cases);
+  }
+});
+
+function prefixInfixPrecedenceTest(op: string): void {
+  const a = `1 ${op} ${op} 1`;
+  const b = `${op} 1 ${op} 1`;
+  testExpr(a, a);
+  testExpr(b, b);
+}
+
+describe('prefix/infix precedence', () => {
+  for (const op of ['-']) {
+    prefixInfixPrecedenceTest(op);
+  }
+});
+
+function prefixTwiceTest(op: PrefixOp): void {
+  const expr = `${op.prefix} ${op.prefix} 1`;
+  testExpr(expr, expr);
+}
+
+describe('prefix twice', () => {
+  for (const op of NOT_OPS.concat(UNARY_OPS)) {
+    prefixTwiceTest(op);
   }
 });

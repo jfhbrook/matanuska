@@ -3183,3 +3183,65 @@ Logical {
 `;
 
 exports[`infix precedence > and vs. or > 1 or 2 and 3 binds to the right 2`] = `null`;
+
+exports[`prefix twice > - - 1 1`] = `
+Unary {
+  "expr": Unary {
+    "expr": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+  },
+  "op": "-",
+}
+`;
+
+exports[`prefix twice > - - 1 2`] = `null`;
+
+exports[`prefix twice > not not 1 1`] = `
+Unary {
+  "expr": Unary {
+    "expr": IntLiteral {
+      "value": 1,
+    },
+    "op": "not",
+  },
+  "op": "not",
+}
+`;
+
+exports[`prefix twice > not not 1 2`] = `null`;
+
+exports[`prefix/infix precedence > - 1 - 1 1`] = `
+Binary {
+  "left": Unary {
+    "expr": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+  },
+  "op": "-",
+  "right": IntLiteral {
+    "value": 1,
+  },
+}
+`;
+
+exports[`prefix/infix precedence > - 1 - 1 2`] = `null`;
+
+exports[`prefix/infix precedence > 1 - - 1 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "-",
+  "right": Unary {
+    "expr": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+  },
+}
+`;
+
+exports[`prefix/infix precedence > 1 - - 1 2`] = `null`;
