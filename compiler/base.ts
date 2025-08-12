@@ -528,6 +528,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private makeIdent(ident: Token): Short {
+    // NOTE: Called "identifierConstant" in clox
     return this.makeConstant(ident.value as Value);
   }
 
