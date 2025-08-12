@@ -3184,6 +3184,121 @@ Logical {
 
 exports[`infix precedence > and vs. or > 1 or 2 and 3 binds to the right 2`] = `null`;
 
+exports[`logical > not 1 + 2 * 3 / 4 1`] = `
+Unary {
+  "expr": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": Binary {
+      "left": Binary {
+        "left": IntLiteral {
+          "value": 2,
+        },
+        "op": "*",
+        "right": IntLiteral {
+          "value": 3,
+        },
+      },
+      "op": "/",
+      "right": IntLiteral {
+        "value": 4,
+      },
+    },
+  },
+  "op": "not",
+}
+`;
+
+exports[`logical > not 1 + 2 * 3 / 4 2`] = `null`;
+
+exports[`logical > not a? and not b? 1`] = `
+Logical {
+  "left": Unary {
+    "expr": Variable {
+      "ident": Token {
+        "index": 7,
+        "kind": "<ident?>",
+        "offsetEnd": 9,
+        "offsetStart": 7,
+        "row": 1,
+        "text": "a?",
+        "value": "a?",
+      },
+    },
+    "op": "not",
+  },
+  "op": "and",
+  "right": Unary {
+    "expr": Variable {
+      "ident": Token {
+        "index": 18,
+        "kind": "<ident?>",
+        "offsetEnd": 20,
+        "offsetStart": 18,
+        "row": 1,
+        "text": "b?",
+        "value": "b?",
+      },
+    },
+    "op": "not",
+  },
+}
+`;
+
+exports[`logical > not a? and not b? 2`] = `null`;
+
+exports[`logical > not a? or not b? 1`] = `
+Logical {
+  "left": Unary {
+    "expr": Variable {
+      "ident": Token {
+        "index": 7,
+        "kind": "<ident?>",
+        "offsetEnd": 9,
+        "offsetStart": 7,
+        "row": 1,
+        "text": "a?",
+        "value": "a?",
+      },
+    },
+    "op": "not",
+  },
+  "op": "or",
+  "right": Unary {
+    "expr": Variable {
+      "ident": Token {
+        "index": 17,
+        "kind": "<ident?>",
+        "offsetEnd": 19,
+        "offsetStart": 17,
+        "row": 1,
+        "text": "b?",
+        "value": "b?",
+      },
+    },
+    "op": "not",
+  },
+}
+`;
+
+exports[`logical > not a? or not b? 2`] = `null`;
+
+exports[`prefix twice > + + 1 1`] = `
+Unary {
+  "expr": Unary {
+    "expr": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+  },
+  "op": "+",
+}
+`;
+
+exports[`prefix twice > + + 1 2`] = `null`;
+
 exports[`prefix twice > - - 1 1`] = `
 Unary {
   "expr": Unary {
@@ -3212,6 +3327,23 @@ Unary {
 
 exports[`prefix twice > not not 1 2`] = `null`;
 
+exports[`prefix/infix precedence > + 1 + 1 1`] = `
+Binary {
+  "left": Unary {
+    "expr": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+  },
+  "op": "+",
+  "right": IntLiteral {
+    "value": 1,
+  },
+}
+`;
+
+exports[`prefix/infix precedence > + 1 + 1 2`] = `null`;
+
 exports[`prefix/infix precedence > - 1 - 1 1`] = `
 Binary {
   "left": Unary {
@@ -3228,6 +3360,23 @@ Binary {
 `;
 
 exports[`prefix/infix precedence > - 1 - 1 2`] = `null`;
+
+exports[`prefix/infix precedence > 1 + + 1 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "+",
+  "right": Unary {
+    "expr": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+  },
+}
+`;
+
+exports[`prefix/infix precedence > 1 + + 1 2`] = `null`;
 
 exports[`prefix/infix precedence > 1 - - 1 1`] = `
 Binary {

@@ -28,7 +28,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Tests for infix left-associativity
   - [x] Tests for `-1 - 1` and `1 - -1`
   - [x] Tests for `- -1` and `not not true`
-  - [ ] Tests for `not {expr}`, etc
+  - [x] Tests for `not {expr}`, etc
   - [ ] Clean up old precedence tests
 - [ ] Local Variables
   - [ ] Local Variables ADR

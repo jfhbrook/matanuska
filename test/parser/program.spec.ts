@@ -25,7 +25,7 @@ import { parseInput, parseProgram } from '../helpers/parser';
 // statement. That's a boatload of state, but I think it's doable.
 test('bare expression starting with an integer', () => {
   throws(() => {
-    parseInput('1 + 1');
+    parseInput('1 * 1');
   });
 });
 

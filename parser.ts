@@ -896,7 +896,7 @@ export class Parser {
 
   private unary(): Expr {
     return this.prefixOperator(
-      [TokenKind.Minus],
+      [TokenKind.Minus, TokenKind.Plus],
       this.primary.bind(this),
       (o, e) => new Unary(o, e),
     );

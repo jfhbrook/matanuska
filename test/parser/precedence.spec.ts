@@ -16,7 +16,7 @@ const EQUALITY_OPS = infix(['=', '==', '<>', '!=']);
 const COMPARISON_OPS = infix(['>', '<', '>=', '>=']);
 const TERM_OPS = infix(['+', '-']);
 const FACTOR_OPS = infix(['*', '/']);
-const UNARY_OPS = prefix(['-']);
+const UNARY_OPS = prefix(['+', '-']);
 
 /*
 function isPrefix(op: any): op is PrefixOp {
@@ -127,7 +127,7 @@ function prefixInfixPrecedenceTest(op: string): void {
 }
 
 describe('prefix/infix precedence', () => {
-  for (const op of ['-']) {
+  for (const op of ['+', '-']) {
     prefixInfixPrecedenceTest(op);
   }
 });
@@ -140,5 +140,15 @@ function prefixTwiceTest(op: PrefixOp): void {
 describe('prefix twice', () => {
   for (const op of NOT_OPS.concat(UNARY_OPS)) {
     prefixTwiceTest(op);
+  }
+});
+
+describe('logical', () => {
+  for (const expr of [
+    'not 1 + 2 * 3 / 4',
+    'not a? and not b?',
+    'not a? or not b?',
+  ]) {
+    testExpr(expr, expr);
   }
 });

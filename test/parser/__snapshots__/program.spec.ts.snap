@@ -2,10 +2,10 @@
 
 exports[`bare expression starting with an integer 1`] = `
 "<input>:1:0: warning: Line numbers should be in factors of 10
-  1 + 1
+  1 * 1
   ^
-<input>:1:2: error: Unexpected token +
-  1 + 1
+<input>:1:2: error: Unexpected token *
+  1 * 1
     ^"
 `;
 
