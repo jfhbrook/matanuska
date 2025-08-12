@@ -789,7 +789,7 @@ export class Parser {
     return this.or();
   }
 
-  private operator<E extends Expr>(
+  private infixOperator<E extends Expr>(
     kinds: TokenKind[],
     operand: () => Expr,
     factory: (l: Expr, o: TokenKind, r: Expr) => E,
@@ -806,8 +806,24 @@ export class Parser {
     return expr;
   }
 
+  private prefixOperator<E extends Expr>(
+    kinds: TokenKind[],
+    operand: () => Expr,
+    factory: (o: TokenKind, e: Expr) => E,
+  ): Expr {
+    const unary = this.prefixOperator.bind(this, kinds, operand, factory);
+    if (this.match(...kinds)) {
+      const op = this.previous!.kind;
+      const right = unary();
+
+      return factory(op, right);
+    }
+
+    return operand();
+  }
+
   private or(): Expr {
-    return this.operator(
+    return this.infixOperator(
       [TokenKind.Or],
       this.and.bind(this),
       (l, o, r) => new Logical(l, o, r),
@@ -815,15 +831,23 @@ export class Parser {
   }
 
   private and(): Expr {
-    return this.operator(
+    return this.infixOperator(
       [TokenKind.And],
-      this.equality.bind(this),
+      this.not.bind(this),
       (l, o, r) => new Logical(l, o, r),
     );
   }
 
+  private not(): Expr {
+    return this.prefixOperator(
+      [TokenKind.Not],
+      this.equality.bind(this),
+      (o, e) => new Unary(o, e),
+    );
+  }
+
   private equality(): Expr {
-    return this.operator(
+    return this.infixOperator(
       [TokenKind.Eq, TokenKind.EqEq, TokenKind.BangEq, TokenKind.Ne],
       this.comparison.bind(this),
       (left, op, right) => {
@@ -847,7 +871,7 @@ export class Parser {
   }
 
   private comparison(): Expr {
-    return this.operator(
+    return this.infixOperator(
       [TokenKind.Gt, TokenKind.Ge, TokenKind.Lt, TokenKind.Le],
       this.term.bind(this),
       (l, o, r) => new Binary(l, o, r),
@@ -855,7 +879,7 @@ export class Parser {
   }
 
   private term(): Expr {
-    return this.operator(
+    return this.infixOperator(
       [TokenKind.Minus, TokenKind.Plus],
       this.factor.bind(this),
       (l, o, r) => new Binary(l, o, r),
@@ -863,7 +887,7 @@ export class Parser {
   }
 
   private factor(): Expr {
-    return this.operator(
+    return this.infixOperator(
       [TokenKind.Slash, TokenKind.Star],
       this.unary.bind(this),
       (l, o, r) => new Binary(l, o, r),
@@ -871,14 +895,11 @@ export class Parser {
   }
 
   private unary(): Expr {
-    if (this.match(TokenKind.Not, TokenKind.Minus)) {
-      const op = this.previous!.kind;
-      const right = this.unary();
-
-      return new Unary(op, right);
-    }
-
-    return this.primary();
+    return this.prefixOperator(
+      [TokenKind.Minus, TokenKind.Plus],
+      this.primary.bind(this),
+      (o, e) => new Unary(o, e),
+    );
   }
 
   private primary(): Expr {

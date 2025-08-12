@@ -792,6 +792,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   visitUnaryExpr(unary: Unary): void {
     unary.expr.accept(this);
     switch (unary.op) {
+      case TokenKind.Plus:
+        // No-op
+        break;
       case TokenKind.Minus:
         this.emitByte(OpCode.Neg);
         break;
