@@ -1,5 +1,109 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`infix left-associativity > *, / are left associative > 1 * 2 / 3 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "/",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix left-associativity > *, / are left associative > 1 * 2 / 3 2`] = `null`;
+
+exports[`infix left-associativity > +, - are left associative > 1 + 2 - 3 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "-",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix left-associativity > +, - are left associative > 1 + 2 - 3 2`] = `null`;
+
+exports[`infix left-associativity > =, ==, <>, != are left associative > 1 = 2 == 3 <> 4 != 5 1`] = `
+Binary {
+  "left": Binary {
+    "left": Binary {
+      "left": Binary {
+        "left": IntLiteral {
+          "value": 1,
+        },
+        "op": "==",
+        "right": IntLiteral {
+          "value": 2,
+        },
+      },
+      "op": "==",
+      "right": IntLiteral {
+        "value": 3,
+      },
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 4,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 5,
+  },
+}
+`;
+
+exports[`infix left-associativity > =, ==, <>, != are left associative > 1 = 2 == 3 <> 4 != 5 2`] = `[ParseWarning]`;
+
+exports[`infix left-associativity > >, <, >=, >= are left associative > 1 > 2 < 3 >= 4 >= 5 1`] = `
+Binary {
+  "left": Binary {
+    "left": Binary {
+      "left": Binary {
+        "left": IntLiteral {
+          "value": 1,
+        },
+        "op": ">",
+        "right": IntLiteral {
+          "value": 2,
+        },
+      },
+      "op": "<",
+      "right": IntLiteral {
+        "value": 3,
+      },
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 4,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 5,
+  },
+}
+`;
+
+exports[`infix left-associativity > >, <, >=, >= are left associative > 1 > 2 < 3 >= 4 >= 5 2`] = `null`;
+
 exports[`infix precedence > *, / vs. +, - > 1 * 2 + 3 binds to the left 1`] = `
 Binary {
   "left": Binary {

@@ -57,7 +57,9 @@ function testExpr(name: string, expr: string): void {
   });
 }
 
-function infixTestCases(ops: Array<InfixOp[]>) {
+function infixPrecedenceTestCases(
+  ops: Array<InfixOp[]>,
+): Array<[InfixOp[], InfixOp[]]> {
   const cases: Array<[InfixOp[], InfixOp[]]> = [];
 
   for (let i = 0; i < ops.length - 1; i++) {
@@ -69,9 +71,10 @@ function infixTestCases(ops: Array<InfixOp[]>) {
   return cases;
 }
 
-function infixTest(higher: InfixOp[], lower: InfixOp[]) {
+function infixPrecedenceTest(higher: InfixOp[], lower: InfixOp[]): void {
   const higherName = higher.map((o) => o.infix).join(', ');
   const lowerName = lower.map((o) => o.infix).join(', ');
+
   describe(`${higherName} vs. ${lowerName}`, () => {
     for (const high of higher) {
       for (const low of lower) {
@@ -86,7 +89,7 @@ function infixTest(higher: InfixOp[], lower: InfixOp[]) {
 }
 
 describe('infix precedence', () => {
-  for (const [higher, lower] of infixTestCases([
+  for (const [higher, lower] of infixPrecedenceTestCases([
     FACTOR_OPS,
     TERM_OPS,
     COMPARISON_OPS,
@@ -94,6 +97,26 @@ describe('infix precedence', () => {
     AND_OPS,
     OR_OPS,
   ])) {
-    infixTest(higher, lower);
+    infixPrecedenceTest(higher, lower);
+  }
+});
+
+function infixLeftAssociativeTest(ops: InfixOp[]): void {
+  const name = ops.map((o) => o.infix).join(', ');
+  let i = 2;
+  const expr = ops.reduce((e, op) => {
+    e += ` ${op.infix} ${i}`;
+    i++;
+    return e;
+  }, '1');
+
+  describe(`${name} are left associative`, () => {
+    testExpr(expr, expr);
+  });
+}
+
+describe('infix left-associativity', () => {
+  for (const cases of [FACTOR_OPS, TERM_OPS, COMPARISON_OPS, EQUALITY_OPS]) {
+    infixLeftAssociativeTest(cases);
   }
 });
