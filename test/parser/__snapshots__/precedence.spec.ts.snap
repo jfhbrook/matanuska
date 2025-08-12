@@ -1,0 +1,3081 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`infix precedence > *, / vs. +, - > 1 * 2 + 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "+",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 * 2 + 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. +, - > 1 * 2 - 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "-",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 * 2 - 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. +, - > 1 + 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "+",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 + 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. +, - > 1 + 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "+",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 + 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. +, - > 1 / 2 + 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "+",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 / 2 + 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. +, - > 1 / 2 - 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "-",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 / 2 - 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. +, - > 1 - 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "-",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 - 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. +, - > 1 - 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "-",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. +, - > 1 - 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 != 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 != 2 * 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 != 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 != 2 / 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 != 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 != 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 <> 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 <> 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 = 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 = 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 == 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 * 2 == 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 != 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 != 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 <> 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 <> 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 = 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 = 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 == 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 / 2 == 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 <> 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 <> 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 <> 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 <> 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 = 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 = 2 * 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 = 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 = 2 / 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 == 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 == 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 == 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. =, ==, <>, != > 1 == 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 < 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 < 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 > 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 > 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 >= 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 >= 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 >= 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 * 2 >= 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 < 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 < 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 > 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 > 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 >= 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 >= 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 >= 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 / 2 >= 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 < 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 < 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 < 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 < 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 > 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 > 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 > 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 > 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 * 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 * 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 * 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 / 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 / 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. >, <, >=, >= > 1 >= 2 / 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > *, / vs. and > 1 * 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. and > 1 * 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. and > 1 / 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. and > 1 / 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. and > 1 and 2 * 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. and > 1 and 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. and > 1 and 2 / 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. and > 1 and 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. or > 1 * 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. or > 1 * 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. or > 1 / 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. or > 1 / 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > *, / vs. or > 1 or 2 * 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "*",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. or > 1 or 2 * 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > *, / vs. or > 1 or 2 / 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "/",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > *, / vs. or > 1 or 2 / 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 != 2 + 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 != 2 + 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 != 2 - 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 != 2 - 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 != 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 != 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 <> 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 <> 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 = 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 = 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 == 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 + 2 == 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 <> 2 + 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 <> 2 + 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 <> 2 - 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 <> 2 - 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 = 2 + 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 = 2 + 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 = 2 - 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 = 2 - 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 == 2 + 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 == 2 + 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 == 2 - 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 == 2 - 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 != 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 != 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 <> 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 <> 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 = 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 = 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 == 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. =, ==, <>, != > 1 - 2 == 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 < 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 < 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 > 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 > 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 >= 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 >= 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 >= 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 + 2 >= 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 < 2 + 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 < 2 + 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 < 2 - 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 < 2 - 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 > 2 + 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 > 2 + 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 > 2 - 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 > 2 - 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 + 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 + 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 + 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 + 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 - 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 - 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 - 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": ">=",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 >= 2 - 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 < 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 < 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 > 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 > 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 >= 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 >= 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 >= 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": ">=",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. >, <, >=, >= > 1 - 2 >= 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > +, - vs. and > 1 + 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. and > 1 + 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. and > 1 - 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. and > 1 - 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. and > 1 and 2 + 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. and > 1 and 2 + 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. and > 1 and 2 - 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. and > 1 and 2 - 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. or > 1 + 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. or > 1 + 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. or > 1 - 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. or > 1 - 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > +, - vs. or > 1 or 2 + 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "+",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. or > 1 or 2 + 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > +, - vs. or > 1 or 2 - 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "-",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > +, - vs. or > 1 or 2 - 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 != 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 != 2 and 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 <> 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 <> 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 = 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 = 2 and 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 == 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 == 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 != 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 != 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 <> 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 <> 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 = 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 = 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 == 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. and > 1 and 2 == 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 != 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 != 2 or 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 <> 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 <> 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 = 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 = 2 or 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 == 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 == 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 != 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 != 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 <> 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<>",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 <> 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 = 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 = 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 == 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "==",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > =, ==, <>, != vs. or > 1 or 2 == 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 < 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 < 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 > 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 > 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 >= 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 >= 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 >= 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 != 2 >= 3 binds to the right 4`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 != 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 != 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 <> 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 <> 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 = 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 = 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 == 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 < 2 == 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 < 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 < 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 > 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 > 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 >= 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 >= 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 >= 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "<>",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 <> 2 >= 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 < 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 < 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 > 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 > 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 >= 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 >= 3 binds to the right 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 >= 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 = 2 >= 3 binds to the right 4`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 < 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 < 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 > 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 > 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 >= 3 binds to the right 1`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 >= 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 >= 3 binds to the right 3`] = `
+Binary {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "==",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 == 2 >= 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 != 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 != 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 <> 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 <> 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 = 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 = 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 == 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 > 2 == 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 != 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 != 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 != 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 != 3 binds to the left 4`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 <> 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 <> 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 <> 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "<>",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 <> 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 = 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 = 3 binds to the left 2`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 = 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 = 3 binds to the left 4`] = `[ParseWarning]`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 == 3 binds to the left 1`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 == 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 == 3 binds to the left 3`] = `
+Binary {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "==",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. =, ==, <>, != > 1 >= 2 == 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 < 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 < 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 > 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 > 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 >= 2 and 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 >= 2 and 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 >= 2 and 3 binds to the left 3`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "and",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 >= 2 and 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 < 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 < 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 > 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 > 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 >= 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 >= 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 >= 3 binds to the right 3`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "and",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. and > 1 and 2 >= 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 < 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 < 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 > 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 > 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 >= 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 >= 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 >= 2 or 3 binds to the left 3`] = `
+Logical {
+  "left": Binary {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 >= 2 or 3 binds to the left 4`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 < 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "<",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 < 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 > 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 > 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 >= 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 >= 3 binds to the right 2`] = `null`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 >= 3 binds to the right 3`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Binary {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": ">=",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > >, <, >=, >= vs. or > 1 or 2 >= 3 binds to the right 4`] = `null`;
+
+exports[`infix precedence > and vs. or > 1 and 2 or 3 binds to the left 1`] = `
+Logical {
+  "left": Logical {
+    "left": IntLiteral {
+      "value": 1,
+    },
+    "op": "and",
+    "right": IntLiteral {
+      "value": 2,
+    },
+  },
+  "op": "or",
+  "right": IntLiteral {
+    "value": 3,
+  },
+}
+`;
+
+exports[`infix precedence > and vs. or > 1 and 2 or 3 binds to the left 2`] = `null`;
+
+exports[`infix precedence > and vs. or > 1 or 2 and 3 binds to the right 1`] = `
+Logical {
+  "left": IntLiteral {
+    "value": 1,
+  },
+  "op": "or",
+  "right": Logical {
+    "left": IntLiteral {
+      "value": 2,
+    },
+    "op": "and",
+    "right": IntLiteral {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`infix precedence > and vs. or > 1 or 2 and 3 binds to the right 2`] = `null`;
