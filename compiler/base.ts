@@ -602,13 +602,16 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.let_(let_.variable, let_.value);
   }
 
+  // NOTE: Corresponds to compiling declaration()/varDeclaration() in clox
   private let_(variable: Variable, value: Expr | null): void {
+    // NOTE: Corresponds to `global` in call to defineVariable in clox
     const target = this.makeIdent(variable.ident);
     if (value) {
       value.accept(this);
     } else {
       this.emitByte(OpCode.Nil);
     }
+    // NOTE: This line corresponds to defineVariable in clox
     this.emitBytes(OpCode.DefineGlobal, target);
   }
 
