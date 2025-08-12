@@ -486,12 +486,6 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.emitBytes(OpCode.Constant, this.makeConstant(value));
   }
 
-  private emitIdent(ident: Token): Short {
-    const constant = this.makeConstant(ident.value as Value);
-    this.emitBytes(OpCode.Constant, constant);
-    return constant;
-  }
-
   private emitJump(code: OpCode): Short {
     this.emitByte(code);
     // Emit jump address as two bytes
@@ -531,6 +525,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   private makeConstant(value: Value): number {
     // TODO: clox validates that the return value is byte sized.
     return this.currentChunk.addConstant(value);
+  }
+
+  private makeIdent(ident: Token): Short {
+    return this.makeConstant(ident.value as Value);
   }
 
   //
@@ -604,7 +602,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private let_(variable: Variable, value: Expr | null): void {
-    const target = this.emitIdent(variable.ident);
+    const target = this.makeIdent(variable.ident);
     if (value) {
       value.accept(this);
     } else {
@@ -618,7 +616,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private assign(variable: Variable, value: Expr) {
-    const target = this.emitIdent(variable.ident);
+    const target = this.makeIdent(variable.ident);
     value.accept(this);
     this.emitBytes(OpCode.SetGlobal, target);
   }
@@ -716,6 +714,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     const incrStart = this.chunk.code.length;
     // Increment the variable
     this.assign(variable, incr);
+    // Remove the assigned value from the stack
     this.emitByte(OpCode.Pop);
     // Go back to the start of the loop, where we eval
     this.emitLoop(loopStart);
@@ -882,7 +881,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitVariableExpr(variable: Variable): void {
-    const ident = this.emitIdent(variable.ident);
+    const ident = this.makeIdent(variable.ident);
     this.emitBytes(OpCode.GetGlobal, ident);
   }
 

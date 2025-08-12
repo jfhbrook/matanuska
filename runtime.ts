@@ -123,6 +123,7 @@ export class Runtime {
               this.stack.pop();
               break;
             case OpCode.GetGlobal:
+              // Reads the constant, does not operate on the stack
               a = this.readString();
               b = this.globals[a];
               if (typeof b === 'undefined') {
@@ -131,26 +132,33 @@ export class Runtime {
               this.stack.push(b);
               break;
             case OpCode.DefineGlobal:
+              // Identifier from instruction
               a = this.readString();
+              // Variable value from values stack
               // NOTE: Pops afterwards for garbage collection reasons
               b = this.stack.peek();
               if (typeof this.globals[a] !== 'undefined') {
                 throw new NameError(`Cannot define variable ${a} twice`);
               }
               this.globals[a] = b as Value;
+              // NOTE: Pop here
               this.stack.pop();
               break;
             case OpCode.SetGlobal:
+              // Identifier from instruction
               a = this.readString();
-              // NOTE: Pops afterwards for garbage collection reasons
               b = this.stack.peek();
               if (typeof this.globals[a] === 'undefined') {
                 throw new NameError(`Cannot assign to undefined variable ${a}`);
               }
               this.globals[a] = b as Value;
-              // TODO: This is missing from my clox implementation. That's a
-              // bug, right?
-              this.stack.pop();
+              // TODO: We currently do not pop the value after setting a global
+              // variable. This is because our reference vm, clox, treats
+              // assignments as expressions with the assigned value as the
+              // return value. Matanuska BASIC treats assignment as an
+              // instruction, which does not need to return anything. But we
+              // delegate this action to the compiler, for now, to avoid bugs
+              // during implementation.
               break;
             case OpCode.Eq:
               b = this.stack.pop();
