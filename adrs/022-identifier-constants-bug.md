@@ -111,7 +111,6 @@ It would be sensible for Matanuska BASIC to make this optimization, assuming the
 
 First, the functions calling `emitIdent` will now call a function named `makeIdent` instead, which does not emit a `CONSTANT` instruction:
 
-
 ```typescript
   private makeIdent(ident: Token): Short {
     return this.makeConstant(ident.value as Value);
