@@ -27,15 +27,13 @@ export const VARIABLE_INSTRUCTIONS: TestCase[] = [
       constants: ['i%', 1],
       code: [
         OpCode.Constant,
-        0,
-        OpCode.Constant,
         1,
         OpCode.DefineGlobal,
         0,
         OpCode.Nil,
         OpCode.Return,
       ],
-      lines: [100, 100, 100, 100, 100, 100, 100, 100],
+      lines: [100, 100, 100, 100, 100, 100],
     }),
   ],
   [
@@ -58,15 +56,13 @@ export const VARIABLE_INSTRUCTIONS: TestCase[] = [
       constants: ['i%', 1],
       code: [
         OpCode.Constant,
-        0,
-        OpCode.Constant,
         1,
         OpCode.SetGlobal,
         0,
         OpCode.Nil,
         OpCode.Return,
       ],
-      lines: [100, 100, 100, 100, 100, 100, 100, 100],
+      lines: [100, 100, 100, 100, 100, 100],
     }),
   ],
 ];

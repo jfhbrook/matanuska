@@ -178,16 +178,8 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
     ),
     chunk({
       constants: ['i%', 1],
-      code: [
-        OpCode.Constant,
-        0,
-        OpCode.GetGlobal,
-        0,
-        OpCode.Constant,
-        1,
-        OpCode.Add,
-      ],
-      lines: [100, 100, 100, 100, 100, 100, 100],
+      code: [OpCode.GetGlobal, 0, OpCode.Constant, 1, OpCode.Add],
+      lines: [100, 100, 100, 100, 100],
     }),
   ],
 ];

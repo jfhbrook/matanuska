@@ -10,7 +10,7 @@ export class Stack<V> implements Formattable {
 
   pop(): V {
     const val = this.stack.pop();
-    assert.notEqual(typeof val, 'undefined');
+    assert.notEqual(typeof val, 'undefined', 'Popped empty stack');
     return val as V;
   }
 

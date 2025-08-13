@@ -53,14 +53,10 @@ export const FOR_PROGRAMS: TestCase[] = [
       code: [
         // Define i%
         OpCode.Constant,
-        0,
-        OpCode.Constant,
         1,
         OpCode.DefineGlobal,
         0,
         // Loop start
-        OpCode.Constant,
-        2,
         OpCode.GetGlobal,
         2,
         OpCode.Constant,
@@ -68,44 +64,37 @@ export const FOR_PROGRAMS: TestCase[] = [
         OpCode.Le,
         // Jump to exit
         OpCode.JumpIfFalse,
-        ...shortToBytes(27),
+        ...shortToBytes(21),
         OpCode.Pop,
         // Jump to body
         OpCode.Jump,
-        ...shortToBytes(15),
+        ...shortToBytes(11),
         // Increment
-        OpCode.Constant,
-        4,
-        OpCode.Constant,
-        5,
         OpCode.GetGlobal,
         5,
         OpCode.Constant,
         6,
         OpCode.Add,
         OpCode.SetGlobal,
-        OpCode.Pop,
         4,
+        OpCode.Pop,
         // Loop to start
         OpCode.Loop,
-        ...shortToBytes(29),
+        ...shortToBytes(23),
         // Body
-        OpCode.Constant,
-        7,
         OpCode.GetGlobal,
         7,
         OpCode.Print,
         // Loop to increment
         OpCode.Loop,
-        ...shortToBytes(23),
+        ...shortToBytes(17),
         // Exit
         OpCode.Nil,
         OpCode.Return,
       ],
       lines: [
         10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 20,
-        20, 20, 20, 20, 30, 30, 30, 30, 30,
+        10, 10, 10, 10, 10, 10, 10, 10, 10, 20, 20, 20, 30, 30, 30, 30, 30,
       ],
     }),
   ],
