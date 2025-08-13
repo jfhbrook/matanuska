@@ -119,3 +119,27 @@ First, the functions calling `emitIdent` will now call a function named `makeIde
 ```
 
 Second, the `SET_GLOBAL` instruction will **not** pop its instruction automatically - at least, for now. In the future, if we commit to assignment being an instruction, and the bytecode implementation is complete, we may revisit this decision.
+
+With these changes, the new disassembled output for the same `for` loop is:
+
+```
+20  1   CONSTANT       1
+20  3   DEFINE_GLOBAL  i%
+20  5   GET_GLOBAL     i%
+20  7   CONSTANT       10
+20  9   LE
+20  10  JUMP_IF_FALSE  10 -> 34
+20  13  POP
+20  14  JUMP           14 -> 28
+20  17  GET_GLOBAL     i%
+20  19  CONSTANT       1
+20  21  ADD
+20  22  SET_GLOBAL     i%
+20  24  POP
+20  25  LOOP           25 -> 5
+30  28  GET_GLOBAL     i%
+30  30  PRINT
+40  31  LOOP           31 -> 17
+40  34  NIL
+40  35  RETURN
+```
