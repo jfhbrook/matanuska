@@ -32,7 +32,7 @@ import {
   Until,
 } from '../ast/instr';
 
-import { LineCompiler } from './base';
+import type { LineCompiler } from './base';
 
 //
 // A class to manage blocks in the LineCompiler. Subclassed for particular
