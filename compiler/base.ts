@@ -849,7 +849,6 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitLogicalExpr(logical: Logical): void {
-    // binary.right.accept(this);
     switch (logical.op) {
       case TokenKind.And:
         this.emitAnd(logical);
