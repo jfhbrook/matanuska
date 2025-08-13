@@ -65,6 +65,7 @@ import {
 } from '../ast/expr';
 
 import { Block } from './block';
+import { Local, Scope } from './scope';
 
 import { Short, shortToBytes } from '../bytecode/short';
 import { Chunk } from '../bytecode/chunk';
@@ -274,6 +275,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   public global: Block;
   public block: Block;
+  public scope: Scope;
 
   constructor(
     lines: Line[],
@@ -297,6 +299,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
         ? new ProgramBlock()
         : new CommandBlock();
     this.block.init(this, null, null, this.global);
+
+    this.scope = new Scope(this);
   }
 
   /**
@@ -395,7 +399,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     }
   }
 
-  private peek(): Instr | null {
+  public peek(): Instr | null {
     if (this.done) {
       return null;
     }
@@ -472,11 +476,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     }
   }
 
-  private emitByte(byte: number): void {
+  public emitByte(byte: number): void {
     this.currentChunk.writeOp(byte, this.lineNo);
   }
 
-  private emitBytes(...bytes: number[]): void {
+  public emitBytes(...bytes: number[]): void {
     for (const byte of bytes) {
       this.emitByte(byte);
     }
@@ -527,7 +531,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return this.currentChunk.addConstant(value);
   }
 
-  private makeIdent(ident: Token): Short {
+  public makeIdent(ident: Token): Short {
     // NOTE: Called "identifierConstant" in clox
     return this.makeConstant(ident.value as Value);
   }
@@ -602,17 +606,15 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.let_(let_.variable, let_.value);
   }
 
-  // NOTE: Corresponds to compiling declaration()/varDeclaration() in clox
+  // NOTE: Corresponds to varDeclaration() in clox
   private let_(variable: Variable, value: Expr | null): void {
-    // NOTE: Corresponds to `global` in call to defineVariable in clox
-    const target = this.makeIdent(variable.ident);
+    const target = this.scope.ident(variable.ident);
     if (value) {
       value.accept(this);
     } else {
       this.emitByte(OpCode.Nil);
     }
-    // NOTE: This line corresponds to defineVariable in clox
-    this.emitBytes(OpCode.DefineGlobal, target);
+    this.scope.define(target);
   }
 
   visitAssignInstr(assign: Assign): void {
@@ -620,9 +622,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   private assign(variable: Variable, value: Expr) {
-    const target = this.makeIdent(variable.ident);
     value.accept(this);
-    this.emitBytes(OpCode.SetGlobal, target);
+    this.scope.assign(variable.ident);
   }
 
   visitShortIfInstr(if_: ShortIf): void {
@@ -884,8 +885,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitVariableExpr(variable: Variable): void {
-    const ident = this.makeIdent(variable.ident);
-    this.emitBytes(OpCode.GetGlobal, ident);
+    this.scope.get(variable.ident);
   }
 
   visitIntLiteralExpr(int: IntLiteral): void {
