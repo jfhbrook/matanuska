@@ -24,11 +24,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 - [ ] Local Variables
   - [x] Compare current global variables implementation to clox
-  - [ ] Implement `LocalsManager`
-  - [ ] Plumb `LocalsManager` into `LineCompiler`
+  - [x] Implement in conditionals and loops
   - [ ] Local Variables ADR
-  - [ ] ???
-  - [ ] Implement in conditionals and loops
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
