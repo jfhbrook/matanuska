@@ -49,7 +49,7 @@ export const FOR_PROGRAMS: TestCase[] = [
     ]),
 
     chunk({
-      constants: ['i%', 1, 'i%', 10, 'i%', 'i%', 1, 'i%'],
+      constants: ['i%', 1, 'i%', 10, 'i%', 1, 'i%', 'i%'],
       code: [
         // Define i%
         OpCode.Constant,
@@ -71,12 +71,12 @@ export const FOR_PROGRAMS: TestCase[] = [
         ...shortToBytes(11),
         // Increment
         OpCode.GetGlobal,
-        5,
+        4,
         OpCode.Constant,
-        6,
+        5,
         OpCode.Add,
         OpCode.SetGlobal,
-        4,
+        6,
         OpCode.Pop,
         // Loop to start
         OpCode.Loop,

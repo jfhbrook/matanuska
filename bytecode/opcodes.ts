@@ -5,6 +5,8 @@ export enum OpCode {
   True,
   False,
   Pop,
+  GetLocal,
+  SetLocal,
   GetGlobal,
   DefineGlobal,
   SetGlobal,

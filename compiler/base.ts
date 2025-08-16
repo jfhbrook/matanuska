@@ -65,7 +65,7 @@ import {
 } from '../ast/expr';
 
 import { Block } from './block';
-import { Local, Scope } from './scope';
+import { Scope } from './scope';
 
 import { Short, shortToBytes } from '../bytecode/short';
 import { Chunk } from '../bytecode/chunk';
@@ -695,7 +695,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // i% + step
     const incr = new Binary(variable, TokenKind.Plus, step);
 
-    // TODO: begin scope
+    // TODO: Begin scope
+    // this.scope.begin()
 
     // Define the variable
     this.let_(variable, value);
@@ -736,7 +737,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   endFor(incrStart: Short, exitJump: Short): void {
     this.emitLoop(incrStart);
-    // TODO: end scope
+    // TODO: End scope
+    // this.scope.end();
     this.patchJump(exitJump);
   }
 
