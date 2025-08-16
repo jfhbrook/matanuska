@@ -695,8 +695,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // i% + step
     const incr = new Binary(variable, TokenKind.Plus, step);
 
-    // TODO: Begin scope
-    // this.scope.begin()
+    // Begin scope
+    this.scope.begin();
 
     // Define the variable
     this.let_(variable, value);
@@ -737,8 +737,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   endFor(incrStart: Short, exitJump: Short): void {
     this.emitLoop(incrStart);
-    // TODO: End scope
-    // this.scope.end();
+    this.scope.end();
     this.patchJump(exitJump);
   }
 

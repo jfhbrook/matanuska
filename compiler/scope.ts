@@ -1,7 +1,6 @@
 import { Token } from '../tokens';
 import { OpCode } from '../bytecode/opcodes';
 import { Instr } from '../ast/instr';
-import { Value } from '../value';
 
 import type { LineCompiler } from './base';
 
@@ -50,7 +49,8 @@ export class Scope {
   // NOTE: Corresponds to defineVariable in clox
   public define(target: number): void {
     if (this.depth > 0) {
-      // Variable should already be on the stack
+      // Variable should already be on the stack, by visiting the expression
+      // that defines it beforehand in the base compiler
       return;
     }
 

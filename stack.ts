@@ -21,6 +21,10 @@ export class Stack<V> implements Formattable {
     return this.stack[this.stack.length - n - 1];
   }
 
+  set(n: number, value: V): void {
+    this.stack[n] = value;
+  }
+
   get empty(): boolean {
     return this.stack.length === 0;
   }

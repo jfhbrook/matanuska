@@ -28,8 +28,15 @@ export function runCompilerTest([source, ast, expected]: TestCase): void {
   test(source, () => {
     const actual = compile(ast)[0];
 
-    expect(disassemble(actual)).toEqual(disassemble(expected));
-    expect(actual.constants).toEqual(expected.constants);
+    expect({
+      constants: actual.constants,
+      code: disassemble(actual),
+      lines: actual.lines,
+    }).toEqual({
+      constants: expected.constants,
+      code: disassemble(expected),
+      lines: expected.lines,
+    });
   });
 }
 
