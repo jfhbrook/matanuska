@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { Instr } from '../../ast/instr';
 import { Program } from '../../ast';
 import { Chunk } from '../../bytecode/chunk';
+import { disassemble } from '../../bytecode/disassembler';
 import {
   compileInstruction,
   compileProgram,
@@ -23,9 +24,12 @@ export function compile(
 
 export type TestCase = [string, Instr | Program, Chunk];
 
-export function runCompilerTest([source, ast, ch]: TestCase): void {
+export function runCompilerTest([source, ast, expected]: TestCase): void {
   test(source, () => {
-    expect(compile(ast)[0]).toEqual(ch);
+    const actual = compile(ast)[0];
+
+    expect(disassemble(actual)).toEqual(disassemble(expected));
+    expect(actual.constants).toEqual(expected.constants);
   });
 }
 
