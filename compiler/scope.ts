@@ -4,6 +4,8 @@ import { Instr } from '../ast/instr';
 
 import type { LineCompiler } from './base';
 
+const UNINITIALIZED = -1;
+
 export interface Local {
   name: Token;
   depth: number;
@@ -51,10 +53,15 @@ export class Scope {
     if (this.depth > 0) {
       // Variable should already be on the stack, by visiting the expression
       // that defines it beforehand in the base compiler
+      this.initialize(this.locals.length - 1);
       return;
     }
 
     this.compiler.emitBytes(OpCode.DefineGlobal, target);
+  }
+
+  private initialize(index: number): void {
+    this.locals[index].depth = this.depth;
   }
 
   // NOTE: Corresponds to declareVariable in clox
@@ -86,7 +93,7 @@ export class Scope {
   private addLocal(ident: Token): void {
     const local: Local = {
       name: ident,
-      depth: this.depth,
+      depth: UNINITIALIZED,
     };
 
     this.locals.push(local);
@@ -123,6 +130,12 @@ export class Scope {
     for (let i = this.locals.length - 1; i >= 0; i--) {
       const local = this.locals[i];
       if (name.value === local.name.value) {
+        if (local.depth === UNINITIALIZED) {
+          this.compiler.syntaxError(
+            this.compiler.peek() as Instr,
+            `Can not read ${name.value} in its own definition.`,
+          );
+        }
         return i;
       }
     }
