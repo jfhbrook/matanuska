@@ -5,6 +5,7 @@ import { Instr } from '../ast/instr';
 import type { LineCompiler } from './base';
 
 const UNINITIALIZED = -1;
+const UNRESOLVED = -1;
 
 export interface Local {
   name: Token;
@@ -116,8 +117,8 @@ export class Scope {
   // NOTE: Corresponds to namedVariable when assigning
   public assign(name: Token): void {
     let op: OpCode;
-    let arg = this.resolveLocal(name);
-    if (arg !== -1) {
+    let arg: number = this.resolveLocal(name);
+    if (arg !== UNRESOLVED) {
       op = OpCode.SetLocal;
     } else {
       arg = this.compiler.makeIdent(name);
@@ -140,6 +141,6 @@ export class Scope {
       }
     }
 
-    return -1;
+    return UNRESOLVED;
   }
 }
