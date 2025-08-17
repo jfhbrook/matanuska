@@ -122,6 +122,14 @@ export class Runtime {
             case OpCode.Pop:
               this.stack.pop();
               break;
+            case OpCode.GetLocal:
+              a = this.readByte();
+              this.stack.push(this.stack.peek(a) as Value);
+              break;
+            case OpCode.SetLocal:
+              a = this.readByte();
+              this.stack.set(a, this.stack.peek() as Value);
+              break;
             case OpCode.GetGlobal:
               // Reads the constant, does not operate on the stack
               a = this.readString();

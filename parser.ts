@@ -582,7 +582,9 @@ export class Parser {
     return new Expression(this.expression());
   }
 
+  // NOTE: Corresponds to parsing declaration()/varDeclaration() in clox.
   private let(): Instr {
+    // NOTE: Corresponds to `global` in global-only clox
     let variable: Variable;
     if (
       this.match(
@@ -592,6 +594,8 @@ export class Parser {
         TokenKind.StringIdent,
       )
     ) {
+      // NOTE: Roughly corresponds to parseVariable, though see also
+      // emitIdent in compiler/base.ts
       variable = this.variable();
     } else {
       this.syntaxError(this.current, 'Expected variable name');

@@ -49,52 +49,51 @@ export const FOR_PROGRAMS: TestCase[] = [
     ]),
 
     chunk({
-      constants: ['i%', 1, 'i%', 10, 'i%', 'i%', 1, 'i%'],
+      constants: [1, 10, 1],
       code: [
         // Define i%
         OpCode.Constant,
-        1,
-        OpCode.DefineGlobal,
         0,
         // Loop start
-        OpCode.GetGlobal,
-        2,
+        OpCode.GetLocal,
+        0,
         OpCode.Constant,
-        3,
+        1,
         OpCode.Le,
         // Jump to exit
         OpCode.JumpIfFalse,
-        ...shortToBytes(21),
+        ...shortToBytes(22),
         OpCode.Pop,
         // Jump to body
         OpCode.Jump,
         ...shortToBytes(11),
         // Increment
-        OpCode.GetGlobal,
-        5,
+        OpCode.GetLocal,
+        0,
         OpCode.Constant,
-        6,
+        2,
         OpCode.Add,
-        OpCode.SetGlobal,
-        4,
+        OpCode.SetLocal,
+        0,
         OpCode.Pop,
         // Loop to start
         OpCode.Loop,
         ...shortToBytes(23),
         // Body
-        OpCode.GetGlobal,
-        7,
+        OpCode.GetLocal,
+        0,
         OpCode.Print,
         // Loop to increment
         OpCode.Loop,
         ...shortToBytes(17),
+        OpCode.Pop,
         // Exit
         OpCode.Nil,
         OpCode.Return,
       ],
       lines: [
         10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-        10, 10, 10, 10, 10, 10, 10, 10, 10, 20, 20, 20, 30, 30, 30, 30, 30,
+        10, 10, 10, 10, 10, 10, 10, 20, 20, 20, 30, 30, 30, 30, 30, 30,
       ],
     }),
   ],

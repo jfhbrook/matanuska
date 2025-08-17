@@ -61,6 +61,10 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
     return [String(lineNo), String(offset), code, ''];
   }
 
+  function byte(code: string): Row {
+    return [String(lineNo), String(offset), code, String(advance())];
+  }
+
   function constant(code: string): Row {
     return [
       String(lineNo),
@@ -100,6 +104,12 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
       break;
     case OpCode.Pop:
       row = simple('POP');
+      break;
+    case OpCode.GetLocal:
+      row = byte('GET_LOCAL');
+      break;
+    case OpCode.SetLocal:
+      row = byte('SET_LOCAL');
       break;
     case OpCode.GetGlobal:
       row = constant('GET_GLOBAL');

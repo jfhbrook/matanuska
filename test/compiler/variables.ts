@@ -53,12 +53,12 @@ export const VARIABLE_INSTRUCTIONS: TestCase[] = [
       new IntLiteral(1),
     ),
     chunk({
-      constants: ['i%', 1],
+      constants: [1, 'i%'],
       code: [
         OpCode.Constant,
-        1,
-        OpCode.SetGlobal,
         0,
+        OpCode.SetGlobal,
+        1,
         OpCode.Nil,
         OpCode.Return,
       ],

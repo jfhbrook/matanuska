@@ -22,10 +22,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Local Variables
-  - [ ] Local Variables ADR
-  - [ ] ???
-  - [ ] Implement in conditionals and loops
+- [x] Local Variables
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
