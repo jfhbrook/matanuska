@@ -75,8 +75,7 @@ export class Scope {
 
     for (let i = this.locals.length - 1; i >= 0; i--) {
       const local = this.locals[i];
-      // TODO: When would the local's depth be -1?
-      if (local.depth !== -1 && local.depth < this.depth) {
+      if (local.depth !== UNINITIALIZED && local.depth < this.depth) {
         break;
       }
 
