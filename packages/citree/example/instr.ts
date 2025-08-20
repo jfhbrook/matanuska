@@ -20,7 +20,8 @@ export interface InstrVisitor<R> {
   visitElseIfInstr(node: ElseIf): R;
   visitEndIfInstr(node: EndIf): R;
   visitForInstr(node: For): R;
-  visitEndForInstr(node: EndFor): R;
+  visitOnwardInstr(node: Onward): R;
+  visitNextInstr(node: Next): R;
   visitWhileInstr(node: While): R;
   visitEndWhileInstr(node: EndWhile): R;
   visitRepeatInstr(node: Repeat): R;
@@ -162,7 +163,12 @@ export class Load extends Instr {
 }
 
 export class List extends Instr {
-  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+  constructor(
+    public lineStart: number | null,
+    public lineEnd: number | null,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
     super(offsetStart, offsetEnd);
   }
 
@@ -273,6 +279,8 @@ export class For extends Instr {
   constructor(
     public variable: Variable,
     public value: Expr,
+    public stop: Expr,
+    public step: Expr | null,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -284,13 +292,23 @@ export class For extends Instr {
   }
 }
 
-export class EndFor extends Instr {
+export class Onward extends Instr {
   constructor(offsetStart: number = -1, offsetEnd: number = -1) {
     super(offsetStart, offsetEnd);
   }
 
   accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitEndForInstr(this);
+    return visitor.visitOnwardInstr(this);
+  }
+}
+
+export class Next extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitNextInstr(this);
   }
 }
 

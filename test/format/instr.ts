@@ -42,7 +42,9 @@ const INSTRUCTIONS = [
   new Rem('a witty remark'),
   new New(null),
   new Load(new StringLiteral('./examples/001-hello-world.bas'), true),
-  new List(),
+  new List(null, null),
+  new List(10, null),
+  new List(10, 20),
   new Save(null),
   new Run(),
   new Let(

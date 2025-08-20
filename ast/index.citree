@@ -27,7 +27,7 @@ type Instr in './instr' {
   End!
   New        => filename: Expr | null
   Load       => filename: Expr, run: boolean
-  List!
+  List       => lineStart: number | null, lineEnd: number | null
   Renum!
   Run!
   Save       => filename: Expr | null

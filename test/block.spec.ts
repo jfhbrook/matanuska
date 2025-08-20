@@ -53,7 +53,7 @@ const INVALID_INSTRS = [
   new Rem('remark'),
   new New(null),
   new Load(new StringLiteral('file'), false),
-  new List(),
+  new List(null, null),
   new Renum(),
   new Save(new StringLiteral('file')),
   new Run(),

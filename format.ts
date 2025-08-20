@@ -639,8 +639,19 @@ export class DefaultFormatter extends Formatter {
     return `Load(${this.format(load.filename)}, run=${load.run ? 'true' : 'false'})`;
   }
 
-  visitListInstr(_list: List): string {
-    return 'List';
+  visitListInstr(list: List): string {
+    let repr = 'List(';
+
+    if (list.lineStart) {
+      repr += list.lineStart;
+    }
+    if (list.lineEnd) {
+      repr += `, ${list.lineEnd}`;
+    }
+
+    repr += ')';
+
+    return repr;
   }
 
   visitRenumInstr(_renum: Renum): string {

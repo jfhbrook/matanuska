@@ -22,12 +22,12 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Path navigation builtins
-  - `cd`
-  - `pwd`
 - [ ] Expanded list
   - `list 10`
   - `list 10-20`
+- [ ] Path navigation builtins
+  - `cd`
+  - `pwd`
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
@@ -64,9 +64,11 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
-- [ ] Closures
-  - [ ] Closures ADR
-  - [ ] ???
+- Closures
+  - Closures ADR
+  - ???
+- More robust citree parser
+  - Setting defaults in List instr is no bueno
 - Complete Print/Format syntax
   - Support ECMA-55?
   - Complete ADR

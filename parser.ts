@@ -550,7 +550,21 @@ export class Parser {
   }
 
   private list(): Instr {
-    return new List();
+    if (this.match(TokenKind.DecimalLiteral)) {
+      const lineStart = this.previous!.value as number;
+
+      if (this.match(TokenKind.Minus)) {
+        const lineEnd = this.consume(
+          TokenKind.DecimalLiteral,
+          'Expected line end',
+        ).value as number;
+        return new List(lineStart, lineEnd);
+      }
+
+      return new List(lineStart, null);
+    }
+
+    return new List(null, null);
   }
 
   private renum(): Instr {

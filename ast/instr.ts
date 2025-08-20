@@ -163,7 +163,12 @@ export class Load extends Instr {
 }
 
 export class List extends Instr {
-  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+  constructor(
+    public lineStart: number | null,
+    public lineEnd: number | null,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
     super(offsetStart, offsetEnd);
   }
 

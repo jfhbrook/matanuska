@@ -334,7 +334,11 @@ exports[`instr > given a DefaultFormatter > If 1`] = `"If (true)"`;
 
 exports[`instr > given a DefaultFormatter > Let 1`] = `"Let(i%, 1)"`;
 
-exports[`instr > given a DefaultFormatter > List 1`] = `"List"`;
+exports[`instr > given a DefaultFormatter > List 1`] = `"List()"`;
+
+exports[`instr > given a DefaultFormatter > List 2`] = `"List(10)"`;
+
+exports[`instr > given a DefaultFormatter > List 3`] = `"List(10, 20)"`;
 
 exports[`instr > given a DefaultFormatter > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
 
@@ -382,7 +386,11 @@ exports[`instr > given a Inspector > If 1`] = `"If (true)"`;
 
 exports[`instr > given a Inspector > Let 1`] = `"Let(i%, 1)"`;
 
-exports[`instr > given a Inspector > List 1`] = `"List"`;
+exports[`instr > given a Inspector > List 1`] = `"List()"`;
+
+exports[`instr > given a Inspector > List 2`] = `"List(10)"`;
+
+exports[`instr > given a Inspector > List 3`] = `"List(10, 20)"`;
 
 exports[`instr > given a Inspector > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
 
