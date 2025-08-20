@@ -22,7 +22,12 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [x] Local Variables
+- [ ] Path navigation builtins
+  - `cd`
+  - `pwd`
+- [ ] Expanded list
+  - `list 10`
+  - `list 10-20`
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
@@ -36,15 +41,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Runtime tests
   - [ ] Examples
   - [ ] Native function support
-- [ ] Closures
-  - [ ] Closures ADR
-  - [ ] ???
-- [ ] Path navigation - `cd`, `ls`, `etc`
-  - `cd` is a builtin ("native function")
-  - `ls` and others are on the PATH, actually
-- [ ] Expanded list
-  - `list 10`
-  - `list 10-20`
 - [ ] Tests for `InstrShifter` in editor
 - [ ] Support entering multiple lines in REPL
   - [ ] ADR
@@ -68,9 +64,9 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
-- Investigate infix operator issue in `precedence.ts`
-  - A clean generation of `precedence.ts` will (probably) trigger parse errors
-  - Probably a bug in `test-generator`, not parsing per se
+- [ ] Closures
+  - [ ] Closures ADR
+  - [ ] ???
 - Complete Print/Format syntax
   - Support ECMA-55?
   - Complete ADR
