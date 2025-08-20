@@ -327,7 +327,7 @@ export class Executor {
    *
    * @returns The recreated source of the current program.
    */
-  list(): void {
+  list(lineStart: number | null = null, lineEnd: number | null = null): void {
     //#if _MATBAS_BUILD == 'debug'
     return startSpan('Executor#list', (_: Span) => {
       //#endif
@@ -338,7 +338,7 @@ export class Executor {
       this.host.writeLine(
         `${this.editor.filename}\n${'-'.repeat(this.editor.filename.length)}`,
       );
-      const listings = this.editor.list();
+      const listings = this.editor.list(lineStart, lineEnd);
       this.host.writeLine(listings);
       //#if _MATBAS_BUILD == 'debug'
     });

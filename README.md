@@ -22,9 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Expanded list
-  - `list 10`
-  - `list 10-20`
 - [ ] Path navigation builtins
   - `cd`
   - `pwd`

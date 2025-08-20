@@ -6,9 +6,9 @@ import { CommandRunner, ReturnValue } from './base';
  */
 export default async function list(
   this: CommandRunner,
-  _list: List,
+  list: List,
 ): Promise<ReturnValue> {
   const { executor } = this;
-  executor.list();
+  executor.list(list.lineStart, list.lineEnd);
   return null;
 }

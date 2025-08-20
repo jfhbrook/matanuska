@@ -297,8 +297,25 @@ export class Editor {
    *
    * @returns The source code for the program.
    */
-  list(): string {
+  list(lineStart: number | null = null, lineEnd: number | null = null): string {
+    let start = 0;
+    let end = this.program.lines[this.program.lines.length - 1].lineNo;
+
+    if (lineStart) {
+      start = lineStart;
+      if (!lineEnd) {
+        end = lineStart;
+      }
+    }
+
+    if (lineEnd) {
+      end = lineEnd;
+    } else if (lineStart) {
+      end = lineStart;
+    }
+
     return this.program.lines
+      .filter((l) => l.lineNo >= start && l.lineNo <= end)
       .map((l) => {
         if (
           l.instructions.length === 1 &&
