@@ -434,6 +434,7 @@ export class ConsoleHost implements Host {
   }
 
   resolvePath(p: string): string {
+    p = p.replace(/^~\//, this.homedir() + '/');
     if (p.startsWith('/') || p.startsWith('\\')) {
       return p;
     }

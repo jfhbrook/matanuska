@@ -104,6 +104,7 @@ type AbsolutePath = string;
 const RELATIVE_PATH_CASES: Array<[RelativePath, RelativePath, RelativePath]> = [
   ['.', './examples/001-hello-world.bas', 'examples/001-hello-world.bas'],
   ['/home/josh/matanuska', '/home/josh/autoexec.bas', '../autoexec.bas'],
+  ['/home/josh/matanuska', '~/autoexec.bas', '../autoexec.bas'],
 ];
 
 const RESOLVE_PATH_CASES: Array<[RelativePath, AbsolutePath]> = [
@@ -112,6 +113,10 @@ const RESOLVE_PATH_CASES: Array<[RelativePath, AbsolutePath]> = [
     '/home/josh/matanuska/examples/001-hello-world.bas',
   ],
   ['/usr/bin/vim', '/usr/bin/vim'],
+  [
+    '~/matanuska/examples/001-hello-world.bas',
+    '/home/josh/matanuska/examples/001-hello-world.bas',
+  ],
 ];
 
 test('relativePath', async () => {
