@@ -30,6 +30,14 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Cd,
+  Cp,
+  Rm,
+  Touch,
+  Mv,
+  MkDir,
+  RmDir,
+  Pwd,
 } from '../ast/instr';
 
 import type { LineCompiler } from './base';
@@ -212,5 +220,37 @@ export abstract class Block implements InstrVisitor<void> {
 
   visitUntilInstr(until: Until): void {
     this.mismatched(until, 'until');
+  }
+
+  visitCdInstr(cd: Cd): void {
+    this.invalid(cd, 'cd');
+  }
+
+  visitCpInstr(cp: Cp): void {
+    this.invalid(cp, 'cp');
+  }
+
+  visitRmInstr(rm: Rm): void {
+    this.invalid(rm, 'rm');
+  }
+
+  visitTouchInstr(touch: Touch): void {
+    this.invalid(touch, 'touch');
+  }
+
+  visitMvInstr(mv: Mv): void {
+    this.invalid(mv, 'mv');
+  }
+
+  visitMkDirInstr(mkdir: MkDir): void {
+    this.invalid(mkdir, 'mkdir');
+  }
+
+  visitRmDirInstr(rmdir: RmDir): void {
+    this.invalid(rmdir, 'rmdir');
+  }
+
+  visitPwdInstr(pwd: Pwd): void {
+    this.invalid(pwd, 'pwd');
   }
 }

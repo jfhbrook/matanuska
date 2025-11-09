@@ -43,6 +43,14 @@ type Instr in './instr' {
   EndWhile!
   Repeat!
   Until      => condition: Expr
+  Cd         => path: Expr
+  Cp         => from: string[], to: string, force: boolean, recursive: boolean
+  Rm         => paths: string[], recursive: boolean, force: boolean, directory: boolean
+  Touch      => paths: string[]
+  Mv         => paths: string[]
+  MkDir      => path: string, parents: boolean, mode: number | null
+  RmDir      => path: string, parents: boolean
+  Pwd        => follow: boolean
 }
 
 type Tree in './index' {

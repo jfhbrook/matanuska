@@ -51,7 +51,16 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Cd,
+  Cp,
+  Rm,
+  Touch,
+  Mv,
+  MkDir,
+  RmDir,
+  Pwd,
 } from './ast/instr';
+import { NotImplementedError } from './exceptions';
 
 type LineNo = number;
 
@@ -222,6 +231,46 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
   visitUntilInstr(until: Until): void {
     this.shiftInstr(until);
     until.condition.accept(this);
+  }
+
+  visitCdInstr(cd: Cd): void {
+    console.log(cd);
+    throw new NotImplementedError('cd');
+  }
+
+  visitCpInstr(cp: Cp): void {
+    console.log(cp);
+    throw new NotImplementedError('cp');
+  }
+
+  visitRmInstr(rm: Rm): void {
+    console.log(rm);
+    throw new NotImplementedError('rm');
+  }
+
+  visitTouchInstr(touch: Touch): void {
+    console.log(touch);
+    throw new NotImplementedError('cp');
+  }
+
+  visitMvInstr(mv: Mv): void {
+    console.log(mv);
+    throw new NotImplementedError('mv');
+  }
+
+  visitMkDirInstr(mkdir: MkDir): void {
+    console.log(mkdir);
+    throw new NotImplementedError('mkDir');
+  }
+
+  visitRmDirInstr(rmdir: RmDir): void {
+    console.log(rmdir);
+    throw new NotImplementedError('rmdir');
+  }
+
+  visitPwdInstr(pwd: Pwd): void {
+    console.log(pwd);
+    throw new NotImplementedError('pwd');
   }
 
   visitUnaryExpr(unary: Unary): void {

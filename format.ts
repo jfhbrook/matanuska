@@ -17,6 +17,7 @@ import {
   ParseError,
   SyntaxWarning,
   ParseWarning,
+  NotImplementedError,
 } from './exceptions';
 import { Exit } from './exit';
 import { BaseFault, RuntimeFault, UsageFault } from './faults';
@@ -65,6 +66,14 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Cd,
+  Cp,
+  Rm,
+  Touch,
+  Mv,
+  MkDir,
+  RmDir,
+  Pwd,
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
 import { Token } from './tokens';
@@ -205,6 +214,15 @@ export abstract class Formatter
   abstract visitEndWhileInstr(endWhile: EndWhile): string;
   abstract visitRepeatInstr(repeat: Repeat): string;
   abstract visitUntilInstr(until: Until): string;
+
+  abstract visitCdInstr(node: Cd): string;
+  abstract visitCpInstr(node: Cp): string;
+  abstract visitRmInstr(node: Rm): string;
+  abstract visitTouchInstr(node: Touch): string;
+  abstract visitMvInstr(node: Mv): string;
+  abstract visitMkDirInstr(node: MkDir): string;
+  abstract visitRmDirInstr(node: RmDir): string;
+  abstract visitPwdInstr(node: Pwd): string;
 
   abstract visitCmdTree(node: Cmd): string;
   abstract visitLineTree(node: Line): string;
@@ -734,6 +752,46 @@ export class DefaultFormatter extends Formatter {
 
   visitUntilInstr(until: Until): string {
     return `Until (${this.format(until.condition)})`;
+  }
+
+  visitCdInstr(cd: Cd): string {
+    console.log(cd);
+    throw new NotImplementedError('cd');
+  }
+
+  visitCpInstr(cp: Cp): string {
+    console.log(cp);
+    throw new NotImplementedError('cp');
+  }
+
+  visitRmInstr(rm: Rm): string {
+    console.log(rm);
+    throw new NotImplementedError('rm');
+  }
+
+  visitTouchInstr(touch: Touch): string {
+    console.log(touch);
+    throw new NotImplementedError('cp');
+  }
+
+  visitMvInstr(mv: Mv): string {
+    console.log(mv);
+    throw new NotImplementedError('mv');
+  }
+
+  visitMkDirInstr(mkdir: MkDir): string {
+    console.log(mkdir);
+    throw new NotImplementedError('mkDir');
+  }
+
+  visitRmDirInstr(rmdir: RmDir): string {
+    console.log(rmdir);
+    throw new NotImplementedError('rmdir');
+  }
+
+  visitPwdInstr(pwd: Pwd): string {
+    console.log(pwd);
+    throw new NotImplementedError('pwd');
   }
 
   formatStack<V>(stack: Stack<V>): string {

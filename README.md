@@ -22,9 +22,15 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Path navigation builtins
-  - `cd`
-  - `pwd`
+- [ ] Disk operation builtins
+  - [x] scanner
+  - [x] AST
+  - [ ] parser
+  - [ ] formatter
+  - [ ] editor
+  - [ ] compiler
+  - [ ] host
+  - [ ] runtime
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner

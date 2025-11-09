@@ -33,6 +33,14 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Cd,
+  Cp,
+  Rm,
+  Touch,
+  Mv,
+  MkDir,
+  RmDir,
+  Pwd,
 } from '../ast/instr';
 import { Expr } from '../ast/expr';
 
@@ -192,6 +200,38 @@ export class CommandCompiler
 
   visitUntilInstr(until: Until): CompileResult<CompiledCmd> {
     return this.invalid(until, 'until');
+  }
+
+  visitCdInstr(cd: Cd): CompileResult<CompiledCmd> {
+    return this.runtime(cd);
+  }
+
+  visitCpInstr(cp: Cp): CompileResult<CompiledCmd> {
+    return this.runtime(cp);
+  }
+
+  visitRmInstr(rm: Rm): CompileResult<CompiledCmd> {
+    return this.runtime(rm);
+  }
+
+  visitTouchInstr(touch: Touch): CompileResult<CompiledCmd> {
+    return this.runtime(touch);
+  }
+
+  visitMvInstr(mv: Mv): CompileResult<CompiledCmd> {
+    return this.runtime(mv);
+  }
+
+  visitMkDirInstr(mkdir: MkDir): CompileResult<CompiledCmd> {
+    return this.runtime(mkdir);
+  }
+
+  visitRmDirInstr(rmdir: RmDir): CompileResult<CompiledCmd> {
+    return this.runtime(rmdir);
+  }
+
+  visitPwdInstr(pwd: Pwd): CompileResult<CompiledCmd> {
+    return this.runtime(pwd);
   }
 }
 

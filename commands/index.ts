@@ -50,6 +50,14 @@ export function commandRunner(
     visitEndWhileInstr: invalid('endwhile'),
     visitRepeatInstr: invalid('repeat'),
     visitUntilInstr: invalid('until'),
+    visitCdInstr: invalid('cd'),
+    visitCpInstr: invalid('cp'),
+    visitRmInstr: invalid('rm'),
+    visitTouchInstr: invalid('touch'),
+    visitMvInstr: invalid('mv'),
+    visitMkDirInstr: invalid('mkdir'),
+    visitRmDirInstr: invalid('rmdir'),
+    visitPwdInstr: invalid('pwd'),
   };
 }
 
