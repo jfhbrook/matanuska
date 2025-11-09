@@ -21,6 +21,8 @@ import {
 } from './ast';
 import { scanner, TokenKind } from './scanner';
 
+const ident = alt(tok(TokenKind.Ident), tok(TokenKind.From));
+
 /**
  * Extract a string path out of a path token.
  *
@@ -81,7 +83,7 @@ const importStatement: Parser<TokenKind, ImportStatement> = apply(
 const typeAnnotation: Parser<TokenKind, string> = apply(
   rep(
     alt(
-      tok(TokenKind.Ident),
+      ident,
       tok(TokenKind.Union),
       tok(TokenKind.LBracket),
       tok(TokenKind.RBracket),
@@ -102,7 +104,7 @@ const expression: Parser<TokenKind, string> = apply(
       tok(TokenKind.Path),
       tok(TokenKind.Bang),
       tok(TokenKind.OfType),
-      tok(TokenKind.Ident),
+      ident,
       tok(TokenKind.Union),
       tok(TokenKind.Plus),
       tok(TokenKind.Minus),
@@ -124,7 +126,7 @@ function applyFieldDefinition([ident, _ofType, type, default_]) {
 
 const fieldDefinition: Parser<TokenKind, FieldDefinition> = apply(
   seq(
-    tok(TokenKind.Ident),
+    ident,
     tok(TokenKind.OfType),
     typeAnnotation,
     opt(defaultValue),
@@ -154,7 +156,7 @@ function applyNodeDefinition([name, fields]: [
 }
 
 const nodeDefinition: Parser<TokenKind, NodeDefinition> = apply(
-  seq(tok(TokenKind.Ident), alt(fieldDefinitions, noFieldDefinitions)),
+  seq(ident, alt(fieldDefinitions, noFieldDefinitions)),
   applyNodeDefinition,
 );
 
@@ -195,7 +197,7 @@ function applyTypeDefinition([
 const typeDefinition: Parser<TokenKind, TypeDefinition> = apply(
   seq(
     tok(TokenKind.Type),
-    tok(TokenKind.Ident),
+    ident,
     inPath,
     tok(TokenKind.LBrace),
     typeBody,
