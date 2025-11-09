@@ -316,6 +316,12 @@ exports[`faults > given a Inspector > it formats a UsageFault 1`] = `"Usage: lol
 
 exports[`instr > given a DefaultFormatter > Assign 1`] = `"Assign(i%, 1)"`;
 
+exports[`instr > given a DefaultFormatter > Cd 1`] = `"Cd (..)"`;
+
+exports[`instr > given a DefaultFormatter > Cp 1`] = `"Cp (-rf foo.txt bar.txt)"`;
+
+exports[`instr > given a DefaultFormatter > Cp 2`] = `"Cp (foo.txt bar.txt)"`;
+
 exports[`instr > given a DefaultFormatter > Else 1`] = `"Else"`;
 
 exports[`instr > given a DefaultFormatter > ElseIf 1`] = `"ElseIf (true)"`;
@@ -342,6 +348,12 @@ exports[`instr > given a DefaultFormatter > List 3`] = `"List(10, 20)"`;
 
 exports[`instr > given a DefaultFormatter > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
 
+exports[`instr > given a DefaultFormatter > MkDir 1`] = `"MkDir (dir)"`;
+
+exports[`instr > given a DefaultFormatter > MkDir 2`] = `"MkDir (-p -m 775 dir)"`;
+
+exports[`instr > given a DefaultFormatter > Mv 1`] = `"Mv (foo.txt bar.txt)"`;
+
 exports[`instr > given a DefaultFormatter > New 1`] = `"New(null)"`;
 
 exports[`instr > given a DefaultFormatter > Next 1`] = `"Next"`;
@@ -350,9 +362,21 @@ exports[`instr > given a DefaultFormatter > Onward 1`] = `"Onward"`;
 
 exports[`instr > given a DefaultFormatter > Print 1`] = `"Print('hello')"`;
 
+exports[`instr > given a DefaultFormatter > Pwd 1`] = `"Pwd ()"`;
+
+exports[`instr > given a DefaultFormatter > Pwd 2`] = `"Pwd (-L)"`;
+
 exports[`instr > given a DefaultFormatter > Rem 1`] = `"Rem(a witty remark)"`;
 
 exports[`instr > given a DefaultFormatter > Repeat 1`] = `"Repeat"`;
+
+exports[`instr > given a DefaultFormatter > Rm 1`] = `"Rm (bar.txt)"`;
+
+exports[`instr > given a DefaultFormatter > Rm 2`] = `"Rm (-rfd bar.txt)"`;
+
+exports[`instr > given a DefaultFormatter > RmDir 1`] = `"RmDir (dir)"`;
+
+exports[`instr > given a DefaultFormatter > RmDir 2`] = `"RmDir (p-p dir)"`;
 
 exports[`instr > given a DefaultFormatter > Run 1`] = `"Run"`;
 
@@ -362,11 +386,19 @@ exports[`instr > given a DefaultFormatter > ShortIf 1`] = `"ShortIf (true) { Pri
 
 exports[`instr > given a DefaultFormatter > ShortIf 2`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
 
+exports[`instr > given a DefaultFormatter > Touch 1`] = `"Touch (foo.txt)"`;
+
 exports[`instr > given a DefaultFormatter > Until 1`] = `"Until (false)"`;
 
 exports[`instr > given a DefaultFormatter > While 1`] = `"While (true)"`;
 
 exports[`instr > given a Inspector > Assign 1`] = `"Assign(i%, 1)"`;
+
+exports[`instr > given a Inspector > Cd 1`] = `"Cd ([32m'..'[39m)"`;
+
+exports[`instr > given a Inspector > Cp 1`] = `"Cp (-rf foo.txt bar.txt)"`;
+
+exports[`instr > given a Inspector > Cp 2`] = `"Cp (foo.txt bar.txt)"`;
 
 exports[`instr > given a Inspector > Else 1`] = `"Else"`;
 
@@ -394,6 +426,12 @@ exports[`instr > given a Inspector > List 3`] = `"List(10, 20)"`;
 
 exports[`instr > given a Inspector > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
 
+exports[`instr > given a Inspector > MkDir 1`] = `"MkDir (dir)"`;
+
+exports[`instr > given a Inspector > MkDir 2`] = `"MkDir (-p -m 775 dir)"`;
+
+exports[`instr > given a Inspector > Mv 1`] = `"Mv (foo.txt bar.txt)"`;
+
 exports[`instr > given a Inspector > New 1`] = `"New([1mnull[22m)"`;
 
 exports[`instr > given a Inspector > Next 1`] = `"Next"`;
@@ -402,9 +440,21 @@ exports[`instr > given a Inspector > Onward 1`] = `"Onward"`;
 
 exports[`instr > given a Inspector > Print 1`] = `"Print('hello')"`;
 
+exports[`instr > given a Inspector > Pwd 1`] = `"Pwd ()"`;
+
+exports[`instr > given a Inspector > Pwd 2`] = `"Pwd (-L)"`;
+
 exports[`instr > given a Inspector > Rem 1`] = `"Rem(a witty remark)"`;
 
 exports[`instr > given a Inspector > Repeat 1`] = `"Repeat"`;
+
+exports[`instr > given a Inspector > Rm 1`] = `"Rm (bar.txt)"`;
+
+exports[`instr > given a Inspector > Rm 2`] = `"Rm (-rfd bar.txt)"`;
+
+exports[`instr > given a Inspector > RmDir 1`] = `"RmDir (dir)"`;
+
+exports[`instr > given a Inspector > RmDir 2`] = `"RmDir (p-p dir)"`;
 
 exports[`instr > given a Inspector > Run 1`] = `"Run"`;
 
@@ -413,6 +463,8 @@ exports[`instr > given a Inspector > Save 1`] = `"New([1mnull[22m)"`;
 exports[`instr > given a Inspector > ShortIf 1`] = `"ShortIf (true) { Print('true') }"`;
 
 exports[`instr > given a Inspector > ShortIf 2`] = `"ShortIf (true) { Print('true') } { Print('false') }"`;
+
+exports[`instr > given a Inspector > Touch 1`] = `"Touch (foo.txt)"`;
 
 exports[`instr > given a Inspector > Until 1`] = `"Until (false)"`;
 

@@ -46,7 +46,6 @@
     "concurrently": "^8.2.2",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint": "^8.57.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.0",

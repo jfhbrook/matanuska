@@ -17,7 +17,6 @@ import {
   ParseError,
   SyntaxWarning,
   ParseWarning,
-  NotImplementedError,
 } from './exceptions';
 import { Exit } from './exit';
 import { BaseFault, RuntimeFault, UsageFault } from './faults';
@@ -755,43 +754,94 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitCdInstr(cd: Cd): string {
-    console.log(cd);
-    throw new NotImplementedError('cd');
+    return `Cd (${this.format(cd.path)})`;
   }
 
   visitCpInstr(cp: Cp): string {
-    console.log(cp);
-    throw new NotImplementedError('cp');
+    const paths = cp.from.concat(cp.to).join(' ');
+    let flags: string = '';
+
+    if (cp.recursive) {
+      flags += 'r';
+    }
+
+    if (cp.force) {
+      flags += 'f';
+    }
+
+    if (flags.length) {
+      flags = `-${flags} `;
+    }
+
+    return `Cp (${flags}${paths})`;
   }
 
   visitRmInstr(rm: Rm): string {
-    console.log(rm);
-    throw new NotImplementedError('rm');
+    const paths = rm.paths.join(' ');
+    let flags: string = '';
+
+    if (rm.recursive) {
+      flags += 'r';
+    }
+
+    if (rm.force) {
+      flags += 'f';
+    }
+
+    if (rm.directory) {
+      flags += 'd';
+    }
+
+    if (flags.length) {
+      flags = `-${flags} `;
+    }
+
+    return `Rm (${flags}${paths})`;
   }
 
   visitTouchInstr(touch: Touch): string {
-    console.log(touch);
-    throw new NotImplementedError('cp');
+    const paths = touch.paths.join(' ');
+
+    return `Touch (${paths})`;
   }
 
   visitMvInstr(mv: Mv): string {
-    console.log(mv);
-    throw new NotImplementedError('mv');
+    const paths = mv.from.concat(mv.to).join(' ');
+
+    return `Mv (${paths})`;
   }
 
   visitMkDirInstr(mkdir: MkDir): string {
-    console.log(mkdir);
-    throw new NotImplementedError('mkDir');
+    const flags: string[] = [];
+
+    if (mkdir.parents) {
+      flags.push('-p');
+    }
+
+    if (mkdir.mode) {
+      flags.push(`-m ${mkdir.mode.toString(8)}`);
+    }
+
+    return `MkDir (${flags.join(' ')}${flags.length ? ' ' : ''}${mkdir.path})`;
   }
 
   visitRmDirInstr(rmdir: RmDir): string {
-    console.log(rmdir);
-    throw new NotImplementedError('rmdir');
+    let flags: string = '';
+
+    if (rmdir.parents) {
+      flags += 'p';
+    }
+
+    if (flags.length) {
+      flags += `-${flags} `;
+    }
+
+    return `RmDir (${flags}${rmdir.path})`;
   }
 
   visitPwdInstr(pwd: Pwd): string {
-    console.log(pwd);
-    throw new NotImplementedError('pwd');
+    const flags = pwd.follow ? '' : '-L';
+    return `Pwd (${flags})`;
   }
 
   formatStack<V>(stack: Stack<V>): string {

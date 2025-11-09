@@ -34,6 +34,14 @@ import {
   Repeat,
   Until,
   End,
+  Cd,
+  Cp,
+  Rm,
+  Touch,
+  Mv,
+  MkDir,
+  RmDir,
+  Pwd,
 } from '../../ast/instr';
 
 const INSTRUCTIONS = [
@@ -112,6 +120,19 @@ const INSTRUCTIONS = [
   new Repeat(),
   new Until(new BoolLiteral(false)),
   new End(),
+  new Cd('..'),
+  new Cp(['foo.txt'], 'bar.txt', true, true),
+  new Cp(['foo.txt'], 'bar.txt', false, false),
+  new Rm(['bar.txt'], false, false, false),
+  new Rm(['bar.txt'], true, true, true),
+  new Touch(['foo.txt']),
+  new Mv(['foo.txt'], 'bar.txt'),
+  new MkDir('dir', false, null),
+  new MkDir('dir', true, 0o775),
+  new RmDir('dir', false),
+  new RmDir('dir', true),
+  new Pwd(true),
+  new Pwd(false),
 ];
 
 export function instructionSuite<F extends Formatter>(formatter: F): void {

@@ -25,8 +25,11 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Disk operation builtins
   - [x] scanner
   - [x] AST
+  - [x] formatter
+  - [ ] paths as exprs
+    - [ ] token type for path literals
+    - [ ] paths should take exprs
   - [ ] parser
-  - [ ] formatter
   - [ ] editor
   - [ ] compiler
   - [ ] host

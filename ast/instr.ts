@@ -370,7 +370,7 @@ export class Until extends Instr {
 
 export class Cd extends Instr {
   constructor(
-    public path: Expr,
+    public path: string,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -432,7 +432,8 @@ export class Touch extends Instr {
 
 export class Mv extends Instr {
   constructor(
-    public paths: string[],
+    public from: string[],
+    public to: string,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
