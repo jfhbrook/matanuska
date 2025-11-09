@@ -22,7 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] `paths` argument for github actions
 - [ ] Path navigation builtins
   - `cd`
   - `pwd`
