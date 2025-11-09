@@ -203,6 +203,13 @@ export interface Host {
   cwd: string;
 
   /**
+   * Change the shell's current working directory.
+   *
+   * @param path The path to change the directory to.
+   */
+  cd(path: string): void;
+
+  /**
    * Resolve a relative path into a full path.
    *
    * @param path A relative path.
@@ -420,6 +427,10 @@ export class ConsoleHost implements Host {
 
   homedir(): string {
     return os.homedir();
+  }
+
+  cd(path: string): void {
+    this.cwd = this.resolvePath(path);
   }
 
   resolvePath(p: string): string {
