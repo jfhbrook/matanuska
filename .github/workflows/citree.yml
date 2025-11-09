@@ -6,6 +6,7 @@ on:
       - 'packages/citree/**.citree'
       - 'packages/citree/**.mjs'
       - 'packages/citree/**.json'
+      - '.github/workflows/citree.yml'
   push:
     branches:
       - main
@@ -14,6 +15,7 @@ on:
       - 'packages/citree/**.citree'
       - 'packages/citree/**.mjs'
       - 'packages/citree/**.json'
+      - '.github/workflows/citree.yml'
 jobs:
   citree:
     name: citree

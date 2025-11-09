@@ -4,12 +4,14 @@ on:
     paths:
       - 'packages/test-generator/**.ts'
       - 'packages/test-generator/**.json'
+      - '.github/workflows/test-generator.yml'
   push:
     branches:
       - main
     paths:
       - 'packages/test-generator/**.ts'
       - 'packages/test-generator/**.json'
+      - '.github/workflows/test-generator.yml'
 jobs:
   test-generator:
     name: test-generator

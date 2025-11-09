@@ -4,12 +4,14 @@ on:
     paths:
       - 'packages/grabthar/**.mjs'
       - 'packages/grabthar/**.json'
+      - '.github/workflows/grabthar.yml'
   push:
     branches:
       - main
     paths:
       - 'packages/grabthar/**.mjs'
       - 'packages/grabthar/**.json'
+      - '.github/workflows/grabthar.yml'
 jobs:
   grabthar:
     name: grabthar

@@ -3,11 +3,13 @@ on:
   pull_request:
     paths:
       - 'packages/citree/scripts/**.sh'
+      - '.github/workflows/citree-scripts.yml'
   push:
     branches:
       - main
     paths:
       - 'packages/citree/scripts/**.sh'
+      - '.github/workflows/citree-scripts.yml'
 jobs:
   citree-scripts:
     name: citree scripts

@@ -4,14 +4,16 @@ on:
     paths:
       - 'packages/telementry/**.ts'
       - 'packages/telemetry/grabthar.yml'
-      - 'packages/entrypoint/**.json'
+      - 'packages/telemetry/**.json'
+      - '.github/workflows/telemetry.yml' 
   push:
     branches:
       - main
     paths:
       - 'packages/telementry/**.ts'
       - 'packages/telemetry/grabthar.yml'
-      - 'packages/entrypoint/**.json'
+      - 'packages/telemetry/**.json'
+      - '.github/workflows/telemetry.yml' 
 jobs:
   telemetry:
     name: telemetry

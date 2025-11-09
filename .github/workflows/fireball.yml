@@ -6,6 +6,7 @@ on:
       - 'packages/fireball/**.tf'
       - 'packages/fireball/**.mjs'
       - 'packages/fireball/**.json'
+      - '.github/workflows/fireball.yml'
   push:
     branches:
       - main
@@ -14,6 +15,7 @@ on:
       - 'packages/fireball/**.tf'
       - 'packages/fireball/**.mjs'
       - 'packages/fireball/**.json'
+      - '.github/workflows/fireball.yml'
 jobs:
   fireball:
     name: fireball
