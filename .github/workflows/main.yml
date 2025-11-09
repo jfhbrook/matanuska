@@ -1,0 +1,42 @@
+name: Matanuska
+on:
+  pull_request:
+    paths:
+      - '**.ts'
+      - '**.mjs'
+      - 'grabthar.yml'
+      - '**.json'
+      - '**.env'
+      - '!packages/**'
+  push:
+    branches:
+      - main
+    paths:
+      - '**.ts'
+      - 'grabthar.yml'
+      - '**.json'
+      - '**.env'
+      - '!packages/**'
+jobs:
+  main:
+    name: Matanuska
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['latest']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up Terraform
+        uses: ./.github/actions/setup-terraform
+      - name: Install
+        run: npm install
+      - name: Check types
+        run: ./node_modules/.bin/grabthar check
+      - name: Test
+        run: dotenv -f ./test.env -- ./node_modules/.bin/grabthar test
+      - name: Lint
+        run: ./node_modules/.bin/grabthar lint

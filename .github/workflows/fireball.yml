@@ -1,0 +1,35 @@
+name: fireball
+on:
+  pull_request:
+    paths:
+      - 'packages/fireball/**.ts'
+      - 'packages/fireball/**.tf'
+      - 'packages/fireball/**.mjs'
+      - 'packages/fireball/**.json'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/fireball/**.ts'
+      - 'packages/fireball/**.tf'
+      - 'packages/fireball/**.mjs'
+      - 'packages/fireball/**.json'
+jobs:
+  fireball:
+    name: fireball
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['lts/Iron', 'latest']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up Terraform
+        uses: ./.github/actions/setup-terraform
+      - name: Install
+        run: npm install
+      - name: Lint
+        run: npm run lint -w packages/fireball

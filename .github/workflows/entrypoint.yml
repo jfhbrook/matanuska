@@ -1,0 +1,37 @@
+name: entrypoint
+on:
+  pull_request:
+    paths:
+      - 'packages/entrypoint/**.ts'
+      - 'packages/entrypoint/**.tf'
+      - 'packages/entrypoint/**.tftpl'
+      - 'packages/entrypoint/**.mjs'
+      - 'packages/entrypoint/**.json'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/entrypoint/**.ts'
+      - 'packages/entrypoint/**.tf'
+      - 'packages/entrypoint/**.tftpl'
+      - 'packages/entrypoint/**.mjs'
+      - 'packages/entrypoint/**.json'
+jobs:
+  entrypoint:
+    name: entrypoint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['lts/Iron', 'latest']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up Terraform
+        uses: ./.github/actions/setup-terraform
+      - name: Install
+        run: npm install
+      - name: Lint
+        run: npm run lint -w packages/entrypoint
