@@ -49,13 +49,22 @@ export const KEYWORDS: Record<string, TokenKind> = {
   repeat: TokenKind.Repeat,
   until: TokenKind.Until,
 
+  // shell operations
+  cd: TokenKind.Cd,
+  cp: TokenKind.Cp,
+  rm: TokenKind.Rm,
+  touch: TokenKind.Touch,
+  mv: TokenKind.Mv,
+  mkdir: TokenKind.MkDir,
+  rmdir: TokenKind.RmDir,
+  pwd: TokenKind.Pwd,
+
   // TODO: error handling
   // TODO: datetime
   // TODO: array operations
   // TODO: file operations, i/o
   print: TokenKind.Print,
   // TODO: internals
-  // TODO: shell operations
   // TODO: clear screen
   // cls: TokenKind.Cls,
   // TODO: prompt, as in SET PROMPT

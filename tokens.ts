@@ -111,8 +111,6 @@ export enum TokenKind {
 
   Print = 'print',
 
-  /*
-  Cls = 'CLS',
   Cd = 'CD',
   Cp = 'CP',
   Rm = 'RM',
@@ -121,6 +119,8 @@ export enum TokenKind {
   MkDir = 'MKDIR',
   RmDir = 'RMDIR',
   Pwd = 'PWD',
+  /*
+  Cls = 'CLS',
   Export = 'EXPORT',
   */
 
