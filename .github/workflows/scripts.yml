@@ -3,11 +3,13 @@ on:
   pull_request:
     paths:
       - 'scripts/**.sh'
+      - '.github/workflows/scripts.yml'
   push:
     branches:
       - main
     paths:
       - 'scripts/**.sh'
+      - '.github/workflows/scripts.yml'
 jobs:
   scripts:
     name: Matanuska scripts
