@@ -1,0 +1,35 @@
+name: test-generator
+on:
+  pull_request:
+    paths:
+      - 'packages/test-generator/**.ts'
+      - 'packages/test-generator/**.json'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/test-generator/**.ts'
+      - 'packages/test-generator/**.json'
+jobs:
+  test-generator:
+    name: test-generator
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['lts/Iron', 'latest']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up Terraform
+        uses: ./.github/actions/setup-terraform
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build -w packages/test-generator
+      - name: Test
+        run: FORCE_COLOR=1 npm test -w packages/test-generator
+      - name: Lint
+        run: npm run lint -w packages/test-generator

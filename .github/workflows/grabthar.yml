@@ -1,0 +1,33 @@
+name: grabthar
+on:
+  pull_request:
+    paths:
+      - 'packages/grabthar/**.mjs'
+      - 'packages/grabthar/**.json'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/grabthar/**.mjs'
+      - 'packages/grabthar/**.json'
+jobs:
+  grabthar:
+    name: grabthar
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['lts/Iron', 'latest']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up Terraform
+        uses: ./.github/actions/setup-terraform
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test -w packages/grabthar
+      - name: Lint
+        run: npm run lint -w packages/grabthar

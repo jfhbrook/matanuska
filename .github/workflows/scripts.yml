@@ -1,0 +1,20 @@
+name: Matanuska scripts
+on:
+  pull_request:
+    paths:
+      - 'scripts/**.sh'
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**.sh'
+jobs:
+  scripts:
+    name: Matanuska scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Shellcheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './scripts'

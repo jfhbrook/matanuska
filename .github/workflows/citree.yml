@@ -1,0 +1,39 @@
+name: citree
+on:
+  pull_request:
+    paths:
+      - 'packages/citree/**.ts'
+      - 'packages/citree/**.citree'
+      - 'packages/citree/**.mjs'
+      - 'packages/citree/**.json'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/citree/**.ts'
+      - 'packages/citree/**.citree'
+      - 'packages/citree/**.mjs'
+      - 'packages/citree/**.json'
+jobs:
+  citree:
+    name: citree
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['lts/Iron', 'latest']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up Terraform
+        uses: ./.github/actions/setup-terraform
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build -w packages/citree
+      - name: Test
+        run: FORCE_COLOR=1 TAP_REPORTER=base TAP_ALLOW_INCOMPLETE_COVERAGE=1 npm test -w packages/citree
+      - name: Lint
+        run: cd ./packages/citree && npm run lint

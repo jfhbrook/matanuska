@@ -1,0 +1,23 @@
+name: citree scripts
+on:
+  pull_request:
+    paths:
+      - 'packages/citree/scripts/**.sh'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/citree/scripts/**.sh'
+jobs:
+  citree-scripts:
+    name: citree scripts
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['lts/Iron', 'latest']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Shellcheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './packages/citree/scripts'
