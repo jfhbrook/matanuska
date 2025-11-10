@@ -17,6 +17,7 @@ import {
   SyntaxWarning,
   ParseWarning,
   sortParseError,
+  NotImplementedError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
 import { Scanner } from './scanner';
@@ -34,6 +35,7 @@ import {
   RealLiteral,
   BoolLiteral,
   StringLiteral,
+  // PathLiteral,
   PromptLiteral,
   NilLiteral,
 } from './ast/expr';
@@ -64,6 +66,14 @@ import {
   EndWhile,
   Repeat,
   Until,
+  // Cd,
+  // Cp,
+  // Rm,
+  // Touch,
+  // Mv,
+  // MkDir,
+  // RmDir,
+  // Pwd,
 } from './ast/instr';
 import { Cmd, Line, Input, Program } from './ast';
 import { sortLines } from './ast/util';
@@ -513,6 +523,22 @@ export class Parser {
       instr = this.repeat();
     } else if (this.match(TokenKind.Until)) {
       instr = this.until();
+    } else if (this.match(TokenKind.Cd)) {
+      instr = this.cd();
+    } else if (this.match(TokenKind.Cp)) {
+      instr = this.cp();
+    } else if (this.match(TokenKind.Rm)) {
+      instr = this.rm();
+    } else if (this.match(TokenKind.Touch)) {
+      instr = this.touch();
+    } else if (this.match(TokenKind.Mv)) {
+      instr = this.mv();
+    } else if (this.match(TokenKind.MkDir)) {
+      instr = this.mkdir();
+    } else if (this.match(TokenKind.RmDir)) {
+      instr = this.rmdir();
+    } else if (this.match(TokenKind.Pwd)) {
+      instr = this.pwd();
     } else {
       const assign = this.assign();
       if (assign) {
@@ -726,6 +752,38 @@ export class Parser {
   private until(): Instr {
     const condition = this.expression();
     return new Until(condition);
+  }
+
+  private cd(): Instr {
+    throw new NotImplementedError('cd');
+  }
+
+  private cp(): Instr {
+    throw new NotImplementedError('cp');
+  }
+
+  private rm(): Instr {
+    throw new NotImplementedError('rm');
+  }
+
+  private touch(): Instr {
+    throw new NotImplementedError('touch');
+  }
+
+  private mv(): Instr {
+    throw new NotImplementedError('mv');
+  }
+
+  private mkdir(): Instr {
+    throw new NotImplementedError('mkdir');
+  }
+
+  private rmdir(): Instr {
+    throw new NotImplementedError('rmdir');
+  }
+
+  private pwd(): Instr {
+    throw new NotImplementedError('pwd');
   }
 
   private assign(): Instr | null {

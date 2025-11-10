@@ -156,14 +156,32 @@ describe('rmdir', () => {
   }
 });
 
-test.skip('pwd', () => {
-  const source = `pwd`;
-  const result = parseInput(source);
+describe('pwd', () => {
+  test.skip('no flag', () => {
+    const source = `pwd`;
+    const result = parseInput(source);
 
-  t.equal(result[1], null);
+    t.equal(result[1], null);
 
-  t.same(
-    result[0],
-    new Input([new Cmd(10, 1, Source.command(source), [new Pwd(true, 0, 4)])]),
-  );
+    t.same(
+      result[0],
+      new Input([
+        new Cmd(10, 1, Source.command(source), [new Pwd(true, 0, 4)]),
+      ]),
+    );
+  });
+
+  test.skip('-P flag', () => {
+    const source = `pwd -P`;
+    const result = parseInput(source);
+
+    t.equal(result[1], null);
+
+    t.same(
+      result[0],
+      new Input([
+        new Cmd(10, 1, Source.command(source), [new Pwd(false, 0, 4)]),
+      ]),
+    );
+  });
 });
