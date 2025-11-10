@@ -20,7 +20,6 @@ import {
   NotImplementedError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
-import { ParamsParser } from './params';
 import { Scanner } from './scanner';
 import { Token, TokenKind } from './tokens';
 
@@ -113,11 +112,8 @@ export class Parser {
   private cmdNo: number = 0;
   private line: Source = Source.empty();
   private isShortIf: boolean = false;
-  private params: ParamsParser;
 
-  constructor() {
-    this.params = new ParamsParser(this);
-  }
+  constructor() {}
 
   init(source: string, filename: string, isProgram: boolean) {
     this.filename = filename;
@@ -558,13 +554,8 @@ export class Parser {
   }
 
   private load(): Instr {
-    const { arguments: args, flags } = this.params.parse({
-      arguments: ['filename'],
-      flags: ['run'],
-    });
-
-    const filename = args[0];
-    return new Load(filename, flags.run || false);
+    const params = this.params();
+    return new Load(params);
   }
 
   private list(): Instr {
@@ -797,6 +788,10 @@ export class Parser {
     }
 
     return null;
+  }
+
+  private params(): Expr[] {
+    throw new NotImplementedError('params');
   }
 
   private optionalExpression(): Expr | null {

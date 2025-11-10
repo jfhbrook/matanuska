@@ -50,7 +50,10 @@ const INSTRUCTIONS = [
   new ExitInstr(new IntLiteral(0)),
   new Rem('a witty remark'),
   new New(null),
-  new Load([new StringLiteral('./examples/001-hello-world.bas'), new ShellLiteral('--run')]),
+  new Load([
+    new StringLiteral('./examples/001-hello-world.bas'),
+    new ShellLiteral('--run'),
+  ]),
   new List(null, null),
   new List(10, null),
   new List(10, 20),
