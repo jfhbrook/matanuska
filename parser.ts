@@ -20,6 +20,7 @@ import {
   NotImplementedError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
+import { ParamsParser } from './params';
 import { Scanner } from './scanner';
 import { Token, TokenKind } from './tokens';
 
@@ -78,18 +79,6 @@ import {
 import { Cmd, Line, Input, Program } from './ast';
 import { sortLines } from './ast/util';
 
-export interface Params {
-  arguments: Expr[];
-  flags: Record<string, boolean>;
-  options: Record<string, Expr>;
-}
-
-export interface ParamsSpec {
-  arguments?: string[];
-  flags?: string[];
-  options?: string[];
-}
-
 export type ParseResult<T> = [T, ParseWarning | null];
 export type Row = Line | Cmd;
 
@@ -108,8 +97,8 @@ export class Parser {
   private filename: string = '<unknown>';
   private scanner: Scanner;
 
-  private previous: Token | null;
-  private current: Token;
+  public previous: Token | null;
+  public current: Token;
   private leadingWs: string = '';
   private next: Token;
   private trailingWs: string = '';
@@ -124,8 +113,11 @@ export class Parser {
   private cmdNo: number = 0;
   private line: Source = Source.empty();
   private isShortIf: boolean = false;
+  private params: ParamsParser;
 
-  constructor() {}
+  constructor() {
+    this.params = new ParamsParser(this);
+  }
 
   init(source: string, filename: string, isProgram: boolean) {
     this.filename = filename;
@@ -224,7 +216,7 @@ export class Parser {
     //#endif
   }
 
-  private match(...kinds: TokenKind[]): boolean {
+  public match(...kinds: TokenKind[]): boolean {
     for (const kind of kinds) {
       if (this.check(kind)) {
         this.advance();
@@ -235,7 +227,7 @@ export class Parser {
     return false;
   }
 
-  private check(kind: TokenKind): boolean {
+  public check(kind: TokenKind): boolean {
     if (this.done) {
       return kind === TokenKind.Eof;
     }
@@ -286,7 +278,7 @@ export class Parser {
     this.syntaxError(this.current, message);
   }
 
-  private syntaxError(token: Token, message: string): never {
+  public syntaxError(token: Token, message: string): never {
     const exc = new SyntaxError(message, {
       filename: this.filename,
       row: token.row,
@@ -566,7 +558,7 @@ export class Parser {
   }
 
   private load(): Instr {
-    const { arguments: args, flags } = this.params({
+    const { arguments: args, flags } = this.params.parse({
       arguments: ['filename'],
       flags: ['run'],
     });
@@ -807,51 +799,6 @@ export class Parser {
     return null;
   }
 
-  private params(spec: ParamsSpec): Params {
-    const args = spec.arguments || [];
-    const argv: Params = { arguments: [], flags: {}, options: {} };
-    const flagNames: Set<string> = new Set(spec.flags || []);
-    const noFlagNames: Set<string> = new Set(
-      (spec.flags || []).map((f) => `no-${f}`),
-    );
-    const optionNames: Set<string> = new Set(spec.options || []);
-
-    let prevParamToken: Token = this.previous!;
-    let currParamToken: Token = this.current;
-    while (
-      !this.check(TokenKind.Colon) &&
-      !this.check(TokenKind.Rem) &&
-      !this.check(TokenKind.LineEnding) &&
-      !this.check(TokenKind.Eof)
-    ) {
-      if (this.match(TokenKind.LongFlag)) {
-        const key = this.previous!.value as string;
-        if (flagNames.has(key)) {
-          argv.flags[key] = true;
-        } else if (noFlagNames.has(key)) {
-          argv.flags[key] = false;
-        } else if (optionNames.has(key)) {
-          argv.options[key] = this.expression();
-        }
-      } else {
-        prevParamToken = currParamToken;
-        currParamToken = this.current;
-        argv.arguments.push(this.expression());
-      }
-    }
-
-    if (argv.arguments.length < args.length) {
-      this.syntaxError(
-        currParamToken,
-        `Missing argument '${args[argv.arguments.length]}'`,
-      );
-    } else if (argv.arguments.length > args.length) {
-      this.syntaxError(prevParamToken, 'Unexpected argument');
-    }
-
-    return argv;
-  }
-
   private optionalExpression(): Expr | null {
     for (const tok of [TokenKind.Colon, TokenKind.LineEnding, TokenKind.Eof]) {
       if (this.check(tok)) {
@@ -861,7 +808,7 @@ export class Parser {
     return this.expression();
   }
 
-  private expression(): Expr {
+  public expression(): Expr {
     return this.or();
   }
 
