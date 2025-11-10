@@ -449,7 +449,7 @@ export class MkDir extends Instr {
   constructor(
     public path: Expr,
     public parents: boolean,
-    public mode: number | null,
+    public mode: Expr | null,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {

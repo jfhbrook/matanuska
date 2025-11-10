@@ -817,6 +817,13 @@ export class DefaultFormatter extends Formatter {
     return `Mv (${paths})`;
   }
 
+  formatMode(expr: Expr) {
+    if (expr instanceof IntLiteral) {
+      return '0' + expr.value.toString(8);
+    }
+    return this.format(expr);
+  }
+
   visitMkDirInstr(mkdir: MkDir): string {
     const path = this.format(mkdir.path);
     const flags: string[] = [];
@@ -826,7 +833,7 @@ export class DefaultFormatter extends Formatter {
     }
 
     if (mkdir.mode) {
-      flags.push(`-m ${mkdir.mode.toString(8)}`);
+      flags.push(`-m ${this.formatMode(mkdir.mode)}`);
     }
 
     return `MkDir (${flags.join(' ')}${flags.length ? ' ' : ''}${path})`;

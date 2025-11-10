@@ -49,7 +49,7 @@ type Instr in './instr' {
   Rm         => paths: Expr[], recursive: boolean, force: boolean, directory: boolean
   Touch      => paths: Expr[]
   Mv         => from: Expr[], to: Expr
-  MkDir      => path: Expr, parents: boolean, mode: number | null
+  MkDir      => path: Expr, parents: boolean, mode: Expr | null
   RmDir      => path: Expr, parents: boolean
   Pwd        => follow: boolean
 }

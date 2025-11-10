@@ -350,7 +350,7 @@ exports[`instr > given a DefaultFormatter > Load 1`] = `"Load('./examples/001-he
 
 exports[`instr > given a DefaultFormatter > MkDir 1`] = `"MkDir (dir)"`;
 
-exports[`instr > given a DefaultFormatter > MkDir 2`] = `"MkDir (-p -m 775 dir)"`;
+exports[`instr > given a DefaultFormatter > MkDir 2`] = `"MkDir (-p -m 0775 dir)"`;
 
 exports[`instr > given a DefaultFormatter > Mv 1`] = `"Mv (foo.txt bar.txt)"`;
 
@@ -428,7 +428,7 @@ exports[`instr > given a Inspector > Load 1`] = `"Load('./examples/001-hello-wor
 
 exports[`instr > given a Inspector > MkDir 1`] = `"MkDir (dir)"`;
 
-exports[`instr > given a Inspector > MkDir 2`] = `"MkDir (-p -m 775 dir)"`;
+exports[`instr > given a Inspector > MkDir 2`] = `"MkDir (-p -m 0775 dir)"`;
 
 exports[`instr > given a Inspector > Mv 1`] = `"Mv (foo.txt bar.txt)"`;
 

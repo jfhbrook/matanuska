@@ -134,7 +134,7 @@ const INSTRUCTIONS = [
   new Touch([new PathLiteral('foo.txt')]),
   new Mv([new PathLiteral('foo.txt')], new PathLiteral('bar.txt')),
   new MkDir(new PathLiteral('dir'), false, null),
-  new MkDir(new PathLiteral('dir'), true, 0o775),
+  new MkDir(new PathLiteral('dir'), true, new IntLiteral(0o775)),
   new RmDir(new PathLiteral('dir'), false),
   new RmDir(new PathLiteral('dir'), true),
   new Pwd(true),
