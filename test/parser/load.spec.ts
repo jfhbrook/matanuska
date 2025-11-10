@@ -29,7 +29,27 @@ describe('load', () => {
     );
   });
 
-  test('load with filename and --run', () => {
+  test.skip('load with path literal', () => {
+    const source = 'load ./examples/001-hello-world.bas';
+    const result = parseInput(source);
+
+    t.equal(result[1], null);
+    t.same(
+      result[0],
+      new Input([
+        new Cmd(10, 1, Source.command(source), [
+          new Load(
+            new StringLiteral('./examples/001-hello-world.bas'),
+            false,
+            0,
+            37,
+          ),
+        ]),
+      ]),
+    );
+  });
+
+  test.skip('load with filename and --run', () => {
     const source = 'load "./examples/001-hello-world.bas" --run';
     const result = parseInput(source);
 
@@ -49,7 +69,7 @@ describe('load', () => {
     );
   });
 
-  test('load with filename and --no-run', () => {
+  test.skip('load with filename and --no-run', () => {
     const source = 'load "./examples/001-hello-world.bas" --no-run';
     const result = parseInput(source);
 

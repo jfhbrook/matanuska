@@ -25,7 +25,7 @@ Before continuing, we should take the time to understand how Matanuska handles p
 Currently, all tested paths scan as a combination of basic tokens, _not_ separated by whitespace:
 
 | text            | tokens                              |
-| --------------- | ------------------------------------|
+| --------------- | ----------------------------------- |
 | `/`             | `/`                                 |
 | `./`            | `.`, `/`                            |
 | `..`            | `.`, `.`                            |
