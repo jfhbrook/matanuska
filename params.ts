@@ -1,5 +1,5 @@
 import { NotImplementedError } from './exceptions';
-import { Expr } from './ast/expr';
+import { Value } from './value';
 
 export interface ParamsSpec {
   arguments?: string[];
@@ -8,15 +8,16 @@ export interface ParamsSpec {
 }
 
 export interface Params {
-  arguments: Expr[];
+  arguments: Value[];
   flags: Record<string, boolean>;
-  options: Record<string, Expr>;
+  options: Record<string, Value>;
 }
 
 export class ParamsParser {
   constructor(private spec: ParamsSpec) {}
 
-  parse(params: Expr[]) {
+  // TODO: This should take values, not exprs
+  parse(params: Array<Value | null>): Params {
     throw new NotImplementedError('params');
   }
 }
