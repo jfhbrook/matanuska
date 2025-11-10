@@ -2,7 +2,7 @@ import { describe, test } from 'vitest';
 import { t } from '../helpers/tap';
 
 import { Source } from '../../ast/source';
-import { StringLiteral, PathLiteral } from '../../ast/expr';
+import { StringLiteral, ShellLiteral } from '../../ast/expr';
 import { Cd, Cp, Rm, Touch, Mv, MkDir, RmDir, Pwd } from '../../ast/instr';
 import { Cmd, Input } from '../../ast';
 import { parseInput } from '../helpers/parser';
@@ -21,7 +21,7 @@ describe('cd', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Cd(new PathLiteral(path), 0, 4),
+            new Cd([new ShellLiteral(path)], 0, 4),
           ]),
         ]),
       );
@@ -41,14 +41,7 @@ describe('cp', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Cp(
-              [new PathLiteral(path)],
-              new StringLiteral('foo'),
-              false,
-              false,
-              0,
-              4,
-            ),
+            new Cp([new ShellLiteral(path), new StringLiteral('foo')], 0, 4),
           ]),
         ]),
       );
@@ -68,7 +61,7 @@ describe('rm', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Rm([new PathLiteral(path)], true, true, false, 0, 4),
+            new Rm([new ShellLiteral(path), new ShellLiteral('-rf')], 0, 4),
           ]),
         ]),
       );
@@ -88,7 +81,7 @@ describe('touch', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Touch([new PathLiteral(path)], 0, 4),
+            new Touch([new ShellLiteral(path)], 0, 4),
           ]),
         ]),
       );
@@ -108,7 +101,7 @@ describe('mv', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Mv([new PathLiteral(path)], new StringLiteral('foo'), 0, 4),
+            new Mv([new ShellLiteral(path), new StringLiteral('foo')], 0, 4),
           ]),
         ]),
       );
@@ -128,7 +121,7 @@ describe('mkdir', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new MkDir(new PathLiteral(path), true, null, 0, 4),
+            new MkDir([new ShellLiteral(path), new ShellLiteral('-p')], 0, 4),
           ]),
         ]),
       );
@@ -148,7 +141,7 @@ describe('rmdir', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new RmDir(new PathLiteral(path), true, 0, 4),
+            new RmDir([new ShellLiteral(path), new ShellLiteral('-p')], 0, 4),
           ]),
         ]),
       );
@@ -165,9 +158,7 @@ describe('pwd', () => {
 
     t.same(
       result[0],
-      new Input([
-        new Cmd(10, 1, Source.command(source), [new Pwd(true, 0, 4)]),
-      ]),
+      new Input([new Cmd(10, 1, Source.command(source), [new Pwd([], 0, 4)])]),
     );
   });
 
@@ -180,7 +171,9 @@ describe('pwd', () => {
     t.same(
       result[0],
       new Input([
-        new Cmd(10, 1, Source.command(source), [new Pwd(false, 0, 4)]),
+        new Cmd(10, 1, Source.command(source), [
+          new Pwd([new ShellLiteral('-p')], 0, 4),
+        ]),
       ]),
     );
   });

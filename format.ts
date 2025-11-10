@@ -34,7 +34,7 @@ import {
   RealLiteral,
   BoolLiteral,
   StringLiteral,
-  PathLiteral,
+  ShellLiteral,
   PromptLiteral,
   NilLiteral,
 } from './ast/expr';
@@ -186,7 +186,7 @@ export abstract class Formatter
   abstract visitRealLiteralExpr(real: RealLiteral): string;
   abstract visitBoolLiteralExpr(bool: BoolLiteral): string;
   abstract visitStringLiteralExpr(str: StringLiteral): string;
-  abstract visitPathLiteralExpr(path: PathLiteral): string;
+  abstract visitShellLiteralExpr(path: ShellLiteral): string;
   abstract visitPromptLiteralExpr(ps: PromptLiteral): string;
   abstract visitNilLiteralExpr(node: NilLiteral): string;
 
@@ -630,7 +630,7 @@ export class DefaultFormatter extends Formatter {
     return inspectString(str.value);
   }
 
-  visitPathLiteralExpr(path: PathLiteral): string {
+  visitShellLiteralExpr(path: ShellLiteral): string {
     return path.value;
   }
 
@@ -659,7 +659,7 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitLoadInstr(load: Load): string {
-    return `Load(${this.format(load.filename)}, run=${load.run ? 'true' : 'false'})`;
+    return `Load (${this.formatArgv(load.argv)})`;
   }
 
   visitListInstr(list: List): string {
@@ -759,104 +759,47 @@ export class DefaultFormatter extends Formatter {
     return `Until (${this.format(until.condition)})`;
   }
 
+  private formatArgv(argv: Expr[], octal: boolean = false): string {
+    return argv
+      .map((expr) => {
+        if (octal && expr instanceof IntLiteral) {
+          return '0' + expr.value.toString(8);
+        }
+        return this.format(expr);
+      })
+      .join(' ');
+  }
+
   visitCdInstr(cd: Cd): string {
-    return `Cd (${this.format(cd.path)})`;
+    return `Cd (${this.formatArgv(cd.argv)})`;
   }
 
   visitCpInstr(cp: Cp): string {
-    const paths = cp.from.concat(cp.to).map(this.format.bind(this)).join(' ');
-    let flags: string = '';
-
-    if (cp.recursive) {
-      flags += 'r';
-    }
-
-    if (cp.force) {
-      flags += 'f';
-    }
-
-    if (flags.length) {
-      flags = `-${flags} `;
-    }
-
-    return `Cp (${flags}${paths})`;
+    return `Cp (${this.formatArgv(cp.argv)})`;
   }
 
   visitRmInstr(rm: Rm): string {
-    const paths = rm.paths.map(this.format.bind(this)).join(' ');
-    let flags: string = '';
-
-    if (rm.recursive) {
-      flags += 'r';
-    }
-
-    if (rm.force) {
-      flags += 'f';
-    }
-
-    if (rm.directory) {
-      flags += 'd';
-    }
-
-    if (flags.length) {
-      flags = `-${flags} `;
-    }
-
-    return `Rm (${flags}${paths})`;
+    return `Rm (${this.formatArgv(rm.argv)})`;
   }
 
   visitTouchInstr(touch: Touch): string {
-    const paths = touch.paths.map(this.format.bind(this)).join(' ');
-
-    return `Touch (${paths})`;
+    return `Touch (${this.formatArgv(touch.argv)})`;
   }
 
   visitMvInstr(mv: Mv): string {
-    const paths = mv.from.concat(mv.to).map(this.format.bind(this)).join(' ');
-
-    return `Mv (${paths})`;
-  }
-
-  formatMode(expr: Expr) {
-    if (expr instanceof IntLiteral) {
-      return '0' + expr.value.toString(8);
-    }
-    return this.format(expr);
+    return `Mv (${this.formatArgv(mv.argv)})`;
   }
 
   visitMkDirInstr(mkdir: MkDir): string {
-    const path = this.format(mkdir.path);
-    const flags: string[] = [];
-
-    if (mkdir.parents) {
-      flags.push('-p');
-    }
-
-    if (mkdir.mode) {
-      flags.push(`-m ${this.formatMode(mkdir.mode)}`);
-    }
-
-    return `MkDir (${flags.join(' ')}${flags.length ? ' ' : ''}${path})`;
+    return `MkDir (${this.formatArgv(mkdir.argv, true)})`;
   }
 
   visitRmDirInstr(rmdir: RmDir): string {
-    const path = this.format(rmdir.path);
-    let flags: string = '';
-
-    if (rmdir.parents) {
-      flags += 'p';
-    }
-
-    if (flags.length) {
-      flags += `-${flags} `;
-    }
-
-    return `RmDir (${flags}${path})`;
+    return `RmDir (${this.formatArgv(rmdir.argv)})`;
   }
 
   visitPwdInstr(pwd: Pwd): string {
-    const flags = pwd.follow ? '' : '-L';
-    return `Pwd (${flags})`;
+    return `Pwd (${this.formatArgv(pwd.argv)})`;
   }
 
   formatStack<V>(stack: Stack<V>): string {

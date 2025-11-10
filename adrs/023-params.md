@@ -33,6 +33,7 @@ Currently, all tested paths scan as a combination of basic tokens, _not_ separat
 | `./`            | `.`, `/`                            |
 | `./path`        | `.`, `/`, `<ident>`                 |
 | `.\path`        | `.`, `\`, `<ident>`                 |
+| `./*.txt`       | `.`, `/`, `*`, `.`, `<ident>`       |
 | `-o`            | `-`, `<ident>`                      |
 | `--long-option` | `-`, `-`, `<ident>`, `-`, `<ident>` |
 

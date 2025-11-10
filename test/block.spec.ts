@@ -52,7 +52,7 @@ const INVALID_INSTRS = [
   new Expression(new StringLiteral('a')),
   new Rem('remark'),
   new New(null),
-  new Load(new StringLiteral('file'), false),
+  new Load([new StringLiteral('file')]),
   new List(null, null),
   new Renum(),
   new Save(new StringLiteral('file')),

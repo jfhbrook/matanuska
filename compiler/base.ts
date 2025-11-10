@@ -36,7 +36,7 @@ import {
   RealLiteral,
   BoolLiteral,
   StringLiteral,
-  PathLiteral,
+  ShellLiteral,
   PromptLiteral,
   NilLiteral,
 } from '../ast/expr';
@@ -959,7 +959,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.emitConstant(str.value);
   }
 
-  visitPathLiteralExpr(path: PathLiteral): void {
+  visitShellLiteralExpr(path: ShellLiteral): void {
     console.log(path);
     throw new NotImplementedError('path literal');
   }

@@ -10,7 +10,7 @@ export interface ExprVisitor<R> {
   visitRealLiteralExpr(node: RealLiteral): R;
   visitBoolLiteralExpr(node: BoolLiteral): R;
   visitStringLiteralExpr(node: StringLiteral): R;
-  visitPathLiteralExpr(node: PathLiteral): R;
+  visitShellLiteralExpr(node: ShellLiteral): R;
   visitPromptLiteralExpr(node: PromptLiteral): R;
   visitNilLiteralExpr(node: NilLiteral): R;
 }
@@ -120,13 +120,13 @@ export class StringLiteral extends Expr {
   }
 }
 
-export class PathLiteral extends Expr {
+export class ShellLiteral extends Expr {
   constructor(public value: string) {
     super();
   }
 
   accept<R>(visitor: ExprVisitor<R>): R {
-    return visitor.visitPathLiteralExpr(this);
+    return visitor.visitShellLiteralExpr(this);
   }
 }
 
