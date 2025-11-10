@@ -76,60 +76,56 @@ export const KEYWORDS: Record<string, TokenKind> = {
 
 export const EOF = '\0';
 
-//
-// TODO: Would regular expressions be faster?
-//
-
-const WHITESPACE = new Set('\r\t ');
+const WHITESPACE = /[\r\t ]/;
 
 function isWhitespace(c: string): boolean {
-  return WHITESPACE.has(c);
+  return c.match(WHITESPACE) !== null;
 }
 
-const DECIMAL_DIGITS = new Set('0123456789');
+const DECIMAL_DIGITS = /[0123456789]/;
 
 function isDecimalDigit(c: string): boolean {
-  return DECIMAL_DIGITS.has(c);
+  return c.match(DECIMAL_DIGITS) !== null;
 }
 
-const HEX_DIGITS = new Set('0123456789abcdefABCDEF');
+const HEX_DIGITS = /[0123456789abcdef]/i;
 
 function isHexDigit(c: string): boolean {
-  return HEX_DIGITS.has(c);
+  return c.match(HEX_DIGITS) !== null;
 }
 
-const OCTAL_DIGITS = new Set('01234567');
+const OCTAL_DIGITS = /[012345678]/;
 
 function isOctalDigit(c: string): boolean {
-  return OCTAL_DIGITS.has(c);
+  return c.match(OCTAL_DIGITS) != null;
 }
 
-const BINARY_DIGITS = new Set('01');
+const BINARY_DIGITS = /[01]/;
 
 function isBinaryDigit(c: string): boolean {
-  return BINARY_DIGITS.has(c);
+  return c.match(BINARY_DIGITS) != null;
 }
 
-const ALPHA = new Set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+const ALPHA = /[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]/;
 
 function isAlpha(c: string): boolean {
-  return ALPHA.has(c);
+  return c.match(ALPHA) != null;
 }
 
 function isAlphaNumeric(c: string): boolean {
   return isAlpha(c) || isDecimalDigit(c);
 }
 
-const ILLEGAL_SHELL_CHARS = new Set('`#$&*()|[]{}:\'"<>?!');
+const ILLEGAL_SHELL_CHARS = /[`#$&*()|[\]{}:\\'"<>?!]/;
 
 function isIllegalShellChar(c: string): boolean {
-  return ILLEGAL_SHELL_CHARS.has(c);
+  return c.match(ILLEGAL_SHELL_CHARS) != null;
 }
 
-const ILLEGAL_TOKEN_BOUNDARY = new Set('\r\t\n ');
+const ILLEGAL_TOKEN_BOUNDARY = /\r\t\n /;
 
 function isIllegalTokenBoundary(c: string): boolean {
-  return ILLEGAL_TOKEN_BOUNDARY.has(c);
+  return c.match(ILLEGAL_TOKEN_BOUNDARY) != null;
 }
 
 /**
