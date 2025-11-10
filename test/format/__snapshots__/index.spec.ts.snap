@@ -394,7 +394,7 @@ exports[`instr > given a DefaultFormatter > While 1`] = `"While (true)"`;
 
 exports[`instr > given a Inspector > Assign 1`] = `"Assign(i%, 1)"`;
 
-exports[`instr > given a Inspector > Cd 1`] = `"Cd ([32m'..'[39m)"`;
+exports[`instr > given a Inspector > Cd 1`] = `"Cd (..)"`;
 
 exports[`instr > given a Inspector > Cp 1`] = `"Cp (-rf foo.txt bar.txt)"`;
 

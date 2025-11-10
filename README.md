@@ -26,9 +26,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] scanner
   - [x] AST
   - [x] formatter
-  - [ ] paths as exprs
-    - [ ] token type for path literals
-    - [ ] paths should take exprs
+  - [x] paths as exprs
+  - [ ] mode should take expr
   - [ ] parser
   - [ ] editor
   - [ ] compiler

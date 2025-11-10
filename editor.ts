@@ -20,6 +20,7 @@ import {
   RealLiteral,
   BoolLiteral,
   StringLiteral,
+  PathLiteral,
   PromptLiteral,
   NilLiteral,
 } from './ast/expr';
@@ -60,7 +61,6 @@ import {
   RmDir,
   Pwd,
 } from './ast/instr';
-import { NotImplementedError } from './exceptions';
 
 type LineNo = number;
 
@@ -234,43 +234,52 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitCdInstr(cd: Cd): void {
-    console.log(cd);
-    throw new NotImplementedError('cd');
+    this.shiftInstr(cd);
+    cd.path.accept(this);
   }
 
   visitCpInstr(cp: Cp): void {
-    console.log(cp);
-    throw new NotImplementedError('cp');
+    this.shiftInstr(cp);
+    for (const expr of cp.from) {
+      expr.accept(this);
+    }
+    cp.to.accept(this);
   }
 
   visitRmInstr(rm: Rm): void {
-    console.log(rm);
-    throw new NotImplementedError('rm');
+    this.shiftInstr(rm);
+    for (const expr of rm.paths) {
+      expr.accept(this);
+    }
   }
 
   visitTouchInstr(touch: Touch): void {
-    console.log(touch);
-    throw new NotImplementedError('cp');
+    this.shiftInstr(touch);
+    for (const expr of touch.paths) {
+      expr.accept(this);
+    }
   }
 
   visitMvInstr(mv: Mv): void {
-    console.log(mv);
-    throw new NotImplementedError('mv');
+    this.shiftInstr(mv);
+    for (const expr of mv.from) {
+      expr.accept(this);
+    }
+    mv.to.accept(this);
   }
 
   visitMkDirInstr(mkdir: MkDir): void {
-    console.log(mkdir);
-    throw new NotImplementedError('mkDir');
+    this.shiftInstr(mkdir);
+    mkdir.path.accept(this);
   }
 
   visitRmDirInstr(rmdir: RmDir): void {
-    console.log(rmdir);
-    throw new NotImplementedError('rmdir');
+    this.shiftInstr(rmdir);
+    rmdir.path.accept(this);
   }
 
   visitPwdInstr(pwd: Pwd): void {
-    console.log(pwd);
-    throw new NotImplementedError('pwd');
+    this.shiftInstr(pwd);
   }
 
   visitUnaryExpr(unary: Unary): void {
@@ -299,6 +308,7 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
   visitRealLiteralExpr(_real: RealLiteral): void {}
   visitBoolLiteralExpr(_bool: BoolLiteral): void {}
   visitStringLiteralExpr(_str: StringLiteral): void {}
+  visitPathLiteralExpr(_path: PathLiteral): void {}
   visitPromptLiteralExpr(_prompt: PromptLiteral): void {}
   visitNilLiteralExpr(_nil: NilLiteral): void {}
 }

@@ -370,7 +370,7 @@ export class Until extends Instr {
 
 export class Cd extends Instr {
   constructor(
-    public path: string,
+    public path: Expr,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -384,8 +384,8 @@ export class Cd extends Instr {
 
 export class Cp extends Instr {
   constructor(
-    public from: string[],
-    public to: string,
+    public from: Expr[],
+    public to: Expr,
     public force: boolean,
     public recursive: boolean,
     offsetStart: number = -1,
@@ -401,7 +401,7 @@ export class Cp extends Instr {
 
 export class Rm extends Instr {
   constructor(
-    public paths: string[],
+    public paths: Expr[],
     public recursive: boolean,
     public force: boolean,
     public directory: boolean,
@@ -418,7 +418,7 @@ export class Rm extends Instr {
 
 export class Touch extends Instr {
   constructor(
-    public paths: string[],
+    public paths: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -432,8 +432,8 @@ export class Touch extends Instr {
 
 export class Mv extends Instr {
   constructor(
-    public from: string[],
-    public to: string,
+    public from: Expr[],
+    public to: Expr,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -447,7 +447,7 @@ export class Mv extends Instr {
 
 export class MkDir extends Instr {
   constructor(
-    public path: string,
+    public path: Expr,
     public parents: boolean,
     public mode: number | null,
     offsetStart: number = -1,
@@ -463,7 +463,7 @@ export class MkDir extends Instr {
 
 export class RmDir extends Instr {
   constructor(
-    public path: string,
+    public path: Expr,
     public parents: boolean,
     offsetStart: number = -1,
     offsetEnd: number = -1,

@@ -25,6 +25,22 @@ import { Value } from '../value';
 import { Line, Program } from '../ast';
 import { Source } from '../ast/source';
 import {
+  Expr,
+  ExprVisitor,
+  Unary,
+  Binary,
+  Logical,
+  Group,
+  Variable,
+  IntLiteral,
+  RealLiteral,
+  BoolLiteral,
+  StringLiteral,
+  PathLiteral,
+  PromptLiteral,
+  NilLiteral,
+} from '../ast/expr';
+import {
   Instr,
   InstrVisitor,
   Print,
@@ -61,21 +77,6 @@ import {
   RmDir,
   Pwd,
 } from '../ast/instr';
-import {
-  Expr,
-  ExprVisitor,
-  Unary,
-  Binary,
-  Logical,
-  Group,
-  Variable,
-  IntLiteral,
-  RealLiteral,
-  BoolLiteral,
-  StringLiteral,
-  PromptLiteral,
-  NilLiteral,
-} from '../ast/expr';
 
 import { Block } from './block';
 import { Scope } from './scope';
@@ -956,6 +957,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitStringLiteralExpr(str: StringLiteral): void {
     this.emitConstant(str.value);
+  }
+
+  visitPathLiteralExpr(path: PathLiteral): void {
+    console.log(path);
+    throw new NotImplementedError('path literal');
   }
 
   visitPromptLiteralExpr(_ps: PromptLiteral): void {}

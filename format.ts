@@ -34,6 +34,7 @@ import {
   RealLiteral,
   BoolLiteral,
   StringLiteral,
+  PathLiteral,
   PromptLiteral,
   NilLiteral,
 } from './ast/expr';
@@ -185,6 +186,7 @@ export abstract class Formatter
   abstract visitRealLiteralExpr(real: RealLiteral): string;
   abstract visitBoolLiteralExpr(bool: BoolLiteral): string;
   abstract visitStringLiteralExpr(str: StringLiteral): string;
+  abstract visitPathLiteralExpr(path: PathLiteral): string;
   abstract visitPromptLiteralExpr(ps: PromptLiteral): string;
   abstract visitNilLiteralExpr(node: NilLiteral): string;
 
@@ -628,6 +630,10 @@ export class DefaultFormatter extends Formatter {
     return inspectString(str.value);
   }
 
+  visitPathLiteralExpr(path: PathLiteral): string {
+    return path.value;
+  }
+
   visitPromptLiteralExpr(str: PromptLiteral): string {
     return inspectString(str.value);
   }
@@ -758,7 +764,7 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitCpInstr(cp: Cp): string {
-    const paths = cp.from.concat(cp.to).join(' ');
+    const paths = cp.from.concat(cp.to).map(this.format.bind(this)).join(' ');
     let flags: string = '';
 
     if (cp.recursive) {
@@ -777,7 +783,7 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitRmInstr(rm: Rm): string {
-    const paths = rm.paths.join(' ');
+    const paths = rm.paths.map(this.format.bind(this)).join(' ');
     let flags: string = '';
 
     if (rm.recursive) {
@@ -800,18 +806,19 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitTouchInstr(touch: Touch): string {
-    const paths = touch.paths.join(' ');
+    const paths = touch.paths.map(this.format.bind(this)).join(' ');
 
     return `Touch (${paths})`;
   }
 
   visitMvInstr(mv: Mv): string {
-    const paths = mv.from.concat(mv.to).join(' ');
+    const paths = mv.from.concat(mv.to).map(this.format.bind(this)).join(' ');
 
     return `Mv (${paths})`;
   }
 
   visitMkDirInstr(mkdir: MkDir): string {
+    const path = this.format(mkdir.path);
     const flags: string[] = [];
 
     if (mkdir.parents) {
@@ -822,10 +829,11 @@ export class DefaultFormatter extends Formatter {
       flags.push(`-m ${mkdir.mode.toString(8)}`);
     }
 
-    return `MkDir (${flags.join(' ')}${flags.length ? ' ' : ''}${mkdir.path})`;
+    return `MkDir (${flags.join(' ')}${flags.length ? ' ' : ''}${path})`;
   }
 
   visitRmDirInstr(rmdir: RmDir): string {
+    const path = this.format(rmdir.path);
     let flags: string = '';
 
     if (rmdir.parents) {
@@ -836,7 +844,7 @@ export class DefaultFormatter extends Formatter {
       flags += `-${flags} `;
     }
 
-    return `RmDir (${flags}${rmdir.path})`;
+    return `RmDir (${flags}${path})`;
   }
 
   visitPwdInstr(pwd: Pwd): string {
