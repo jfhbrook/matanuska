@@ -959,9 +959,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.emitConstant(str.value);
   }
 
-  visitShellLiteralExpr(path: ShellLiteral): void {
-    console.log(path);
-    throw new NotImplementedError('path literal');
+  visitShellLiteralExpr(shell: ShellLiteral): void {
+    this.emitConstant(shell.value);
   }
 
   visitPromptLiteralExpr(_ps: PromptLiteral): void {}
