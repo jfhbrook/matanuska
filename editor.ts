@@ -144,7 +144,7 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitLoadInstr(load: Load): void {
     this.shiftInstr(load);
-    for (const expr of load.argv) {
+    for (const expr of load.params) {
       expr.accept(this);
     }
   }
@@ -235,56 +235,56 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitCdInstr(cd: Cd): void {
     this.shiftInstr(cd);
-    for (const expr of cd.argv) {
+    for (const expr of cd.params) {
       expr.accept(this);
     }
   }
 
   visitCpInstr(cp: Cp): void {
     this.shiftInstr(cp);
-    for (const expr of cp.argv) {
+    for (const expr of cp.params) {
       expr.accept(this);
     }
   }
 
   visitRmInstr(rm: Rm): void {
     this.shiftInstr(rm);
-    for (const expr of rm.argv) {
+    for (const expr of rm.params) {
       expr.accept(this);
     }
   }
 
   visitTouchInstr(touch: Touch): void {
     this.shiftInstr(touch);
-    for (const expr of touch.argv) {
+    for (const expr of touch.params) {
       expr.accept(this);
     }
   }
 
   visitMvInstr(mv: Mv): void {
     this.shiftInstr(mv);
-    for (const expr of mv.argv) {
+    for (const expr of mv.params) {
       expr.accept(this);
     }
   }
 
   visitMkDirInstr(mkdir: MkDir): void {
     this.shiftInstr(mkdir);
-    for (const expr of mkdir.argv) {
+    for (const expr of mkdir.params) {
       expr.accept(this);
     }
   }
 
   visitRmDirInstr(rmdir: RmDir): void {
     this.shiftInstr(rmdir);
-    for (const expr of rmdir.argv) {
+    for (const expr of rmdir.params) {
       expr.accept(this);
     }
   }
 
   visitPwdInstr(pwd: Pwd): void {
     this.shiftInstr(pwd);
-    for (const expr of pwd.argv) {
+    for (const expr of pwd.params) {
       expr.accept(this);
     }
   }

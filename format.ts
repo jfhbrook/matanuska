@@ -659,7 +659,7 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitLoadInstr(load: Load): string {
-    return `Load (${this.formatArgv(load.argv)})`;
+    return `Load (${this.formatArgv(load.params)})`;
   }
 
   visitListInstr(list: List): string {
@@ -759,8 +759,8 @@ export class DefaultFormatter extends Formatter {
     return `Until (${this.format(until.condition)})`;
   }
 
-  private formatArgv(argv: Expr[], octal: boolean = false): string {
-    return argv
+  private formatArgv(params: Expr[], octal: boolean = false): string {
+    return params
       .map((expr) => {
         if (octal && expr instanceof IntLiteral) {
           return '0' + expr.value.toString(8);
@@ -771,35 +771,35 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitCdInstr(cd: Cd): string {
-    return `Cd (${this.formatArgv(cd.argv)})`;
+    return `Cd (${this.formatArgv(cd.params)})`;
   }
 
   visitCpInstr(cp: Cp): string {
-    return `Cp (${this.formatArgv(cp.argv)})`;
+    return `Cp (${this.formatArgv(cp.params)})`;
   }
 
   visitRmInstr(rm: Rm): string {
-    return `Rm (${this.formatArgv(rm.argv)})`;
+    return `Rm (${this.formatArgv(rm.params)})`;
   }
 
   visitTouchInstr(touch: Touch): string {
-    return `Touch (${this.formatArgv(touch.argv)})`;
+    return `Touch (${this.formatArgv(touch.params)})`;
   }
 
   visitMvInstr(mv: Mv): string {
-    return `Mv (${this.formatArgv(mv.argv)})`;
+    return `Mv (${this.formatArgv(mv.params)})`;
   }
 
   visitMkDirInstr(mkdir: MkDir): string {
-    return `MkDir (${this.formatArgv(mkdir.argv, true)})`;
+    return `MkDir (${this.formatArgv(mkdir.params, true)})`;
   }
 
   visitRmDirInstr(rmdir: RmDir): string {
-    return `RmDir (${this.formatArgv(rmdir.argv)})`;
+    return `RmDir (${this.formatArgv(rmdir.params)})`;
   }
 
   visitPwdInstr(pwd: Pwd): string {
-    return `Pwd (${this.formatArgv(pwd.argv)})`;
+    return `Pwd (${this.formatArgv(pwd.params)})`;
   }
 
   formatStack<V>(stack: Stack<V>): string {

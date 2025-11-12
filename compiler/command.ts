@@ -119,7 +119,7 @@ export class CommandCompiler
   }
 
   visitLoadInstr(load: Load): CompileResult<CompiledCmd> {
-    return this.command(load, load.argv);
+    return this.command(load, load.params);
   }
 
   visitListInstr(list: List): CompileResult<CompiledCmd> {

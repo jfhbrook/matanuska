@@ -157,7 +157,7 @@ export class New extends Instr {
 
 export class Load extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -369,7 +369,7 @@ export class Until extends Instr {
 
 export class Cd extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -383,7 +383,7 @@ export class Cd extends Instr {
 
 export class Cp extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -397,7 +397,7 @@ export class Cp extends Instr {
 
 export class Rm extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -411,7 +411,7 @@ export class Rm extends Instr {
 
 export class Touch extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -425,7 +425,7 @@ export class Touch extends Instr {
 
 export class Mv extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -439,7 +439,7 @@ export class Mv extends Instr {
 
 export class MkDir extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -453,7 +453,7 @@ export class MkDir extends Instr {
 
 export class RmDir extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -467,7 +467,7 @@ export class RmDir extends Instr {
 
 export class Pwd extends Instr {
   constructor(
-    public argv: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {

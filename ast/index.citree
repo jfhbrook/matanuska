@@ -27,7 +27,7 @@ type Instr in './instr' {
   Exit       => expression: Expr | null
   End!
   New        => filename: Expr | null
-  Load       => argv: Expr[]
+  Load       => params: Expr[]
   List       => lineStart: number | null, lineEnd: number | null
   Renum!
   Run!
@@ -44,14 +44,14 @@ type Instr in './instr' {
   EndWhile!
   Repeat!
   Until      => condition: Expr
-  Cd         => argv: Expr[]
-  Cp         => argv: Expr[]
-  Rm         => argv: Expr[]
-  Touch      => argv: Expr[]
-  Mv         => argv: Expr[]
-  MkDir      => argv: Expr[]
-  RmDir      => argv: Expr[]
-  Pwd        => argv: Expr[]
+  Cd         => params: Expr[]
+  Cp         => params: Expr[]
+  Rm         => params: Expr[]
+  Touch      => params: Expr[]
+  Mv         => params: Expr[]
+  MkDir      => params: Expr[]
+  RmDir      => params: Expr[]
+  Pwd        => params: Expr[]
 }
 
 type Tree in './index' {
