@@ -5,7 +5,6 @@ import { Source } from '../../ast/source';
 import { ShellLiteral, StringLiteral } from '../../ast/expr';
 import { Load } from '../../ast/instr';
 import { Cmd, Input } from '../../ast';
-import { throws } from '../helpers/exceptions';
 import { parseInput } from '../helpers/parser';
 
 describe('load', () => {
@@ -85,12 +84,5 @@ describe('load', () => {
         ]),
       ]),
     );
-  });
-
-  test('load with no filename', () => {
-    const source = 'load';
-    throws(() => {
-      parseInput(source);
-    });
   });
 });

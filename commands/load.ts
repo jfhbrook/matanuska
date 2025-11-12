@@ -1,13 +1,8 @@
-import { ValueError } from '../exceptions';
-import { formatter } from '../format';
-import { ParamsParser } from '../params';
+import { Arg, Flag, Params } from '../params';
 import { Load } from '../ast/instr';
 import { CommandRunner, ReturnValue } from './base';
 
-const PARAMS = new ParamsParser({
-  arguments: ['filename'],
-  flags: ['run'],
-});
+const PARAMS = new Params([new Arg('filename'), new Flag('run')]);
 
 /**
  * Load a script, and optionally run it.
@@ -17,13 +12,10 @@ export default async function load(
   _load: Load,
 ): Promise<ReturnValue> {
   const { executor, editor, host } = this;
-  const { arguments: args, flags } = PARAMS.parse(this.args);
-  const [filename] = args;
-  if (typeof filename !== 'string') {
-    throw new ValueError(`Invalid filename; ${formatter.format(filename)}`);
-  }
-  await executor.load(filename);
-  if (flags.run) {
+  const opts = PARAMS.parse(this.args);
+  console.log(opts);
+  await executor.load(String(opts.filename));
+  if (opts.run) {
     await executor.run();
   } else if (editor.warning) {
     host.writeWarn(editor.warning);
