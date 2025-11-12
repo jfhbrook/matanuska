@@ -26,7 +26,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] scanner
   - [x] AST
   - [x] formatter
-  - [ ] overhaul params
+  - [x] params overhaul
+  - [ ] parse `Builtin` type
   - [ ] parser
   - [ ] editor
   - [ ] compiler

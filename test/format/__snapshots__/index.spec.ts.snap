@@ -318,7 +318,7 @@ exports[`instr > given a DefaultFormatter > Assign 1`] = `"Assign(i%, 1)"`;
 
 exports[`instr > given a DefaultFormatter > Cd 1`] = `"Cd (..)"`;
 
-exports[`instr > given a DefaultFormatter > Cp 1`] = `"Cp (-rf foo.txt bar.txt)"`;
+exports[`instr > given a DefaultFormatter > Cp 1`] = `"Cp (foo.txt bar.txt)"`;
 
 exports[`instr > given a DefaultFormatter > Cp 2`] = `"Cp (foo.txt bar.txt)"`;
 
@@ -346,11 +346,11 @@ exports[`instr > given a DefaultFormatter > List 2`] = `"List(10)"`;
 
 exports[`instr > given a DefaultFormatter > List 3`] = `"List(10, 20)"`;
 
-exports[`instr > given a DefaultFormatter > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
+exports[`instr > given a DefaultFormatter > Load 1`] = `"Load ('./examples/001-hello-world.bas' --run)"`;
 
 exports[`instr > given a DefaultFormatter > MkDir 1`] = `"MkDir (dir)"`;
 
-exports[`instr > given a DefaultFormatter > MkDir 2`] = `"MkDir (-p -m 0775 dir)"`;
+exports[`instr > given a DefaultFormatter > MkDir 2`] = `"MkDir (dir -p 0775)"`;
 
 exports[`instr > given a DefaultFormatter > Mv 1`] = `"Mv (foo.txt bar.txt)"`;
 
@@ -372,11 +372,11 @@ exports[`instr > given a DefaultFormatter > Repeat 1`] = `"Repeat"`;
 
 exports[`instr > given a DefaultFormatter > Rm 1`] = `"Rm (bar.txt)"`;
 
-exports[`instr > given a DefaultFormatter > Rm 2`] = `"Rm (-rfd bar.txt)"`;
+exports[`instr > given a DefaultFormatter > Rm 2`] = `"Rm (bar.txt -rf)"`;
 
 exports[`instr > given a DefaultFormatter > RmDir 1`] = `"RmDir (dir)"`;
 
-exports[`instr > given a DefaultFormatter > RmDir 2`] = `"RmDir (p-p dir)"`;
+exports[`instr > given a DefaultFormatter > RmDir 2`] = `"RmDir (dir -p)"`;
 
 exports[`instr > given a DefaultFormatter > Run 1`] = `"Run"`;
 
@@ -396,7 +396,7 @@ exports[`instr > given a Inspector > Assign 1`] = `"Assign(i%, 1)"`;
 
 exports[`instr > given a Inspector > Cd 1`] = `"Cd (..)"`;
 
-exports[`instr > given a Inspector > Cp 1`] = `"Cp (-rf foo.txt bar.txt)"`;
+exports[`instr > given a Inspector > Cp 1`] = `"Cp (foo.txt bar.txt)"`;
 
 exports[`instr > given a Inspector > Cp 2`] = `"Cp (foo.txt bar.txt)"`;
 
@@ -424,11 +424,11 @@ exports[`instr > given a Inspector > List 2`] = `"List(10)"`;
 
 exports[`instr > given a Inspector > List 3`] = `"List(10, 20)"`;
 
-exports[`instr > given a Inspector > Load 1`] = `"Load('./examples/001-hello-world.bas', run=true)"`;
+exports[`instr > given a Inspector > Load 1`] = `"Load ('./examples/001-hello-world.bas' --run)"`;
 
 exports[`instr > given a Inspector > MkDir 1`] = `"MkDir (dir)"`;
 
-exports[`instr > given a Inspector > MkDir 2`] = `"MkDir (-p -m 0775 dir)"`;
+exports[`instr > given a Inspector > MkDir 2`] = `"MkDir (dir -p 0775)"`;
 
 exports[`instr > given a Inspector > Mv 1`] = `"Mv (foo.txt bar.txt)"`;
 
@@ -450,11 +450,11 @@ exports[`instr > given a Inspector > Repeat 1`] = `"Repeat"`;
 
 exports[`instr > given a Inspector > Rm 1`] = `"Rm (bar.txt)"`;
 
-exports[`instr > given a Inspector > Rm 2`] = `"Rm (-rfd bar.txt)"`;
+exports[`instr > given a Inspector > Rm 2`] = `"Rm (bar.txt -rf)"`;
 
 exports[`instr > given a Inspector > RmDir 1`] = `"RmDir (dir)"`;
 
-exports[`instr > given a Inspector > RmDir 2`] = `"RmDir (p-p dir)"`;
+exports[`instr > given a Inspector > RmDir 2`] = `"RmDir (dir -p)"`;
 
 exports[`instr > given a Inspector > Run 1`] = `"Run"`;
 

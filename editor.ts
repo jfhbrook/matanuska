@@ -20,7 +20,7 @@ import {
   RealLiteral,
   BoolLiteral,
   StringLiteral,
-  PathLiteral,
+  ShellLiteral,
   PromptLiteral,
   NilLiteral,
 } from './ast/expr';
@@ -144,8 +144,8 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitLoadInstr(load: Load): void {
     this.shiftInstr(load);
-    if (load.filename) {
-      load.filename.accept(this);
+    for (const expr of load.params) {
+      expr.accept(this);
     }
   }
 
@@ -235,51 +235,58 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitCdInstr(cd: Cd): void {
     this.shiftInstr(cd);
-    cd.path.accept(this);
+    for (const expr of cd.params) {
+      expr.accept(this);
+    }
   }
 
   visitCpInstr(cp: Cp): void {
     this.shiftInstr(cp);
-    for (const expr of cp.from) {
+    for (const expr of cp.params) {
       expr.accept(this);
     }
-    cp.to.accept(this);
   }
 
   visitRmInstr(rm: Rm): void {
     this.shiftInstr(rm);
-    for (const expr of rm.paths) {
+    for (const expr of rm.params) {
       expr.accept(this);
     }
   }
 
   visitTouchInstr(touch: Touch): void {
     this.shiftInstr(touch);
-    for (const expr of touch.paths) {
+    for (const expr of touch.params) {
       expr.accept(this);
     }
   }
 
   visitMvInstr(mv: Mv): void {
     this.shiftInstr(mv);
-    for (const expr of mv.from) {
+    for (const expr of mv.params) {
       expr.accept(this);
     }
-    mv.to.accept(this);
   }
 
   visitMkDirInstr(mkdir: MkDir): void {
     this.shiftInstr(mkdir);
-    mkdir.path.accept(this);
+    for (const expr of mkdir.params) {
+      expr.accept(this);
+    }
   }
 
   visitRmDirInstr(rmdir: RmDir): void {
     this.shiftInstr(rmdir);
-    rmdir.path.accept(this);
+    for (const expr of rmdir.params) {
+      expr.accept(this);
+    }
   }
 
   visitPwdInstr(pwd: Pwd): void {
     this.shiftInstr(pwd);
+    for (const expr of pwd.params) {
+      expr.accept(this);
+    }
   }
 
   visitUnaryExpr(unary: Unary): void {
@@ -308,7 +315,7 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
   visitRealLiteralExpr(_real: RealLiteral): void {}
   visitBoolLiteralExpr(_bool: BoolLiteral): void {}
   visitStringLiteralExpr(_str: StringLiteral): void {}
-  visitPathLiteralExpr(_path: PathLiteral): void {}
+  visitShellLiteralExpr(_path: ShellLiteral): void {}
   visitPromptLiteralExpr(_prompt: PromptLiteral): void {}
   visitNilLiteralExpr(_nil: NilLiteral): void {}
 }

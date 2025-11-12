@@ -1,64 +1,123 @@
-import { type Parser } from './parser';
-import { Token, TokenKind } from './tokens';
-import { Expr } from './ast/expr';
+import { ParamError } from './exceptions';
+import { nil, Value } from './value';
 
-export interface Params {
-  arguments: Expr[];
-  flags: Record<string, boolean>;
-  options: Record<string, Expr>;
+export abstract class Param {
+  public aliases: string[];
+
+  constructor(
+    public name: string,
+    aliases?: string[],
+  ) {
+    this.aliases = aliases ? aliases : [];
+  }
 }
 
-export interface ParamsSpec {
-  arguments?: string[];
-  flags?: string[];
-  options?: string[];
+export class Arg extends Param {
+  constructor(name: string) {
+    super(name);
+  }
 }
+export class Flag extends Param {}
+export class Opt extends Param {}
 
-export class ParamsParser {
-  constructor(private parser: Parser) {}
+export type ParamSpec = Param[];
+export type Parameters = Record<string, Value>;
 
-  parse(spec: ParamsSpec) {
-    const args = spec.arguments || [];
-    const argv: Params = { arguments: [], flags: {}, options: {} };
-    const flagNames: Set<string> = new Set(spec.flags || []);
-    const noFlagNames: Set<string> = new Set(
-      (spec.flags || []).map((f) => `no-${f}`),
-    );
-    const optionNames: Set<string> = new Set(spec.options || []);
+// export type Value = number | boolean | string | BaseException | Nil;
 
-    let prevParamToken: Token = this.parser.previous!;
-    let currParamToken: Token = this.parser.current;
-    while (
-      !this.parser.check(TokenKind.Colon) &&
-      !this.parser.check(TokenKind.Rem) &&
-      !this.parser.check(TokenKind.LineEnding) &&
-      !this.parser.check(TokenKind.Eof)
-    ) {
-      if (this.parser.match(TokenKind.LongFlag)) {
-        const key = this.parser.previous!.value as string;
-        if (flagNames.has(key)) {
-          argv.flags[key] = true;
-        } else if (noFlagNames.has(key)) {
-          argv.flags[key] = false;
-        } else if (optionNames.has(key)) {
-          argv.options[key] = this.parser.expression();
-        }
+export class Params {
+  args: string[];
+  flags: Record<string, Flag>;
+  opts: Record<string, Opt>;
+  aliases: Record<string, string>;
+
+  constructor(spec: ParamSpec) {
+    this.args = [];
+    this.opts = {};
+    this.aliases = {};
+
+    for (const param of spec) {
+      if (param instanceof Arg) {
+        this.args.push(param.name);
       } else {
-        prevParamToken = currParamToken;
-        currParamToken = this.parser.current;
-        argv.arguments.push(this.parser.expression());
+        this.opts[param.name] = param;
+      }
+
+      for (const alias of param.aliases) {
+        this.aliases[alias] = param.name;
+      }
+    }
+  }
+
+  parse(params: Array<Value | null>): Record<string, Value> {
+    const args = this.args.slice();
+    const parsed: Record<string, Value> = {};
+
+    let i = 0;
+
+    const advance = (n: number = 1) => {
+      i += n;
+    };
+
+    const getValue = (n: number = 1): Value => {
+      const v = params[i + n];
+      if (v === null) {
+        return nil;
+      }
+      return v;
+    };
+
+    while (i < params.length) {
+      const param = params[i];
+      if (typeof param === 'string') {
+        if (param.match(/^--no-/)) {
+          const p = this.getOpt(param.slice(5));
+          if (p) {
+            // TODO: Should we allow --no-x for non-flag parameters?
+            parsed[p.name] = false;
+            advance();
+            continue;
+          }
+          throw new ParamError(`Unknown flag or option ${param}`);
+        }
+
+        if (param.match(/^--/)) {
+          const p = this.getOpt(param.slice(2));
+          if (p) {
+            if (p instanceof Flag) {
+              parsed[p.name] = true;
+              advance();
+              continue;
+            }
+
+            parsed[p.name] = getValue();
+            advance(2);
+            continue;
+          }
+          throw new ParamError(`Unknown flag or option ${param}`);
+        }
+
+        if (args.length) {
+          parsed[args[0]] = getValue(0);
+          args.shift();
+          advance(1);
+          continue;
+        }
+
+        throw new ParamError(`Unknown argument ${param}`);
       }
     }
 
-    if (argv.arguments.length < args.length) {
-      this.parser.syntaxError(
-        currParamToken,
-        `Missing argument '${args[argv.arguments.length]}'`,
-      );
-    } else if (argv.arguments.length > args.length) {
-      this.parser.syntaxError(prevParamToken, 'Unexpected argument');
+    if (args.length) {
+      throw new ParamError(`No argument for ${args[0]}`);
     }
 
-    return argv;
+    return parsed;
+  }
+
+  private getOpt(name: string): Param | null {
+    name = this.aliases[name] ? this.aliases[name] : name;
+
+    return this.opts[name] || null;
   }
 }

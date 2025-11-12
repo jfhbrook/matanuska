@@ -240,8 +240,27 @@ const SHELL: Array<[string, TokenKind[]]> = [
   ['./', [TokenKind.Dot, TokenKind.Slash]],
   ['./pony', [TokenKind.Dot, TokenKind.Slash, TokenKind.Ident]],
   ['.\\pony', [TokenKind.Dot, TokenKind.BSlash, TokenKind.Ident]],
+  [
+    './*.txt',
+    [
+      TokenKind.Dot,
+      TokenKind.Slash,
+      TokenKind.Star,
+      TokenKind.Dot,
+      TokenKind.Ident,
+    ],
+  ],
   ['-o', [TokenKind.Minus, TokenKind.Ident]],
-  ['--long-option', [TokenKind.LongFlag]],
+  [
+    '--long-option',
+    [
+      TokenKind.Minus,
+      TokenKind.Minus,
+      TokenKind.Ident,
+      TokenKind.Minus,
+      TokenKind.Ident,
+    ],
+  ],
 ];
 
 describe('shell tokens', () => {
@@ -249,12 +268,13 @@ describe('shell tokens', () => {
     kinds.push(TokenKind.Eof);
     test(`it tokenizes ${text}`, () => {
       const tokens = scanTokens(text);
-      t.equal(tokens.length, kinds.length);
 
       t.same(
         tokens.map((t) => t.kind),
         kinds,
       );
+
+      t.equal(tokens.length, kinds.length);
     });
   }
 });

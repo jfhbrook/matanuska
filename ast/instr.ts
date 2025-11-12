@@ -157,8 +157,7 @@ export class New extends Instr {
 
 export class Load extends Instr {
   constructor(
-    public filename: Expr,
-    public run: boolean,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -370,7 +369,7 @@ export class Until extends Instr {
 
 export class Cd extends Instr {
   constructor(
-    public path: Expr,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -384,10 +383,7 @@ export class Cd extends Instr {
 
 export class Cp extends Instr {
   constructor(
-    public from: Expr[],
-    public to: Expr,
-    public force: boolean,
-    public recursive: boolean,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -401,10 +397,7 @@ export class Cp extends Instr {
 
 export class Rm extends Instr {
   constructor(
-    public paths: Expr[],
-    public recursive: boolean,
-    public force: boolean,
-    public directory: boolean,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -418,7 +411,7 @@ export class Rm extends Instr {
 
 export class Touch extends Instr {
   constructor(
-    public paths: Expr[],
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -432,8 +425,7 @@ export class Touch extends Instr {
 
 export class Mv extends Instr {
   constructor(
-    public from: Expr[],
-    public to: Expr,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -447,9 +439,7 @@ export class Mv extends Instr {
 
 export class MkDir extends Instr {
   constructor(
-    public path: Expr,
-    public parents: boolean,
-    public mode: Expr | null,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -463,8 +453,7 @@ export class MkDir extends Instr {
 
 export class RmDir extends Instr {
   constructor(
-    public path: Expr,
-    public parents: boolean,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {
@@ -478,7 +467,7 @@ export class RmDir extends Instr {
 
 export class Pwd extends Instr {
   constructor(
-    public follow: boolean,
+    public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {

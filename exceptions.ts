@@ -106,6 +106,13 @@ export class ValueError extends RuntimeError {}
 export class NameError extends RuntimeError {}
 
 /**
+ * An exception raised when an unexpected parameter is encountered. Extends
+ * RuntimeError.
+ */
+@errorType('ParamError')
+export class ParamError extends RuntimeError {}
+
+/**
  * An exception raised for various arithmetic errors. Extends RuntimeError.
  */
 @errorType('ArithmeticError')
