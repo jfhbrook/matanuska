@@ -17,7 +17,7 @@ export class ParamsParser {
   constructor(private spec: ParamsSpec) {}
 
   // TODO: This should take values, not exprs
-  parse(params: Array<Value | null>): Params {
+  parse(_params: Array<Value | null>): Params {
     throw new NotImplementedError('params');
   }
 }

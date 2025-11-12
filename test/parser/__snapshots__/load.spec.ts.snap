@@ -1,9 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`load > load with no filename 1`] = `"NotImplementedError: params"`;
-
-exports[`load > load with two positional arguments 1`] = `
-"<input>:<R1>:5 (at the beginning): error: Unexpected argument
-  load "./examples/001-hello-world.bas" "extra"
-       ^"
-`;

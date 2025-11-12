@@ -35,7 +35,7 @@ import {
   RealLiteral,
   BoolLiteral,
   StringLiteral,
-  // PathLiteral,
+  ShellLiteral,
   PromptLiteral,
   NilLiteral,
 } from './ast/expr';
@@ -96,8 +96,8 @@ export class Parser {
   private filename: string = '<unknown>';
   private scanner: Scanner;
 
-  public previous: Token | null;
-  public current: Token;
+  private previous: Token | null;
+  private current: Token;
   private leadingWs: string = '';
   private next: Token;
   private trailingWs: string = '';
@@ -212,7 +212,11 @@ export class Parser {
     //#endif
   }
 
-  public match(...kinds: TokenKind[]): boolean {
+  //
+  // Core parse methods
+  //
+
+  private match(...kinds: TokenKind[]): boolean {
     for (const kind of kinds) {
       if (this.check(kind)) {
         this.advance();
@@ -223,7 +227,7 @@ export class Parser {
     return false;
   }
 
-  public check(kind: TokenKind): boolean {
+  private check(kind: TokenKind): boolean {
     if (this.done) {
       return kind === TokenKind.Eof;
     }
@@ -254,6 +258,7 @@ export class Parser {
     this.line.source += this.trailingWs + this.current.text;
 
     const [ws, next] = this.nextToken();
+
     this.leadingWs = this.trailingWs;
     this.trailingWs = ws;
     this.next = next;
@@ -274,7 +279,7 @@ export class Parser {
     this.syntaxError(this.current, message);
   }
 
-  public syntaxError(token: Token, message: string): never {
+  private syntaxError(token: Token, message: string): never {
     const exc = new SyntaxError(message, {
       filename: this.filename,
       row: token.row,
@@ -432,6 +437,10 @@ export class Parser {
   private get isLineEnding(): boolean {
     return this.done || this.current.kind === TokenKind.LineEnding;
   }
+
+  //
+  // Instruction parsing
+  //
 
   private instructions(): Instr[] {
     if (this.isLineEnding) {
@@ -631,6 +640,27 @@ export class Parser {
     return new Let(variable, value);
   }
 
+  private assign(): Instr | null {
+    // We can't match here because we need to check the *next* token
+    // before advancing...
+    if (
+      (this.check(TokenKind.IntIdent) ||
+        this.check(TokenKind.RealIdent) ||
+        this.check(TokenKind.BoolIdent) ||
+        this.check(TokenKind.StringIdent)) &&
+      this.checkNext(TokenKind.Eq)
+    ) {
+      // ...and so we advance here.
+      this.advance();
+      const variable = this.variable();
+      this.consume(TokenKind.Eq, 'Expected =');
+      const value = this.expression();
+      return new Assign(variable, value);
+    }
+
+    return null;
+  }
+
   private if_(): Instr {
     const condition = this.ifCondition();
 
@@ -769,30 +799,9 @@ export class Parser {
     throw new NotImplementedError('pwd');
   }
 
-  private assign(): Instr | null {
-    // We can't match here because we need to check the *next* token
-    // before advancing...
-    if (
-      (this.check(TokenKind.IntIdent) ||
-        this.check(TokenKind.RealIdent) ||
-        this.check(TokenKind.BoolIdent) ||
-        this.check(TokenKind.StringIdent)) &&
-      this.checkNext(TokenKind.Eq)
-    ) {
-      // ...and so we advance here.
-      this.advance();
-      const variable = this.variable();
-      this.consume(TokenKind.Eq, 'Expected =');
-      const value = this.expression();
-      return new Assign(variable, value);
-    }
-
-    return null;
-  }
-
-  private params(): Expr[] {
-    throw new NotImplementedError('params');
-  }
+  //
+  // Standard expression parsing
+  //
 
   private optionalExpression(): Expr | null {
     for (const tok of [TokenKind.Colon, TokenKind.LineEnding, TokenKind.Eof]) {
@@ -803,7 +812,7 @@ export class Parser {
     return this.expression();
   }
 
-  public expression(): Expr {
+  private expression(): Expr {
     return this.or();
   }
 
@@ -1075,5 +1084,83 @@ export class Parser {
     }
 
     return value;
+  }
+
+  //
+  // Command-style parameter parsing
+  //
+
+  private params(): Expr[] {
+    const exprs: Expr[] = [];
+
+    let current = this.param();
+
+    while (current) {
+      exprs.push(current);
+      current = this.param();
+    }
+
+    return exprs;
+  }
+
+  private param(): Expr | null {
+    // Parse literals and groups as expressions
+    if (
+      this.check(TokenKind.DecimalLiteral) ||
+      this.check(TokenKind.HexLiteral) ||
+      this.check(TokenKind.OctalLiteral) ||
+      this.check(TokenKind.BinaryLiteral) ||
+      this.check(TokenKind.RealLiteral) ||
+      this.check(TokenKind.TrueLiteral) ||
+      this.check(TokenKind.FalseLiteral) ||
+      this.check(TokenKind.StringLiteral) ||
+      this.check(TokenKind.NilLiteral) ||
+      this.check(TokenKind.IntIdent) ||
+      this.check(TokenKind.RealIdent) ||
+      this.check(TokenKind.BoolIdent) ||
+      this.check(TokenKind.StringIdent) ||
+      this.check(TokenKind.LParen)
+    ) {
+      return this.primary();
+    }
+
+    return this.shellLiteral();
+  }
+
+  private shellLiteral(): Expr | null {
+    if (!this.matchShellPart()) {
+      return null;
+    }
+
+    let text: string = this.previous!.text;
+
+    while (this.matchShellPart()) {
+      text += this.previous!.text;
+    }
+
+    return new ShellLiteral(text);
+  }
+
+  private checkShellPart(): boolean {
+    // These tokens are explicitly *not* part of a shell token
+    if (
+      this.check(TokenKind.Rem) ||
+      this.check(TokenKind.LineEnding) ||
+      this.check(TokenKind.Eof)
+    ) {
+      return false;
+    }
+    // We want to check for *any* token that doesn't contain invalid shell
+    // characters....
+    return !this.current.text.match(/[`#$&*()|[\]{}:'"<>?!]+/);
+  }
+
+  private matchShellPart(): boolean {
+    // Shell parts should not be whitespace separated
+    if (this.checkShellPart() && !this.trailingWs) {
+      this.advance();
+      return true;
+    }
+    return false;
   }
 }

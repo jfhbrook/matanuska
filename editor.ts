@@ -144,7 +144,7 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitLoadInstr(load: Load): void {
     this.shiftInstr(load);
-    for (let expr of load.argv) {
+    for (const expr of load.argv) {
       expr.accept(this);
     }
   }

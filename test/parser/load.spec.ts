@@ -28,7 +28,7 @@ describe('load', () => {
     );
   });
 
-  test.skip('load with path literal', () => {
+  test('load with path literal', () => {
     const source = 'load ./examples/001-hello-world.bas';
     const result = parseInput(source);
 
@@ -37,17 +37,13 @@ describe('load', () => {
       result[0],
       new Input([
         new Cmd(10, 1, Source.command(source), [
-          new Load(
-            [new StringLiteral('./examples/001-hello-world.bas')],
-            0,
-            37,
-          ),
+          new Load([new ShellLiteral('./examples/001-hello-world.bas')], 0, 35),
         ]),
       ]),
     );
   });
 
-  test.skip('load with filename and --run', () => {
+  test('load with filename and --run', () => {
     const source = 'load "./examples/001-hello-world.bas" --run';
     const result = parseInput(source);
 
@@ -69,7 +65,7 @@ describe('load', () => {
     );
   });
 
-  test.skip('load with filename and --no-run', () => {
+  test('load with filename and --no-run', () => {
     const source = 'load "./examples/001-hello-world.bas" --no-run';
     const result = parseInput(source);
 
