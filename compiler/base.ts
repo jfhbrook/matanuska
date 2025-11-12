@@ -68,14 +68,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Cd,
-  Cp,
-  Rm,
-  Touch,
-  Mv,
-  MkDir,
-  RmDir,
-  Pwd,
+  Builtin,
 } from '../ast/instr';
 
 import { Block } from './block';
@@ -804,44 +797,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.block.handle(onward);
   }
 
-  visitCdInstr(cd: Cd): void {
-    console.log(cd);
-    throw new NotImplementedError('cd');
-  }
-
-  visitCpInstr(cp: Cp): void {
-    console.log(cp);
-    throw new NotImplementedError('cp');
-  }
-
-  visitRmInstr(rm: Rm): void {
-    console.log(rm);
-    throw new NotImplementedError('rm');
-  }
-
-  visitTouchInstr(touch: Touch): void {
-    console.log(touch);
-    throw new NotImplementedError('cp');
-  }
-
-  visitMvInstr(mv: Mv): void {
-    console.log(mv);
-    throw new NotImplementedError('mv');
-  }
-
-  visitMkDirInstr(mkdir: MkDir): void {
-    console.log(mkdir);
-    throw new NotImplementedError('mkDir');
-  }
-
-  visitRmDirInstr(rmdir: RmDir): void {
-    console.log(rmdir);
-    throw new NotImplementedError('rmdir');
-  }
-
-  visitPwdInstr(pwd: Pwd): void {
-    console.log(pwd);
-    throw new NotImplementedError('pwd');
+  visitBuiltinInstr(builtin: Builtin): void {
+    console.log(builtin);
+    throw new NotImplementedError(builtin.name);
   }
 
   //

@@ -26,14 +26,7 @@ export interface InstrVisitor<R> {
   visitEndWhileInstr(node: EndWhile): R;
   visitRepeatInstr(node: Repeat): R;
   visitUntilInstr(node: Until): R;
-  visitCdInstr(node: Cd): R;
-  visitCpInstr(node: Cp): R;
-  visitRmInstr(node: Rm): R;
-  visitTouchInstr(node: Touch): R;
-  visitMvInstr(node: Mv): R;
-  visitMkDirInstr(node: MkDir): R;
-  visitRmDirInstr(node: RmDir): R;
-  visitPwdInstr(node: Pwd): R;
+  visitBuiltinInstr(node: Builtin): R;
 }
 
 export abstract class Instr {
@@ -367,8 +360,9 @@ export class Until extends Instr {
   }
 }
 
-export class Cd extends Instr {
+export class Builtin extends Instr {
   constructor(
+    public name: string,
     public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,
@@ -377,104 +371,6 @@ export class Cd extends Instr {
   }
 
   accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitCdInstr(this);
-  }
-}
-
-export class Cp extends Instr {
-  constructor(
-    public params: Expr[],
-    offsetStart: number = -1,
-    offsetEnd: number = -1,
-  ) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitCpInstr(this);
-  }
-}
-
-export class Rm extends Instr {
-  constructor(
-    public params: Expr[],
-    offsetStart: number = -1,
-    offsetEnd: number = -1,
-  ) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitRmInstr(this);
-  }
-}
-
-export class Touch extends Instr {
-  constructor(
-    public params: Expr[],
-    offsetStart: number = -1,
-    offsetEnd: number = -1,
-  ) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitTouchInstr(this);
-  }
-}
-
-export class Mv extends Instr {
-  constructor(
-    public params: Expr[],
-    offsetStart: number = -1,
-    offsetEnd: number = -1,
-  ) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitMvInstr(this);
-  }
-}
-
-export class MkDir extends Instr {
-  constructor(
-    public params: Expr[],
-    offsetStart: number = -1,
-    offsetEnd: number = -1,
-  ) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitMkDirInstr(this);
-  }
-}
-
-export class RmDir extends Instr {
-  constructor(
-    public params: Expr[],
-    offsetStart: number = -1,
-    offsetEnd: number = -1,
-  ) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitRmDirInstr(this);
-  }
-}
-
-export class Pwd extends Instr {
-  constructor(
-    public params: Expr[],
-    offsetStart: number = -1,
-    offsetEnd: number = -1,
-  ) {
-    super(offsetStart, offsetEnd);
-  }
-
-  accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitPwdInstr(this);
+    return visitor.visitBuiltinInstr(this);
   }
 }

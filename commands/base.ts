@@ -13,7 +13,7 @@ import { formatter } from '../format';
 import { Host } from '../host';
 import { Value } from '../value';
 import { Program } from '../ast';
-import { Instr, InstrVisitor } from '../ast/instr';
+import { Builtin, Instr, InstrVisitor } from '../ast/instr';
 
 /**
  * The return value of a command. Null is used to indicate no returned
@@ -56,6 +56,10 @@ export function invalid<C extends Instr>(name: string): InteractiveCommand<C> {
   return async function invalidCommand(_cmd: C): Promise<ReturnValue> {
     throw RuntimeFault.fromError(new Invalid(name));
   };
+}
+
+export function invalidBuiltin(cmd: Builtin): Promise<ReturnValue> {
+  throw RuntimeFault.fromError(new Invalid(cmd.name));
 }
 
 /**

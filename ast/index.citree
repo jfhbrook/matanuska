@@ -44,14 +44,7 @@ type Instr in './instr' {
   EndWhile!
   Repeat!
   Until      => condition: Expr
-  Cd         => params: Expr[]
-  Cp         => params: Expr[]
-  Rm         => params: Expr[]
-  Touch      => params: Expr[]
-  Mv         => params: Expr[]
-  MkDir      => params: Expr[]
-  RmDir      => params: Expr[]
-  Pwd        => params: Expr[]
+  Builtin    => name: string, params: Expr[]
 }
 
 type Tree in './index' {

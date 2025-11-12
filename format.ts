@@ -66,14 +66,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Cd,
-  Cp,
-  Rm,
-  Touch,
-  Mv,
-  MkDir,
-  RmDir,
-  Pwd,
+  Builtin,
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
 import { Token } from './tokens';
@@ -216,14 +209,7 @@ export abstract class Formatter
   abstract visitRepeatInstr(repeat: Repeat): string;
   abstract visitUntilInstr(until: Until): string;
 
-  abstract visitCdInstr(node: Cd): string;
-  abstract visitCpInstr(node: Cp): string;
-  abstract visitRmInstr(node: Rm): string;
-  abstract visitTouchInstr(node: Touch): string;
-  abstract visitMvInstr(node: Mv): string;
-  abstract visitMkDirInstr(node: MkDir): string;
-  abstract visitRmDirInstr(node: RmDir): string;
-  abstract visitPwdInstr(node: Pwd): string;
+  abstract visitBuiltinInstr(node: Builtin): string;
 
   abstract visitCmdTree(node: Cmd): string;
   abstract visitLineTree(node: Line): string;
@@ -770,36 +756,8 @@ export class DefaultFormatter extends Formatter {
       .join(' ');
   }
 
-  visitCdInstr(cd: Cd): string {
-    return `Cd (${this.formatArgv(cd.params)})`;
-  }
-
-  visitCpInstr(cp: Cp): string {
-    return `Cp (${this.formatArgv(cp.params)})`;
-  }
-
-  visitRmInstr(rm: Rm): string {
-    return `Rm (${this.formatArgv(rm.params)})`;
-  }
-
-  visitTouchInstr(touch: Touch): string {
-    return `Touch (${this.formatArgv(touch.params)})`;
-  }
-
-  visitMvInstr(mv: Mv): string {
-    return `Mv (${this.formatArgv(mv.params)})`;
-  }
-
-  visitMkDirInstr(mkdir: MkDir): string {
-    return `MkDir (${this.formatArgv(mkdir.params, true)})`;
-  }
-
-  visitRmDirInstr(rmdir: RmDir): string {
-    return `RmDir (${this.formatArgv(rmdir.params)})`;
-  }
-
-  visitPwdInstr(pwd: Pwd): string {
-    return `Pwd (${this.formatArgv(pwd.params)})`;
+  visitBuiltinInstr(builtin: Builtin): string {
+    return `Builtin (${this.format(builtin.name)}, ${this.formatArgv(builtin.params)})`;
   }
 
   formatStack<V>(stack: Stack<V>): string {
