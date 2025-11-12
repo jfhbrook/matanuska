@@ -13,7 +13,6 @@ export default async function load(
 ): Promise<ReturnValue> {
   const { executor, editor, host } = this;
   const opts = PARAMS.parse(this.args);
-  console.log(opts);
   await executor.load(String(opts.filename));
   if (opts.run) {
     await executor.run();
