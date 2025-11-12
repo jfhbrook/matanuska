@@ -17,7 +17,6 @@ import {
   SyntaxWarning,
   ParseWarning,
   sortParseError,
-  NotImplementedError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
 import { Scanner } from './scanner';
@@ -66,14 +65,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  // Cd,
-  // Cp,
-  // Rm,
-  // Touch,
-  // Mv,
-  // MkDir,
-  // RmDir,
-  // Pwd,
+  Builtin,
 } from './ast/instr';
 import { Cmd, Line, Input, Program } from './ast';
 import { sortLines } from './ast/util';
@@ -768,35 +760,43 @@ export class Parser {
   }
 
   private cd(): Instr {
-    throw new NotImplementedError('cd');
+    const params = this.params();
+    return new Builtin('cd', params);
   }
 
   private cp(): Instr {
-    throw new NotImplementedError('cp');
+    const params = this.params();
+    return new Builtin('cp', params);
   }
 
   private rm(): Instr {
-    throw new NotImplementedError('rm');
+    const params = this.params();
+    return new Builtin('rm', params);
   }
 
   private touch(): Instr {
-    throw new NotImplementedError('touch');
+    const params = this.params();
+    return new Builtin('touch', params);
   }
 
   private mv(): Instr {
-    throw new NotImplementedError('mv');
+    const params = this.params();
+    return new Builtin('mv', params);
   }
 
   private mkdir(): Instr {
-    throw new NotImplementedError('mkdir');
+    const params = this.params();
+    return new Builtin('mkdir', params);
   }
 
   private rmdir(): Instr {
-    throw new NotImplementedError('rmdir');
+    const params = this.params();
+    return new Builtin('rmdir', params);
   }
 
   private pwd(): Instr {
-    throw new NotImplementedError('pwd');
+    const params = this.params();
+    return new Builtin('pwd', params);
   }
 
   //
@@ -1128,14 +1128,19 @@ export class Parser {
   }
 
   private shellLiteral(): Expr | null {
-    if (!this.matchShellPart()) {
+    let [matched, boundary] = this.matchShellPart();
+    if (!matched) {
       return null;
     }
 
-    let text: string = this.previous!.text;
+    let text: string = ''; //this.previous!.text;
 
-    while (this.matchShellPart()) {
+    while (matched) {
       text += this.previous!.text;
+      if (boundary) {
+        break;
+      }
+      [matched, boundary] = this.matchShellPart();
     }
 
     return new ShellLiteral(text);
@@ -1155,12 +1160,12 @@ export class Parser {
     return !this.current.text.match(/[`#$&*()|[\]{}:'"<>?!]+/);
   }
 
-  private matchShellPart(): boolean {
+  private matchShellPart(): [boolean, boolean] {
     // Shell parts should not be whitespace separated
-    if (this.checkShellPart() && !this.trailingWs) {
+    if (this.checkShellPart()) {
       this.advance();
-      return true;
+      return [true, !!this.leadingWs.length];
     }
-    return false;
+    return [false, !!this.trailingWs.length];
   }
 }

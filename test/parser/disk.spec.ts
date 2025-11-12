@@ -11,7 +11,7 @@ const PATHS = ['/', './', '..', '../', './', './pony', '.\\pony'];
 
 describe('cd', () => {
   for (const path of PATHS) {
-    test.skip(path, () => {
+    test(path, () => {
       const source = `cd ${path}`;
       const result = parseInput(source);
 
@@ -21,7 +21,7 @@ describe('cd', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin('cd', [new ShellLiteral(path)], 0, 4),
+            new Builtin('cd', [new ShellLiteral(path)], 0, source.length),
           ]),
         ]),
       );
@@ -31,8 +31,8 @@ describe('cd', () => {
 
 describe('cp', () => {
   for (const path of PATHS) {
-    test.skip(path, () => {
-      const source = `cp ${path} "foo"`;
+    const source = `cp ${path} "foo"`;
+    test(source, () => {
       const result = parseInput(source);
 
       t.equal(result[1], null);
@@ -45,7 +45,7 @@ describe('cp', () => {
               'cp',
               [new ShellLiteral(path), new StringLiteral('foo')],
               0,
-              4,
+              source.length,
             ),
           ]),
         ]),
@@ -56,7 +56,7 @@ describe('cp', () => {
 
 describe('rm', () => {
   for (const path of PATHS) {
-    test.skip(path, () => {
+    test(path, () => {
       const source = `rm -rf ${path}`;
       const result = parseInput(source);
 
@@ -68,9 +68,9 @@ describe('rm', () => {
           new Cmd(10, 1, Source.command(source), [
             new Builtin(
               'rm',
-              [new ShellLiteral(path), new ShellLiteral('-rf')],
+              [new ShellLiteral('-rf'), new ShellLiteral(path)],
               0,
-              4,
+              source.length,
             ),
           ]),
         ]),
@@ -81,7 +81,7 @@ describe('rm', () => {
 
 describe('touch', () => {
   for (const path of PATHS) {
-    test.skip(path, () => {
+    test(path, () => {
       const source = `touch ${path}`;
       const result = parseInput(source);
 
@@ -91,7 +91,7 @@ describe('touch', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin('touch', [new ShellLiteral(path)], 0, 4),
+            new Builtin('touch', [new ShellLiteral(path)], 0, source.length),
           ]),
         ]),
       );
@@ -101,7 +101,7 @@ describe('touch', () => {
 
 describe('mv', () => {
   for (const path of PATHS) {
-    test.skip(path, () => {
+    test(path, () => {
       const source = `mv ${path} "foo"`;
       const result = parseInput(source);
 
@@ -115,7 +115,7 @@ describe('mv', () => {
               'mv',
               [new ShellLiteral(path), new StringLiteral('foo')],
               0,
-              4,
+              source.length,
             ),
           ]),
         ]),
@@ -126,7 +126,7 @@ describe('mv', () => {
 
 describe('mkdir', () => {
   for (const path of PATHS) {
-    test.skip(path, () => {
+    test(path, () => {
       const source = `mkdir -p ${path}`;
       const result = parseInput(source);
 
@@ -138,9 +138,9 @@ describe('mkdir', () => {
           new Cmd(10, 1, Source.command(source), [
             new Builtin(
               'mkdir',
-              [new ShellLiteral(path), new ShellLiteral('-p')],
+              [new ShellLiteral('-p'), new ShellLiteral(path)],
               0,
-              4,
+              source.length,
             ),
           ]),
         ]),
@@ -151,7 +151,7 @@ describe('mkdir', () => {
 
 describe('rmdir', () => {
   for (const path of PATHS) {
-    test.skip(path, () => {
+    test(path, () => {
       const source = `rmdir -p ${path}`;
       const result = parseInput(source);
 
@@ -163,9 +163,9 @@ describe('rmdir', () => {
           new Cmd(10, 1, Source.command(source), [
             new Builtin(
               'rmdir',
-              [new ShellLiteral(path), new ShellLiteral('-p')],
+              [new ShellLiteral('-p'), new ShellLiteral(path)],
               0,
-              4,
+              source.length,
             ),
           ]),
         ]),
@@ -175,7 +175,7 @@ describe('rmdir', () => {
 });
 
 describe('pwd', () => {
-  test.skip('no flag', () => {
+  test('no flag', () => {
     const source = `pwd`;
     const result = parseInput(source);
 
@@ -184,12 +184,12 @@ describe('pwd', () => {
     t.same(
       result[0],
       new Input([
-        new Cmd(10, 1, Source.command(source), [new Builtin('pwd', [], 0, 4)]),
+        new Cmd(10, 1, Source.command(source), [new Builtin('pwd', [], 0, 3)]),
       ]),
     );
   });
 
-  test.skip('-P flag', () => {
+  test('-P flag', () => {
     const source = `pwd -P`;
     const result = parseInput(source);
 
@@ -199,7 +199,7 @@ describe('pwd', () => {
       result[0],
       new Input([
         new Cmd(10, 1, Source.command(source), [
-          new Builtin('pwd', [new ShellLiteral('-p')], 0, 4),
+          new Builtin('pwd', [new ShellLiteral('-P')], 0, 6),
         ]),
       ]),
     );
