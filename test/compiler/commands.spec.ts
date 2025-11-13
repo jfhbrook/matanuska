@@ -5,9 +5,8 @@ import { Print, Exit, Expression, Rem } from '../../ast/instr';
 import { StringLiteral } from '../../ast/expr';
 import { compileCommands, CompiledCmd } from '../../compiler';
 
-function isCompiled(name: string, [cmd, chunks]: CompiledCmd): void {
+function isCompiled(name: string, chunks: CompiledCmd): void {
   test(name, () => {
-    t.equal(cmd, null, 'is a runtime instruction');
     t.equal(chunks.length, 1, 'chunk is compiled');
   });
 }

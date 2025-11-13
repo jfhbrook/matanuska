@@ -5,7 +5,7 @@ import { Chunk } from '../bytecode/chunk';
 
 import { CompileResult, CompilerOptions, compileInstruction } from './base';
 
-export type CompiledCmd = [Instr | null, Array<Chunk | null>];
+export type CompiledCmd = Array<Chunk | null>;
 
 /**
  * Compile a mixture of interactive instructions and commands.
@@ -21,7 +21,7 @@ export function compileCommands(
   // TODO: Collect ParseErrors
   const results: CompileResult<CompiledCmd>[] = cmds.map((cmd) => {
     const [chunk, warning] = compileInstruction(cmd, options);
-    return [[null, [chunk]], warning];
+    return [[chunk], warning];
   });
 
   const commands: CompiledCmd[] = results

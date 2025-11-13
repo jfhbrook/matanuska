@@ -7,7 +7,7 @@ import { Span } from '@opentelemetry/api';
 //#endif
 
 import { Chunk } from './bytecode/chunk';
-import { commandRunner, ReturnValue } from './commands';
+import { ReturnValue } from './commands';
 import { compileCommands, compileProgram, CompiledCmd } from './compiler';
 import { Config } from './config';
 //#if _MATBAS_BUILD == 'debug'
@@ -484,24 +484,11 @@ export class Executor {
   //
   // Run a compiled command.
   //
-  private async runCompiledCommand([
-    cmd,
-    chunks,
-  ]: CompiledCmd): Promise<ReturnValue> {
-    // Interpret any chunks.
-    const args = chunks.map((c) => {
+  private async runCompiledCommand(chunks: CompiledCmd): Promise<ReturnValue> {
+    const results = chunks.map((c) => {
       return c ? this.runtime.interpret(c) : null;
     });
 
-    if (cmd) {
-      // Run an interactive command.
-      return await cmd.accept(
-        commandRunner(this, this.editor, this.host, args),
-      );
-    } else {
-      // The args really contained the body of the non-interactive
-      // command, which we just interpreted.
-      return null;
-    }
+    return results[results.length - 1];
   }
 }
