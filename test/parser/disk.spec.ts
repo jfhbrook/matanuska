@@ -3,7 +3,7 @@ import { t } from '../helpers/tap';
 
 import { Source } from '../../ast/source';
 import { StringLiteral, ShellLiteral } from '../../ast/expr';
-import { Builtin } from '../../ast/instr';
+import { Command } from '../../ast/instr';
 import { Cmd, Input } from '../../ast';
 import { parseInput } from '../helpers/parser';
 
@@ -21,7 +21,7 @@ describe('cd', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin('cd', [new ShellLiteral(path)], 0, source.length),
+            new Command('cd', [new ShellLiteral(path)], 0, source.length),
           ]),
         ]),
       );
@@ -41,7 +41,7 @@ describe('cp', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin(
+            new Command(
               'cp',
               [new ShellLiteral(path), new StringLiteral('foo')],
               0,
@@ -66,7 +66,7 @@ describe('rm', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin(
+            new Command(
               'rm',
               [new ShellLiteral('-rf'), new ShellLiteral(path)],
               0,
@@ -91,7 +91,7 @@ describe('touch', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin('touch', [new ShellLiteral(path)], 0, source.length),
+            new Command('touch', [new ShellLiteral(path)], 0, source.length),
           ]),
         ]),
       );
@@ -111,7 +111,7 @@ describe('mv', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin(
+            new Command(
               'mv',
               [new ShellLiteral(path), new StringLiteral('foo')],
               0,
@@ -136,7 +136,7 @@ describe('mkdir', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin(
+            new Command(
               'mkdir',
               [new ShellLiteral('-p'), new ShellLiteral(path)],
               0,
@@ -161,7 +161,7 @@ describe('rmdir', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Builtin(
+            new Command(
               'rmdir',
               [new ShellLiteral('-p'), new ShellLiteral(path)],
               0,
@@ -184,7 +184,7 @@ describe('pwd', () => {
     t.same(
       result[0],
       new Input([
-        new Cmd(10, 1, Source.command(source), [new Builtin('pwd', [], 0, 3)]),
+        new Cmd(10, 1, Source.command(source), [new Command('pwd', [], 0, 3)]),
       ]),
     );
   });
@@ -199,7 +199,7 @@ describe('pwd', () => {
       result[0],
       new Input([
         new Cmd(10, 1, Source.command(source), [
-          new Builtin('pwd', [new ShellLiteral('-P')], 0, 6),
+          new Command('pwd', [new ShellLiteral('-P')], 0, 6),
         ]),
       ]),
     );

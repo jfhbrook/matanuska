@@ -1,6 +1,6 @@
 # ADR 024 - Builtins & Commands
 
-### Status: Draft
+### Status: Accepted
 
 ### Josh Holbrook
 
@@ -86,8 +86,8 @@ type Args = Array<Value | null>;
 type ReturnValue = Value | null;
 
 interface Command {
-  interactive: false | undefined,
-  main: (args: Args, context: Context) => Promise<ReturnValue>
+  interactive: false | undefined;
+  main: (args: Args, context: Context) => Promise<ReturnValue>;
 }
 ```
 
@@ -100,8 +100,8 @@ interface InteractiveContext extends Context {
 }
 
 interface InteractiveCommand {
-  interactive: true
-  main: (args: Args, context: InteractiveContext) => Promise<ReturnValue>
+  interactive: true;
+  main: (args: Args, context: InteractiveContext) => Promise<ReturnValue>;
 }
 ```
 
@@ -115,6 +115,6 @@ This means that the compiler will no longer include switching behavior for inter
 
 When a command instruction is encountered, it will be delegated to based on its string name. If the command is tagged as `interactive: true`, it will either be passed an `InteractiveContext` or raise an error, as appropriate. Otherwise, the command will be run with a standard `Context`.
 
-This loses the advantages of the visitor pattern. However, it does mean we don't need to define handlers for *all* instruction types - just commands. It also allows for easy extension with native commands and user-provided cmdlets.
+This loses the advantages of the visitor pattern. However, it does mean we don't need to define handlers for _all_ instruction types - just commands. It also allows for easy extension with native commands and user-provided cmdlets.
 
 "Invalid" instructions should be appropriately handled by the runtime, as they won't compile in the interactive context.

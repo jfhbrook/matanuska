@@ -316,31 +316,31 @@ exports[`faults > given a Inspector > it formats a UsageFault 1`] = `"Usage: lol
 
 exports[`instr > given a DefaultFormatter > Assign 1`] = `"Assign(i%, 1)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 1`] = `"Builtin (cd, ..)"`;
+exports[`instr > given a DefaultFormatter > Command 1`] = `"Command (cd, ..)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 2`] = `"Builtin (cp, foo.txt bar.txt)"`;
+exports[`instr > given a DefaultFormatter > Command 2`] = `"Command (cp, foo.txt bar.txt)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 3`] = `"Builtin (cp, foo.txt bar.txt)"`;
+exports[`instr > given a DefaultFormatter > Command 3`] = `"Command (cp, foo.txt bar.txt)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 4`] = `"Builtin (rm, bar.txt)"`;
+exports[`instr > given a DefaultFormatter > Command 4`] = `"Command (rm, bar.txt)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 5`] = `"Builtin (rm, bar.txt -rf)"`;
+exports[`instr > given a DefaultFormatter > Command 5`] = `"Command (rm, bar.txt -rf)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 6`] = `"Builtin (touch, foo.txt)"`;
+exports[`instr > given a DefaultFormatter > Command 6`] = `"Command (touch, foo.txt)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 7`] = `"Builtin (mv, foo.txt bar.txt)"`;
+exports[`instr > given a DefaultFormatter > Command 7`] = `"Command (mv, foo.txt bar.txt)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 8`] = `"Builtin (mkdir, dir)"`;
+exports[`instr > given a DefaultFormatter > Command 8`] = `"Command (mkdir, dir)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 9`] = `"Builtin (mkdir, dir -p 509)"`;
+exports[`instr > given a DefaultFormatter > Command 9`] = `"Command (mkdir, dir -p 509)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 10`] = `"Builtin (rmdir, dir)"`;
+exports[`instr > given a DefaultFormatter > Command 10`] = `"Command (rmdir, dir)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 11`] = `"Builtin (rmdir, dir -p)"`;
+exports[`instr > given a DefaultFormatter > Command 11`] = `"Command (rmdir, dir -p)"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 12`] = `"Builtin (pwd, )"`;
+exports[`instr > given a DefaultFormatter > Command 12`] = `"Command (pwd, )"`;
 
-exports[`instr > given a DefaultFormatter > Builtin 13`] = `"Builtin (pwd, -L)"`;
+exports[`instr > given a DefaultFormatter > Command 13`] = `"Command (pwd, -L)"`;
 
 exports[`instr > given a DefaultFormatter > Else 1`] = `"Else"`;
 
@@ -394,31 +394,31 @@ exports[`instr > given a DefaultFormatter > While 1`] = `"While (true)"`;
 
 exports[`instr > given a Inspector > Assign 1`] = `"Assign(i%, 1)"`;
 
-exports[`instr > given a Inspector > Builtin 1`] = `"Builtin ([32m'cd'[39m, ..)"`;
+exports[`instr > given a Inspector > Command 1`] = `"Command ([32m'cd'[39m, ..)"`;
 
-exports[`instr > given a Inspector > Builtin 2`] = `"Builtin ([32m'cp'[39m, foo.txt bar.txt)"`;
+exports[`instr > given a Inspector > Command 2`] = `"Command ([32m'cp'[39m, foo.txt bar.txt)"`;
 
-exports[`instr > given a Inspector > Builtin 3`] = `"Builtin ([32m'cp'[39m, foo.txt bar.txt)"`;
+exports[`instr > given a Inspector > Command 3`] = `"Command ([32m'cp'[39m, foo.txt bar.txt)"`;
 
-exports[`instr > given a Inspector > Builtin 4`] = `"Builtin ([32m'rm'[39m, bar.txt)"`;
+exports[`instr > given a Inspector > Command 4`] = `"Command ([32m'rm'[39m, bar.txt)"`;
 
-exports[`instr > given a Inspector > Builtin 5`] = `"Builtin ([32m'rm'[39m, bar.txt -rf)"`;
+exports[`instr > given a Inspector > Command 5`] = `"Command ([32m'rm'[39m, bar.txt -rf)"`;
 
-exports[`instr > given a Inspector > Builtin 6`] = `"Builtin ([32m'touch'[39m, foo.txt)"`;
+exports[`instr > given a Inspector > Command 6`] = `"Command ([32m'touch'[39m, foo.txt)"`;
 
-exports[`instr > given a Inspector > Builtin 7`] = `"Builtin ([32m'mv'[39m, foo.txt bar.txt)"`;
+exports[`instr > given a Inspector > Command 7`] = `"Command ([32m'mv'[39m, foo.txt bar.txt)"`;
 
-exports[`instr > given a Inspector > Builtin 8`] = `"Builtin ([32m'mkdir'[39m, dir)"`;
+exports[`instr > given a Inspector > Command 8`] = `"Command ([32m'mkdir'[39m, dir)"`;
 
-exports[`instr > given a Inspector > Builtin 9`] = `"Builtin ([32m'mkdir'[39m, dir -p 509)"`;
+exports[`instr > given a Inspector > Command 9`] = `"Command ([32m'mkdir'[39m, dir -p 509)"`;
 
-exports[`instr > given a Inspector > Builtin 10`] = `"Builtin ([32m'rmdir'[39m, dir)"`;
+exports[`instr > given a Inspector > Command 10`] = `"Command ([32m'rmdir'[39m, dir)"`;
 
-exports[`instr > given a Inspector > Builtin 11`] = `"Builtin ([32m'rmdir'[39m, dir -p)"`;
+exports[`instr > given a Inspector > Command 11`] = `"Command ([32m'rmdir'[39m, dir -p)"`;
 
-exports[`instr > given a Inspector > Builtin 12`] = `"Builtin ([32m'pwd'[39m, )"`;
+exports[`instr > given a Inspector > Command 12`] = `"Command ([32m'pwd'[39m, )"`;
 
-exports[`instr > given a Inspector > Builtin 13`] = `"Builtin ([32m'pwd'[39m, -L)"`;
+exports[`instr > given a Inspector > Command 13`] = `"Command ([32m'pwd'[39m, -L)"`;
 
 exports[`instr > given a Inspector > Else 1`] = `"Else"`;
 

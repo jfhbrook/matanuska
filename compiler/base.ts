@@ -63,7 +63,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Builtin,
+  Command,
 } from '../ast/instr';
 
 import { Block } from './block';
@@ -792,12 +792,12 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.block.handle(onward);
   }
 
-  visitBuiltinInstr(builtin: Builtin): void {
-    this.emitConstant(builtin.name);
-    for (const expr of builtin.params) {
+  visitCommandInstr(command: Command): void {
+    this.emitConstant(command.name);
+    for (const expr of command.params) {
       expr.accept(this);
     }
-    this.emitBytes(OpCode.Builtin, 1 + builtin.params.length);
+    this.emitBytes(OpCode.Command, 1 + command.params.length);
   }
 
   //

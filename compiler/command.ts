@@ -33,7 +33,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Builtin,
+  Command,
 } from '../ast/instr';
 import { Expr } from '../ast/expr';
 
@@ -195,8 +195,8 @@ export class CommandCompiler
     return this.invalid(until, 'until');
   }
 
-  visitBuiltinInstr(builtin: Builtin): CompileResult<CompiledCmd> {
-    return this.runtime(builtin);
+  visitCommandInstr(command: Command): CompileResult<CompiledCmd> {
+    return this.runtime(command);
   }
 }
 

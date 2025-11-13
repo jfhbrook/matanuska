@@ -44,7 +44,7 @@ type Instr in './instr' {
   EndWhile!
   Repeat!
   Until      => condition: Expr
-  Builtin    => name: string, params: Expr[]
+  Command    => name: string, params: Expr[]
 }
 
 type Tree in './index' {

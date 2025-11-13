@@ -4,7 +4,7 @@ import { Span } from '@opentelemetry/api';
 import { startSpan } from '../debug';
 //#endif
 import { Program } from '../ast';
-import { Builtin, Instr, InstrVisitor } from '../ast/instr';
+import { Command, Instr, InstrVisitor } from '../ast/instr';
 import { Editor } from '../editor';
 import { errorType } from '../errors';
 import { Executor } from '../executor';
@@ -62,7 +62,7 @@ export function invalid<C extends Instr>(name: string): InteractiveCommand<C> {
   };
 }
 
-export function invalidBuiltin(cmd: Builtin): Promise<ReturnValue> {
+export function invalidCommand(cmd: Command): Promise<ReturnValue> {
   throw RuntimeFault.fromError(new Invalid(cmd.name));
 }
 

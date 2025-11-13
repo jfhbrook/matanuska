@@ -26,7 +26,7 @@ export interface InstrVisitor<R> {
   visitEndWhileInstr(node: EndWhile): R;
   visitRepeatInstr(node: Repeat): R;
   visitUntilInstr(node: Until): R;
-  visitBuiltinInstr(node: Builtin): R;
+  visitCommandInstr(node: Command): R;
 }
 
 export abstract class Instr {
@@ -360,7 +360,7 @@ export class Until extends Instr {
   }
 }
 
-export class Builtin extends Instr {
+export class Command extends Instr {
   constructor(
     public name: string,
     public params: Expr[],
@@ -371,6 +371,6 @@ export class Builtin extends Instr {
   }
 
   accept<R>(visitor: InstrVisitor<R>): R {
-    return visitor.visitBuiltinInstr(this);
+    return visitor.visitCommandInstr(this);
   }
 }

@@ -1,4 +1,4 @@
-import { invalid, invalidBuiltin, noop, trace } from './base';
+import { invalid, invalidCommand, noop, trace } from './base';
 import type { CommandRunner, ReturnValue } from './base';
 import { Editor } from '../editor';
 import { Executor } from '../executor';
@@ -50,7 +50,7 @@ export function commandRunner(
     visitEndWhileInstr: invalid('endwhile'),
     visitRepeatInstr: invalid('repeat'),
     visitUntilInstr: invalid('until'),
-    visitBuiltinInstr: invalidBuiltin,
+    visitCommandInstr: invalidCommand,
   };
 }
 

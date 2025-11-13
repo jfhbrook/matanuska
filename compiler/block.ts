@@ -30,7 +30,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Builtin,
+  Command,
 } from '../ast/instr';
 
 import type { LineCompiler } from './base';
@@ -215,7 +215,7 @@ export abstract class Block implements InstrVisitor<void> {
     this.mismatched(until, 'until');
   }
 
-  visitBuiltinInstr(builtin: Builtin): void {
-    this.invalid(builtin, builtin.name);
+  visitCommandInstr(command: Command): void {
+    this.invalid(command, command.name);
   }
 }

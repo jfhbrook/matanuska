@@ -65,7 +65,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Builtin,
+  Command,
 } from './ast/instr';
 import { Cmd, Line, Input, Program } from './ast';
 import { sortLines } from './ast/util';
@@ -761,42 +761,42 @@ export class Parser {
 
   private cd(): Instr {
     const params = this.params();
-    return new Builtin('cd', params);
+    return new Command('cd', params);
   }
 
   private cp(): Instr {
     const params = this.params();
-    return new Builtin('cp', params);
+    return new Command('cp', params);
   }
 
   private rm(): Instr {
     const params = this.params();
-    return new Builtin('rm', params);
+    return new Command('rm', params);
   }
 
   private touch(): Instr {
     const params = this.params();
-    return new Builtin('touch', params);
+    return new Command('touch', params);
   }
 
   private mv(): Instr {
     const params = this.params();
-    return new Builtin('mv', params);
+    return new Command('mv', params);
   }
 
   private mkdir(): Instr {
     const params = this.params();
-    return new Builtin('mkdir', params);
+    return new Command('mkdir', params);
   }
 
   private rmdir(): Instr {
     const params = this.params();
-    return new Builtin('rmdir', params);
+    return new Command('rmdir', params);
   }
 
   private pwd(): Instr {
     const params = this.params();
-    return new Builtin('pwd', params);
+    return new Command('pwd', params);
   }
 
   //

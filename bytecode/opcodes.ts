@@ -37,7 +37,7 @@ export enum OpCode {
   // Commands
   Print,
   Exit,
-  Builtin,
+  Command,
 
   // Jumping
   Jump,

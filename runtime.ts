@@ -88,7 +88,7 @@ export class Runtime {
     );
   }
 
-  private builtin(): void {
+  private command(): void {
     const argv: Array<Value> = [];
     let n = this.readByte();
     while (n > 1) {
@@ -253,8 +253,8 @@ export class Runtime {
               }
               this.host.exit(b);
               return null;
-            case OpCode.Builtin:
-              this.builtin();
+            case OpCode.Command:
+              this.command();
               break;
             case OpCode.Jump:
               // Note: readShort increments the pc. If we didn't assign before,
