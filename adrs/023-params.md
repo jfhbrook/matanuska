@@ -1,6 +1,6 @@
 # ADR 023 - Params
 
-### Status: Draft
+### Status: Accepted
 
 ### Josh Holbrook
 
@@ -18,11 +18,21 @@ In current internal parlance, these sort of arguments and flags are known as "pa
 
 This feature is currently half-baked and poorly tested, since it only needs to support `load`. However, I am in the process of implementing disk-based shell builtins - `cd`, `cp`, `rm`, `touch`, `mv`, `mkdir`, `rmdir` and `pwd`. Most of these accept params. Therefore, it is worth stepping back and doing some up-front design.
 
-# Path Literals and Shell Tokens
+# Decision
 
-Before continuing, we should take the time to understand how Matanuska handles path literals and bare "shell" tokens.
+## AST
 
-Currently, all tested paths scan as a combination of basic tokens, _not_ separated by whitespace:
+Certain instructions will accept an array of "params", as opposed to the more structured formats of others:
+
+```
+Command => name: string, params: Expr[]
+```
+
+These expressions will generally contain either `ShellLiteral` expressions, or full expressions as seen in other contexts.
+
+## Shell Literal Parsing
+
+Currently, all tested paths and options flags scan as a combination of basic tokens, _not_ separated by whitespace:
 
 | text            | tokens                              |
 | --------------- | ----------------------------------- |
@@ -37,56 +47,30 @@ Currently, all tested paths scan as a combination of basic tokens, _not_ separat
 | `-o`            | `-`, `<ident>`                      |
 | `--long-option` | `-`, `-`, `<ident>`, `-`, `<ident>` |
 
-Off the cuff, it may seem like these scans are incorrect. However:
+This means that we can parse out `ShellLiteral(value)` expressions by accepting any token which doesn't include "illegal" characters, pausing if we encounter whitespace.
 
-1. Because the scanner emits **whitespace** tokens, we can easily reassemble these entities in the scanner
-2. In most contexts, we would want to treat these tokens as part of non-param expressions
+## Expression Parsing
 
-In addition, the scanner is intended to handle standard shell-compatible tokens as a last resort. However, to date, no such tokens have been discovered - all inputs so far have scanned into higher level tokens.
+In addition, we would like to accept standard expressions. But we need to be careful that the expression will parse clearly, in the presence of shell literals which may confuse the parser.
 
-## Runtime Handling
+We do this by only treating tokens corresponding to `primary` entities as expressions. This includes literals (such as strings or numbers), identifiers, and groups (`(...)`). In these cases, we dive right into the `primary()` parser; otherwise, we accept a shell literal.
 
-Currently, params are handled entirely in the parser. However, there are problems with this:
+## Compiling
 
-1. Shells allow for params to be quoted - `foo "bar" baz`
-2. We would like to allow for params to be assembled with expressions at runtime
+Currently, shell literals are treated the same as strings in the compiler. Generally speaking, we don't have a particular need for a dedicated shell type. This decision may be re-evaluated in the future, if such a need arises.
 
-This would be expected to change to parsing at runtime, after expressions have been evaluated. In other words, AST nodes which currently look like this:
+## Params Parsing
 
-```
-Rm => paths: Expr[], recursive: boolean, force: boolean, directory: boolean
-```
+For these commands, the AST parser only handles extracting the expressions into a list of params. Because we won't know what an expression evaluates to until runtime, we're forced to do "command line options parsing" at runtime.
 
-should instead look like this:
-
-```
-Rm => argv: Expr[]
-```
-
-The runtime would then evaluate those arguments and pass those to the `Rm` instruction.
-
-## Semantics
-
-The params parser currently takes a `ParamsSpec` and returns a `Params` object, with an interface inspired by [minimist](https://www.npmjs.com/package/minimist).
+This parsing is supported by a class called `Params`. Its general interface looks like so (using an example based on the `load` command):
 
 ```typescript
-export interface Params {
-  arguments: Expr[];
-  flags: Record<string, boolean>;
-  options: Record<string, Expr>;
-}
+const PARAMS = new Params([new Arg('filename'), new Flag('run')]);
 
-export interface ParamsSpec {
-  arguments?: string[];
-  flags?: string[];
-  options?: string[];
-}
+const { filename, run } = PARAMS.parse(['some-filename.bas', '--run']);
 ```
 
-Negative flags are handled with a `--no` prefix - ie `--flag` is negated by `--no-flag`. Short flags are handled by treating flags of length 1 as short.
+Negative flags are handled with a `--no` prefix - ie `--flag` is negated by `--no-flag`. Short flags are handled by treating flags of length 1 as short. Note that short flags currently do not support negation.
 
-This format should be able to handle general use cases for builtins. Non-builtins (ie real shell commands) should be able to delegate their behavior to their respective commands.
-
-# Decision
-
-TK
+This format should be able to handle general use cases for built-in commands. Non-builtins (ie real shell commands) should be able to delegate their behavior to their respective commands.

@@ -12,9 +12,9 @@ export default async function load(
   _load: Load,
 ): Promise<ReturnValue> {
   const { executor, editor, host } = this;
-  const opts = PARAMS.parse(this.args);
-  await executor.load(String(opts.filename));
-  if (opts.run) {
+  const { filename, run } = PARAMS.parse(this.args);
+  await executor.load(String(filename));
+  if (run) {
     await executor.run();
   } else if (editor.warning) {
     host.writeWarn(editor.warning);

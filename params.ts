@@ -59,6 +59,12 @@ export class Params {
       i += n;
     };
 
+    const getOpt = (name: string): Param | null => {
+      name = this.aliases[name] ? this.aliases[name] : name;
+
+      return this.opts[name] || null;
+    };
+
     const getValue = (n: number = 1): Value => {
       const v = params[i + n];
       if (v === null) {
@@ -67,45 +73,86 @@ export class Params {
       return v;
     };
 
+    const setOpt = (name: string, flagValue: boolean = true): void => {
+      const p = getOpt(name);
+      if (p) {
+        if (p instanceof Flag) {
+          parsed[p.name] = flagValue;
+          advance();
+          return;
+        }
+        parsed[p.name] = getValue();
+        advance(2);
+        return;
+      }
+
+      throw new ParamError(`Unknown flag or option --${name}`);
+    };
+
+    const setNoOpt = (name: string): void => {
+      try {
+        setOpt(name, true);
+      } catch (err) {
+        if (!(err instanceof ParamError)) {
+          throw err;
+        }
+        setOpt(name.slice(3), false);
+      }
+    };
+
+    const setShortOpts = (opts: string) => {
+      let n = 1;
+      for (let i = 0; i < opts.length; i++) {
+        const name = opts[i];
+        const p = getOpt(name);
+        if (p) {
+          if (p instanceof Flag) {
+            parsed[p.name] = true;
+            continue;
+          }
+          if (i !== opts.length - 1) {
+            throw new ParamError(
+              `Option flag -${name} must be followed by a value`,
+            );
+          }
+          parsed[p.name] = getValue();
+          n = 2;
+          break;
+        }
+      }
+      advance(n);
+    };
+
+    const setArg = () => {
+      const value = getValue(0);
+      if (args.length) {
+        parsed[args[0]] = value;
+        args.shift();
+        advance(1);
+        return;
+      }
+
+      throw new ParamError(`Unknown argument ${value}`);
+    };
+
     while (i < params.length) {
       const param = params[i];
       if (typeof param === 'string') {
         if (param.match(/^--no-/)) {
-          const p = this.getOpt(param.slice(5));
-          if (p) {
-            // TODO: Should we allow --no-x for non-flag parameters?
-            parsed[p.name] = false;
-            advance();
-            continue;
-          }
-          throw new ParamError(`Unknown flag or option ${param}`);
-        }
-
-        if (param.match(/^--/)) {
-          const p = this.getOpt(param.slice(2));
-          if (p) {
-            if (p instanceof Flag) {
-              parsed[p.name] = true;
-              advance();
-              continue;
-            }
-
-            parsed[p.name] = getValue();
-            advance(2);
-            continue;
-          }
-          throw new ParamError(`Unknown flag or option ${param}`);
-        }
-
-        if (args.length) {
-          parsed[args[0]] = getValue(0);
-          args.shift();
-          advance(1);
+          setNoOpt(param.slice(2));
           continue;
         }
 
-        throw new ParamError(`Unknown argument ${param}`);
+        if (param.match(/^--/)) {
+          setOpt(param.slice(2), true);
+          continue;
+        }
+
+        if (param.match(/^-/)) {
+          setShortOpts(param.slice(1));
+        }
       }
+      setArg();
     }
 
     if (args.length) {
@@ -113,11 +160,5 @@ export class Params {
     }
 
     return parsed;
-  }
-
-  private getOpt(name: string): Param | null {
-    name = this.aliases[name] ? this.aliases[name] : name;
-
-    return this.opts[name] || null;
   }
 }
