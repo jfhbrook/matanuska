@@ -7,7 +7,7 @@ import { Span } from '@opentelemetry/api';
 //#endif
 
 import { Chunk } from './bytecode/chunk';
-import { compileCommands, compileProgram } from './compiler';
+import { compileInstructions, compileProgram } from './compiler';
 import { Config } from './config';
 //#if _MATBAS_BUILD == 'debug'
 import { startSpan } from './debug';
@@ -444,7 +444,7 @@ export class Executor {
   ]: ParseResult<Cmd>): Promise<void> {
     let warning: ParseWarning | null = null;
     try {
-      const result = compileCommands(cmds.instructions, {
+      const result = compileInstructions(cmds.instructions, {
         filename: '<input>',
         cmdNo: cmds.cmdNo,
         cmdSource: cmds.source,

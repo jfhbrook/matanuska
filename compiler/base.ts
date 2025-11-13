@@ -11,7 +11,12 @@ import { startSpan } from '../debug';
 import { showChunk } from '../debug';
 //#endif
 import { errorType } from '../errors';
-import { SyntaxError, ParseError, ParseWarning } from '../exceptions';
+import {
+  SyntaxError,
+  ParseError,
+  ParseWarning,
+  mergeParseErrors,
+} from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
 import { Token, TokenKind } from '../tokens';
 import { Value } from '../value';
@@ -950,6 +955,30 @@ export function compileInstruction(
     //#if _MATBAS_BUILD == 'debug'
   });
   //#endif
+}
+
+/**
+ * Compile a series of instructions.
+ *
+ * @param instrs The instructions to compile.
+ * @param options Compiler options.
+ * @returns The result of compiling each line, plus warnings.
+ */
+export function compileInstructions(
+  cmds: Instr[],
+  options: CompilerOptions = {},
+): CompileResult<Chunk[]> {
+  const results: CompileResult<Chunk>[] = cmds.map((cmd) => {
+    const [chunk, warning] = compileInstruction(cmd, options);
+    return [chunk, warning];
+  });
+
+  const commands: Chunk[] = results.map(([chunk, _]) => chunk);
+  const warnings: Array<ParseWarning | null> = results.reduce(
+    (acc, [_, warns]) => (warns ? acc.concat(warns) : acc),
+    [] as Array<ParseWarning | null>,
+  );
+  return [commands, mergeParseErrors(warnings)];
 }
 
 /**
