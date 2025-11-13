@@ -88,6 +88,17 @@ export class Runtime {
     );
   }
 
+  private builtin(): void {
+    const argv: Array<Value> = [];
+    let n = this.readByte();
+    while (n > 1) {
+      argv.unshift(this.stack.pop());
+      n--;
+    }
+    const name = this.stack.pop();
+    throw new NotImplementedError(name + ' ' + JSON.stringify(argv));
+  }
+
   private run(): Value | null {
     //#if _MATBAS_BUILD == 'debug'
     return startSpan('Runtime#run', (_: Span): Value | null => {
@@ -242,6 +253,9 @@ export class Runtime {
               }
               this.host.exit(b);
               return null;
+            case OpCode.Builtin:
+              this.builtin();
+              break;
             case OpCode.Jump:
               // Note: readShort increments the pc. If we didn't assign before,
               // we would need to add extra to skip over those bytes!
