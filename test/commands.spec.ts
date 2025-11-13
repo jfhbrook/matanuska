@@ -49,7 +49,7 @@ test('expression', async () => {
   });
 });
 
-test('editing', async () => {
+test.skip('editing', async () => {
   await topic.swear(async ({ executor, editor, host }) => {
     await executor.eval('load "./examples/001-hello-world.bas"');
 

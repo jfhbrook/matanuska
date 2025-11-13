@@ -6,4 +6,4 @@ export {
   compileInstruction,
   compileProgram,
 } from './base';
-export { CompiledCmd, CommandCompiler, compileCommands } from './command';
+export { CompiledCmd, compileCommands } from './command';

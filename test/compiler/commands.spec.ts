@@ -12,13 +12,6 @@ function isCompiled(name: string, [cmd, chunks]: CompiledCmd): void {
   });
 }
 
-function isInteractive(name: string, cmd: CompiledCmd): void {
-  test(name, () => {
-    t.ok(cmd, 'is an interactive command');
-    t.matchSnapshot(cmd, 'has the expected arguments');
-  });
-}
-
 describe('interactive compiler', () => {
   const [cmds, warning] = compileCommands([
     new Print(new StringLiteral('Hello')),
@@ -27,13 +20,13 @@ describe('interactive compiler', () => {
     new Expression(new StringLiteral('Hello')),
   ]);
 
-  t.equal(cmds.length, 3, 'rem is filtered out');
+  t.equal(cmds.length, 4, 'All commands are compiled');
 
-  const [print, exit, expr] = cmds;
+  const [print, exit, _rem, expr] = cmds;
 
   t.equal(warning, null, 'has no warnings');
 
   isCompiled('print', print);
   isCompiled('exit', exit);
-  isInteractive('expression', expr);
+  isCompiled('expression', expr);
 });
