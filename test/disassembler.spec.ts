@@ -359,6 +359,18 @@ test('simple program', () => {
   ).toMatchSnapshot();
 });
 
+test('builtin', () => {
+  expect(
+    disassemble(
+      chunk({
+        constants: [],
+        code: [OpCode.Builtin, 6],
+        lines: [100],
+      }),
+    ),
+  ).toMatchSnapshot();
+});
+
 test('malformed lines', () => {
   expect(
     disassemble(

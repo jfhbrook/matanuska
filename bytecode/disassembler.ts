@@ -74,6 +74,10 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
     ];
   }
 
+  function builtin(): Row {
+    return [String(lineNo), String(offset), 'BUILTIN', String(advance())];
+  }
+
   function jump(code: string, sign: number): Row {
     const jump = bytesToShort([peek(1), peek(2)]);
 
@@ -161,6 +165,9 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
       break;
     case OpCode.Exit:
       row = simple('EXIT');
+      break;
+    case OpCode.Builtin:
+      row = builtin();
       break;
     case OpCode.Jump:
       row = jump('JUMP', FORWARD);

@@ -28,10 +28,11 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] formatter
   - [x] params overhaul
   - [x] parse `Builtin` type
-  - [ ] builtin abstraction
-  - [ ] compiler
-  - [ ] host
+  - [x] bytecode support
+  - [x] compiler support
   - [ ] runtime
+  - [ ] host
+  - [ ] compiler tests
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner

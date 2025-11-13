@@ -11,12 +11,7 @@ import { startSpan } from '../debug';
 import { showChunk } from '../debug';
 //#endif
 import { errorType } from '../errors';
-import {
-  SyntaxError,
-  ParseError,
-  ParseWarning,
-  NotImplementedError,
-} from '../exceptions';
+import { SyntaxError, ParseError, ParseWarning } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
 import { Token, TokenKind } from '../tokens';
 import { Value } from '../value';
@@ -798,8 +793,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitBuiltinInstr(builtin: Builtin): void {
-    console.log(builtin);
-    throw new NotImplementedError(builtin.name);
+    this.emitConstant(builtin.name);
+    for (const expr of builtin.params) {
+      expr.accept(this);
+    }
+    this.emitBytes(OpCode.Builtin, 1 + builtin.params.length);
   }
 
   //
