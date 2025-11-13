@@ -7,8 +7,7 @@ import { Span } from '@opentelemetry/api';
 //#endif
 
 import { Chunk } from './bytecode/chunk';
-import { ReturnValue } from './commands';
-import { compileCommands, compileProgram, CompiledCmd } from './compiler';
+import { compileCommands, compileProgram } from './compiler';
 import { Config } from './config';
 //#if _MATBAS_BUILD == 'debug'
 import { startSpan } from './debug';
@@ -462,11 +461,11 @@ export class Executor {
       const lastCmd = commands.pop();
 
       for (const cmd of commands) {
-        await this.runCompiledCommand(cmd);
+        this.runtime.interpret(cmd);
       }
 
       if (lastCmd) {
-        const rv = await this.runCompiledCommand(lastCmd);
+        const rv = this.runtime.interpret(lastCmd);
         if (rv !== null) {
           this.host.writeLine(inspector.format(rv));
         }
@@ -479,16 +478,5 @@ export class Executor {
 
       throw exc;
     }
-  }
-
-  //
-  // Run a compiled command.
-  //
-  private async runCompiledCommand(chunks: CompiledCmd): Promise<ReturnValue> {
-    const results = chunks.map((c) => {
-      return c ? this.runtime.interpret(c) : null;
-    });
-
-    return results[results.length - 1];
   }
 }

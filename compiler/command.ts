@@ -1,11 +1,9 @@
 import { ParseWarning, mergeParseErrors } from '../exceptions';
-import { Instr, Rem } from '../ast/instr';
+import { Instr } from '../ast/instr';
 
 import { Chunk } from '../bytecode/chunk';
 
 import { CompileResult, CompilerOptions, compileInstruction } from './base';
-
-export type CompiledCmd = Array<Chunk | null>;
 
 /**
  * Compile a mixture of interactive instructions and commands.
@@ -17,16 +15,13 @@ export type CompiledCmd = Array<Chunk | null>;
 export function compileCommands(
   cmds: Instr[],
   options: CompilerOptions = {},
-): CompileResult<CompiledCmd[]> {
-  // TODO: Collect ParseErrors
-  const results: CompileResult<CompiledCmd>[] = cmds.map((cmd) => {
+): CompileResult<Chunk[]> {
+  const results: CompileResult<Chunk>[] = cmds.map((cmd) => {
     const [chunk, warning] = compileInstruction(cmd, options);
-    return [[chunk], warning];
+    return [chunk, warning];
   });
 
-  const commands: CompiledCmd[] = results
-    .map(([cmd, _]) => cmd)
-    .filter(([c, _]) => !(c instanceof Rem));
+  const commands: Chunk[] = results.map(([chunk, _]) => chunk);
   const warnings: Array<ParseWarning | null> = results.reduce(
     (acc, [_, warns]) => (warns ? acc.concat(warns) : acc),
     [] as Array<ParseWarning | null>,
