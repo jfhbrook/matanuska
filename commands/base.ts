@@ -3,17 +3,25 @@ import { Span } from '@opentelemetry/api';
 
 import { startSpan } from '../debug';
 //#endif
+import { Program } from '../ast';
+import { Builtin, Instr, InstrVisitor } from '../ast/instr';
 import { Editor } from '../editor';
-import { Executor } from '../executor';
 import { errorType } from '../errors';
+import { Executor } from '../executor';
 import { RuntimeFault } from '../faults';
 //#if _MATBAS_BUILD == 'debug'
 import { formatter } from '../format';
 //#endif
 import { Host } from '../host';
 import { Value } from '../value';
-import { Program } from '../ast';
-import { Builtin, Instr, InstrVisitor } from '../ast/instr';
+
+export interface CommandContext {
+  executor: Executor;
+  editor: Editor;
+  program: Program;
+  host: Host;
+  args: Array<Value | null>;
+}
 
 /**
  * The return value of a command. Null is used to indicate no returned
@@ -29,13 +37,9 @@ export type InteractiveCommand<C extends Instr> = (
   cmd: C,
 ) => Promise<ReturnValue>;
 
-export interface CommandRunner extends InstrVisitor<Promise<ReturnValue>> {
-  executor: Executor;
-  editor: Editor;
-  program: Program;
-  host: Host;
-  args: Array<Value | null>;
-}
+export interface CommandRunner
+  extends CommandContext,
+    InstrVisitor<Promise<ReturnValue>> {}
 
 @errorType('Invalid')
 export class Invalid extends Error {
