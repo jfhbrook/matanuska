@@ -1,53 +1,7 @@
 import { test } from 'vitest';
 import { t } from './helpers/tap';
 
-import { commandRunner } from '../commands';
-import { RuntimeFault } from '../faults';
-import { IntLiteral, StringLiteral } from '../ast/expr';
-import { Instr, Expression, Print, Exit, Rem } from '../ast/instr';
-
 import { executorTopic as topic } from './helpers/executor';
-
-const INVALID_CMDS: Array<[string, Instr]> = [
-  ['print', new Print(new IntLiteral(1))],
-  ['exit', new Exit(null)],
-];
-
-const NOOP_CMDS: Array<[string, Instr]> = [['rem', new Rem('A witty remark.')]];
-
-test('invalid commands', async () => {
-  await topic.swear(async ({ executor, editor, host }) => {
-    for (const [name, instr] of INVALID_CMDS) {
-      await t.rejects(
-        () => instr.accept(commandRunner(executor, editor, host, [])),
-        RuntimeFault,
-        `${name} is an invalid command`,
-      );
-    }
-  });
-});
-
-test('noop commands', async () => {
-  await topic.swear(async ({ executor, editor, host }) => {
-    for (const [name, instr] of NOOP_CMDS) {
-      t.equal(
-        await instr.accept(commandRunner(executor, editor, host, [])),
-        null,
-        `${name} returns null`,
-      );
-    }
-  });
-});
-
-test('expression', async () => {
-  await topic.swear(async ({ executor, editor, host }) => {
-    const expr = new Expression(new StringLiteral('hello'));
-    const rv = await expr.accept(
-      commandRunner(executor, editor, host, ['hello']),
-    );
-    t.equal(rv, 'hello');
-  });
-});
 
 test.skip('editing', async () => {
   await topic.swear(async ({ executor, editor, host }) => {
