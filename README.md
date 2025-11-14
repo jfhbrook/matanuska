@@ -25,7 +25,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Builtin commands
   - [x] fix commands.spec.ts
   - [ ] handle pc context for `run`
-  - [ ] handle runtime reset in `new`
+  - [x] handle runtime reset in `new`
   - [ ] test params parser
   - [ ] implement cd
 - [ ] Native commands

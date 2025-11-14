@@ -65,6 +65,8 @@ export interface Command {
   main: (context: Context, args: Args) => Promise<ReturnValue>;
 }
 
+export type Deferred = () => Promise<void>;
+
 /**
  * Wrap a command in a telemetry span.
  */

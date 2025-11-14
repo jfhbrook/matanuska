@@ -1,4 +1,4 @@
-import type { Args, Command, ReturnValue } from './base';
+import type { Args, Command, Deferred, ReturnValue } from './base';
 import { Context } from './base';
 
 import new_ from './new';
@@ -19,4 +19,12 @@ const BUILTINS: CommandIndex = {
   run,
 };
 
-export { BUILTINS, CommandIndex, Args, Command, Context, ReturnValue };
+export {
+  BUILTINS,
+  CommandIndex,
+  Args,
+  Command,
+  Context,
+  Deferred,
+  ReturnValue,
+};

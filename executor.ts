@@ -7,7 +7,7 @@ import { Span } from '@opentelemetry/api';
 //#endif
 
 import { Chunk } from './bytecode/chunk';
-import { BUILTINS, Command, CommandIndex, Context } from './commands';
+import { BUILTINS, Command, CommandIndex, Context, Deferred } from './commands';
 import { compileInstructions, compileProgram } from './compiler';
 import { Config } from './config';
 //#if _MATBAS_BUILD == 'debug'
@@ -48,6 +48,7 @@ export class Executor {
 
   public interactive: boolean;
   private commands: CommandIndex;
+  private _deferred: Deferred[] = [];
 
   constructor(
     private config: Config,
@@ -258,6 +259,13 @@ export class Executor {
   }
 
   /**
+   * Defer an action until after runtime execution.
+   */
+  public defer(fn: Deferred): void {
+    this._deferred.push(fn);
+  }
+
+  /**
    * Load a script into the editor.
    *
    * @param filename The file path to the script.
@@ -367,6 +375,8 @@ export class Executor {
           await this._eval([row, warning as ParseWarning]);
         }
       }
+
+      this.runDeferred();
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
@@ -409,6 +419,13 @@ export class Executor {
 
       throw exc;
     }
+  }
+
+  private async runDeferred(): Promise<void> {
+    for (const deferred of this._deferred) {
+      await deferred();
+    }
+    this._deferred = [];
   }
 
   public async command(name: string, args: Value[]): Promise<Value | null> {
