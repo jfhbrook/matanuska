@@ -5,7 +5,6 @@ import { Span } from '@opentelemetry/api';
 //#else
 //#unset _DEBUG_TRACE_RUNTIME
 //#endif
-
 //#if _MATBAS_BUILD == 'debug'
 import { startSpan } from './debug';
 //#endif
@@ -13,6 +12,7 @@ import { startSpan } from './debug';
 import { startTraceExec, traceExec } from './debug';
 //#endif
 import { BaseException, NameError, NotImplementedError } from './exceptions';
+import type { Executor } from './executor';
 import { Exit } from './exit';
 import { RuntimeFault } from './faults';
 import { Host } from './host';
@@ -36,7 +36,10 @@ export class Runtime {
   public chunk: Chunk = new Chunk();
   public globals: Globals = {};
 
-  constructor(private host: Host) {
+  constructor(
+    private host: Host,
+    private executor: Executor,
+  ) {
     this.stack = new Stack();
   }
 
@@ -46,10 +49,10 @@ export class Runtime {
     this.pc = 0;
   }
 
-  public interpret(chunk: Chunk): Value | null {
+  public async interpret(chunk: Chunk): Promise<Value | null> {
     this.chunk = chunk;
     this.pc = 0;
-    return this.run();
+    return await this.run();
   }
 
   // TODO: Using templates can help decrease boilerplate while increasing the
@@ -88,20 +91,21 @@ export class Runtime {
     );
   }
 
-  private command(): void {
-    const argv: Array<Value> = [];
+  private async command(): Promise<Value> {
+    const args: Array<Value> = [];
     let n = this.readByte();
     while (n > 1) {
-      argv.unshift(this.stack.pop());
+      args.unshift(this.stack.pop());
       n--;
     }
     const name = this.stack.pop();
-    throw new NotImplementedError(name + ' ' + JSON.stringify(argv));
+
+    return await this.executor.command(name as string, args);
   }
 
-  private run(): Value | null {
+  private async run(): Promise<Value | null> {
     //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Runtime#run', (_: Span): Value | null => {
+    return startSpan('Runtime#run', async (_: Span): Promise<Value | null> => {
       //#endif
       let a: Value | null = null;
       let b: Value | null = null;
@@ -254,7 +258,7 @@ export class Runtime {
               this.host.exit(b);
               return null;
             case OpCode.Command:
-              this.command();
+              await this.command();
               break;
             case OpCode.Jump:
               // Note: readShort increments the pc. If we didn't assign before,

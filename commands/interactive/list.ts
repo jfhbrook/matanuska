@@ -9,7 +9,7 @@ export default {
   async main(context: InteractiveContext, args: Args): Promise<ReturnValue> {
     const { executor } = context;
     const [lineStart, lineEnd] = args;
-    executor.list(lineStart as number | null, lineEnd as number | null);
+    executor.list(lineStart, lineEnd);
     return null;
   },
 };

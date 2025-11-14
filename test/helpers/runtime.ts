@@ -2,6 +2,7 @@ import { t } from './tap';
 
 import { Exit } from '../../exit';
 import { Chunk } from '../../bytecode/chunk';
+import { Executor } from '../../executor';
 import { formatter } from '../../format';
 import { Runtime } from '../../runtime';
 import { Value } from '../../value';
@@ -14,10 +15,13 @@ export interface ChunkTests {
   exitCode?: number;
 }
 
-export function testChunk(chunk: Chunk, tests: ChunkTests = {}): void {
+export async function testChunk(
+  chunk: Chunk,
+  tests: ChunkTests = {},
+): Promise<void> {
   const [stackBefore, stackAfter] = tests.effect || [[], []];
   const host = new MockConsoleHost();
-  const runtime = new Runtime(host);
+  const runtime = new Runtime(host, {} as Executor);
 
   runtime.stack.stack = stackBefore;
 
@@ -36,7 +40,7 @@ export function testChunk(chunk: Chunk, tests: ChunkTests = {}): void {
   }
 
   try {
-    runtime.interpret(chunk);
+    await runtime.interpret(chunk);
   } catch (err) {
     t.equal(err.exitCode, tests.exitCode || 0);
   }

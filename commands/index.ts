@@ -15,7 +15,9 @@ import renum from './interactive/renum';
 import save from './interactive/save';
 import run from './interactive/run';
 
-const BUILTINS: Record<string, BaseCommand> = {
+type CommandIndex = Record<string, BaseCommand>;
+
+const BUILTINS: CommandIndex = {
   new: new_,
   load,
   list,
@@ -26,6 +28,7 @@ const BUILTINS: Record<string, BaseCommand> = {
 
 export {
   BUILTINS,
+  CommandIndex,
   Args,
   BaseCommand,
   Command,

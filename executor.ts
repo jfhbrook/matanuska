@@ -19,6 +19,7 @@ import {
   ParseWarning,
   mergeParseErrors,
   splitParseError,
+  NotImplementedError,
 } from './exceptions';
 import { RuntimeFault } from './faults';
 import { inspector } from './format';
@@ -26,6 +27,7 @@ import type { Host } from './host';
 import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
+import { nil, Nil, Value } from './value';
 
 import { Line, Cmd, Program } from './ast';
 
@@ -49,7 +51,7 @@ export class Executor {
     @Inject('Host') private host: Host,
   ) {
     this.parser = new Parser();
-    this.runtime = new Runtime(host);
+    this.runtime = new Runtime(host, this);
     this._readline = null;
     this.history = [];
     this.ps1 = new Prompt('\\u@\\h:\\w\\$', this.config.historyFileSize, host);
@@ -326,10 +328,12 @@ export class Executor {
    *
    * @returns The recreated source of the current program.
    */
-  list(lineStart: number | null = null, lineEnd: number | null = null): void {
+  list(lineStart: Value = nil, lineEnd: Value = nil): void {
     //#if _MATBAS_BUILD == 'debug'
     return startSpan('Executor#list', (_: Span) => {
       //#endif
+      const start = lineStart instanceof Nil ? null : (lineStart as number);
+      const end = lineEnd instanceof Nil ? null : (lineEnd as number);
       if (this.editor.warning) {
         this.host.writeWarn(this.editor.warning);
       }
@@ -337,7 +341,7 @@ export class Executor {
       this.host.writeLine(
         `${this.editor.filename}\n${'-'.repeat(this.editor.filename.length)}`,
       );
-      const listings = this.editor.list(lineStart, lineEnd);
+      const listings = this.editor.list(start, end);
       this.host.writeLine(listings);
       //#if _MATBAS_BUILD == 'debug'
     });
@@ -397,7 +401,7 @@ export class Executor {
         this.host.writeWarn(warning);
       }
 
-      this.runtime.interpret(chunk);
+      await this.runtime.interpret(chunk);
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
@@ -425,7 +429,7 @@ export class Executor {
           }
           this.editor.setLine(row, warning as ParseWarning);
         } else {
-          await this.evalParsedCommands([row, warning as ParseWarning]);
+          await this._eval([row, warning as ParseWarning]);
         }
       }
       //#if _MATBAS_BUILD == 'debug'
@@ -433,15 +437,7 @@ export class Executor {
     //#endif
   }
 
-  /**
-   * Evaluate a group of commands.
-   *
-   * @param instrs A group of instructions to evaluate.
-   */
-  private async evalParsedCommands([
-    cmds,
-    parseWarning,
-  ]: ParseResult<Cmd>): Promise<void> {
+  private async _eval([cmds, parseWarning]: ParseResult<Cmd>): Promise<void> {
     let warning: ParseWarning | null = null;
     try {
       const result = compileInstructions(cmds.instructions, {
@@ -461,11 +457,11 @@ export class Executor {
       const lastCmd = commands.pop();
 
       for (const cmd of commands) {
-        this.runtime.interpret(cmd);
+        await this.runtime.interpret(cmd);
       }
 
       if (lastCmd) {
-        const rv = this.runtime.interpret(lastCmd);
+        const rv = await this.runtime.interpret(lastCmd);
         if (rv !== null) {
           this.host.writeLine(inspector.format(rv));
         }
@@ -478,5 +474,9 @@ export class Executor {
 
       throw exc;
     }
+  }
+
+  public async command(name: string, _args: Value[]): Promise<Value> {
+    throw new NotImplementedError(name);
   }
 }

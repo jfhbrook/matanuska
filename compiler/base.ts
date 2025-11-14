@@ -19,7 +19,7 @@ import {
 } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
 import { Token, TokenKind } from '../tokens';
-import { Value } from '../value';
+import { nil, Value } from '../value';
 // import { Type } from './value/types';
 // import { Stack } from './stack';
 import { Line, Program } from '../ast';
@@ -438,13 +438,6 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     throw RuntimeFault.fromError(exc);
   }
 
-  private interactive(name: string, instr: Instr): never {
-    this.syntaxError(
-      instr,
-      `Cannot run interactive command in scripts: ${name}`,
-    );
-  }
-
   private synchronize(): void {
     this.currentLine++;
     this.currentInstrNo = 0;
@@ -568,28 +561,44 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitRemInstr(_rem: Rem): void {}
 
-  visitNewInstr(new_: New): void {
-    return this.interactive('new', new_);
+  visitNewInstr(_new_: New): void {
+    this.emitConstant('new');
+    this.emitBytes(OpCode.Command, 1);
   }
 
   visitLoadInstr(load: Load): void {
-    return this.interactive('load', load);
+    this.emitConstant('load');
+    for (const expr of load.params) {
+      expr.accept(this);
+    }
+    this.emitBytes(OpCode.Command, 1 + load.params.length);
   }
 
   visitListInstr(list: List): void {
-    return this.interactive('list', list);
+    this.emitConstant('list');
+    this.emitConstant(list.lineStart || nil);
+    this.emitConstant(list.lineEnd || nil);
+    this.emitBytes(OpCode.Command, 3);
   }
 
-  visitRenumInstr(renum: Renum): void {
-    return this.interactive('renum', renum);
+  visitRenumInstr(_renum: Renum): void {
+    this.emitConstant('renum');
+    this.emitBytes(OpCode.Command, 1);
   }
 
   visitSaveInstr(save: Save): void {
-    return this.interactive('save', save);
+    this.emitConstant('save');
+    if (save.filename) {
+      save.filename.accept(this);
+    } else {
+      this.emitConstant(nil);
+    }
+    this.emitBytes(OpCode.Command, 2);
   }
 
-  visitRunInstr(run: Run): void {
-    return this.interactive('run', run);
+  visitRunInstr(_run: Run): void {
+    this.emitConstant('run');
+    this.emitBytes(OpCode.Command, 1);
   }
 
   visitEndInstr(_end: End): void {
