@@ -17,6 +17,7 @@ export class Arg extends Param {
     super(name);
   }
 }
+export class Argv extends Arg {}
 export class Flag extends Param {}
 export class Opt extends Param {}
 
@@ -27,17 +28,21 @@ export type Parameters = Record<string, Value>;
 
 export class Params {
   args: string[];
+  argv: string[];
   flags: Record<string, Flag>;
   opts: Record<string, Opt>;
   aliases: Record<string, string>;
 
   constructor(spec: ParamSpec) {
     this.args = [];
+    this.argv = [];
     this.opts = {};
     this.aliases = {};
 
     for (const param of spec) {
-      if (param instanceof Arg) {
+      if (param instanceof Argv) {
+        this.argv.push(param.name);
+      } else if (param instanceof Arg) {
         this.args.push(param.name);
       } else {
         this.opts[param.name] = param;
@@ -49,14 +54,27 @@ export class Params {
     }
   }
 
-  parse(params: Array<Value | null>): Record<string, Value> {
+  parse(params: Array<Value | null>): Record<string, any> {
     const args = this.args.slice();
-    const parsed: Record<string, Value> = {};
+    // Result can be either a value or, in the case of argv, an array of
+    // values. Rather than forcing the user to check the type, we assume they
+    // are adults - lol
+    const parsed: Record<string, any> = {};
+
+    for (const name of this.argv) {
+      parsed[name] = [];
+    }
 
     let i = 0;
 
     const advance = (n: number = 1) => {
       i += n;
+    };
+
+    const getOpt = (name: string): Param | null => {
+      name = this.aliases[name] ? this.aliases[name] : name;
+
+      return this.opts[name] || null;
     };
 
     const getValue = (n: number = 1): Value => {
@@ -67,45 +85,92 @@ export class Params {
       return v;
     };
 
+    const setOpt = (name: string, flagValue: boolean = true): void => {
+      const p = getOpt(name);
+      if (p) {
+        if (p instanceof Flag) {
+          parsed[p.name] = flagValue;
+          advance();
+          return;
+        }
+        parsed[p.name] = getValue();
+        advance(2);
+        return;
+      }
+
+      throw new ParamError(`Unknown flag or option --${name}`);
+    };
+
+    const setNoOpt = (name: string): void => {
+      try {
+        setOpt(name, true);
+      } catch (err) {
+        if (!(err instanceof ParamError)) {
+          throw err;
+        }
+        setOpt(name.slice(3), false);
+      }
+    };
+
+    const setShortOpts = (opts: string) => {
+      let n = 1;
+      for (let i = 0; i < opts.length; i++) {
+        const name = opts[i];
+        const p = getOpt(name);
+        if (p) {
+          if (p instanceof Flag) {
+            parsed[p.name] = true;
+            continue;
+          }
+          if (i !== opts.length - 1) {
+            throw new ParamError(
+              `Option flag -${name} must be followed by a value`,
+            );
+          }
+          parsed[p.name] = getValue();
+          n = 2;
+          break;
+        }
+      }
+      advance(n);
+    };
+
+    const setArg = () => {
+      const value = getValue(0);
+      if (args.length) {
+        parsed[args[0]] = value;
+        args.shift();
+        advance(1);
+        return;
+      }
+
+      if (this.argv.length) {
+        for (const name of this.argv) {
+          parsed[name].push(value);
+        }
+      }
+
+      throw new ParamError(`Unknown argument ${value}`);
+    };
+
     while (i < params.length) {
       const param = params[i];
       if (typeof param === 'string') {
         if (param.match(/^--no-/)) {
-          const p = this.getOpt(param.slice(5));
-          if (p) {
-            // TODO: Should we allow --no-x for non-flag parameters?
-            parsed[p.name] = false;
-            advance();
-            continue;
-          }
-          throw new ParamError(`Unknown flag or option ${param}`);
-        }
-
-        if (param.match(/^--/)) {
-          const p = this.getOpt(param.slice(2));
-          if (p) {
-            if (p instanceof Flag) {
-              parsed[p.name] = true;
-              advance();
-              continue;
-            }
-
-            parsed[p.name] = getValue();
-            advance(2);
-            continue;
-          }
-          throw new ParamError(`Unknown flag or option ${param}`);
-        }
-
-        if (args.length) {
-          parsed[args[0]] = getValue(0);
-          args.shift();
-          advance(1);
+          setNoOpt(param.slice(2));
           continue;
         }
 
-        throw new ParamError(`Unknown argument ${param}`);
+        if (param.match(/^--/)) {
+          setOpt(param.slice(2), true);
+          continue;
+        }
+
+        if (param.match(/^-/)) {
+          setShortOpts(param.slice(1));
+        }
       }
+      setArg();
     }
 
     if (args.length) {
@@ -113,11 +178,5 @@ export class Params {
     }
 
     return parsed;
-  }
-
-  private getOpt(name: string): Param | null {
-    name = this.aliases[name] ? this.aliases[name] : name;
-
-    return this.opts[name] || null;
   }
 }

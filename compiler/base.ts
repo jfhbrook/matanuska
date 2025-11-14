@@ -11,10 +11,15 @@ import { startSpan } from '../debug';
 import { showChunk } from '../debug';
 //#endif
 import { errorType } from '../errors';
-import { SyntaxError, ParseError, ParseWarning } from '../exceptions';
+import {
+  SyntaxError,
+  ParseError,
+  ParseWarning,
+  mergeParseErrors,
+} from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
 import { Token, TokenKind } from '../tokens';
-import { Value } from '../value';
+import { nil, Value } from '../value';
 // import { Type } from './value/types';
 // import { Stack } from './stack';
 import { Line, Program } from '../ast';
@@ -63,7 +68,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Builtin,
+  Command,
 } from '../ast/instr';
 
 import { Block } from './block';
@@ -433,13 +438,6 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     throw RuntimeFault.fromError(exc);
   }
 
-  private interactive(name: string, instr: Instr): never {
-    this.syntaxError(
-      instr,
-      `Cannot run interactive command in scripts: ${name}`,
-    );
-  }
-
   private synchronize(): void {
     this.currentLine++;
     this.currentInstrNo = 0;
@@ -564,27 +562,48 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   visitRemInstr(_rem: Rem): void {}
 
   visitNewInstr(new_: New): void {
-    return this.interactive('new', new_);
+    let n = 1;
+    this.emitConstant('new');
+    if (new_.filename) {
+      new_.filename.accept(this);
+      n = 2;
+    }
+    this.emitBytes(OpCode.Command, n);
   }
 
   visitLoadInstr(load: Load): void {
-    return this.interactive('load', load);
+    this.emitConstant('load');
+    for (const expr of load.params) {
+      expr.accept(this);
+    }
+    this.emitBytes(OpCode.Command, 1 + load.params.length);
   }
 
   visitListInstr(list: List): void {
-    return this.interactive('list', list);
+    this.emitConstant('list');
+    this.emitConstant(list.lineStart || nil);
+    this.emitConstant(list.lineEnd || nil);
+    this.emitBytes(OpCode.Command, 3);
   }
 
-  visitRenumInstr(renum: Renum): void {
-    return this.interactive('renum', renum);
+  visitRenumInstr(_renum: Renum): void {
+    this.emitConstant('renum');
+    this.emitBytes(OpCode.Command, 1);
   }
 
   visitSaveInstr(save: Save): void {
-    return this.interactive('save', save);
+    this.emitConstant('save');
+    if (save.filename) {
+      save.filename.accept(this);
+    } else {
+      this.emitConstant(nil);
+    }
+    this.emitBytes(OpCode.Command, 2);
   }
 
-  visitRunInstr(run: Run): void {
-    return this.interactive('run', run);
+  visitRunInstr(_run: Run): void {
+    this.emitConstant('run');
+    this.emitBytes(OpCode.Command, 1);
   }
 
   visitEndInstr(_end: End): void {
@@ -792,12 +811,12 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.block.handle(onward);
   }
 
-  visitBuiltinInstr(builtin: Builtin): void {
-    this.emitConstant(builtin.name);
-    for (const expr of builtin.params) {
+  visitCommandInstr(command: Command): void {
+    this.emitConstant(command.name);
+    for (const expr of command.params) {
       expr.accept(this);
     }
-    this.emitBytes(OpCode.Builtin, 1 + builtin.params.length);
+    this.emitBytes(OpCode.Command, 1 + command.params.length);
   }
 
   //
@@ -950,6 +969,30 @@ export function compileInstruction(
     //#if _MATBAS_BUILD == 'debug'
   });
   //#endif
+}
+
+/**
+ * Compile a series of instructions.
+ *
+ * @param instrs The instructions to compile.
+ * @param options Compiler options.
+ * @returns The result of compiling each line, plus warnings.
+ */
+export function compileInstructions(
+  cmds: Instr[],
+  options: CompilerOptions = {},
+): CompileResult<Chunk[]> {
+  const results: CompileResult<Chunk>[] = cmds.map((cmd) => {
+    const [chunk, warning] = compileInstruction(cmd, options);
+    return [chunk, warning];
+  });
+
+  const commands: Chunk[] = results.map(([chunk, _]) => chunk);
+  const warnings: Array<ParseWarning | null> = results.reduce(
+    (acc, [_, warns]) => (warns ? acc.concat(warns) : acc),
+    [] as Array<ParseWarning | null>,
+  );
+  return [commands, mergeParseErrors(warnings)];
 }
 
 /**

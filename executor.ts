@@ -7,8 +7,8 @@ import { Span } from '@opentelemetry/api';
 //#endif
 
 import { Chunk } from './bytecode/chunk';
-import { commandRunner, ReturnValue } from './commands';
-import { compileCommands, compileProgram, CompiledCmd } from './compiler';
+import { BUILTINS, Command, CommandIndex, Context, Deferred } from './commands';
+import { compileInstructions, compileProgram } from './compiler';
 import { Config } from './config';
 //#if _MATBAS_BUILD == 'debug'
 import { startSpan } from './debug';
@@ -20,6 +20,7 @@ import {
   ParseWarning,
   mergeParseErrors,
   splitParseError,
+  RuntimeError,
 } from './exceptions';
 import { RuntimeFault } from './faults';
 import { inspector } from './format';
@@ -27,13 +28,14 @@ import type { Host } from './host';
 import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
+import { Value } from './value';
 
 import { Line, Cmd, Program } from './ast';
 
 @Injectable()
 export class Executor {
-  private parser: Parser;
-  private runtime: Runtime;
+  public parser: Parser;
+  public runtime: Runtime;
   private _readline: readline.Interface | null;
   private history: string[];
 
@@ -44,16 +46,22 @@ export class Executor {
   // same as the command number + the size of the history file.
   private cmdNo: number = 0;
 
+  public interactive: boolean;
+  private commands: CommandIndex;
+  private _deferred: Deferred[] = [];
+
   constructor(
     private config: Config,
     private editor: Editor,
     @Inject('Host') private host: Host,
   ) {
     this.parser = new Parser();
-    this.runtime = new Runtime(host);
+    this.runtime = new Runtime(host, this);
     this._readline = null;
     this.history = [];
     this.ps1 = new Prompt('\\u@\\h:\\w\\$', this.config.historyFileSize, host);
+    this.interactive = false;
+    this.commands = { ...BUILTINS };
   }
 
   /**
@@ -175,6 +183,9 @@ export class Executor {
     return path.join(this.host.homedir(), '.matbas_history');
   }
 
+  /**
+   * Load REPL history.
+   */
   public async loadHistory(): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
     await startSpan('Executor#loadHistory', async (_: Span) => {
@@ -248,19 +259,10 @@ export class Executor {
   }
 
   /**
-   * Start a new program and reset the runtime.
+   * Defer an action until after runtime execution.
    */
-  new(filename: string): void {
-    //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Executor#new', (_: Span) => {
-      //#endif
-      this.runtime.reset();
-      this.editor.reset();
-      this.editor.filename = filename;
-      // TODO: Close open file handles on this.host
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
+  public defer(fn: Deferred): void {
+    this._deferred.push(fn);
   }
 
   /**
@@ -294,65 +296,6 @@ export class Executor {
 
       this.editor.program = program;
       this.editor.warning = warning;
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
-  }
-
-  /**
-   * Save a program.
-   *
-   * @Returns A promise.
-   */
-  async save(filename: string | null): Promise<void> {
-    //#if _MATBAS_BUILD == 'debug'
-    await startSpan('Executor#save', async (_: Span) => {
-      //#endif
-      if (filename) {
-        this.editor.filename = filename;
-      }
-
-      await this.host.writeFile(
-        this.editor.filename,
-        this.editor.list() + '\n',
-      );
-
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
-  }
-
-  /**
-   * Retrieve listings from the current program.
-   *
-   * @returns The recreated source of the current program.
-   */
-  list(lineStart: number | null = null, lineEnd: number | null = null): void {
-    //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Executor#list', (_: Span) => {
-      //#endif
-      if (this.editor.warning) {
-        this.host.writeWarn(this.editor.warning);
-      }
-
-      this.host.writeLine(
-        `${this.editor.filename}\n${'-'.repeat(this.editor.filename.length)}`,
-      );
-      const listings = this.editor.list(lineStart, lineEnd);
-      this.host.writeLine(listings);
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
-  }
-
-  /**
-   * Renumber the current program.
-   */
-  renum(): void {
-    //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Executor#list', (_: Span) => {
-      //#endif
-      this.editor.renum();
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
@@ -398,7 +341,13 @@ export class Executor {
         this.host.writeWarn(warning);
       }
 
-      this.runtime.interpret(chunk);
+      await this.runtime.using(async () => {
+        const interactive = this.interactive;
+        this.interactive = false;
+        await this.runtime.interpret(chunk);
+        this.interactive = interactive;
+      });
+
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
@@ -426,26 +375,20 @@ export class Executor {
           }
           this.editor.setLine(row, warning as ParseWarning);
         } else {
-          await this.evalParsedCommands([row, warning as ParseWarning]);
+          await this._eval([row, warning as ParseWarning]);
         }
       }
+
+      this.runDeferred();
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
   }
 
-  /**
-   * Evaluate a group of commands.
-   *
-   * @param instrs A group of instructions to evaluate.
-   */
-  private async evalParsedCommands([
-    cmds,
-    parseWarning,
-  ]: ParseResult<Cmd>): Promise<void> {
+  private async _eval([cmds, parseWarning]: ParseResult<Cmd>): Promise<void> {
     let warning: ParseWarning | null = null;
     try {
-      const result = compileCommands(cmds.instructions, {
+      const result = compileInstructions(cmds.instructions, {
         filename: '<input>',
         cmdNo: cmds.cmdNo,
         cmdSource: cmds.source,
@@ -462,11 +405,11 @@ export class Executor {
       const lastCmd = commands.pop();
 
       for (const cmd of commands) {
-        await this.runCompiledCommand(cmd);
+        await this.runtime.interpret(cmd);
       }
 
       if (lastCmd) {
-        const rv = await this.runCompiledCommand(lastCmd);
+        const rv = await this.runtime.interpret(lastCmd);
         if (rv !== null) {
           this.host.writeLine(inspector.format(rv));
         }
@@ -481,27 +424,27 @@ export class Executor {
     }
   }
 
-  //
-  // Run a compiled command.
-  //
-  private async runCompiledCommand([
-    cmd,
-    chunks,
-  ]: CompiledCmd): Promise<ReturnValue> {
-    // Interpret any chunks.
-    const args = chunks.map((c) => {
-      return c ? this.runtime.interpret(c) : null;
-    });
-
-    if (cmd) {
-      // Run an interactive command.
-      return await cmd.accept(
-        commandRunner(this, this.editor, this.host, args),
-      );
-    } else {
-      // The args really contained the body of the non-interactive
-      // command, which we just interpreted.
-      return null;
+  private async runDeferred(): Promise<void> {
+    for (const deferred of this._deferred) {
+      await deferred();
     }
+    this._deferred = [];
+  }
+
+  public async command(name: string, args: Value[]): Promise<Value | null> {
+    const cmd: Command | undefined = this.commands[name];
+
+    if (!cmd) {
+      throw new RuntimeError(`Unknown command ${cmd}`);
+    }
+
+    const context = new Context(
+      name,
+      this,
+      this.host,
+      this.interactive ? this.editor : null,
+    );
+
+    return await cmd.main(context, args);
   }
 }

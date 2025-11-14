@@ -359,12 +359,12 @@ test('simple program', () => {
   ).toMatchSnapshot();
 });
 
-test('builtin', () => {
+test('command', () => {
   expect(
     disassemble(
       chunk({
         constants: [],
-        code: [OpCode.Builtin, 6],
+        code: [OpCode.Command, 6],
         lines: [100],
       }),
     ),

@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`builtin 1`] = `
+exports[`command 1`] = `
 "=== Disassembly of <unknown>: ===
-100  1  BUILTIN  6"
+100  1  CMD  6"
 `;
 
 exports[`expressions > "hello world" 1`] = `

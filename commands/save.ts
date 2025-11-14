@@ -1,7 +1,11 @@
+//#if _MATBAS_BUILD == 'debug'
+import { Span } from '@opentelemetry/api';
+
+import { startSpan } from '../debug';
+//#endif
 import { ValueError } from '../exceptions';
 import { formatter } from '../format';
-import { Save } from '../ast/instr';
-import { CommandRunner, ReturnValue } from './base';
+import { Args, Context, ReturnValue } from './base';
 
 /**
  * An interactive expression.
@@ -9,15 +13,28 @@ import { CommandRunner, ReturnValue } from './base';
  * Interactive expressions are evaluated in the runtime, but their value
  * is returned to the Executor so that it can inspect and print it.
  */
-export default async function save(
-  this: CommandRunner,
-  _save: Save,
-): Promise<ReturnValue> {
-  const { executor } = this;
-  const [filename] = this.args;
-  if (filename !== null && typeof filename !== 'string') {
-    throw new ValueError(`Invalid filename; ${formatter.format(filename)}`);
-  }
-  await executor.save(filename);
-  return null;
-}
+export default {
+  async main(context: Context, args: Args): Promise<ReturnValue> {
+    //#if _MATBAS_BUILD == 'debug'
+    return await startSpan('save', async (_: Span) => {
+      const { host, editor } = context;
+      const [filename] = args;
+
+      if (filename !== null && typeof filename !== 'string') {
+        throw new ValueError(`Invalid filename; ${formatter.format(filename)}`);
+      }
+
+      //#endif
+      if (filename) {
+        editor.filename = filename;
+      }
+
+      await host.writeFile(editor.filename, editor.list() + '\n');
+
+      return null;
+
+      //#if _MATBAS_BUILD == 'debug'
+    });
+    //#endif
+  },
+};

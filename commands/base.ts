@@ -3,17 +3,54 @@ import { Span } from '@opentelemetry/api';
 
 import { startSpan } from '../debug';
 //#endif
+import { Program } from '../ast';
 import { Editor } from '../editor';
+import { RuntimeError } from '../exceptions';
 import { Executor } from '../executor';
-import { errorType } from '../errors';
-import { RuntimeFault } from '../faults';
 //#if _MATBAS_BUILD == 'debug'
 import { formatter } from '../format';
 //#endif
 import { Host } from '../host';
 import { Value } from '../value';
-import { Program } from '../ast';
-import { Builtin, Instr, InstrVisitor } from '../ast/instr';
+
+/*
+ * A command context.
+ */
+export class Context {
+  _editor: Editor | null;
+
+  constructor(
+    public name: string,
+    public executor: Executor,
+    public host: Host,
+    editor?: Editor | null,
+  ) {
+    this._editor = editor || null;
+  }
+
+  public interactive(): void {
+    if (!this._editor) {
+      throw new RuntimeError(
+        `Command ${this.name} must be run in an interactive context`,
+      );
+    }
+  }
+
+  public get editor(): Editor {
+    this.interactive();
+
+    return this._editor as Editor;
+  }
+
+  public get program(): Program {
+    return this.editor.program;
+  }
+}
+
+/**
+ * The argument values for a command.
+ */
+export type Args = Value[];
 
 /**
  * The return value of a command. Null is used to indicate no returned
@@ -22,77 +59,31 @@ import { Builtin, Instr, InstrVisitor } from '../ast/instr';
 export type ReturnValue = Value | null;
 
 /**
- * An interactive command.
+ * A command.
  */
-export type InteractiveCommand<C extends Instr> = (
-  this: CommandRunner,
-  cmd: C,
-) => Promise<ReturnValue>;
-
-export interface CommandRunner extends InstrVisitor<Promise<ReturnValue>> {
-  executor: Executor;
-  editor: Editor;
-  program: Program;
-  host: Host;
-  args: Array<Value | null>;
+export interface Command {
+  main: (context: Context, args: Args) => Promise<ReturnValue>;
 }
 
-@errorType('Invalid')
-export class Invalid extends Error {
-  constructor(name: string) {
-    super(`Invalid command: ${name}`);
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
+export type Deferred = () => Promise<void>;
 
 /**
- * Create an invalid command. Invalid commands should never be executed
- * by the Executor, as they should be fully implemented in the runtime.
- *
- * @param name The name of the invalid command.
- * @returns An interactive command that will immediately throw a RuntimeFault
+ * Wrap a command in a telemetry span.
  */
-export function invalid<C extends Instr>(name: string): InteractiveCommand<C> {
-  return async function invalidCommand(_cmd: C): Promise<ReturnValue> {
-    throw RuntimeFault.fromError(new Invalid(name));
+export function trace(command: Command): Command {
+  return {
+    ...command,
+    async main(context: Context, args: Args): Promise<ReturnValue> {
+      //#if _MATBAS_BUILD == 'debug'
+      return await startSpan(`Command: ${context.name}`, async (span: Span) => {
+        for (let i = 0; i < this.args.length; i++) {
+          span.setAttribute(`arg_${i}`, formatter.format(this.args[i]));
+        }
+        return await command.main(context, args);
+      });
+      //#else
+      return command.main(context, args);
+      //#endif
+    },
   };
-}
-
-export function invalidBuiltin(cmd: Builtin): Promise<ReturnValue> {
-  throw RuntimeFault.fromError(new Invalid(cmd.name));
-}
-
-/**
- * Create a no-op command. These commands won't throw, but don't do anything
- * either. The primary example of this is the Rem "command".
- *
- * @param cmd The no-op command
- * @returns null
- */
-export async function noop<C extends Instr>(_cmd: C): Promise<ReturnValue> {
-  return null;
-}
-
-/**
- * Wrap an interactive command in a telemetry span.
- */
-export function trace<C extends Instr>(
-  name: string,
-  command: InteractiveCommand<C>,
-): InteractiveCommand<C> {
-  //#if _MATBAS_BUILD == 'debug'
-  return async function traced(
-    this: CommandRunner,
-    cmd: C,
-  ): Promise<ReturnValue> {
-    return await startSpan(`Command: ${name}`, async (span: Span) => {
-      for (let i = 0; i < this.args.length; i++) {
-        span.setAttribute(`arg_${i}`, formatter.format(this.args[i]));
-      }
-      return await command.call(this, cmd);
-    });
-  };
-  //#else
-  return command;
-  //#endif
 }

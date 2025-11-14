@@ -52,7 +52,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Builtin,
+  Command,
 } from './ast/instr';
 
 type LineNo = number;
@@ -226,9 +226,9 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
     until.condition.accept(this);
   }
 
-  visitBuiltinInstr(builtin: Builtin): void {
-    this.shiftInstr(builtin);
-    for (const expr of builtin.params) {
+  visitCommandInstr(command: Command): void {
+    this.shiftInstr(command);
+    for (const expr of command.params) {
       expr.accept(this);
     }
   }

@@ -14,7 +14,10 @@ function chunkName(chunk: Chunk): string {
   return chunk.filename;
 }
 
-function toHex(value: number): string {
+function toHex(value?: number): string {
+  if (typeof value === 'undefined') {
+    return '<undefined>';
+  }
   return `0x${value.toString(16)}`;
 }
 
@@ -74,8 +77,8 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
     ];
   }
 
-  function builtin(): Row {
-    return [String(lineNo), String(offset), 'BUILTIN', String(advance())];
+  function command(code: string): Row {
+    return [String(lineNo), String(offset), code, String(advance())];
   }
 
   function jump(code: string, sign: number): Row {
@@ -166,8 +169,8 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
     case OpCode.Exit:
       row = simple('EXIT');
       break;
-    case OpCode.Builtin:
-      row = builtin();
+    case OpCode.Command:
+      row = command('CMD');
       break;
     case OpCode.Jump:
       row = jump('JUMP', FORWARD);

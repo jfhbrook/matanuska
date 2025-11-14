@@ -23,6 +23,9 @@ const coverageData = data.coverage || {};
 const formatData = data.format || {};
 const lintData = data.lint || {};
 
+const sourceMaps =
+  typeof buildData.sourceMaps === 'undefined' ? true : buildData.sourceMaps;
+
 const outDir = data.outDir || 'dist';
 const testDir = data.testDir || 'test';
 
@@ -35,13 +38,14 @@ export default {
   exclude,
   target: data.target || 'es2022',
   moduleType: data.moduleType || 'nodenext',
-  sourceMaps: typeof data.sourceMaps === 'undefined' ? true : data.sourceMaps,
+  sourceMaps,
   check: {
     exclude: merge(exclude, checkData.exclude || [], [outDir, 'node_modules']),
     compilerOptions: checkData.compilerOptions || {},
     shellcheck: checkData.shellcheck || {},
   },
   build: {
+    sourcemap: sourceMaps,
     exclude: merge(exclude, buildData.exclude || [], [testDir]),
     minify: typeof buildData.minify === 'undefined' ? true : buildData.minify,
   },

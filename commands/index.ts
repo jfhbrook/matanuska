@@ -1,57 +1,30 @@
-import { invalid, invalidBuiltin, noop, trace } from './base';
-import type { CommandRunner, ReturnValue } from './base';
-import { Editor } from '../editor';
-import { Executor } from '../executor';
-import { Host } from '../host';
-import { Value } from '../value';
+import type { Args, Command, Deferred, ReturnValue } from './base';
+import { Context } from './base';
 
-import visitExpressionInstr from './expression';
-import visitNewInstr from './new';
-import visitLoadInstr from './load';
-import visitListInstr from './list';
-import visitRenumInstr from './renum';
-import visitSaveInstr from './save';
-import visitRunInstr from './run';
+import new_ from './new';
+import load from './load';
+import list from './list';
+import renum from './renum';
+import save from './save';
+import run from './run';
 
-export function commandRunner(
-  executor: Executor,
-  editor: Editor,
-  host: Host,
-  args: Array<Value | null>,
-): CommandRunner {
-  return {
-    executor,
-    editor,
-    program: editor.program,
-    host,
-    args,
-    visitExpressionInstr: trace('<expr>', visitExpressionInstr),
-    visitPrintInstr: invalid('print'),
-    visitRemInstr: noop,
-    visitNewInstr: trace('new', visitNewInstr),
-    visitLoadInstr: trace('load', visitLoadInstr),
-    visitListInstr: trace('list', visitListInstr),
-    visitRenumInstr: trace('renum', visitRenumInstr),
-    visitSaveInstr: trace('save', visitSaveInstr),
-    visitRunInstr: trace('run', visitRunInstr),
-    visitEndInstr: invalid('end'),
-    visitExitInstr: invalid('exit'),
-    visitLetInstr: invalid('let'),
-    visitAssignInstr: invalid('assign'),
-    visitShortIfInstr: invalid('if'),
-    visitIfInstr: invalid('if'),
-    visitElseInstr: invalid('else'),
-    visitElseIfInstr: invalid('else if'),
-    visitEndIfInstr: invalid('endif'),
-    visitForInstr: invalid('for'),
-    visitOnwardInstr: invalid('onward'),
-    visitNextInstr: invalid('next'),
-    visitWhileInstr: invalid('while'),
-    visitEndWhileInstr: invalid('endwhile'),
-    visitRepeatInstr: invalid('repeat'),
-    visitUntilInstr: invalid('until'),
-    visitBuiltinInstr: invalidBuiltin,
-  };
-}
+type CommandIndex = Record<string, Command>;
 
-export { CommandRunner, ReturnValue };
+const BUILTINS: CommandIndex = {
+  new: new_,
+  load,
+  list,
+  renum,
+  save,
+  run,
+};
+
+export {
+  BUILTINS,
+  CommandIndex,
+  Args,
+  Command,
+  Context,
+  Deferred,
+  ReturnValue,
+};

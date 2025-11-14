@@ -66,7 +66,7 @@ import {
   EndWhile,
   Repeat,
   Until,
-  Builtin,
+  Command,
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
 import { Token } from './tokens';
@@ -209,7 +209,7 @@ export abstract class Formatter
   abstract visitRepeatInstr(repeat: Repeat): string;
   abstract visitUntilInstr(until: Until): string;
 
-  abstract visitBuiltinInstr(node: Builtin): string;
+  abstract visitCommandInstr(node: Command): string;
 
   abstract visitCmdTree(node: Cmd): string;
   abstract visitLineTree(node: Line): string;
@@ -756,8 +756,8 @@ export class DefaultFormatter extends Formatter {
       .join(' ');
   }
 
-  visitBuiltinInstr(builtin: Builtin): string {
-    return `Builtin (${this.format(builtin.name)}, ${this.formatArgv(builtin.params)})`;
+  visitCommandInstr(command: Command): string {
+    return `Command (${this.format(command.name)}, ${this.formatArgv(command.params)})`;
   }
 
   formatStack<V>(stack: Stack<V>): string {

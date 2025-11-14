@@ -35,7 +35,7 @@ import {
   Repeat,
   Until,
   End,
-  Builtin,
+  Command,
 } from '../../ast/instr';
 
 const INSTRUCTIONS = [
@@ -117,23 +117,23 @@ const INSTRUCTIONS = [
   new Repeat(),
   new Until(new BoolLiteral(false)),
   new End(),
-  new Builtin('cd', [new ShellLiteral('..')]),
-  new Builtin('cp', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
-  new Builtin('cp', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
-  new Builtin('rm', [new ShellLiteral('bar.txt')]),
-  new Builtin('rm', [new ShellLiteral('bar.txt'), new ShellLiteral('-rf')]),
-  new Builtin('touch', [new ShellLiteral('foo.txt')]),
-  new Builtin('mv', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
-  new Builtin('mkdir', [new ShellLiteral('dir')]),
-  new Builtin('mkdir', [
+  new Command('cd', [new ShellLiteral('..')]),
+  new Command('cp', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
+  new Command('cp', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
+  new Command('rm', [new ShellLiteral('bar.txt')]),
+  new Command('rm', [new ShellLiteral('bar.txt'), new ShellLiteral('-rf')]),
+  new Command('touch', [new ShellLiteral('foo.txt')]),
+  new Command('mv', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
+  new Command('mkdir', [new ShellLiteral('dir')]),
+  new Command('mkdir', [
     new ShellLiteral('dir'),
     new ShellLiteral('-p'),
     new IntLiteral(0o775),
   ]),
-  new Builtin('rmdir', [new ShellLiteral('dir')]),
-  new Builtin('rmdir', [new ShellLiteral('dir'), new ShellLiteral('-p')]),
-  new Builtin('pwd', []),
-  new Builtin('pwd', [new ShellLiteral('-L')]),
+  new Command('rmdir', [new ShellLiteral('dir')]),
+  new Command('rmdir', [new ShellLiteral('dir'), new ShellLiteral('-p')]),
+  new Command('pwd', []),
+  new Command('pwd', [new ShellLiteral('-L')]),
 ];
 
 export function instructionSuite<F extends Formatter>(formatter: F): void {
