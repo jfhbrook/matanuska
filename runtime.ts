@@ -49,6 +49,21 @@ export class Runtime {
     this.pc = 0;
   }
 
+  /**
+   * Create a context under which it is safe to interpret a new chunk while
+   * another program is executing.
+   *
+   * TODO: I'm not satisfied with this naming...
+   */
+  public async using<R>(fn: () => Promise<R>): Promise<R> {
+    const chunk = this.chunk;
+    const pc = this.pc;
+    const ret = await fn();
+    this.chunk = chunk;
+    this.pc = pc;
+    return ret;
+  }
+
   public async interpret(chunk: Chunk): Promise<Value | null> {
     this.chunk = chunk;
     this.pc = 0;

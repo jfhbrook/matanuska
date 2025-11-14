@@ -341,10 +341,10 @@ export class Executor {
         this.host.writeWarn(warning);
       }
 
-      // TODO: Should run in current runtime
-      const runtime = new Runtime(this.host, this);
+      await this.runtime.using(async () => {
+        await this.runtime.interpret(chunk);
+      });
 
-      await runtime.interpret(chunk);
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif

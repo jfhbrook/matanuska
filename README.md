@@ -24,10 +24,10 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 - [ ] Builtin commands
   - [x] fix commands.spec.ts
-  - [ ] handle pc context for `run`
+  - [x] handle pc context for `run`
   - [x] handle runtime reset in `new`
   - [ ] test params parser
-  - [ ] implement cd
+- [ ] Implement cd
 - [ ] Native commands
   - [ ] parse native commands
   - [ ] clean up disk command tokens
