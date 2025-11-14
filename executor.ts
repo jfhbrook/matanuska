@@ -7,7 +7,7 @@ import { Span } from '@opentelemetry/api';
 //#endif
 
 import { Chunk } from './bytecode/chunk';
-import { BaseCommand, BUILTINS, CommandIndex } from './commands';
+import { BUILTINS, Command, CommandIndex, Context } from './commands';
 import { compileInstructions, compileProgram } from './compiler';
 import { Config } from './config';
 //#if _MATBAS_BUILD == 'debug'
@@ -481,20 +481,14 @@ export class Executor {
   }
 
   public async command(name: string, args: Value[]): Promise<Value | null> {
-    const cmd: BaseCommand | undefined = this.commands[name];
+    const cmd: Command | undefined = this.commands[name];
 
     if (!cmd) {
       throw new RuntimeError(`Unknown command ${cmd}`);
     }
 
-    return await cmd.main(
-      {
-        executor: this,
-        host: this.host,
-        editor: this.editor,
-        program: this.editor.program,
-      },
-      args,
-    );
+    const context = new Context(name, this, this.host, this.editor);
+
+    return await cmd.main(context, args);
   }
 }
