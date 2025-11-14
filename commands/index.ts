@@ -1,10 +1,5 @@
-import {
-  Args,
-  Command,
-  Context,
-  InteractiveContext,
-  ReturnValue,
-} from './base';
+import type { Args, Command, InteractiveContext, ReturnValue } from './base';
+import { Context } from './base';
 
 import new_ from './interactive/new';
 import load from './interactive/load';

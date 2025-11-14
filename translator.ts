@@ -18,6 +18,7 @@ import type { Host } from './host';
 // Run the REPL.
 //
 async function repl(executor: Executor, host: Host) {
+  executor.interactive = true;
   while (true) {
     //#if _MATBAS_BUILD == 'debug'
     await startSpan('read-eval-print', async (_: Span) => {
@@ -41,6 +42,7 @@ async function repl(executor: Executor, host: Host) {
     });
     //#endif
   }
+  executor.interactive = false;
 }
 
 @Injectable()

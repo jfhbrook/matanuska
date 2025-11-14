@@ -46,6 +46,7 @@ export class Executor {
   // same as the command number + the size of the history file.
   private cmdNo: number = 0;
 
+  public interactive: boolean;
   private commands: CommandIndex;
 
   constructor(
@@ -58,6 +59,7 @@ export class Executor {
     this._readline = null;
     this.history = [];
     this.ps1 = new Prompt('\\u@\\h:\\w\\$', this.config.historyFileSize, host);
+    this.interactive = false;
     this.commands = { ...BUILTINS };
   }
 
@@ -487,7 +489,12 @@ export class Executor {
       throw new RuntimeError(`Unknown command ${cmd}`);
     }
 
-    const context = new Context(name, this, this.host, this.editor);
+    const context = new Context(
+      name,
+      this,
+      this.host,
+      this.interactive ? this.editor : null,
+    );
 
     return await cmd.main(context, args);
   }
