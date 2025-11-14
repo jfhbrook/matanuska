@@ -23,16 +23,19 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Prioritized Backlog
 
 - [ ] Disk operation builtins
-  - [x] scanner
-  - [x] AST
-  - [x] formatter
-  - [x] params overhaul
-  - [x] parse `Builtin` type
-  - [x] bytecode support
-  - [x] compiler support
-  - [ ] runtime
-  - [ ] host
-  - [ ] compiler tests
+  - [ ] reimplement commands.spec.ts
+    - [ ] test bare expressions behavior
+  - [ ] implement disk commands
+    - [ ] cd
+    - [ ] cp
+    - [ ] rm
+    - [ ] touch
+    - [ ] mv
+    - [ ] mkdir
+    - [ ] rmdir
+    - [ ] pwd
+  - [ ] test disk commands
+  - [ ] example basic scripts + tests
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
