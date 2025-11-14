@@ -23,10 +23,10 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Prioritized Backlog
 
 - [ ] Builtin commands
-  - [ ] reimplement commands.spec.ts
-  - [ ] test bare expressions behavior
+  - [ ] fix commands.spec.ts
   - [ ] basic interactive testing
   - [ ] test params parser
+  - [ ] implement cd
 - [ ] Native commands
   - [ ] parse native commands
   - [ ] clean up disk command tokens

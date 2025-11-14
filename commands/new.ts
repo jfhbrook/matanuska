@@ -15,12 +15,12 @@ import { Args, Context, ReturnValue } from './base';
  * be 'untitled.bas'.
  */
 export default {
-  async main(context: Context, _args: Args): Promise<ReturnValue> {
+  async main(context: Context, args: Args): Promise<ReturnValue> {
     //#if _MATBAS_BUILD == 'debug'
     return startSpan('new', (_: Span): ReturnValue => {
       //#endif
       const { executor, editor } = context;
-      let [filename] = this.args;
+      let [filename] = args;
 
       if (!filename) {
         filename = 'untitled.bas';
