@@ -1,14 +1,23 @@
-import { Args, InteractiveContext, ReturnValue } from '../base';
+//#if _MATBAS_BUILD == 'debug'
+import { Span } from '@opentelemetry/api';
+
+import { startSpan } from '../../debug';
+//#endif
+
+import { Args, Context, ReturnValue } from '../base';
 
 /**
  * List the current program.
  */
 export default {
-  interactive: true,
-
-  async main(context: InteractiveContext, _args: Args): Promise<ReturnValue> {
-    const { executor } = context;
-    executor.renum();
-    return null;
+  async main(context: Context, _args: Args): Promise<ReturnValue> {
+    //#if _MATBAS_BUILD == 'debug'
+    return startSpan('Executor#list', (_: Span) => {
+      //#endif
+      context.editor.renum();
+      //#if _MATBAS_BUILD == 'debug'
+      return null;
+    });
+    //#endif
   },
 };

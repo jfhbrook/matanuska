@@ -1,4 +1,4 @@
-import type { Args, Command, InteractiveContext, ReturnValue } from './base';
+import type { Args, Command, ReturnValue } from './base';
 import { Context } from './base';
 
 import new_ from './interactive/new';
@@ -19,12 +19,4 @@ const BUILTINS: CommandIndex = {
   run,
 };
 
-export {
-  BUILTINS,
-  CommandIndex,
-  Args,
-  Command,
-  Context,
-  InteractiveContext,
-  ReturnValue,
-};
+export { BUILTINS, CommandIndex, Args, Command, Context, ReturnValue };

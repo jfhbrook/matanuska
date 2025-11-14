@@ -1,4 +1,4 @@
-import { Args, InteractiveContext, ReturnValue } from '../base';
+import { Args, Context, ReturnValue } from '../base';
 
 /**
  * An interactive expression.
@@ -7,11 +7,11 @@ import { Args, InteractiveContext, ReturnValue } from '../base';
  * is returned to the Executor so that it can inspect and print it.
  */
 export default {
-  interactive: true,
+  async main(context: Context, _args: Args): Promise<ReturnValue> {
+    context.interactive();
 
-  async main(context: InteractiveContext, _args: Args): Promise<ReturnValue> {
-    const { executor } = context;
-    await executor.run();
+    await context.executor.run();
+
     return null;
   },
 };

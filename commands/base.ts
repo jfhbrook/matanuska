@@ -13,13 +13,6 @@ import { formatter } from '../format';
 import { Host } from '../host';
 import { Value } from '../value';
 
-export interface InteractiveContext {
-  executor: Executor;
-  host: Host;
-  editor: Editor;
-  program: Program;
-}
-
 /*
  * A command context.
  */
@@ -35,14 +28,18 @@ export class Context {
     this._editor = editor || null;
   }
 
-  public get editor(): Editor {
+  public interactive(): void {
     if (!this._editor) {
       throw new RuntimeError(
         `Command ${this.name} must be run in an interactive context`,
       );
     }
+  }
 
-    return this._editor;
+  public get editor(): Editor {
+    this.interactive();
+
+    return this._editor as Editor;
   }
 
   public get program(): Program {

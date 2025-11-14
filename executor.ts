@@ -28,14 +28,14 @@ import type { Host } from './host';
 import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
-import { nil, Nil, Value } from './value';
+import { Value } from './value';
 
 import { Line, Cmd, Program } from './ast';
 
 @Injectable()
 export class Executor {
-  private parser: Parser;
-  private runtime: Runtime;
+  public parser: Parser;
+  public runtime: Runtime;
   private _readline: readline.Interface | null;
   private history: string[];
 
@@ -182,6 +182,9 @@ export class Executor {
     return path.join(this.host.homedir(), '.matbas_history');
   }
 
+  /**
+   * Load REPL history.
+   */
   public async loadHistory(): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
     await startSpan('Executor#loadHistory', async (_: Span) => {
@@ -255,22 +258,6 @@ export class Executor {
   }
 
   /**
-   * Start a new program and reset the runtime.
-   */
-  new(filename: string): void {
-    //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Executor#new', (_: Span) => {
-      //#endif
-      this.runtime.reset();
-      this.editor.reset();
-      this.editor.filename = filename;
-      // TODO: Close open file handles on this.host
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
-  }
-
-  /**
    * Load a script into the editor.
    *
    * @param filename The file path to the script.
@@ -301,67 +288,6 @@ export class Executor {
 
       this.editor.program = program;
       this.editor.warning = warning;
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
-  }
-
-  /**
-   * Save a program.
-   *
-   * @Returns A promise.
-   */
-  async save(filename: string | null): Promise<void> {
-    //#if _MATBAS_BUILD == 'debug'
-    await startSpan('Executor#save', async (_: Span) => {
-      //#endif
-      if (filename) {
-        this.editor.filename = filename;
-      }
-
-      await this.host.writeFile(
-        this.editor.filename,
-        this.editor.list() + '\n',
-      );
-
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
-  }
-
-  /**
-   * Retrieve listings from the current program.
-   *
-   * @returns The recreated source of the current program.
-   */
-  list(lineStart: Value = nil, lineEnd: Value = nil): void {
-    //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Executor#list', (_: Span) => {
-      //#endif
-      const start = lineStart instanceof Nil ? null : (lineStart as number);
-      const end = lineEnd instanceof Nil ? null : (lineEnd as number);
-      if (this.editor.warning) {
-        this.host.writeWarn(this.editor.warning);
-      }
-
-      this.host.writeLine(
-        `${this.editor.filename}\n${'-'.repeat(this.editor.filename.length)}`,
-      );
-      const listings = this.editor.list(start, end);
-      this.host.writeLine(listings);
-      //#if _MATBAS_BUILD == 'debug'
-    });
-    //#endif
-  }
-
-  /**
-   * Renumber the current program.
-   */
-  renum(): void {
-    //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Executor#list', (_: Span) => {
-      //#endif
-      this.editor.renum();
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
