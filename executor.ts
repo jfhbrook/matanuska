@@ -342,7 +342,10 @@ export class Executor {
       }
 
       await this.runtime.using(async () => {
+        const interactive = this.interactive;
+        this.interactive = false;
         await this.runtime.interpret(chunk);
+        this.interactive = interactive;
       });
 
       //#if _MATBAS_BUILD == 'debug'
