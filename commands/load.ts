@@ -18,7 +18,7 @@ export default {
 
   async main(context: Context, args: Args): Promise<ReturnValue> {
     //#if _MATBAS_BUILD == 'debug'
-    return await startSpan('Executor#save', async (_: Span) => {
+    return await startSpan('load', async (_: Span) => {
       //#endif
 
       const { executor, editor, host } = context;

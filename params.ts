@@ -17,6 +17,7 @@ export class Arg extends Param {
     super(name);
   }
 }
+export class Argv extends Arg {}
 export class Flag extends Param {}
 export class Opt extends Param {}
 
@@ -27,17 +28,21 @@ export type Parameters = Record<string, Value>;
 
 export class Params {
   args: string[];
+  argv: string[];
   flags: Record<string, Flag>;
   opts: Record<string, Opt>;
   aliases: Record<string, string>;
 
   constructor(spec: ParamSpec) {
     this.args = [];
+    this.argv = [];
     this.opts = {};
     this.aliases = {};
 
     for (const param of spec) {
-      if (param instanceof Arg) {
+      if (param instanceof Argv) {
+        this.argv.push(param.name);
+      } else if (param instanceof Arg) {
         this.args.push(param.name);
       } else {
         this.opts[param.name] = param;
@@ -49,9 +54,16 @@ export class Params {
     }
   }
 
-  parse(params: Array<Value | null>): Record<string, Value> {
+  parse(params: Array<Value | null>): Record<string, any> {
     const args = this.args.slice();
-    const parsed: Record<string, Value> = {};
+    // Result can be either a value or, in the case of argv, an array of
+    // values. Rather than forcing the user to check the type, we assume they
+    // are adults - lol
+    const parsed: Record<string, any> = {};
+
+    for (const name of this.argv) {
+      parsed[name] = [];
+    }
 
     let i = 0;
 
@@ -130,6 +142,12 @@ export class Params {
         args.shift();
         advance(1);
         return;
+      }
+
+      if (this.argv.length) {
+        for (const name of this.argv) {
+          parsed[name].push(value);
+        }
       }
 
       throw new ParamError(`Unknown argument ${value}`);

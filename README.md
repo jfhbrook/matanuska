@@ -22,20 +22,26 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Disk operation builtins
+- [ ] Builtin commands
   - [ ] reimplement commands.spec.ts
-    - [ ] test bare expressions behavior
-  - [ ] implement disk commands
-    - [ ] cd
-    - [ ] cp
-    - [ ] rm
-    - [ ] touch
-    - [ ] mv
-    - [ ] mkdir
-    - [ ] rmdir
-    - [ ] pwd
-  - [ ] test disk commands
+  - [ ] test bare expressions behavior
+  - [ ] basic interactive testing
+  - [ ] test params parser
+- [ ] Native commands
+  - [ ] parse native commands
+  - [ ] clean up disk command tokens
+  - [ ] clean up disk command host functions
+  - [ ] research jobs in bash
+  - [ ] Investigate alt-shells
+    - [fish](https://fishshell.com/)
+    - [nushell](https://www.nushell.sh/)
+    - [elvish](https://elv.sh/)
+  - [ ] spawn method in host
+  - [ ] include streams as `Value` type?
+  - [ ] plumb up spawn in executor
+  - [ ] basic testing
   - [ ] example basic scripts + tests
+  - [ ] support \j in prompt rendering
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
@@ -54,18 +60,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] ADR
   - Probably a `Reader` class that handles `readline` stuff
   - Probably track block nesting
-- [ ] Shell commands
-  - Will need to research jobs in Bash
-  - Investigate alt-shells
-    - [fish](https://fishshell.com/)
-    - [nushell](https://www.nushell.sh/)
-    - [elvish](https://elv.sh/)
-  - Scanner and parser support for shell commands and "shell tokens"
-  - Compiler support for shell commands
-  - Host support for shell commands
-  - Runtime support for shell commands
-  - Support \j in prompt rendering
-  - (Pipes will come later)
 - [ ] PS1/PS2 support
   - `SET PS1` and `SET PS2`?
 - [ ] Runtime tests for `Jump` and `Loop`

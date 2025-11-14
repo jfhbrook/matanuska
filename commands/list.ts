@@ -14,7 +14,7 @@ import { Args, Context, ReturnValue } from './base';
 export default {
   async main(context: Context, args: Args): Promise<ReturnValue> {
     //#if _MATBAS_BUILD == 'debug'
-    startSpan('Executor#list', (_: Span) => {
+    startSpan('list', (_: Span) => {
       //#endif
       const { host, editor } = context;
       const [lineStart, lineEnd] = args;

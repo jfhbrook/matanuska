@@ -16,7 +16,7 @@ import { Args, Context, ReturnValue } from './base';
 export default {
   async main(context: Context, args: Args): Promise<ReturnValue> {
     //#if _MATBAS_BUILD == 'debug'
-    return await startSpan('Executor#save', async (_: Span) => {
+    return await startSpan('save', async (_: Span) => {
       const { host, editor } = context;
       const [filename] = args;
 

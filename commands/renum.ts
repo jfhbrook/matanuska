@@ -12,7 +12,7 @@ import { Args, Context, ReturnValue } from './base';
 export default {
   async main(context: Context, _args: Args): Promise<ReturnValue> {
     //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Executor#list', (_: Span) => {
+    return startSpan('renum', (_: Span) => {
       //#endif
       context.editor.renum();
       //#if _MATBAS_BUILD == 'debug'
