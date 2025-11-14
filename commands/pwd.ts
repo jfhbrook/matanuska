@@ -3,23 +3,31 @@ import { Span } from '@opentelemetry/api';
 
 import { startSpan } from '../debug';
 //#endif
-import { Arg, Params } from '../params';
+import { Flag, Params } from '../params';
 
 import { Args, Context, ReturnValue } from './base';
 
 /**
- * Change the current working directory.
+ * Display the current working directory.
+ *
  */
 export default {
-  params: new Params([new Arg('path')]),
+  params: new Params([new Flag('P'), new Flag('L')]),
 
   async main(context: Context, args: Args): Promise<ReturnValue> {
     //#if _MATBAS_BUILD == 'debug'
-    return startSpan('cd', (_: Span): ReturnValue => {
-      const { host } = context;
+    return startSpan('pwd', (_: Span): ReturnValue => {
       //#endif
-      const { path } = this.params.parse(args);
-      host.cd(path);
+      const { host } = context;
+      const params = this.params.parse(args);
+
+      let follow = true;
+      if (params.P) {
+        follow = false;
+      }
+
+      host.writeLine(host.pwd(follow));
+
       return null;
       //#if _MATBAS_BUILD == 'debug'
     });

@@ -7,6 +7,8 @@ import list from './list';
 import renum from './renum';
 import save from './save';
 import run from './run';
+import cd from './cd';
+import pwd from './pwd';
 
 type CommandIndex = Record<string, Command>;
 
@@ -17,6 +19,8 @@ const BUILTINS: CommandIndex = {
   renum,
   save,
   run,
+  cd,
+  pwd,
 };
 
 export {

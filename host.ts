@@ -8,7 +8,7 @@ import { Readable, Writable } from 'stream';
 import { Injectable } from '@nestjs/common';
 
 import { ErrorCode } from './errors';
-import { BaseException, FileError, NotImplementedError } from './exceptions';
+import { BaseException, FileError } from './exceptions';
 import { Exit, ExitCode } from './exit';
 import { DefaultFormatter } from './format';
 
@@ -210,27 +210,10 @@ export interface Host {
   cd(path: string): void;
 
   /**
-   * Copy files.
+   * Shows the shell's current working directory.
    *
-   * @param path The path to change the directory to.
+   * @param follow Whether or not to follow symlinks.
    */
-  cp(from: string[], to: string, force: boolean, recursive: boolean): void;
-
-  rm(
-    paths: string[],
-    recursive: boolean,
-    force: boolean,
-    directory: boolean,
-  ): void;
-
-  touch(paths: string[]): void;
-
-  mv(from: string[], to: string): void;
-
-  mkdir(path: string, parents: boolean, mode: number | null): void;
-
-  rmdir(path: string, parents: boolean): void;
-
   pwd(follow: boolean): void;
 
   /**
@@ -463,63 +446,9 @@ export class ConsoleHost implements Host {
     this.cwd = this.resolvePath(path);
   }
 
-  // See: https://en.wikipedia.org/wiki/Cp_(Unix)
-  cp(from: string[], to: string, force: boolean, recursive: boolean): void {
-    console.log(from);
-    console.log(to);
-    console.log(force);
-    console.log(recursive);
-    throw new NotImplementedError('cp');
-  }
-
-  // See: https://en.wikipedia.org/wiki/Rm_(Unix)
-  rm(
-    paths: string[],
-    recursive: boolean,
-    force: boolean,
-    directory: boolean,
-  ): void {
-    console.log(paths);
-    console.log(recursive);
-    console.log(force);
-    console.log(directory);
-    throw new NotImplementedError('rm');
-  }
-
-  // See: https://en.wikipedia.org/wiki/Touch_(command)
-  touch(paths: string[]): void {
-    console.log(paths);
-    throw new NotImplementedError('touch');
-  }
-
-  // See: https://en.wikipedia.org/wiki/Mv_(Unix)
-  mv(from: string[], to: string): void {
-    console.log(from);
-    console.log(to);
-    throw new NotImplementedError('mv');
-  }
-
-  // See: https://en.wikipedia.org/wiki/Mkdir
-  mkdir(path: string, parents: boolean, mode: number | null): void {
-    console.log(path);
-    console.log(parents);
-    console.log(mode);
-    throw new NotImplementedError('mkdir');
-  }
-
-  // See: https://en.wikipedia.org/wiki/Rmdir
-  rmdir(path: string, parents: boolean): void {
-    console.log(path);
-    console.log(parents);
-    throw new NotImplementedError('rmdir');
-  }
-
   // See: https://en.wikipedia.org/wiki/Pwd
-  pwd(follow: boolean): string {
-    if (!follow) {
-      throw new NotImplementedError('pwd -L');
-    }
-
+  pwd(_follow: boolean): string {
+    // TODO: implement follow/no-follow
     return this.cwd;
   }
 
