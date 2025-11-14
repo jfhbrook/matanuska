@@ -1,10 +1,10 @@
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from '@opentelemetry/api';
 
-import { startSpan } from '../../debug';
+import { startSpan } from '../debug';
 //#endif
 
-import { Args, Context, ReturnValue } from '../base';
+import { Args, Context, ReturnValue } from './base';
 
 /**
  * List the current program.

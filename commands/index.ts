@@ -1,12 +1,12 @@
 import type { Args, Command, ReturnValue } from './base';
 import { Context } from './base';
 
-import new_ from './interactive/new';
-import load from './interactive/load';
-import list from './interactive/list';
-import renum from './interactive/renum';
-import save from './interactive/save';
-import run from './interactive/run';
+import new_ from './new';
+import load from './load';
+import list from './list';
+import renum from './renum';
+import save from './save';
+import run from './run';
 
 type CommandIndex = Record<string, Command>;
 

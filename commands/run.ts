@@ -1,4 +1,4 @@
-import { Args, Context, ReturnValue } from '../base';
+import { Args, Context, ReturnValue } from './base';
 
 /**
  * An interactive expression.
