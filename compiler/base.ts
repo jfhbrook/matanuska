@@ -561,9 +561,14 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitRemInstr(_rem: Rem): void {}
 
-  visitNewInstr(_new_: New): void {
+  visitNewInstr(new_: New): void {
+    let n = 1;
     this.emitConstant('new');
-    this.emitBytes(OpCode.Command, 1);
+    if (new_.filename) {
+      new_.filename.accept(this);
+      n = 2;
+    }
+    this.emitBytes(OpCode.Command, n);
   }
 
   visitLoadInstr(load: Load): void {

@@ -333,7 +333,10 @@ export class Executor {
         this.host.writeWarn(warning);
       }
 
-      await this.runtime.interpret(chunk);
+      // TODO: Should run in current runtime
+      const runtime = new Runtime(this.host, this);
+
+      await runtime.interpret(chunk);
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif

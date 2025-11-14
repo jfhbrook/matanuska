@@ -14,7 +14,10 @@ function chunkName(chunk: Chunk): string {
   return chunk.filename;
 }
 
-function toHex(value: number): string {
+function toHex(value?: number): string {
+  if (typeof value === 'undefined') {
+    return '<undefined>';
+  }
   return `0x${value.toString(16)}`;
 }
 

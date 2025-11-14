@@ -23,8 +23,9 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Prioritized Backlog
 
 - [ ] Builtin commands
-  - [ ] fix commands.spec.ts
-  - [ ] basic interactive testing
+  - [x] fix commands.spec.ts
+  - [ ] handle pc context for `run`
+  - [ ] handle runtime reset in `new`
   - [ ] test params parser
   - [ ] implement cd
 - [ ] Native commands

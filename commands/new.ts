@@ -19,7 +19,7 @@ export default {
     //#if _MATBAS_BUILD == 'debug'
     return startSpan('new', (_: Span): ReturnValue => {
       //#endif
-      const { executor, editor } = context;
+      const { /*executor,*/ editor } = context;
       let [filename] = args;
 
       if (!filename) {
@@ -28,7 +28,8 @@ export default {
         throw new ValueError(`Invalid filename; ${formatter.format(filename)}`);
       }
 
-      executor.runtime.reset();
+      // TODO: This is unsafe, because the runtime is currently running
+      // executor.runtime.reset();
       editor.reset();
       editor.filename = filename;
       return null;
