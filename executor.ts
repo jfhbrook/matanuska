@@ -7,6 +7,7 @@ import { Span } from '@opentelemetry/api';
 //#endif
 
 import { Chunk } from './bytecode/chunk';
+import { BaseCommand, BUILTINS, CommandIndex } from './commands';
 import { compileInstructions, compileProgram } from './compiler';
 import { Config } from './config';
 //#if _MATBAS_BUILD == 'debug'
@@ -19,7 +20,7 @@ import {
   ParseWarning,
   mergeParseErrors,
   splitParseError,
-  NotImplementedError,
+  RuntimeError,
 } from './exceptions';
 import { RuntimeFault } from './faults';
 import { inspector } from './format';
@@ -45,6 +46,8 @@ export class Executor {
   // same as the command number + the size of the history file.
   private cmdNo: number = 0;
 
+  private commands: CommandIndex;
+
   constructor(
     private config: Config,
     private editor: Editor,
@@ -55,6 +58,7 @@ export class Executor {
     this._readline = null;
     this.history = [];
     this.ps1 = new Prompt('\\u@\\h:\\w\\$', this.config.historyFileSize, host);
+    this.commands = { ...BUILTINS };
   }
 
   /**
@@ -476,7 +480,21 @@ export class Executor {
     }
   }
 
-  public async command(name: string, _args: Value[]): Promise<Value> {
-    throw new NotImplementedError(name);
+  public async command(name: string, args: Value[]): Promise<Value | null> {
+    const cmd: BaseCommand | undefined = this.commands[name];
+
+    if (!cmd) {
+      throw new RuntimeError(`Unknown command ${cmd}`);
+    }
+
+    return await cmd.main(
+      {
+        executor: this,
+        host: this.host,
+        editor: this.editor,
+        program: this.editor.program,
+      },
+      args,
+    );
   }
 }

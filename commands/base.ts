@@ -24,10 +24,8 @@ export interface Context {
  * An interactive command context.
  */
 export interface InteractiveContext extends Context {
-  executor: Executor;
   editor: Editor;
   program: Program;
-  host: Host;
 }
 
 /**
