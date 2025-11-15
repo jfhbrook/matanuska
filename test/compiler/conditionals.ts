@@ -38,7 +38,7 @@ export const CONDITIONAL_INSTRUCTIONS: TestCase[] = [
         OpCode.Constant,
         2,
         OpCode.Print,
-        OpCode.Nil,
+        OpCode.Undef,
         OpCode.Return,
       ],
       lines: [
@@ -92,7 +92,7 @@ export const CONDITIONAL_PROGRAMS: TestCase[] = [
         OpCode.Constant,
         2,
         OpCode.Print,
-        OpCode.Nil,
+        OpCode.Undef,
         OpCode.Return,
       ],
       lines: [
@@ -156,7 +156,7 @@ export const CONDITIONAL_PROGRAMS: TestCase[] = [
         ...shortToBytes(1),
         // "else" block
         OpCode.Pop,
-        OpCode.Nil,
+        OpCode.Undef,
         OpCode.Return,
       ],
       lines: [

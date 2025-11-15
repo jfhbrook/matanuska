@@ -4,23 +4,23 @@ import { Span } from '@opentelemetry/api';
 import { startSpan } from '../debug';
 //#endif
 
-import { Nil } from '../value';
+import { nullish } from '../value/nullness';
 
-import { Args, Context, ReturnValue } from './base';
+import { Args, Context } from './base';
 
 /**
  * List the current program.
  */
 export default {
-  async main(context: Context, args: Args): Promise<ReturnValue> {
+  async main(context: Context, args: Args): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
     startSpan('list', (_: Span) => {
       //#endif
       const { host, editor } = context;
       const [lineStart, lineEnd] = args;
 
-      const start = lineStart instanceof Nil ? null : (lineStart as number);
-      const end = lineEnd instanceof Nil ? null : (lineEnd as number);
+      const start = nullish(lineStart) ? null : (lineStart as number);
+      const end = nullish(lineEnd) ? null : (lineEnd as number);
 
       if (editor.warning) {
         host.writeWarn(this.editor.warning);
@@ -36,7 +36,5 @@ export default {
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
-
-    return null;
   },
 };

@@ -2,6 +2,7 @@ export enum OpCode {
   // Constants and values
   Constant,
   Nil,
+  Undef,
   True,
   False,
   Pop,

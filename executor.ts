@@ -28,7 +28,7 @@ import type { Host } from './host';
 import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
-import { Value } from './value';
+import { Value, Undef } from './value';
 
 import { Line, Cmd, Program } from './ast';
 
@@ -410,7 +410,7 @@ export class Executor {
 
       if (lastCmd) {
         const rv = await this.runtime.interpret(lastCmd);
-        if (rv !== null) {
+        if (!(rv instanceof Undef)) {
           this.host.writeLine(inspector.format(rv));
         }
       }
@@ -431,7 +431,7 @@ export class Executor {
     this._deferred = [];
   }
 
-  public async command(name: string, args: Value[]): Promise<Value | null> {
+  public async command(name: string, args: Value[]): Promise<void> {
     const cmd: Command | undefined = this.commands[name];
 
     if (!cmd) {
@@ -445,6 +445,6 @@ export class Executor {
       this.interactive ? this.editor : null,
     );
 
-    return await cmd.main(context, args);
+    await cmd.main(context, args);
   }
 }

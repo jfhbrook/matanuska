@@ -18,8 +18,9 @@ import { RuntimeFault } from './faults';
 import { Host } from './host';
 import { Stack } from './stack';
 import { Traceback } from './traceback';
-import { Value, nil, Nil } from './value';
+import { Value, nil, undef } from './value';
 import { falsey } from './value/truthiness';
+import { nullish } from './value/nullness';
 
 import { Byte } from './bytecode/byte';
 import { Chunk } from './bytecode/chunk';
@@ -64,7 +65,7 @@ export class Runtime {
     return ret;
   }
 
-  public async interpret(chunk: Chunk): Promise<Value | null> {
+  public async interpret(chunk: Chunk): Promise<Value> {
     this.chunk = chunk;
     this.pc = 0;
     return await this.run();
@@ -106,7 +107,7 @@ export class Runtime {
     );
   }
 
-  private async command(): Promise<Value | null> {
+  private async command(): Promise<void> {
     const args: Array<Value> = [];
     let n = this.readByte();
     while (n > 1) {
@@ -115,12 +116,12 @@ export class Runtime {
     }
     const name = this.stack.pop();
 
-    return await this.executor.command(name as string, args);
+    await this.executor.command(name as string, args);
   }
 
-  private async run(): Promise<Value | null> {
+  private async run(): Promise<Value> {
     //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Runtime#run', async (_: Span): Promise<Value | null> => {
+    return startSpan('Runtime#run', async (_: Span): Promise<Value> => {
       //#endif
       let a: Value | null = null;
       let b: Value | null = null;
@@ -142,6 +143,9 @@ export class Runtime {
               break;
             case OpCode.Nil:
               this.stack.push(nil);
+              break;
+            case OpCode.Undef:
+              this.stack.push(undef);
               break;
             case OpCode.True:
               this.stack.push(true);
@@ -263,7 +267,7 @@ export class Runtime {
               a = this.stack.pop();
               if (typeof a === 'number') {
                 b = Math.floor(a);
-              } else if (a instanceof Nil) {
+              } else if (nullish(a)) {
                 b = 0;
               } else if (a) {
                 b = 1;
@@ -271,12 +275,9 @@ export class Runtime {
                 b = 0;
               }
               this.host.exit(b);
-              return null;
+              return undef;
             case OpCode.Command:
-              a = await this.command();
-              if (a !== null) {
-                this.stack.push(a);
-              }
+              await this.command();
               break;
             case OpCode.Jump:
               // Note: readShort increments the pc. If we didn't assign before,

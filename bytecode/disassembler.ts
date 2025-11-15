@@ -103,6 +103,9 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
     case OpCode.Nil:
       row = simple('NIL');
       break;
+    case OpCode.Undef:
+      row = simple('UNDEF');
+      break;
     case OpCode.True:
       row = simple('TRUE');
       break;

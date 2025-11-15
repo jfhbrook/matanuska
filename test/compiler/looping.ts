@@ -88,7 +88,7 @@ export const FOR_PROGRAMS: TestCase[] = [
         ...shortToBytes(17),
         OpCode.Pop,
         // Exit
-        OpCode.Nil,
+        OpCode.Undef,
         OpCode.Return,
       ],
       lines: [
@@ -129,7 +129,7 @@ export const WHILE_PROGRAMS: TestCase[] = [
         OpCode.Loop,
         ...shortToBytes(12),
         // Exit
-        OpCode.Nil,
+        OpCode.Undef,
         OpCode.Return,
       ],
       lines: [10, 10, 10, 10, 10, 10, 20, 20, 20, 30, 30, 30, 30, 30],
@@ -167,7 +167,7 @@ export const REPEAT_PROGRAMS: TestCase[] = [
         OpCode.Loop,
         ...shortToBytes(12),
         // Exit
-        OpCode.Nil,
+        OpCode.Undef,
         OpCode.Return,
       ],
       lines: [20, 20, 20, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],

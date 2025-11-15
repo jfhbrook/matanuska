@@ -29,7 +29,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(new IntLiteral(255)),
       chunk({
         constants: [255],
-        code: [OpCode.Constant, 0, code, OpCode.Nil, OpCode.Return],
+        code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
       }),
     ],
@@ -38,7 +38,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(new IntLiteral(123.456)),
       chunk({
         constants: [123.456],
-        code: [OpCode.Constant, 0, code, OpCode.Nil, OpCode.Return],
+        code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
       }),
     ],
@@ -47,7 +47,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(new BoolLiteral(true)),
       chunk({
         constants: [true],
-        code: [OpCode.Constant, 0, code, OpCode.Nil, OpCode.Return],
+        code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
       }),
     ],
@@ -56,7 +56,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(new BoolLiteral(false)),
       chunk({
         constants: [false],
-        code: [OpCode.Constant, 0, code, OpCode.Nil, OpCode.Return],
+        code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
       }),
     ],
@@ -65,7 +65,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(new NilLiteral()),
       chunk({
         constants: [],
-        code: [OpCode.Nil, code, OpCode.Nil, OpCode.Return],
+        code: [OpCode.Nil, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100],
       }),
     ],
@@ -74,7 +74,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(new StringLiteral('hello world')),
       chunk({
         constants: ['hello world'],
-        code: [OpCode.Constant, 0, code, OpCode.Nil, OpCode.Return],
+        code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
       }),
     ],
@@ -83,7 +83,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(new Group(new IntLiteral(1))),
       chunk({
         constants: [1],
-        code: [OpCode.Constant, 0, code, OpCode.Nil, OpCode.Return],
+        code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
       }),
     ],
@@ -102,7 +102,7 @@ function instructionExpr1Cases<C extends Instr>(
           1,
           OpCode.Add,
           code,
-          OpCode.Nil,
+          OpCode.Undef,
           OpCode.Return,
         ],
         lines: [100, 100, 100, 100, 100, 100, 100, 100],

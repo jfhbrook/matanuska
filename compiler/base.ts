@@ -79,7 +79,7 @@ import { Chunk } from '../bytecode/chunk';
 import { OpCode } from '../bytecode/opcodes';
 
 export enum RoutineType {
-  Command,
+  Instruction,
   Program,
 }
 
@@ -268,14 +268,14 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   private currentLine: number = 0;
 
   private filename: string;
-  private routineType: RoutineType = RoutineType.Command;
+  private routineType: RoutineType = RoutineType.Instruction;
 
   // private stack: Stack<Type> = new Stack();
 
   // Set to true whenever an expression command is compiled. In the case of
   // Instrs, this will signal that the result of the single expression
   // should be returned. In Program cases, it's ignored.
-  private isExpressionCmd: boolean = false;
+  private isReturningInstruction: boolean = false;
 
   private isError: boolean = false;
   private errors: SyntaxError[] = [];
@@ -417,9 +417,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return new SyntaxError(message, {
       filename: this.filename,
       row: this.rowNo,
-      isLine: this.routineType !== RoutineType.Command,
+      isLine: this.routineType !== RoutineType.Instruction,
       lineNo: this.lineNo,
-      cmdNo: this.routineType === RoutineType.Command ? null : this.lineNo,
+      cmdNo: this.routineType === RoutineType.Instruction ? null : this.lineNo,
       offsetStart: instr.offsetStart,
       offsetEnd: instr.offsetEnd,
       source: this.lineSource,
@@ -520,8 +520,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // NOTE: If/when implementing classes, I would need to detect when
     // compiling a constructor and return "this", not nil.
 
-    if (this.routineType !== RoutineType.Command || !this.isExpressionCmd) {
-      this.emitByte(OpCode.Nil);
+    if (
+      this.routineType !== RoutineType.Instruction ||
+      !this.isReturningInstruction
+    ) {
+      this.emitByte(OpCode.Undef);
     }
     this.emitByte(OpCode.Return);
   }
@@ -550,7 +553,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitExpressionInstr(expr: Expression): void {
-    this.isExpressionCmd = true;
+    this.isReturningInstruction = true;
     expr.expression.accept(this);
 
     // NOTE: In commands, save the result to return later.
@@ -610,8 +613,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // TODO: I'm currently treating 'end' as a synonym for 'return nil'.
     // But perhaps it should behave differently? In MSX it also cleans up
     // open file handles.
-    this.emitByte(OpCode.Nil);
-    this.emitByte(OpCode.Return);
+    this.emitReturn();
   }
 
   visitExitInstr(exit: Exit): void {
@@ -963,7 +965,7 @@ export function compileInstruction(
     const lines = [
       new Line(cmdNo || 100, 1, cmdSource || Source.unknown(), [instr]),
     ];
-    const compiler = new LineCompiler(lines, RoutineType.Command, options);
+    const compiler = new LineCompiler(lines, RoutineType.Instruction, options);
     return compiler.compile();
 
     //#if _MATBAS_BUILD == 'debug'

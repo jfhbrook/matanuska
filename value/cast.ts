@@ -1,4 +1,4 @@
-import { Nil, Value } from './';
+import { nil, Nil, Value } from './';
 import { Type } from './types';
 import { typeOf } from './typeof';
 import { BaseException, TypeError } from '../exceptions';
@@ -327,6 +327,15 @@ function cast(
   from_: Type.Nil,
   to_: Type.Exception,
 ): BaseException;
+function cast(value: Value, from_: Type.Undef, to_: Type.Integer): number;
+function cast(value: Value, from_: Type.Undef, to_: Type.Real): number;
+function cast(value: Value, from_: Type.Undef, to_: Type.Boolean): boolean;
+function cast(value: Value, from_: Type.Undef, to_: Type.String): string;
+function cast(
+  value: Value,
+  from_: Type.Undef,
+  to_: Type.Exception,
+): BaseException;
 function cast(value: Value, from_: Type.Any, to_: Type.Integer): number;
 function cast(value: Value, from_: Type.Any, to_: Type.Real): number;
 function cast(value: Value, from_: Type.Any, to_: Type.Boolean): boolean;
@@ -355,6 +364,8 @@ function cast(value: Value, from_: Type, to_: Type): Value {
       return castException(value as BaseException, to_);
     case Type.Nil:
       return castNil(value as Nil, to_);
+    case Type.Undef:
+      return castNil(nil, to_);
     default:
       return castFault(value, Type.Unknown, Type.Unknown);
   }
@@ -373,6 +384,8 @@ function castType(from_: Type, to_: Type): Type {
     case Type.Exception:
       return castExceptionType(to_);
     case Type.Nil:
+      return castNilType(to_);
+    case Type.Undef:
       return castNilType(to_);
     case Type.Any:
       return Type.Any;

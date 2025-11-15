@@ -1,6 +1,6 @@
 import { BaseException } from '../exceptions';
 import { Type } from './types';
-import { Value, Nil } from './index';
+import { Value, Nil, Undef } from './index';
 
 export function typeOf(value: Value): Type {
   const type = typeof value;
@@ -18,6 +18,9 @@ export function typeOf(value: Value): Type {
   }
   if (value instanceof Nil) {
     return Type.Nil;
+  }
+  if (value instanceof Undef) {
+    return Type.Undef;
   }
   if (value instanceof BaseException) {
     return Type.Exception;

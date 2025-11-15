@@ -30,10 +30,14 @@ import { formatter } from './format';
 //#endif
 
 let NO_TRACE = true;
+let SHOW_UNDEF = false;
 
 //#if _MATBAS_BUILD == 'debug'
 NO_TRACE = parseBoolEnv(process.env.NO_TRACE);
+SHOW_UNDEF = parseBoolEnv(process.env.DEBUG_SHOW_UNDEF);
 //#endif
+
+export { NO_TRACE, SHOW_UNDEF }
 
 /**
  * Show a parse tree.

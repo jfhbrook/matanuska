@@ -1,4 +1,4 @@
-import { Nil, Value } from './index';
+import { nil, Nil, Value } from './index';
 import { Type } from './types';
 import { typeOf } from './typeof';
 import { BaseException, TypeError } from '../exceptions';
@@ -350,6 +350,15 @@ function into(
   from_: Type.Nil,
   to_: Type.Exception,
 ): BaseException;
+function into(value: Value, from_: Type.Undef, to_: Type.Integer): number;
+function into(value: Value, from_: Type.Undef, to_: Type.Real): number;
+function into(value: Value, from_: Type.Undef, to_: Type.Boolean): boolean;
+function into(value: Value, from_: Type.Undef, to_: Type.String): string;
+function into(
+  value: Value,
+  from_: Type.Undef,
+  to_: Type.Exception,
+): BaseException;
 function into(value: Value, from_: Type.Any, to_: Type.Integer): number;
 function into(value: Value, from_: Type.Any, to_: Type.Real): number;
 function into(value: Value, from_: Type.Any, to_: Type.Boolean): boolean;
@@ -377,6 +386,8 @@ function into(value: Value, from_: Type, to_: Type): Value {
       return fromException(value as BaseException, to_);
     case Type.Nil:
       return fromNil(value as Nil, to_);
+    case Type.Undef:
+      return fromNil(nil, to_);
     default:
       return conversionFault(value, Type.Unknown, Type.Unknown);
   }
@@ -395,6 +406,7 @@ function intoType(from_: Type, to_: Type): Type {
     case Type.Exception:
       return fromExceptionType(to_);
     case Type.Nil:
+    case Type.Undef:
       return fromNilType(to_);
     case Type.Any:
       return Type.Any;

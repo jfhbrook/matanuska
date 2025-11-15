@@ -5,7 +5,7 @@ import { startSpan } from '../debug';
 //#endif
 import { ValueError } from '../exceptions';
 import { formatter } from '../format';
-import { Args, Context, ReturnValue } from './base';
+import { Args, Context } from './base';
 
 /**
  * An interactive expression.
@@ -14,9 +14,9 @@ import { Args, Context, ReturnValue } from './base';
  * is returned to the Executor so that it can inspect and print it.
  */
 export default {
-  async main(context: Context, args: Args): Promise<ReturnValue> {
+  async main(context: Context, args: Args): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
-    return await startSpan('save', async (_: Span) => {
+    return await startSpan('save', async (_: Span): Promise<void> => {
       const { host, editor } = context;
       const [filename] = args;
 
@@ -30,9 +30,6 @@ export default {
       }
 
       await host.writeFile(editor.filename, editor.list() + '\n');
-
-      return null;
-
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
