@@ -54,7 +54,7 @@ export class Params {
     }
   }
 
-  parse(params: Array<Value | null>): Record<string, any> {
+  parse(params: Array<Value>): Record<string, any> {
     const args = this.args.slice();
     // Result can be either a value or, in the case of argv, an array of
     // values. Rather than forcing the user to check the type, we assume they

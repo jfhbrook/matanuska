@@ -65,7 +65,7 @@ export class Runtime {
     return ret;
   }
 
-  public async interpret(chunk: Chunk): Promise<Value | null> {
+  public async interpret(chunk: Chunk): Promise<Value> {
     this.chunk = chunk;
     this.pc = 0;
     return await this.run();
@@ -119,9 +119,9 @@ export class Runtime {
     await this.executor.command(name as string, args);
   }
 
-  private async run(): Promise<Value | null> {
+  private async run(): Promise<Value> {
     //#if _MATBAS_BUILD == 'debug'
-    return startSpan('Runtime#run', async (_: Span): Promise<Value | null> => {
+    return startSpan('Runtime#run', async (_: Span): Promise<Value> => {
       //#endif
       let a: Value | null = null;
       let b: Value | null = null;
@@ -275,7 +275,7 @@ export class Runtime {
                 b = 0;
               }
               this.host.exit(b);
-              return null;
+              return undef;
             case OpCode.Command:
               await this.command();
               break;
