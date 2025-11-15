@@ -1,3 +1,4 @@
+import { SHOW_UNDEF } from '../debug';
 import { BaseException } from '../exceptions';
 import { Formattable, Formatter } from '../format';
 
@@ -9,7 +10,7 @@ export class Nil implements Formattable {
 
 export class Undef implements Formattable {
   format(_formatter: Formatter): string {
-    return 'undef';
+    return SHOW_UNDEF ? 'undef' : 'nil';
   }
 }
 
