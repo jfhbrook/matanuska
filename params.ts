@@ -66,11 +66,11 @@ export class Params {
     }
 
     for (const arg of this.args) {
-      parsed[arg.name] = null;
+      parsed[arg.name] = nil;
     }
 
     for (const name of Object.keys(this.opts)) {
-      parsed[name] = null;
+      parsed[name] = nil;
     }
 
     let i = 0;
@@ -86,11 +86,7 @@ export class Params {
     };
 
     const getValue = (n: number = 1): Value => {
-      const v = params[i + n];
-      if (v === null) {
-        return nil;
-      }
-      return v;
+      return params[i + n];
     };
 
     const setOpt = (name: string, flagValue: boolean = true): void => {
@@ -174,7 +170,7 @@ export class Params {
       // Additional arguments were not provided
       if (j >= argv.length) {
         if (arg instanceof OptionalArg) {
-          parsed[arg.name] = null;
+          parsed[arg.name] = nil;
           j++;
           continue;
         }
