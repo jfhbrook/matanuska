@@ -18,8 +18,9 @@ import { RuntimeFault } from './faults';
 import { Host } from './host';
 import { Stack } from './stack';
 import { Traceback } from './traceback';
-import { Value, nil, Nil, undef, Undef } from './value';
+import { Value, nil, undef } from './value';
 import { falsey } from './value/truthiness';
+import { nullish } from './value/nullness';
 
 import { Byte } from './bytecode/byte';
 import { Chunk } from './bytecode/chunk';
@@ -266,7 +267,7 @@ export class Runtime {
               a = this.stack.pop();
               if (typeof a === 'number') {
                 b = Math.floor(a);
-              } else if (a instanceof Nil || a instanceof Undef) {
+              } else if (nullish(a)) {
                 b = 0;
               } else if (a) {
                 b = 1;
