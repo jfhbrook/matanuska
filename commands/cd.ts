@@ -3,7 +3,7 @@ import { Span } from '@opentelemetry/api';
 
 import { startSpan } from '../debug';
 //#endif
-import { Arg, Params } from '../params';
+import { OptionalArg, Params } from '../params';
 
 import { Args, Context } from './base';
 
@@ -11,7 +11,7 @@ import { Args, Context } from './base';
  * Change the current working directory.
  */
 export default {
-  params: new Params([new Arg('path')]),
+  params: new Params([new OptionalArg('path')]),
 
   async main(context: Context, args: Args): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'

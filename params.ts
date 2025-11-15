@@ -17,6 +17,7 @@ export class Arg extends Param {
     super(name);
   }
 }
+export class OptionalArg extends Arg {}
 export class Argv extends Arg {}
 export class Flag extends Param {}
 export class Opt extends Param {}
@@ -27,7 +28,7 @@ export type Parameters = Record<string, Value>;
 // export type Value = number | boolean | string | BaseException | Nil;
 
 export class Params {
-  args: string[];
+  args: Arg[];
   argv: string[];
   opts: Record<string, Opt>;
   aliases: Record<string, string>;
@@ -42,7 +43,7 @@ export class Params {
       if (param instanceof Argv) {
         this.argv.push(param.name);
       } else if (param instanceof Arg) {
-        this.args.push(param.name);
+        this.args.push(param);
       } else {
         this.opts[param.name] = param;
       }
@@ -53,8 +54,8 @@ export class Params {
     }
   }
 
-  parse(params: Array<Value>): Record<string, any> {
-    const args = this.args.slice();
+  parse(params: Value[]): Record<string, any> {
+    const argv: Value[] = [];
     // Result can be either a value or, in the case of argv, an array of
     // values. Rather than forcing the user to check the type, we assume they
     // are adults - lol
@@ -64,8 +65,8 @@ export class Params {
       parsed[name] = [];
     }
 
-    for (const name of this.args) {
-      parsed[name] = null;
+    for (const arg of this.args) {
+      parsed[arg.name] = null;
     }
 
     for (const name of Object.keys(this.opts)) {
@@ -141,22 +142,9 @@ export class Params {
       advance(n);
     };
 
-    const setArg = () => {
-      const value = getValue(0);
-      if (args.length) {
-        parsed[args[0]] = value;
-        args.shift();
-        advance(1);
-        return;
-      }
-
-      if (this.argv.length) {
-        for (const name of this.argv) {
-          parsed[name].push(value);
-        }
-      }
-
-      throw new ParamError(`Unknown argument ${value}`);
+    const collectArg = () => {
+      argv.push(getValue(0));
+      advance();
     };
 
     while (i < params.length) {
@@ -177,11 +165,37 @@ export class Params {
           continue;
         }
       }
-      setArg();
+      collectArg();
     }
 
-    if (args.length) {
-      throw new ParamError(`No argument for ${args[0]}`);
+    let j = 0;
+
+    for (const arg of this.args) {
+      // Additional arguments were not provided
+      if (j >= argv.length) {
+        if (arg instanceof OptionalArg) {
+          parsed[arg.name] = null;
+          j++;
+          continue;
+        }
+        throw new ParamError(`Expected argument ${arg.name}`);
+      }
+
+      // Absorb additional argv
+      if (arg instanceof Argv) {
+        parsed[arg.name] = argv.slice(j);
+        j = argv.length;
+        continue;
+      }
+
+      // Save the arg as normal and continue
+      parsed[arg.name] = argv[j];
+      j++;
+    }
+
+    // Unconsumed arguments
+    if (j < argv.length) {
+      throw new ParamError(`Unexpected argument ${argv[j]}`);
     }
 
     return parsed;

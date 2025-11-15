@@ -22,9 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Command Follow-Ups
-  - [x] Implement cd
-  - [ ] Tests for params parser
 - [ ] Native commands
   - [ ] parse native commands
   - [ ] clean up disk command tokens

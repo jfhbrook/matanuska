@@ -11,7 +11,7 @@ describe('cd', () => {
     expect(params.path).toBe('./');
   });
 
-  test.skip('cd (no path)', () => {
+  test('cd (no path)', () => {
     const params = cd.params.parse([]);
 
     expect(params.path).toBe(null);
