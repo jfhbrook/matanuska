@@ -22,15 +22,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Support "undefined" command results
-  - `Undef` type analogous to `Nil`
-  - Return `Value | Undef`
-  - Always push a command result onto stack
-  - Convert `undef` to `nil` within the runtime
 - [ ] Command Follow-Ups
   - [x] Implement cd
-  - [ ] Is there a good way to handle nil/return?
-    - Internal `undefined` value
   - [ ] Tests for params parser
 - [ ] Native commands
   - [ ] parse native commands

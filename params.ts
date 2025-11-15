@@ -29,7 +29,6 @@ export type Parameters = Record<string, Value>;
 export class Params {
   args: string[];
   argv: string[];
-  flags: Record<string, Flag>;
   opts: Record<string, Opt>;
   aliases: Record<string, string>;
 
@@ -63,6 +62,14 @@ export class Params {
 
     for (const name of this.argv) {
       parsed[name] = [];
+    }
+
+    for (const name of this.args) {
+      parsed[name] = null;
+    }
+
+    for (const name of Object.keys(this.opts)) {
+      parsed[name] = null;
     }
 
     let i = 0;
@@ -129,7 +136,6 @@ export class Params {
           }
           parsed[p.name] = getValue();
           n = 2;
-          break;
         }
       }
       advance(n);
@@ -168,6 +174,7 @@ export class Params {
 
         if (param.match(/^-/)) {
           setShortOpts(param.slice(1));
+          continue;
         }
       }
       setArg();
