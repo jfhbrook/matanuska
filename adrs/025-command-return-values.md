@@ -1,6 +1,6 @@
-# ADR 025 - Command Return Values & Undefined Values
+# ADR 025 - Command Return Values
 
-### Status: Draft
+### Status: Accepted
 
 ### Josh Holbrook
 
@@ -27,11 +27,13 @@ nil
 josh@slowpoke:~/code/jfhbrook$
 ```
 
-This is not the intended behavior. This is due to mixed abstractions in Matanuska BASIC, which we now need to sort out.
+This is not the intended behavior. This is due to a number of factors.
 
-## Return Values of Commands
+First: most compiled instructions return `nil`, regardless of the current state of the stack. The need to distinguish between `nil` and "undefined" values will be handled in a separate ADR.
 
-Currently, commands use the `null` type to represent "undefined" values, and the runtime throws those values out:
+The primary exception is expression statements. Expressions always leave a value on the stack, and (in an interactive context) the resulting value of expression _statements_ should be returned to the executor. Because this exception is narrow, we are able to handle it today, as a special case, through a `this.isExpressionCmd` flag in the compiler.
+
+But, even if compiled interactive instructions respected existing existing stack values, _commands_ would still not have a meaningful way to signal an "undefined" return. They can return `nil`, of course, which drives the current behavior. Otherwise, they may return `null`, which places _no_ value on the stack:
 
 ```typescript
 case OpCode.Command:
@@ -42,31 +44,17 @@ case OpCode.Command:
   break;
 ```
 
-## Compilation of Interactive Instructions
+This would make it difficult to handle a case where we _would_ want to return an "undefined" value. The `Return` instruction must always pop a `Value` off the stack. If the prior command places no such value, then the runtime will try (and fail) to pop an empty stack.
 
-Compilation also currently always places a `nil` on the stack before a top level return, excepting for interactive expression commands as a special case:
-
-```
-  private emitReturn(): void {
-    // NOTE: If/when implementing classes, I would need to detect when
-    // compiling a constructor and return "this", not nil.
-
-    if (this.routineType !== RoutineType.Command || !this.isExpressionCmd) {
-      this.emitByte(OpCode.Nil);
-    }
-    this.emitByte(OpCode.Return);
-  }
-```
+This ADR focuses on the question of which instructions (particularly commands) should be able to return a value. Once this decision is made, it should be more straightforward to handle the broader issue of "undefined" return values in compiled instructions.
 
 # Decision
 
-## Do Instructions Create Values?
+Generally speaking, instructions _should_ not create values - that is, only expressions should create values. But there are exceptions.
 
-Generally speaking, instructions _should_ not create values. But there are exceptions.
+As mentioned, the primary exception is expression statements. But, if this remains the only corner case, then the existing treatment should remain acceptable.
 
-The primary exception is expression statements. Expressions always leave a value on the stack, and (in an interactive context) the resulting value of expression _statements_ should be returned to the executor. This means that, if commands never create values, that we may safely retain an exception for expression statements and continue as before.
-
-A potential secondary exception is native commands. Any spawned command will create a process, with standard IO. Currently, the runtime does not have special support for that output. In the future, that process may get processed with a `pipe` feature. But for now, we may treat native commands as having no returned value.
+A potential secondary exception is native commands. Any spawned command will create a process, with standard IO. Currently, the runtime does not have special support for that output. In the future, that process may get processed with a `pipe` feature. But for now, we may treat native commands as having no returned value. This decision will be revisited in the future.
 
 Until we implement native commands, no command will return a value - the return type will always be `Promise<void>`. We will continue to make an exception for expression statements in a command context.
 
