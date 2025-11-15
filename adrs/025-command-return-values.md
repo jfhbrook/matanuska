@@ -58,4 +58,4 @@ A potential secondary exception is native commands. Any spawned command will cre
 
 Until we implement native commands, no command will return a value - the return type will always be `Promise<void>`. We will continue to make an exception for expression statements in a command context.
 
-It's worth noting that the semantics within the compiler around expression statements are non-general - in other words, the flag is currently `this.isExpressionCmd`. This is acceptable for now. But it's worth noting that there's room to generalize this concept in the future, if there are other instances of commands which should return a value to the runtime.
+Finally, we will rename `this.isExpressionCmd` to `this.isReturningInstruction`. Its behavior will be unchanged, but the naming will reflect that it may be used for other cases when an instruction is expected to return a value.
