@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { BaseException, TypeError } from '../../exceptions';
 import { BaseFault, NotImplementedFault, RuntimeFault } from '../../faults';
 import { formatter } from '../../format';
-import { nil, Value } from '../../value';
+import { nil, undef, Value } from '../../value';
 import { Type } from '../../value/types';
 import { into, intoType } from '../../value/convert';
 import { truthy } from '../../value/truthiness';
@@ -65,6 +65,14 @@ const CASES: TestCase[] = [
   [nil, Type.Nil, Type.Exception, TypeError],
   [nil, Type.Nil, Type.Nil, nil],
   [nil, Type.Nil, Type.Any, RuntimeFault],
+
+  [undef, Type.Undef, Type.Integer, 0],
+  [undef, Type.Undef, Type.Real, 0.0],
+  [undef, Type.Undef, Type.Boolean, false],
+  [undef, Type.Undef, Type.String, 'nil'],
+  [undef, Type.Undef, Type.Exception, TypeError],
+  [undef, Type.Undef, Type.Nil, nil],
+  [undef, Type.Undef, Type.Any, RuntimeFault],
 ];
 
 function testInto([value, from_, to_, expected]: TestCase): void {
