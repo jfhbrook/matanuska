@@ -28,7 +28,7 @@ import type { Host } from './host';
 import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
-import { Value } from './value';
+import { Value, Undef } from './value';
 
 import { Line, Cmd, Program } from './ast';
 
@@ -410,7 +410,9 @@ export class Executor {
 
       if (lastCmd) {
         const rv = await this.runtime.interpret(lastCmd);
-        this.host.writeLine(inspector.format(rv));
+        if (!(rv instanceof Undef)) {
+          this.host.writeLine(inspector.format(rv));
+        }
       }
     } catch (err) {
       let exc = err;

@@ -521,7 +521,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // compiling a constructor and return "this", not nil.
 
     if (this.routineType !== RoutineType.Command || !this.isExpressionCmd) {
-      this.emitByte(OpCode.Nil);
+      this.emitByte(OpCode.Undef);
     }
     this.emitByte(OpCode.Return);
   }
@@ -610,8 +610,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // TODO: I'm currently treating 'end' as a synonym for 'return nil'.
     // But perhaps it should behave differently? In MSX it also cleans up
     // open file handles.
-    this.emitByte(OpCode.Nil);
-    this.emitByte(OpCode.Return);
+    this.emitReturn();
   }
 
   visitExitInstr(exit: Exit): void {

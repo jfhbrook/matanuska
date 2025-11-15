@@ -38,3 +38,5 @@ In this ADR, we will square the circle. How will the runtime handle "undefined" 
 First, the Matanuska _language_ will **not** support an "undefined" type. For simplicity, `nil` will be the only non-value.
 
 However, the Matanuska _runtime_ **will** include a new `undef` value. This value will be treated the same as `nil` within the runtime, but will have the additional behavior of not being logged as a return value in the executor.
+
+A bare `return` will return an `undef` value.

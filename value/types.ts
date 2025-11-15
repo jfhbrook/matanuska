@@ -5,6 +5,7 @@ export enum Type {
   String = 'string',
   Exception = 'Exception',
   Nil = 'nil',
+  Undef = 'undef',
   Any = 'any',
   Unknown = 'unknown',
   Invalid = 'invalid',

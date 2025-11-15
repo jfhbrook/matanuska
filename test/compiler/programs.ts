@@ -21,7 +21,7 @@ export const SIMPLE_PROGRAMS: TestCase[] = [
         ]),
         chunk({
           constants,
-          code: code.concat([OpCode.Pop, OpCode.Nil, OpCode.Return]),
+          code: code.concat([OpCode.Pop, OpCode.Undef, OpCode.Return]),
           lines: lines.concat([100, 100, 100]),
         }),
       ];
@@ -59,7 +59,7 @@ export const SIMPLE_PROGRAMS: TestCase[] = [
         OpCode.Constant,
         1,
         OpCode.Pop,
-        OpCode.Nil,
+        OpCode.Undef,
         OpCode.Return,
       ],
       lines: [100, 100, 100, 100, 100, 100, 100, 100],

@@ -25,6 +25,7 @@ export function truthy(value: Value, type: Type = Type.Any): boolean {
     case Type.Exception:
       return true;
     case Type.Nil:
+    case Type.Undef:
       return false;
     default:
       throw new TypeError(
@@ -52,6 +53,7 @@ export function falsey(value: Value, type: Type = Type.Any): boolean {
     case Type.Exception:
       return false;
     case Type.Nil:
+    case Type.Undef:
       return true;
     default:
       throw new TypeError(

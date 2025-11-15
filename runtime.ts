@@ -18,7 +18,7 @@ import { RuntimeFault } from './faults';
 import { Host } from './host';
 import { Stack } from './stack';
 import { Traceback } from './traceback';
-import { Value, nil, Nil } from './value';
+import { Value, nil, Nil, undef, Undef } from './value';
 import { falsey } from './value/truthiness';
 
 import { Byte } from './bytecode/byte';
@@ -143,6 +143,9 @@ export class Runtime {
             case OpCode.Nil:
               this.stack.push(nil);
               break;
+            case OpCode.Undef:
+              this.stack.push(undef);
+              break;
             case OpCode.True:
               this.stack.push(true);
               break;
@@ -263,7 +266,7 @@ export class Runtime {
               a = this.stack.pop();
               if (typeof a === 'number') {
                 b = Math.floor(a);
-              } else if (a instanceof Nil) {
+              } else if (a instanceof Nil || a instanceof Undef) {
                 b = 0;
               } else if (a) {
                 b = 1;
