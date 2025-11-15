@@ -35,8 +35,19 @@ In this ADR, we will square the circle. How will the runtime handle "undefined" 
 
 # Decision
 
-First, the Matanuska _language_ will **not** support an "undefined" type. For simplicity, `nil` will be the only non-value.
+First, the Matanuska _language_ will **not** support an "undefined" type. For simplicity, `nil` will be the only non-value. This means that there will be no `undef` literal, and the runtime will never show the user an `undef` value.
 
-However, the Matanuska _runtime_ **will** include a new `undef` value. This value will be treated the same as `nil` within the runtime, but will have the additional behavior of not being logged as a return value in the executor.
+However, Matanuska's internal value model **will** include a new `undef` value. The runtime will treat both `nil` and `undef` as "nullish" values. The one additional behavior, for now, will be that `undef` values will not be logged by the executor.
 
-A bare `return` will return an `undef` value.
+A bare `return` will return an `undef` value:
+
+```
+=== Disassembly of <input>: ===
+10  1  CONSTANT  cd
+10  3  CONSTANT  ..
+10  5  CMD       2
+10  7  UNDEF
+10  8  RETURN
+```
+
+This may be thought as semantically equivalent to a `void` return type. In fact, `void` may be a more appropriate name for `undef`. But `void` is a keyword in TypeScript, while `undef` is not.
