@@ -53,16 +53,10 @@ export class Context {
 export type Args = Value[];
 
 /**
- * The return value of a command. Null is used to indicate no returned
- * value, not even nil.
- */
-export type ReturnValue = Value | null;
-
-/**
  * A command.
  */
 export interface Command {
-  main: (context: Context, args: Args) => Promise<ReturnValue>;
+  main: (context: Context, args: Args) => Promise<void>;
 }
 
 export type Deferred = () => Promise<void>;
@@ -73,14 +67,17 @@ export type Deferred = () => Promise<void>;
 export function trace(command: Command): Command {
   return {
     ...command,
-    async main(context: Context, args: Args): Promise<ReturnValue> {
+    async main(context: Context, args: Args): Promise<void> {
       //#if _MATBAS_BUILD == 'debug'
-      return await startSpan(`Command: ${context.name}`, async (span: Span) => {
-        for (let i = 0; i < this.args.length; i++) {
-          span.setAttribute(`arg_${i}`, formatter.format(this.args[i]));
-        }
-        return await command.main(context, args);
-      });
+      return await startSpan(
+        `Command: ${context.name}`,
+        async (span: Span): Promise<void> => {
+          for (let i = 0; i < this.args.length; i++) {
+            span.setAttribute(`arg_${i}`, formatter.format(this.args[i]));
+          }
+          return await command.main(context, args);
+        },
+      );
       //#else
       return command.main(context, args);
       //#endif

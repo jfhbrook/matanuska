@@ -6,7 +6,7 @@ import { startSpan } from '../debug';
 import { ValueError } from '../exceptions';
 import { formatter } from '../format';
 
-import { Args, Context, ReturnValue } from './base';
+import { Args, Context } from './base';
 
 /**
  * A new program.
@@ -15,9 +15,9 @@ import { Args, Context, ReturnValue } from './base';
  * be 'untitled.bas'.
  */
 export default {
-  async main(context: Context, args: Args): Promise<ReturnValue> {
+  async main(context: Context, args: Args): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
-    return startSpan('new', (_: Span): ReturnValue => {
+    return startSpan('new', (_: Span): void => {
       //#endif
       const { executor, editor } = context;
       let [filename] = args;
@@ -34,7 +34,6 @@ export default {
 
       editor.reset();
       editor.filename = filename;
-      return null;
       // TODO: Close open file handles on this.host
       //#if _MATBAS_BUILD == 'debug'
     });

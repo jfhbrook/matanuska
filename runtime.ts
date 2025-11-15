@@ -106,7 +106,7 @@ export class Runtime {
     );
   }
 
-  private async command(): Promise<Value | null> {
+  private async command(): Promise<void> {
     const args: Array<Value> = [];
     let n = this.readByte();
     while (n > 1) {
@@ -115,7 +115,7 @@ export class Runtime {
     }
     const name = this.stack.pop();
 
-    return await this.executor.command(name as string, args);
+    await this.executor.command(name as string, args);
   }
 
   private async run(): Promise<Value | null> {
@@ -273,10 +273,7 @@ export class Runtime {
               this.host.exit(b);
               return null;
             case OpCode.Command:
-              a = await this.command();
-              if (a !== null) {
-                this.stack.push(a);
-              }
+              await this.command();
               break;
             case OpCode.Jump:
               // Note: readShort increments the pc. If we didn't assign before,

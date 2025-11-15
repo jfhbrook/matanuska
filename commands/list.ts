@@ -6,13 +6,13 @@ import { startSpan } from '../debug';
 
 import { Nil } from '../value';
 
-import { Args, Context, ReturnValue } from './base';
+import { Args, Context } from './base';
 
 /**
  * List the current program.
  */
 export default {
-  async main(context: Context, args: Args): Promise<ReturnValue> {
+  async main(context: Context, args: Args): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
     startSpan('list', (_: Span) => {
       //#endif
@@ -36,7 +36,5 @@ export default {
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif
-
-    return null;
   },
 };

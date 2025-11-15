@@ -8,7 +8,7 @@ import { ValueError } from '../exceptions';
 import { formatter } from '../format';
 import { Arg, Flag, Params } from '../params';
 
-import { Args, Context, ReturnValue } from './base';
+import { Args, Context } from './base';
 
 /**
  * Load a script, and optionally run it.
@@ -16,7 +16,7 @@ import { Args, Context, ReturnValue } from './base';
 export default {
   params: new Params([new Arg('filename'), new Flag('run')]),
 
-  async main(context: Context, args: Args): Promise<ReturnValue> {
+  async main(context: Context, args: Args): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
     return await startSpan('load', async (_: Span) => {
       //#endif
@@ -35,7 +35,6 @@ export default {
       } else if (editor.warning) {
         host.writeWarn(editor.warning);
       }
-      return null;
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif

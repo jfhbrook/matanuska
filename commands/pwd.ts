@@ -5,7 +5,7 @@ import { startSpan } from '../debug';
 //#endif
 import { Flag, Params } from '../params';
 
-import { Args, Context, ReturnValue } from './base';
+import { Args, Context } from './base';
 
 /**
  * Display the current working directory.
@@ -14,9 +14,9 @@ import { Args, Context, ReturnValue } from './base';
 export default {
   params: new Params([new Flag('P'), new Flag('L')]),
 
-  async main(context: Context, args: Args): Promise<ReturnValue> {
+  async main(context: Context, args: Args): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
-    return startSpan('pwd', (_: Span): ReturnValue => {
+    return startSpan('pwd', (_: Span): void => {
       //#endif
       const { host } = context;
       const params = this.params.parse(args);
@@ -27,8 +27,6 @@ export default {
       }
 
       host.writeLine(host.pwd(follow));
-
-      return null;
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif

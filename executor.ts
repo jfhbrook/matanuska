@@ -410,9 +410,7 @@ export class Executor {
 
       if (lastCmd) {
         const rv = await this.runtime.interpret(lastCmd);
-        if (rv !== null) {
-          this.host.writeLine(inspector.format(rv));
-        }
+        this.host.writeLine(inspector.format(rv));
       }
     } catch (err) {
       let exc = err;
@@ -431,7 +429,7 @@ export class Executor {
     this._deferred = [];
   }
 
-  public async command(name: string, args: Value[]): Promise<Value | null> {
+  public async command(name: string, args: Value[]): Promise<void> {
     const cmd: Command | undefined = this.commands[name];
 
     if (!cmd) {
@@ -445,6 +443,6 @@ export class Executor {
       this.interactive ? this.editor : null,
     );
 
-    return await cmd.main(context, args);
+    await cmd.main(context, args);
   }
 }
