@@ -1,8 +1,6 @@
 import process from 'node:process';
 import { inspect } from 'node:util';
 
-import c from 'ansi-colors';
-
 import VERSIONS from 'consts:versions';
 import {
   BaseException,
@@ -70,6 +68,14 @@ import {
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
 import { Token } from './tokens';
+
+function red(text: string): string {
+  return `\x1b[31m${text}\x1b[39m`;
+}
+
+function green(text: string): string {
+  return `\x1b[32m${text}\x1b[39m`;
+}
 
 /**
  * Objects implementing this interface can be formatted.
@@ -249,7 +255,7 @@ export function inspectString(
   }
 
   if (options.colors) {
-    fmt = c.green(fmt);
+    fmt = green(fmt);
   }
 
   return fmt;
@@ -862,9 +868,9 @@ export class Inspector extends DefaultFormatter {
     let exitCode: string = String(exit.exitCode);
 
     if (exit.exitCode) {
-      exitCode = c.red(exitCode);
+      exitCode = red(exitCode);
     } else {
-      exitCode = c.green(exitCode);
+      exitCode = green(exitCode);
     }
     return `Exit ${exitCode}${exit.message.length ? ': ' + exit.message : ''}`;
   }

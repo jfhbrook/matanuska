@@ -1,5 +1,5 @@
 import { basename } from 'node:path';
-import strftime from 'strftime';
+import strftime from './vendor/strftime';
 
 import MATBAS from 'consts:matbas';
 import { Host } from './host';

@@ -15,7 +15,6 @@ check:
     noFallthroughCasesInSwitch: false
   shellcheck:
     files:
-      - bin/matbas
       - scripts/*.sh
       - .husky/pre-commit
     externalSources: true

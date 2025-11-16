@@ -97,7 +97,7 @@ import { NestFactory } from '@nestjs/core';
 
 It's probably not worth embedding nestjs - it would have a lot of files and downstream dependencies.
 
-### ansi-colors and text-table
+### ansi-colors, text-table and strftime
 
 ```
 import c from 'ansi-colors';
@@ -105,7 +105,9 @@ import table from 'text-table';
 import strftime from 'strftime';
 ```
 
-These libraries are all amenable to forking and vendoring.
+- `ansi-colors` was removed in favor of small custom helpers
+- `text-table` was vendored
+- `strftime` was vendored
 
 ### Node Core Libraries
 
