@@ -26,6 +26,7 @@ check:
 
 format:
   npm run format
+  clang-format -i src/*.cpp src/*.h
 
 format-markdown:
   npm run format-markdown
