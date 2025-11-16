@@ -16,7 +16,7 @@ However, there are a number of significant limitations of Node.js:
   - Matanuska struggles to use real bytes in its "bytecode"
 - Limited process management
   - Particularly around groups
-- Less performant versus
+- Less performant versus C, C++ and Rust
 
 A lot of these issues could be solved by rewriting some (or all) of Matanuska in a systems language - either C, C++ or Rust. Out of these, C is the one I'd struggle with the most. That leaves C++ or Rust.
 
