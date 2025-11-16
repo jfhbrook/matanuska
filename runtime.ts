@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from '@opentelemetry/api';

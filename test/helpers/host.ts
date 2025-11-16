@@ -4,8 +4,8 @@ import { expect } from 'vitest';
 // you're compiling imports to commonjs, lolsob
 import stripAnsi from 'strip-ansi';
 
-import { Buffer } from 'buffer';
-import { Transform, Writable } from 'stream';
+import { Buffer } from 'node:buffer';
+import { Transform, Writable } from 'node:stream';
 
 import { ConsoleHost } from '../../host';
 

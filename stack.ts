@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 import { Formattable, Formatter } from './format';
 
 export class Stack<V> implements Formattable {

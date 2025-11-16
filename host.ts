@@ -1,9 +1,9 @@
-import { readFile, writeFile } from 'fs/promises';
-import * as path from 'path';
-import * as os from 'os';
+import { readFile, writeFile } from 'node:fs/promises';
+import * as path from 'node:path';
+import * as os from 'node:os';
 import { spawn, spawnSync, ChildProcess } from 'node:child_process';
 import { stdin, stdout, stderr } from 'node:process';
-import { Readable, Writable } from 'stream';
+import { Readable, Writable } from 'node:stream';
 
 import { Injectable } from '@nestjs/common';
 
