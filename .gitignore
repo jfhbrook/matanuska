@@ -4,10 +4,8 @@
 # compiled output
 constants.ts
 debug.ts
-/dist/*.js
-/dist/*.js.map
-/dist/tsconfig.tsbuildinfo
-/dist/target
+/dist
+/bundle/target
 /node_modules
 /bin/matbas
 

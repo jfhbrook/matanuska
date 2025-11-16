@@ -1,5 +1,6 @@
 build:
   npm run build
+  cd ./bundle && cargo build --release
   cd ./src && qmake matanuska.pro
   cd ./src && make
 
