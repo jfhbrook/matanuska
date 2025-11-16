@@ -7,6 +7,7 @@ import { Readable, Writable } from 'stream';
 
 import { Injectable } from '@nestjs/common';
 
+import { Channel } from './channel';
 import { ErrorCode } from './errors';
 import { BaseException, FileError } from './exceptions';
 import { Exit, ExitCode } from './exit';
@@ -129,24 +130,12 @@ export interface Host {
   writeException(value: any): void;
 
   /**
-   * Write a value to a numbered channel. The standard channels are:
-   *
-   * 1 - Output
-   * 2 - Error
-   * 3 - Warn
-   * 4 - Info
-   * 5 - Debug
-   *
-   * Channels 1 and 2 correspond to stdout and stderr, respectively.
-   * Channels 3-5 are treated as logging methods.
-   *
-   * In the future, custom channels may be supported as an abstraction over
-   * file descriptors.
+   * Write a value to a numbered channel.
    *
    * @param channel The channel to write to.
    * @param value The value to write.
    */
-  writeChannel(channel: number, value: any): void;
+  writeChannel(channel: Channel, value: any): void;
 
   /**
    * Exit the process.
@@ -323,7 +312,7 @@ export class ConsoleHost implements Host {
     this.errorStream.write(`${this.formatter.format(exc)}\n`);
   }
 
-  writeChannel(channel: number, value: any): void {
+  writeChannel(channel: Channel, value: any): void {
     switch (channel) {
       case 1:
         this.writeOut(value);
