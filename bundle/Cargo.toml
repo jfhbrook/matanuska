@@ -1,7 +1,0 @@
-[package]
-name = "bundle"
-version = "1.0.0"
-edition = "2024"
-
-[dependencies]
-static-include-bytes = "2.0.0"
