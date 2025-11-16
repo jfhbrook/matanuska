@@ -1,14 +1,11 @@
-import { ChildProcess, spawn } from 'node:child_process';
-import * as nodeProcess from 'node:process';
+import { ChildProcess } from 'node:child_process';
 
-import { Channel } from './channel';
 import { Host } from './host';
-import { RuntimeError, NotImplementedError } from './exceptions';
-import { formatter } from './format';
+import { RuntimeError } from './exceptions';
+import type { Pid, Env } from './process';
+import { ProcessSpec, INHERIT } from './process';
 import { Value } from './value';
-import { nullish } from './value/nullness';
 
-export type Pid = number;
 export type JobId = number;
 export type Group = string;
 
@@ -19,76 +16,9 @@ function isBackgroundGroup(group: Group): boolean {
   return group === BACKGROUND;
 }
 
-export type Env = Record<string, Value>;
-
-export type ProcessCollection = Map<Pid, ChildProcess>;
-
 export interface Job {
   group: Group;
-  processes: ProcessCollection;
-}
-
-abstract class IOSpec {
-  public abstract nodeStdIO(): string;
-}
-
-export class Inherit extends IOSpec {
-  public nodeStdIO(): string {
-    return 'inherit';
-  }
-}
-
-export const INHERIT = new Inherit();
-
-export class Pipe extends IOSpec {
-  constructor(
-    public channel: Channel,
-    public toId: JobId | null = null,
-  ) {
-    super();
-  }
-
-  public nodeStdIO(): string {
-    return 'pipe';
-  }
-}
-
-export class Redirect extends IOSpec {
-  constructor(public channel: Channel) {
-    super();
-  }
-
-  public nodeStdIO(): string {
-    throw new NotImplementedError('Stream redirection');
-  }
-}
-
-interface ProcessSpec {
-  command: Value;
-  args: Value[];
-  env: Env;
-  io: [IOSpec, IOSpec, IOSpec];
-}
-
-function stringify(value: Value): string {
-  if (nullish(value)) {
-    return 'nil';
-  }
-  return formatter.format(value);
-}
-
-function environment(env: Env): Record<string, string | undefined> {
-  const e: Record<string, string | undefined> = { ...nodeProcess.env };
-
-  for (const [name, value] of Object.entries(env)) {
-    if (nullish(value)) {
-      e[name] = undefined;
-    } else {
-      e[name] = stringify(value);
-    }
-  }
-
-  return e;
+  processes: Map<Pid, ChildProcess>;
 }
 
 export class JobSpec {
@@ -140,7 +70,7 @@ export class JobManager {
     const processes: Map<JobId, ChildProcess> = new Map();
 
     for (const sp of spec.processes) {
-      const proc = this._spawn(sp, isBackgroundGroup(spec.group));
+      const proc = this.host.spawn(sp, isBackgroundGroup(spec.group));
       if (typeof proc.pid === 'undefined') {
         // TODO: Better error
         throw new RuntimeError('Process failed to spawn');
@@ -152,25 +82,5 @@ export class JobManager {
       group: spec.group,
       processes,
     };
-  }
-
-  private _spawn(spec: ProcessSpec, background: boolean): ChildProcess {
-    const stdio: any = [
-      spec.io[0].nodeStdIO(),
-      spec.io[1].nodeStdIO(),
-      spec.io[2].nodeStdIO(),
-    ];
-
-    // TODO: Shouldn't this be in Host?
-    return spawn(
-      stringify(spec.command),
-      spec.args.map((arg) => stringify(arg)),
-      {
-        cwd: this.host.cwd,
-        env: environment(spec.env),
-        stdio,
-        detached: background,
-      },
-    );
   }
 }

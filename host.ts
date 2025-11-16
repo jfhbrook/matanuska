@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
-import { spawnSync } from 'child_process';
+import { spawn, spawnSync, ChildProcess } from 'node:child_process';
 import { stdin, stdout, stderr } from 'node:process';
 import { Readable, Writable } from 'stream';
 
@@ -12,6 +12,7 @@ import { ErrorCode } from './errors';
 import { BaseException, FileError } from './exceptions';
 import { Exit, ExitCode } from './exit';
 import { DefaultFormatter } from './format';
+import { ProcessSpec, nodeSpawnArguments } from './process';
 
 /**
  * A logging level.
@@ -238,6 +239,14 @@ export interface Host {
    * @param contents The contents of the file.
    */
   writeFile(filename: string, contents: string): Promise<void>;
+
+  /**
+   * Spawn a child process.
+   *
+   * @param process A spec for a process to spawn.
+   * @param background When true, detach the process.
+   */
+  spawn(process: ProcessSpec, background: boolean): ChildProcess;
 }
 
 /**
@@ -467,5 +476,9 @@ export class ConsoleHost implements Host {
     } catch (err) {
       throw FileError.fromWriteError(null, err);
     }
+  }
+
+  spawn(process: ProcessSpec, background: boolean): ChildProcess {
+    return spawn.apply(spawn, nodeSpawnArguments(process, background));
   }
 }
