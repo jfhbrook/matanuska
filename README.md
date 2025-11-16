@@ -24,8 +24,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 - [ ] Native commands
   - [x] jobs ADR
-  - [ ] parse native commands
-  - [ ] clean up disk command tokens
+  - [x] parse native commands
+  - [x] clean up disk command tokens
   - [ ] create jobs table abstractions
   - [ ] test jobs table abstractions
   - [ ] develop runtime instructions for managing jobs

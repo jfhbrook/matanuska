@@ -435,7 +435,7 @@ export class Executor {
     const cmd: Command | undefined = this.commands[name];
 
     if (!cmd) {
-      throw new RuntimeError(`Unknown command ${cmd}`);
+      throw new RuntimeError(`Unknown command ${name}`);
     }
 
     const context = new Context(
