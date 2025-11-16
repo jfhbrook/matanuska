@@ -7,7 +7,7 @@ TARGET = ../bin/matbas
 INCLUDEPATH += .
 CONFIG -= app_bundle
 
-QT += widgets
+QT += core
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
