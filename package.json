@@ -16,14 +16,12 @@
     "packages/test-generator"
   ],
   "scripts": {
-    "build": "npm run build:debug",
-    "build:debug": "dotenvx run -- grabthar build",
-    "build:release": "dotenvx run -f release.env --overload -- grabthar build",
+    "build": "dotenvx run -f \"${ENV_FILE:-.env}\" -- grabthar build",
     "build:ast": "citree ast/index.citree",
     "build:entrypoint": "entrypoint ./bin/matbas",
     "build:test": "dotenvx run -f test.env --overload -- test-generator ./test",
     "build:test:activate": "dotenvx run -f test.env --overload -- test-generator --activate ./test",
-    "check": "npm run build:ast && grabthar check",
+    "check": "grabthar check",
     "format": "grabthar format",
     "format:markdown": "./scripts/format-markdown.mjs",
     "start": "PATH=\"${PATH}:$(pwd)/bin\" bin/matbas",

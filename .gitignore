@@ -9,6 +9,7 @@ debug.ts
 /node_modules
 /bin/matbas
 /src/dist.h
+.make.*.env
 
 # Logs
 logs

@@ -13,7 +13,7 @@ check:
     noFallthroughCasesInSwitch: false
   shellcheck:
     files:
-      - bin/*
+      - bin/matbas
       - scripts/*.sh
       - .husky/pre-commit
     externalSources: true

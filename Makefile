@@ -1,10 +1,18 @@
-.PHONY: default ast bin citree test-generator
+.PHONY: default target ast bin citree test-generator
 
-# MATBAS_BUILD = debug
+MATBAS_BUILD = debug
 
 TYPESCRIPT_FILES := $(find . -name '*.ts' -not -path './node_modules/*' -not -path './packages/*/node_modules/*')
 
 default: bin
+
+# environment shenanigans
+
+TARGET_ENV = .make.$(shell echo $($(1))).env
+
+$(call TARGET_ENV,MATBAS_BUILD):
+	rm -rf .make.*.env
+	if [[ '$(MATBAS_BUILD)' == 'debug' ]]; then cp .env $@; else cp release.env $@; fi
 
 # ast
 
@@ -17,12 +25,12 @@ ast/expr.ts ast/instr.ts ast/index.ts: ast/index.citree
 
 dist: dist/main.js dist/main.js.map
 
-dist/main.js dist/main.js.map: ast/*.ts *.yml *.json $(TYPESCRIPT_FILES)
-	npm run build
+dist/main.js dist/main.js.map: ast/*.ts *.yml *.json .env release.env $(call TARGET_ENV,MATBAS_BUILD) $(TYPESCRIPT_FILES)
+	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # bin
 
-bin: bin/qt-matbas
+bin: $(call TARGET_ENV,MATBAS_BUILD) bin/qt-matbas
 
 core/dist.h: dist
 	node ./scripts/dist-header.js

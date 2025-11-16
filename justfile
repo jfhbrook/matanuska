@@ -4,15 +4,23 @@ start: build
   npm start
 
 build: 
-  MATBAS_BUILD="${MATBAS_BUILD}" make
+  make MATBAS_BUILD="${MATBAS_BUILD}"
 
-check:
+release:
+  make MATBAS_BUILD=release
+
+dist:
+  make dist MATBAS_BUILD="${MATBAS_BUILD}"
+
+check: dist
   npm run check
 
 format:
   npm run format
-  npm run format:markdown
-  clang-format -i src/*.cpp src/*.h
+  clang-format -i core/*.cpp core/*.h
+
+format-markdown file:
+  npm run format-markdown -- '{{ file }}'
 
 fireball:
   npm run fireball
@@ -24,7 +32,8 @@ lint:
 lint-staged:
   npm run lint:staged
 
-test: build
+test:
+  make build
   npm run test:env
   npm test
 
