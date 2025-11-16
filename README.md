@@ -23,20 +23,15 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Prioritized Backlog
 
 - [ ] Native commands
+  - [x] jobs ADR
   - [ ] parse native commands
   - [ ] clean up disk command tokens
-  - [ ] clean up disk command host functions
-  - [ ] research jobs in bash
-  - [ ] Investigate alt-shells
-    - [fish](https://fishshell.com/)
-    - [nushell](https://www.nushell.sh/)
-    - [elvish](https://elv.sh/)
-  - [ ] spawn method in host
-  - [ ] include streams as `Value` type?
-  - [ ] plumb up spawn in executor
-  - [ ] basic testing
-  - [ ] example basic scripts + tests
+  - [ ] create jobs table abstractions
+  - [ ] test jobs table abstractions
+  - [ ] develop runtime instructions for managing jobs
+  - [ ] use jobs to implement `pwd`
   - [ ] support \j in prompt rendering
+- [ ] Fully featured `cd` command
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
@@ -58,6 +53,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] PS1/PS2 support
   - `SET PS1` and `SET PS2`?
 - [ ] Runtime tests for `Jump` and `Loop`
+- [ ] STDIO and Background Control
+  - `|`, `&` and stream redirection
+- [ ] Spike on `^Z`, `^Y` and `fg`
+- [ ] Spike on Rust Jobs Implementation
+  - Use `neon`
+  - Potentially implement process groups
+
 
 ### Up Next
 
