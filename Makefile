@@ -25,14 +25,14 @@ ast/expr.ts ast/instr.ts ast/index.ts: ast/index.citree
 
 dist: dist/main.js dist/main.js.map
 
-dist/main.js dist/main.js.map: *.yml *.json .env release.env $(call TARGET_ENV,MATBAS_BUILD) $(TYPESCRIPT_FILES)
+dist/main.js dist/main.js.map: grabthar.yml package.json package-lock.json .env release.env $(call TARGET_ENV,MATBAS_BUILD) $(TYPESCRIPT_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # bin
 
 bin: $(call TARGET_ENV,MATBAS_BUILD) bin/matbas
 
-core/dist.h core/config.h: dist
+core/config.h: dist
 	npm run build:headers
 
 bin/matbas: dist/main.js dist/main.js.map core/dist.h
