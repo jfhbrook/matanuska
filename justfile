@@ -1,6 +1,6 @@
 build:
   npm run build
-  cd ./bundle && cargo build --release
+  node ./scripts/dist-header.js
   cd ./src && qmake matanuska.pro
   cd ./src && make
 
