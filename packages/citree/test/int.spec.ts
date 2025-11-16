@@ -1,5 +1,5 @@
-import { join, resolve } from 'path';
-import { readFileSync } from 'fs';
+import { join, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { expect, test } from 'vitest';
 

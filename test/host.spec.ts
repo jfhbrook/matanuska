@@ -3,6 +3,7 @@ import { t } from './helpers/tap';
 
 import { discuss } from '@jfhbrook/swears';
 
+import { Channel } from '../channel';
 import { Level } from '../host';
 import { MockConsoleHost } from './helpers/host';
 
@@ -67,7 +68,7 @@ describe('when calling writeInfo', logTest('writeInfo', Level.Info));
 describe('when calling writeWarn', logTest('writeWarn', Level.Warn));
 
 function channelTest(
-  channel: number,
+  channel: Channel,
   stream: 'outputStream' | 'errorStream',
   expected: string,
 ): () => void {

@@ -21,7 +21,12 @@ describe('cd', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Command('cd', [new ShellLiteral(path)], 0, source.length),
+            new Command(
+              new ShellLiteral('cd'),
+              [new ShellLiteral(path)],
+              0,
+              source.length,
+            ),
           ]),
         ]),
       );
@@ -42,7 +47,7 @@ describe('cp', () => {
         new Input([
           new Cmd(10, 1, Source.command(source), [
             new Command(
-              'cp',
+              new ShellLiteral('cp'),
               [new ShellLiteral(path), new StringLiteral('foo')],
               0,
               source.length,
@@ -67,7 +72,7 @@ describe('rm', () => {
         new Input([
           new Cmd(10, 1, Source.command(source), [
             new Command(
-              'rm',
+              new ShellLiteral('rm'),
               [new ShellLiteral('-rf'), new ShellLiteral(path)],
               0,
               source.length,
@@ -91,7 +96,12 @@ describe('touch', () => {
         result[0],
         new Input([
           new Cmd(10, 1, Source.command(source), [
-            new Command('touch', [new ShellLiteral(path)], 0, source.length),
+            new Command(
+              new ShellLiteral('touch'),
+              [new ShellLiteral(path)],
+              0,
+              source.length,
+            ),
           ]),
         ]),
       );
@@ -112,7 +122,7 @@ describe('mv', () => {
         new Input([
           new Cmd(10, 1, Source.command(source), [
             new Command(
-              'mv',
+              new ShellLiteral('mv'),
               [new ShellLiteral(path), new StringLiteral('foo')],
               0,
               source.length,
@@ -137,7 +147,7 @@ describe('mkdir', () => {
         new Input([
           new Cmd(10, 1, Source.command(source), [
             new Command(
-              'mkdir',
+              new ShellLiteral('mkdir'),
               [new ShellLiteral('-p'), new ShellLiteral(path)],
               0,
               source.length,
@@ -162,7 +172,7 @@ describe('rmdir', () => {
         new Input([
           new Cmd(10, 1, Source.command(source), [
             new Command(
-              'rmdir',
+              new ShellLiteral('rmdir'),
               [new ShellLiteral('-p'), new ShellLiteral(path)],
               0,
               source.length,
@@ -184,7 +194,9 @@ describe('pwd', () => {
     t.same(
       result[0],
       new Input([
-        new Cmd(10, 1, Source.command(source), [new Command('pwd', [], 0, 3)]),
+        new Cmd(10, 1, Source.command(source), [
+          new Command(new ShellLiteral('pwd'), [], 0, 3),
+        ]),
       ]),
     );
   });
@@ -199,7 +211,7 @@ describe('pwd', () => {
       result[0],
       new Input([
         new Cmd(10, 1, Source.command(source), [
-          new Command('pwd', [new ShellLiteral('-P')], 0, 6),
+          new Command(new ShellLiteral('pwd'), [new ShellLiteral('-P')], 0, 6),
         ]),
       ]),
     );

@@ -2,6 +2,7 @@ import * as assert from 'node:assert';
 
 import { RuntimeError } from '../exceptions';
 import { RuntimeFault } from '../faults';
+import { formatter } from '../format';
 import {
   Instr,
   InstrVisitor,
@@ -216,6 +217,6 @@ export abstract class Block implements InstrVisitor<void> {
   }
 
   visitCommandInstr(command: Command): void {
-    this.invalid(command, command.name);
+    this.invalid(command, formatter.format(command));
   }
 }

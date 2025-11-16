@@ -117,23 +117,38 @@ const INSTRUCTIONS = [
   new Repeat(),
   new Until(new BoolLiteral(false)),
   new End(),
-  new Command('cd', [new ShellLiteral('..')]),
-  new Command('cp', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
-  new Command('cp', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
-  new Command('rm', [new ShellLiteral('bar.txt')]),
-  new Command('rm', [new ShellLiteral('bar.txt'), new ShellLiteral('-rf')]),
-  new Command('touch', [new ShellLiteral('foo.txt')]),
-  new Command('mv', [new ShellLiteral('foo.txt'), new ShellLiteral('bar.txt')]),
-  new Command('mkdir', [new ShellLiteral('dir')]),
-  new Command('mkdir', [
+  new Command(new ShellLiteral('cd'), [new ShellLiteral('..')]),
+  new Command(new ShellLiteral('cp'), [
+    new ShellLiteral('foo.txt'),
+    new ShellLiteral('bar.txt'),
+  ]),
+  new Command(new ShellLiteral('cp'), [
+    new ShellLiteral('foo.txt'),
+    new ShellLiteral('bar.txt'),
+  ]),
+  new Command(new ShellLiteral('rm'), [new ShellLiteral('bar.txt')]),
+  new Command(new ShellLiteral('rm'), [
+    new ShellLiteral('bar.txt'),
+    new ShellLiteral('-rf'),
+  ]),
+  new Command(new ShellLiteral('touch'), [new ShellLiteral('foo.txt')]),
+  new Command(new ShellLiteral('mv'), [
+    new ShellLiteral('foo.txt'),
+    new ShellLiteral('bar.txt'),
+  ]),
+  new Command(new ShellLiteral('mkdir'), [new ShellLiteral('dir')]),
+  new Command(new ShellLiteral('mkdir'), [
     new ShellLiteral('dir'),
     new ShellLiteral('-p'),
     new IntLiteral(0o775),
   ]),
-  new Command('rmdir', [new ShellLiteral('dir')]),
-  new Command('rmdir', [new ShellLiteral('dir'), new ShellLiteral('-p')]),
-  new Command('pwd', []),
-  new Command('pwd', [new ShellLiteral('-L')]),
+  new Command(new ShellLiteral('rmdir'), [new ShellLiteral('dir')]),
+  new Command(new ShellLiteral('rmdir'), [
+    new ShellLiteral('dir'),
+    new ShellLiteral('-p'),
+  ]),
+  new Command(new ShellLiteral('pwd'), []),
+  new Command(new ShellLiteral('pwd'), [new ShellLiteral('-L')]),
 ];
 
 export function instructionSuite<F extends Formatter>(formatter: F): void {

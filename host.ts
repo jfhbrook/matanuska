@@ -1,16 +1,18 @@
-import { readFile, writeFile } from 'fs/promises';
-import * as path from 'path';
-import * as os from 'os';
-import { spawnSync } from 'child_process';
+import { readFile, writeFile } from 'node:fs/promises';
+import * as path from 'node:path';
+import * as os from 'node:os';
+import { spawn, spawnSync, ChildProcess } from 'node:child_process';
 import { stdin, stdout, stderr } from 'node:process';
-import { Readable, Writable } from 'stream';
+import { Readable, Writable } from 'node:stream';
 
 import { Injectable } from '@nestjs/common';
 
+import { Channel } from './channel';
 import { ErrorCode } from './errors';
 import { BaseException, FileError } from './exceptions';
 import { Exit, ExitCode } from './exit';
 import { DefaultFormatter } from './format';
+import { ProcessSpec, nodeSpawnArguments } from './process';
 
 /**
  * A logging level.
@@ -129,24 +131,12 @@ export interface Host {
   writeException(value: any): void;
 
   /**
-   * Write a value to a numbered channel. The standard channels are:
-   *
-   * 1 - Output
-   * 2 - Error
-   * 3 - Warn
-   * 4 - Info
-   * 5 - Debug
-   *
-   * Channels 1 and 2 correspond to stdout and stderr, respectively.
-   * Channels 3-5 are treated as logging methods.
-   *
-   * In the future, custom channels may be supported as an abstraction over
-   * file descriptors.
+   * Write a value to a numbered channel.
    *
    * @param channel The channel to write to.
    * @param value The value to write.
    */
-  writeChannel(channel: number, value: any): void;
+  writeChannel(channel: Channel, value: any): void;
 
   /**
    * Exit the process.
@@ -249,6 +239,14 @@ export interface Host {
    * @param contents The contents of the file.
    */
   writeFile(filename: string, contents: string): Promise<void>;
+
+  /**
+   * Spawn a child process.
+   *
+   * @param process A spec for a process to spawn.
+   * @param background When true, detach the process.
+   */
+  spawn(process: ProcessSpec, background: boolean): ChildProcess;
 }
 
 /**
@@ -323,7 +321,7 @@ export class ConsoleHost implements Host {
     this.errorStream.write(`${this.formatter.format(exc)}\n`);
   }
 
-  writeChannel(channel: number, value: any): void {
+  writeChannel(channel: Channel, value: any): void {
     switch (channel) {
       case 1:
         this.writeOut(value);
@@ -478,5 +476,9 @@ export class ConsoleHost implements Host {
     } catch (err) {
       throw FileError.fromWriteError(null, err);
     }
+  }
+
+  spawn(process: ProcessSpec, background: boolean): ChildProcess {
+    return spawn.apply(spawn, nodeSpawnArguments(process, background));
   }
 }

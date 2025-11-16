@@ -1,4 +1,4 @@
-import { AssertionError } from 'assert';
+import { AssertionError } from 'node:assert';
 
 import { describe, test } from 'vitest';
 import { t } from './helpers/tap';
