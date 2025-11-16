@@ -68,7 +68,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - Use `neon`
   - Potentially implement process groups
 
-
 ### Up Next
 
 - User cmdlets

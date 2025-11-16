@@ -814,7 +814,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitCommandInstr(command: Command): void {
-    this.emitConstant(command.name);
+    command.name.accept(this);
     for (const expr of command.params) {
       expr.accept(this);
     }

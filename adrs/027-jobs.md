@@ -24,11 +24,11 @@ Bash leverages OS-native job control facilities. It does this by assigning foreg
 
 Job control uses the following control codes and commands:
 
-* The `&` token will asynchronously run a specified job in the background.
-* **^Z** (the _suspend_ character) will stop the current foreground process (using the `SIGSTP` signal), and return control to Bash
-* **^Y** (the _delayed suspend_ character) behaves similarly to **^Z**, but allows the process to run (potentially pausing when it receives a `SIGTTIN` or `SIGTTOU` signal)
-* The `bg` builtin will continue running the job in the background, without suspending it
-* The `fg` builtin will bring a specified job to the foreground, resuming it if suspended (using the `SIGCONT` signal)
+- The `&` token will asynchronously run a specified job in the background.
+- **^Z** (the _suspend_ character) will stop the current foreground process (using the `SIGSTP` signal), and return control to Bash
+- **^Y** (the _delayed suspend_ character) behaves similarly to **^Z**, but allows the process to run (potentially pausing when it receives a `SIGTTIN` or `SIGTTOU` signal)
+- The `bg` builtin will continue running the job in the background, without suspending it
+- The `fg` builtin will bring a specified job to the foreground, resuming it if suspended (using the `SIGCONT` signal)
 
 Implementation details may be seen in Bash's [jobs.c](https://github.com/bminor/bash/blob/master/jobs.c) and [jobs.h](https://github.com/bminor/bash/blob/master/jobs.h).
 
@@ -36,9 +36,9 @@ Implementation details may be seen in Bash's [jobs.c](https://github.com/bminor/
 
 [PowerShell also has the concept of jobs](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_jobs?view=powershell-7.5), though only for background operations. PowerShell has three kinds of jobs:
 
-* `BackgroundJob` - commands or scripts running as separate processes in the background
-* `RemoteJob` - commands or scripts being run on remote computers
-* `ThreadJob` - commands or scripts running in the background, but in a thread (ie. in the same process)
+- `BackgroundJob` - commands or scripts running as separate processes in the background
+- `RemoteJob` - commands or scripts being run on remote computers
+- `ThreadJob` - commands or scripts running in the background, but in a thread (ie. in the same process)
 
 These jobs may only run PowerShell commands. For processes, PowerShell uses [the separate Process abstraction](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process?view=powershell-7.5). These processes use classes to wrap their execution, similar to Node.js's `process.spawn` or Python's `subprocess.run`.
 
@@ -46,12 +46,12 @@ The fact that PowerShell doesn't appear to leverage OS level job control is like
 
 ## POSIX Job Control
 
-[According to Wikipedia](https://en.wikipedia.org/wiki/Job_control_(Unix)), job control is supported through signals. The core signals relevant to job control are:
+[According to Wikipedia](<https://en.wikipedia.org/wiki/Job_control_(Unix)>), job control is supported through signals. The core signals relevant to job control are:
 
-* `SIGSTP` - Suspend the process
-* `SIGCONT` - Continue the process
-* `SIGTTIN` - Sent when attempting to read from the controlling terminal (typically suspends the process)
-* `SIGTTOU` - Send when attempting to write to the controlling terminal (typically suspends the process)
+- `SIGSTP` - Suspend the process
+- `SIGCONT` - Continue the process
+- `SIGTTIN` - Sent when attempting to read from the controlling terminal (typically suspends the process)
+- `SIGTTOU` - Send when attempting to write to the controlling terminal (typically suspends the process)
 
 The concept of a [controlling terminal](https://en.wikipedia.org/wiki/POSIX_terminal_interface#Controlling_terminals_and_process_groups) is central. Typically a process is part of a [progress group](https://en.wikipedia.org/wiki/Process_group) which typically has a controlling terminal. This controlling terminal would not be Bash (or Node.js) necessarily, but the terminal program itself (Konsole, Kitty, SSH).
 
@@ -82,7 +82,7 @@ process.kill(-gid, 'SIGSTP');
 
 If a child process is spawned with the `detached: true` option, it will be given a process group, without a controlling terminal. The particular group in use seems to be treated as an implementation detail, but it is likely unique to the process.
 
-A process may be attached to an existing group by passing the `gid` argument to the spawn call. However, Node.js does not seem to allow for setting the process group for a process *after* it's spawned.
+A process may be attached to an existing group by passing the `gid` argument to the spawn call. However, Node.js does not seem to allow for setting the process group for a process _after_ it's spawned.
 
 Node.js also does not seem to expose the capability of looking up the process group for a running process. Instead, you would need to get the process ID from the `ChildProcess` object, and use a process external to Node.js.
 
@@ -96,7 +96,7 @@ Rust can, of course, call C based OS libraries directly. But Rust also has a cra
 
 <https://crates.io/crates/nix>
 
-This crate can likely be used alongside Rust's `std::process` library and [neon based bindings](https://neon-rs.dev) to accomplish these behaviors. 
+This crate can likely be used alongside Rust's `std::process` library and [neon based bindings](https://neon-rs.dev) to accomplish these behaviors.
 
 # Decision
 
@@ -108,8 +108,8 @@ type JobId = number;
 type Group = string;
 
 interface Job {
-  background: boolean,
-  processes: Map<Pid, ChildProcess>
+  background: boolean;
+  processes: Map<Pid, ChildProcess>;
 }
 
 type JobsTable = Record<JobId, Job>;

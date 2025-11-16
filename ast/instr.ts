@@ -362,7 +362,7 @@ export class Until extends Instr {
 
 export class Command extends Instr {
   constructor(
-    public name: string,
+    public name: Expr,
     public params: Expr[],
     offsetStart: number = -1,
     offsetEnd: number = -1,

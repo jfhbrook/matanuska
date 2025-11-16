@@ -19,7 +19,7 @@ import {
   sortParseError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
-import { Scanner } from './scanner';
+import { Scanner, KEYWORDS } from './scanner';
 import { Token, TokenKind } from './tokens';
 
 import { Source } from './ast/source';
@@ -512,28 +512,14 @@ export class Parser {
       instr = this.repeat();
     } else if (this.match(TokenKind.Until)) {
       instr = this.until();
-    } else if (this.match(TokenKind.Cd)) {
-      instr = this.cd();
-    } else if (this.match(TokenKind.Cp)) {
-      instr = this.cp();
-    } else if (this.match(TokenKind.Rm)) {
-      instr = this.rm();
-    } else if (this.match(TokenKind.Touch)) {
-      instr = this.touch();
-    } else if (this.match(TokenKind.Mv)) {
-      instr = this.mv();
-    } else if (this.match(TokenKind.MkDir)) {
-      instr = this.mkdir();
-    } else if (this.match(TokenKind.RmDir)) {
-      instr = this.rmdir();
-    } else if (this.match(TokenKind.Pwd)) {
-      instr = this.pwd();
     } else {
       const assign = this.assign();
       if (assign) {
         instr = assign;
-      } else {
+      } else if (this.checkExpressionStatementStart()) {
         instr = this.expressionStatement();
+      } else {
+        instr = this.command();
       }
     }
 
@@ -759,44 +745,53 @@ export class Parser {
     return new Until(condition);
   }
 
-  private cd(): Instr {
-    const params = this.params();
-    return new Command('cd', params);
+  private checkKeyword(): boolean {
+    return Object.values(KEYWORDS).reduce(
+      (check, tok) => this.check(tok) || check,
+      false,
+    );
   }
 
-  private cp(): Instr {
-    const params = this.params();
-    return new Command('cp', params);
+  private checkPrimaryStart(): boolean {
+    return (
+      this.check(TokenKind.DecimalLiteral) ||
+      this.check(TokenKind.HexLiteral) ||
+      this.check(TokenKind.OctalLiteral) ||
+      this.check(TokenKind.BinaryLiteral) ||
+      this.check(TokenKind.RealLiteral) ||
+      this.check(TokenKind.TrueLiteral) ||
+      this.check(TokenKind.FalseLiteral) ||
+      this.check(TokenKind.StringLiteral) ||
+      this.check(TokenKind.NilLiteral) ||
+      this.check(TokenKind.IntIdent) ||
+      this.check(TokenKind.RealIdent) ||
+      this.check(TokenKind.BoolIdent) ||
+      this.check(TokenKind.StringIdent) ||
+      this.check(TokenKind.LParen)
+    );
   }
 
-  private rm(): Instr {
-    const params = this.params();
-    return new Command('rm', params);
+  private checkExpressionStatementStart(): boolean {
+    return (
+      this.checkPrimaryStart() ||
+      [...Object.values(KEYWORDS), TokenKind.Plus, TokenKind.Minus].reduce(
+        (check, tok) => this.check(tok) || check,
+        false,
+      )
+    );
   }
 
-  private touch(): Instr {
+  private command(): Instr {
+    const cmd = this.param();
+    if (!cmd) {
+      const token = this.current;
+      this.syntaxError(
+        token,
+        `Unexpected token ${token.text.length ? token.text : token.kind}`,
+      );
+    }
     const params = this.params();
-    return new Command('touch', params);
-  }
-
-  private mv(): Instr {
-    const params = this.params();
-    return new Command('mv', params);
-  }
-
-  private mkdir(): Instr {
-    const params = this.params();
-    return new Command('mkdir', params);
-  }
-
-  private rmdir(): Instr {
-    const params = this.params();
-    return new Command('rmdir', params);
-  }
-
-  private pwd(): Instr {
-    const params = this.params();
-    return new Command('pwd', params);
+    return new Command(cmd, params);
   }
 
   //
@@ -1105,22 +1100,7 @@ export class Parser {
 
   private param(): Expr | null {
     // Parse literals and groups as expressions
-    if (
-      this.check(TokenKind.DecimalLiteral) ||
-      this.check(TokenKind.HexLiteral) ||
-      this.check(TokenKind.OctalLiteral) ||
-      this.check(TokenKind.BinaryLiteral) ||
-      this.check(TokenKind.RealLiteral) ||
-      this.check(TokenKind.TrueLiteral) ||
-      this.check(TokenKind.FalseLiteral) ||
-      this.check(TokenKind.StringLiteral) ||
-      this.check(TokenKind.NilLiteral) ||
-      this.check(TokenKind.IntIdent) ||
-      this.check(TokenKind.RealIdent) ||
-      this.check(TokenKind.BoolIdent) ||
-      this.check(TokenKind.StringIdent) ||
-      this.check(TokenKind.LParen)
-    ) {
+    if (this.checkPrimaryStart()) {
       return this.primary();
     }
 
