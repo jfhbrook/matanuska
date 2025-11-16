@@ -37,6 +37,17 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] basic testing
   - [ ] example basic scripts + tests
   - [ ] support \j in prompt rendering
+<<<<<<< Updated upstream
+=======
+  - `./adrs/draft/processes.md`
+- [ ] Fully featured `cd` command
+- [ ] Revisit draft ADRs
+  - `./adrs/draft/end-keyword.md`
+  - `./adrs/draft/peek-poke.md`
+  - `./adrs/draft/stack-effects.md`
+  - `./adrs/draft/sigil-typecasting.md`
+  - `./adrs/draft/registers.md`
+>>>>>>> Stashed changes
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
@@ -61,12 +72,17 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
+- User cmdlets
+  - Dust off `./adrs/draft/cmdlets.md`
+  - Import cmdlets from some directory
+  - Probably move `.matbas_history` and existing files
 - Closures
   - Closures ADR
   - ???
 - More robust citree parser
   - Setting defaults in List instr is no bueno
 - Complete Print/Format syntax
+  - `./adrs/draft/print-statement.md`
   - Support ECMA-55?
   - Complete ADR
   - Print can take a channel config
@@ -139,13 +155,16 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - MSX BASIC uses the `stop` and `cont` commands to control break-in behavior
   - Will need to intercept and handle ctrl-c from readline (ctrl-stop in MSX BASIC)
 - Symbol dump
+  - `./adrs/draft/symbol-dump.md`
 - Profiling
+  - `./adrs/draft/profiler.md`
+    - Revisit in light of recent opentelemetry features
   - Line-based for users
   - Opcode-based for me
 - Performance tests
   - Benchmarks
   - Profile slow benchmarks
-- Editor plugins
+- Text Editor plugins
 - Generated "exceedingly large" script tests
 
 ### The Future
