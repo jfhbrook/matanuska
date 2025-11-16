@@ -2,6 +2,8 @@ entrypoint: ./main.ts
 exclude:
   - bin
   - packages
+build:
+  minify: false
 check:
   compilerOptions:
     declaration: true
