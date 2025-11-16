@@ -3,7 +3,7 @@ TARGET = ../bin/matbas
 INCLUDEPATH += .
 CONFIG -= app_bundle
 
-QT += core
+QT += core qml
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
