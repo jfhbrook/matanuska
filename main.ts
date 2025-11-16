@@ -1,3 +1,4 @@
-import { main } from './index';
+// import { main } from './index';
 
-main();
+// main();
+console.log('hello world!');
