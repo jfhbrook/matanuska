@@ -76,7 +76,7 @@ There are a few issues which cause problems for QJSEngine:
 - QJSEngine does NOT like Vite's commonjs shim for bundled dependencies
   - It considers `catch {}` to be a syntax error
 
-This means that not *only* are Node *core* libraries a non-starter - `npm` dependencies are fraught as well.
+This means that not _only_ are Node _core_ libraries a non-starter - `npm` dependencies are fraught as well.
 
 Luckily, the full list of imports is at the very top of `./dist/main.js`. So... let's see what we're dealing with.
 

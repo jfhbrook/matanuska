@@ -1,4 +1,4 @@
-import table from 'text-table';
+import table from '../vendor/text-table';
 
 import { formatter } from '../format';
 import { bytesToShort } from './short';
