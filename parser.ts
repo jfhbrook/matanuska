@@ -745,13 +745,6 @@ export class Parser {
     return new Until(condition);
   }
 
-  private checkKeyword(): boolean {
-    return Object.values(KEYWORDS).reduce(
-      (check, tok) => this.check(tok) || check,
-      false,
-    );
-  }
-
   private checkPrimaryStart(): boolean {
     return (
       this.check(TokenKind.DecimalLiteral) ||
