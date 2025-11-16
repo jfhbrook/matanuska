@@ -1,8 +1,8 @@
-.PHONY: default target ast bin citree test-generator
+.PHONY: default target ast bin dist citree test-generator
 
 MATBAS_BUILD = debug
 
-TYPESCRIPT_FILES := $(find . -name '*.ts' -not -path './node_modules/*' -not -path './packages/*/node_modules/*')
+TYPESCRIPT_FILES := $(shell find . -name '*.ts' -not -path './node_modules/*' -not -path './packages/*/node_modules/*')
 
 default: bin
 
@@ -25,17 +25,17 @@ ast/expr.ts ast/instr.ts ast/index.ts: ast/index.citree
 
 dist: dist/main.js dist/main.js.map
 
-dist/main.js dist/main.js.map: ast/*.ts *.yml *.json .env release.env $(call TARGET_ENV,MATBAS_BUILD) $(TYPESCRIPT_FILES)
+dist/main.js dist/main.js.map: *.yml *.json .env release.env $(call TARGET_ENV,MATBAS_BUILD) $(TYPESCRIPT_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # bin
 
-bin: $(call TARGET_ENV,MATBAS_BUILD) bin/qt-matbas
+bin: $(call TARGET_ENV,MATBAS_BUILD) bin/matbas
 
 core/dist.h core/config.h: dist
 	npm run build:headers
 
-bin/qt-matbas: dist core/dist.h
+bin/matbas: dist/main.js dist/main.js.map core/dist.h
 	cd core && qmake matanuska.pro
 	cd core && make
 

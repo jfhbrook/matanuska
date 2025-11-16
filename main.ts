@@ -1,4 +1,11 @@
-// import { main } from './index';
+/*
+import { main } from './index';
 
-// main();
-console.log('hello world!');
+main();
+*/
+
+import { Injectable, Inject, Module } from '@nestjs/common';
+
+console.log(Injectable);
+console.log(Inject);
+console.log(Module);
