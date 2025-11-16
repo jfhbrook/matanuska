@@ -1,3 +1,5 @@
 *.o
 .qmake.stash
 Makefile
+config.h
+dist.h

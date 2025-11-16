@@ -21,6 +21,7 @@
     "build:entrypoint": "entrypoint ./bin/matbas",
     "build:test": "dotenvx run -f test.env --overload -- test-generator ./test",
     "build:test:activate": "dotenvx run -f test.env --overload -- test-generator --activate ./test",
+    "build:headers": "dotenvx run -f \"${ENV_FILE:-.env}\" -- node ./scripts/build-headers.mjs",
     "check": "grabthar check",
     "format": "grabthar format",
     "format:markdown": "./scripts/format-markdown.mjs",

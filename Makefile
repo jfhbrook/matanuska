@@ -32,8 +32,8 @@ dist/main.js dist/main.js.map: ast/*.ts *.yml *.json .env release.env $(call TAR
 
 bin: $(call TARGET_ENV,MATBAS_BUILD) bin/qt-matbas
 
-core/dist.h: dist
-	node ./scripts/dist-header.js
+core/dist.h core/config.h: dist
+	npm run build:headers
 
 bin/qt-matbas: dist core/dist.h
 	cd core && qmake matanuska.pro
