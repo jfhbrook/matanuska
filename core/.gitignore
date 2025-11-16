@@ -2,4 +2,4 @@
 .qmake.stash
 Makefile
 config.h
-dist.h
+qrc_dist.cpp

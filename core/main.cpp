@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
   engine.installExtensions(QJSEngine::ConsoleExtension);
 
-  QJSValue result = engine.evaluate(DIST);
+  QJSValue result = engine.importModule(":dist/main.js");
 
   logResult(result);
 

@@ -16,4 +16,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += dist.h config.h
+RESOURCES = dist.qrc
 SOURCES += main.cpp

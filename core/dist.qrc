@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="dist/main.js">../dist/main.js</file>
+  </qresource>
+</RCC>
