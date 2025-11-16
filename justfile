@@ -1,68 +1,45 @@
-build:
-  make
+set dotenv-load := true
 
-build-release:
-  npm run build:release
+start: build
+  npm start
 
-build-ast:
-  npm run build:ast
-
-build-entrypoint:
-  npm run build:entrypoint
-
-build-test-generator:
-  npm run build:test-generator
-
-build-test:
-  npm run build:test
-
-build-test-activate:
-  npm run build:test:activate
+build: 
+  MATBAS_BUILD="${MATBAS_BUILD}" make
 
 check:
   npm run check
 
 format:
   npm run format
+  npm run format:markdown
   clang-format -i src/*.cpp src/*.h
 
-format-markdown:
-  npm run format-markdown
-
-start:
-  npm start
-
 fireball:
-  fireball
+  npm run fireball
 
 lint:
   npm run lint
-
-lint-shell:
   npm run lint:shell
 
 lint-staged:
   npm run lint:staged
 
-test:
-  npm run test
-
-test-env:
+test: build
   npm run test:env
+  npm test
 
 test-citree:
-  npm run test:citree
+  make citree
+  npm test -w packages/citree
+
+test-grabthar:
+  npm test -w packages/grabthar
 
 snap:
   npm run snap
 
-prepare:
-  npm run prepare
-
 report:
-  npm run report
+  ./scripts/report.sh
 
 clean:
-  npm run clean
-
-
+  make clean

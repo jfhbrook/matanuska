@@ -6,7 +6,7 @@ env | awk '/^VITEST_/;/^MATBAS_/;/^DEBUG_/;/^FORCE_/;/^TZ=/'
 echo '=== Node Environment ==='
 set -x
 
-npx envinfo --system \
+envinfo --system \
   --npmPackages '{vitest,@vitest/*,vite,@vitejs/*}' \
   --binaries \
   --browsers
