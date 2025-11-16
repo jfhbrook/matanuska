@@ -68,7 +68,69 @@ Pros:
 
 Matanuska will be refactored to use a C++/QT based entry point. It will continue running TypeScript in a `QJSEngine`, exposing `QT` functionality through pluggable interfaces such as `Host`. Some functionality will additionally be written in Rust on a case-by-case basis.
 
-## Getting Away from Node Core
+## Getting Away from Node Modules
+
+There are a few issues which cause problems for QJSEngine:
+
+- QJSEngine requires that imports are exposed in C++
+- QJSEngine does NOT like Vite's commonjs shim for bundled dependencies
+  - It considers `catch {}` to be a syntax error
+
+This means that not *only* are Node *core* libraries a non-starter - `npm` dependencies are fraught as well.
+
+Luckily, the full list of imports is at the very top of `./dist/main.js`. So... let's see what we're dealing with.
+
+### dotenv
+
+```
+import * as dotenv from 'dotenv';
+```
+
+We can ditch dotenv in favor of injecting parameters from QT.
+
+### nestjs
+
+```
+import { Injectable, Inject, Module } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+```
+
+It's probably not worth embedding nestjs - it would have a lot of files and downstream dependencies.
+
+### ansi-colors and text-table
+
+```
+import c from 'ansi-colors';
+import table from 'text-table';
+import strftime from 'strftime';
+```
+
+These libraries are all amenable to forking and vendoring.
+
+### Node Core Libraries
+
+See further down.
+
+```
+import * as process$1 from 'node:process';
+import process__default, { stdin, stdout, stderr } from 'node:process';
+import { inspect } from 'node:util';
+import { readFile, writeFile } from 'node:fs/promises';
+import * as path from 'node:path';
+import { basename } from 'node:path';
+import * as os from 'node:os';
+import { spawnSync, spawn } from 'node:child_process';
+import * as readline from 'node:readline/promises';
+import * as assert from 'node:assert';
+```
+
+### OpenTelemetry
+
+```
+import { trace, context } from '@opentelemetry/api';
+```
+
+OpenTelemetry is a Bigger Problem. We can rip this out for now.
 
 In order to initiate this rewrite, we need to get away from using Node core modules. Most uses of these modules are contained within the `Host` abstraction. But there are a few others we can get away from first.
 
