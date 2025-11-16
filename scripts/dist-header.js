@@ -23,4 +23,13 @@ function encode(input) {
   return output;
 }
 
-writeFileSync('./src/dist.h', `#define DIST "${encode(dist)}"`);
+writeFileSync(
+  './core/dist.h',
+  `#ifndef matbas_dist_h
+#define matbas_dist_h
+
+#define DIST "${encode(dist)}"
+
+#endif
+`,
+);

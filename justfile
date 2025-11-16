@@ -1,8 +1,5 @@
 build:
-  npm run build
-  node ./scripts/dist-header.js
-  cd ./src && qmake matanuska.pro
-  cd ./src && make
+  make
 
 build-release:
   npm run build:release
