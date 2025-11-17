@@ -14,6 +14,10 @@ $(call TARGET_ENV,MATBAS_BUILD):
 	rm -rf .make.*.env
 	if [[ '$(MATBAS_BUILD)' == 'debug' ]]; then cp .env $@; else cp release.env $@; fi
 
+# internal
+packages/internal/dist/index.js packages/internal/dist/index.d.js packages/internal/dist/index.js.map: packages/internal/src/index.ts
+	npm run build:internal
+
 # ast
 
 ast: ast/expr.ts ast/instr.ts ast/index.ts
@@ -25,7 +29,7 @@ ast/expr.ts ast/instr.ts ast/index.ts: ast/index.citree
 
 dist: dist/main.js dist/main.js.map
 
-dist/main.js dist/main.js.map: grabthar.yml package.json package-lock.json .env release.env $(call TARGET_ENV,MATBAS_BUILD) $(TYPESCRIPT_FILES)
+dist/main.js dist/main.js.map: grabthar.yml package.json package-lock.json .env release.env packages/internal/dist/index.js $(call TARGET_ENV,MATBAS_BUILD) $(TYPESCRIPT_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # bin

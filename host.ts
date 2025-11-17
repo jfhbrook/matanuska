@@ -1,9 +1,17 @@
-import { readFile, writeFile } from 'node:fs/promises';
-import * as os from 'node:os';
-import { spawnSync } from 'node:child_process';
-// import { spawn, spawnSync, ChildProcess } from 'node:child_process';
-import { stdin, stdout, stderr } from 'node:process';
-import { Readable, Writable } from 'node:stream';
+import {
+  hostname,
+  userInfo,
+  homedir,
+  spawnSync,
+  readFile,
+  writeFile,
+  stdin,
+  stdout,
+  stderr,
+  Readable,
+  Writable,
+} from '@matanuska/internal';
+// import { spawn, spawnSync, ChildProcess } from '@matanuska/internal';
 
 import { Channel } from './channel';
 import { ErrorCode } from './errors';
@@ -356,7 +364,7 @@ export class ConsoleHost implements Host {
   }
 
   hostname(): string {
-    return os.hostname();
+    return hostname();
   }
 
   tty(): string | null {
@@ -417,19 +425,19 @@ export class ConsoleHost implements Host {
   }
 
   uid(): number {
-    return os.userInfo().uid;
+    return userInfo().uid;
   }
 
   gid(): number {
-    return os.userInfo().gid;
+    return userInfo().gid;
   }
 
   username(): string {
-    return os.userInfo().username;
+    return userInfo().username;
   }
 
   homedir(): string {
-    return os.homedir();
+    return homedir();
   }
 
   // See: https://en.wikipedia.org/wiki/Cd_(command)

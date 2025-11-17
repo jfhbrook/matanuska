@@ -1,7 +1,6 @@
-import process from 'node:process';
-import { inspect } from 'node:util';
-
 import VERSIONS from 'consts:versions';
+import { inspect } from '@matanuska/internal';
+
 import {
   BaseException,
   AssertionError,
@@ -487,7 +486,6 @@ export class DefaultFormatter extends Formatter {
     report += `Matanuska BASIC: v${VERSIONS.matbas}\n`;
     report += `swc: v${VERSIONS.swc}\n`;
     report += `vite: v${VERSIONS.swc}\n`;
-    report += `Node.js: ${process.version}\n\n`;
     report +=
       'This is a bug in Matanuska BASIC. If you copy this entire message and post it\n';
     report += 'to the issues tracker:\n\n';

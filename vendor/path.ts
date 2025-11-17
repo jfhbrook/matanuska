@@ -25,7 +25,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import * as process from 'node:process';
+import * as internal from '@matanuska/internal';
 
 // From node's internal/constants.js
 const CHAR_UPPERCASE_A = 65;
@@ -38,7 +38,7 @@ const CHAR_BACKWARD_SLASH = 92;
 const CHAR_COLON = 58;
 const CHAR_QUESTION_MARK = 63;
 
-const isWindows: boolean = process.platform === 'win32';
+const isWindows: boolean = internal.platform === 'win32';
 
 function isPathSeparator(code: number): boolean {
   return code === CHAR_FORWARD_SLASH || code === CHAR_BACKWARD_SLASH;
@@ -203,7 +203,7 @@ const win32 = {
           continue;
         }
       } else if (resolvedDevice.length === 0) {
-        path = process.cwd();
+        path = internal.cwd();
         // Fast path for current directory
         if (
           args.length === 0 ||
@@ -222,7 +222,7 @@ const win32 = {
         // absolute path, get cwd for that drive, or the process cwd if
         // the drive cwd is not available. We're sure the device is not
         // a UNC path at this points, because UNC paths are always absolute.
-        path = process.env[`=${resolvedDevice}`] || process.cwd();
+        path = internal.env[`=${resolvedDevice}`] || internal.cwd();
 
         // Verify that a cwd was found and that it actually points
         // to our drive. If not, default to the drive's root.
@@ -331,7 +331,7 @@ const win32 = {
     }
 
     // At this point the path should be resolved to a full absolute path,
-    // but handle relative paths to be safe (might happen when process.cwd()
+    // but handle relative paths to be safe (might happen when internal.cwd()
     // fails)
 
     // Normalize the tail path
@@ -1154,13 +1154,13 @@ const posixCwd: () => string = (() => {
     // and truncates any drive indicator
     const regexp = /\\/g;
     return () => {
-      const cwd = process.cwd().replace(regexp, '/');
+      const cwd = internal.cwd().replace(regexp, '/');
       return cwd.slice(cwd.indexOf('/'));
     };
   }
 
   // We're already on POSIX, no need for any transformations
-  return () => process.cwd();
+  return () => internal.cwd();
 })();
 
 const posix = {
@@ -1196,7 +1196,7 @@ const posix = {
     }
 
     // At this point the path should be resolved to a full absolute path, but
-    // handle relative paths to be safe (might happen when process.cwd() fails)
+    // handle relative paths to be safe (might happen when internal.cwd() fails)
 
     // Normalize the path
     resolvedPath = normalizeString(

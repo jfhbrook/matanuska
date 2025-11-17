@@ -133,7 +133,12 @@ A `@matanuska/internal` library will be created, which exposes:
   - Note, `vendor/path` depends on this
 - `process.cwd`
   - `vendor/path` calls this directly. Shouldn't this delegate to `Host`?
+- `process.env`
+  - `vendor/path` calls this directly. Shouldn't this delegate to `Host`?
 - `child_process.spawnSync`
+
+Later:
+
 - `ConsoleHost`
 
 This library will be implemented in Node for tests, and in c++ for our runtime.
