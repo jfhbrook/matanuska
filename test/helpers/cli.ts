@@ -1,7 +1,6 @@
-import { Translator } from '../../translator';
+import { Container } from '../../index';
+
 import { Config, Argv, Env } from '../../config';
-import { Editor } from '../../editor';
-import { Executor } from '../../executor';
 import { ExitCode } from '../../exit';
 import { Host } from '../../host';
 
@@ -12,6 +11,17 @@ export interface RunResult {
   host: MockConsoleHost;
 }
 
+class MockContainer extends Container {
+  constructor(argv: Argv, env: Env, exitFn: any, host: Host) {
+    super(argv, env, exitFn, host);
+  }
+
+  public config(): Config {
+    return Config.load(this.argv, this.env);
+  }
+}
+
+/*
 class Container {
   public argv: string[];
   public env: Record<string, string | undefined>;
@@ -37,7 +47,7 @@ class Container {
       this.executor,
     );
   }
-}
+}*/
 
 export async function run(
   argv: Argv,
@@ -54,8 +64,8 @@ export async function run(
       });
     };
 
-    const container = new Container(argv, env, exitFn, host);
-    const main = container.translator;
+    const container = new MockContainer(argv, env, exitFn, host);
+    const main = container.translator();
     return main.start().catch((err) => reject(err));
   });
 }

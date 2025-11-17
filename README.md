@@ -29,7 +29,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Vendor `strftime`
   - [x] Disable OpenTelemetry
   - [x] Rip out NestJS
-  - [ ] Write actually not terrible Container abstraction
+  - [x] Write actually not terrible Container abstraction
   - [x] Disable process/job shenanigans
   - [ ] Vendor node path module
   - [ ] Rip out node assert module
