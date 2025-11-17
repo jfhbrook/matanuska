@@ -137,9 +137,21 @@ A `@matanuska/internal` library will be created, which exposes:
   - `vendor/path` calls this directly. Shouldn't this delegate to `Host`?
 - `child_process.spawnSync`
 
-Later:
+Implementing Host is a little hairy.
 
-- `ConsoleHost`
+- `@matanuska/path`
+  - Keep the same structure for now
+  - Accept a "process" object later
+
+- `@matanuska/host`
+  - `Channel` type
+  - `Level` from host
+  - `Host` interface itself
+
+- `@matanuska/console`
+  - depend on host library
+  - depend on path library
+  - inject `formatter`, `BaseException`, `FileError`, `Exit`, `ExitCode`
 
 This library will be implemented in Node for tests, and in c++ for our runtime.
 
