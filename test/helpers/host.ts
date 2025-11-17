@@ -7,7 +7,7 @@ import stripAnsi from 'strip-ansi';
 import { Buffer } from 'node:buffer';
 import { Transform, Writable } from 'node:stream';
 
-import { ConsoleHost } from '../../host';
+import { ConsoleHost } from '../../console';
 
 import { EXAMPLES } from './files';
 

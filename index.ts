@@ -1,7 +1,8 @@
 import { Exit } from './exit';
 import { Translator } from './translator';
 import { Config, Argv, Env } from './config';
-import { Host, ConsoleHost } from './host';
+import { Host } from './host';
+import { ConsoleHost } from './console';
 import { Editor } from './editor';
 import { Executor } from './executor';
 
