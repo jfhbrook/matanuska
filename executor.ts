@@ -1,7 +1,6 @@
 import * as readline from 'node:readline/promises';
 import * as path from 'node:path';
 
-import { Injectable, Inject } from '@nestjs/common';
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from './debug';
 //#endif
@@ -32,7 +31,6 @@ import { Value, Undef } from './value';
 
 import { Line, Cmd, Program } from './ast';
 
-@Injectable()
 export class Executor {
   public parser: Parser;
   public runtime: Runtime;
@@ -53,7 +51,7 @@ export class Executor {
   constructor(
     private config: Config,
     private editor: Editor,
-    @Inject('Host') private host: Host,
+    private host: Host,
   ) {
     this.parser = new Parser();
     this.runtime = new Runtime(host, this);

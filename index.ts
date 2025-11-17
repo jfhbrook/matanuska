@@ -1,14 +1,11 @@
-import { Module } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-
 import { Exit } from './exit';
 import { Translator } from './translator';
 import { Config, Argv, Env } from './config';
-import { ConsoleHost } from './host';
+import { Host, ConsoleHost } from './host';
 import { Editor } from './editor';
 import { Executor } from './executor';
 
-async function exit(code: number) {
+async function exit(code: number): Promise<any> {
   process.exit(code);
 }
 
@@ -29,33 +26,35 @@ function configFactory(argv: Argv, env: Env) {
   }
 }
 
-@Module({
-  providers: [
-    { provide: 'argv', useValue: process.argv.slice(2) },
-    { provide: 'env', useValue: process.env },
-    { provide: 'exitFn', useValue: exit },
-    {
-      provide: Config,
-      useFactory: configFactory,
-      inject: ['argv', 'env'],
-    },
-    {
-      provide: 'Host',
-      useClass: ConsoleHost,
-    },
-    Editor,
-    Executor,
-    Translator,
-  ],
-})
-export class Container {}
+class Container {
+  public argv: string[];
+  public env: Record<string, string | undefined>;
+  public exitFn: (code: number) => Promise<any>;
+  public config: Config;
+  public host: Host;
+  public editor: Editor;
+  public executor: Executor;
+  public translator: Translator;
+
+  constructor() {
+    this.argv = process.argv.slice(2);
+    this.env = process.env;
+    this.exitFn = exit;
+    this.config = configFactory(this.argv, this.env);
+    this.host = new ConsoleHost();
+    this.editor = new Editor(this.host);
+    this.executor = new Executor(this.config, this.editor, this.host);
+    this.translator = new Translator(
+      this.host,
+      this.exitFn,
+      this.config,
+      this.executor,
+    );
+  }
+}
 
 export async function main(): Promise<void> {
-  const deps = await NestFactory.createApplicationContext(Container, {
-    //#if _MATBAS_BUILD != 'debug'
-    logger: false,
-    //#endif
-  });
-  const translator = deps.get(Translator);
+  const container = new Container();
+  const translator = container.translator;
   await translator.start();
 }

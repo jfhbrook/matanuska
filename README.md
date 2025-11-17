@@ -22,6 +22,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
+- [ ] Spike on QT
+  - [x] Hello world
+  - [x] Rip out `ansi-colors`
+  - [x] Vendor `text-table`
+  - [x] Vendor `strftime`
+  - [x] Disable OpenTelemetry
+  - [ ] Rip out NestJS
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands

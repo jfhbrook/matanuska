@@ -50,8 +50,6 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
-    "@nestjs/common": "^11.1.6",
-    "@nestjs/core": "^11.1.6",
     "@types/text-table": "^0.2.5",
     "envinfo": "^7.20.0",
     "reflect-metadata": "^0.2.2"
@@ -65,7 +63,6 @@
     "@matanuska/fireball": "^1.0.0",
     "@matanuska/telemetry": "^1.0.0",
     "@matanuska/test-generator": "^0.0.1",
-    "@nestjs/testing": "^11.1.6",
     "@types/strftime": "^0.9.8",
     "@types/text-table": "^0.2.5",
     "@typescript-eslint/eslint-plugin": "^8.39.0",

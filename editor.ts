@@ -1,5 +1,3 @@
-import { Injectable, Inject } from '@nestjs/common';
-
 import {
   ParseWarning,
   mergeParseErrors,
@@ -264,13 +262,12 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
   visitNilLiteralExpr(_nil: NilLiteral): void {}
 }
 
-@Injectable()
 export class Editor {
   public program: Program;
   public warning: ParseWarning | null;
   public justify: Justify = Justify.Left;
 
-  constructor(@Inject('Host') public host: Host) {
+  constructor(public host: Host) {
     this.program = new Program('untitled.bas', []);
     this.warning = null;
   }

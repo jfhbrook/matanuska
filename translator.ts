@@ -1,4 +1,3 @@
-import { Injectable, Inject } from '@nestjs/common';
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from './debug';
 //#endif
@@ -45,14 +44,13 @@ async function repl(executor: Executor, host: Host) {
   executor.interactive = false;
 }
 
-@Injectable()
 export class Translator {
   /**
    * The main entry point for the application.
    */
   constructor(
-    @Inject('Host') private host: Host,
-    @Inject('exitFn') private exit: ExitFn,
+    private host: Host,
+    private exit: ExitFn,
     private config: Config,
     private executor: Executor,
   ) {}

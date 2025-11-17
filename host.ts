@@ -5,8 +5,6 @@ import { spawn, spawnSync, ChildProcess } from 'node:child_process';
 import { stdin, stdout, stderr } from 'node:process';
 import { Readable, Writable } from 'node:stream';
 
-import { Injectable } from '@nestjs/common';
-
 import { Channel } from './channel';
 import { ErrorCode } from './errors';
 import { BaseException, FileError } from './exceptions';
@@ -252,7 +250,6 @@ export interface Host {
 /**
  * A host for a standard terminal console.
  */
-@Injectable()
 export class ConsoleHost implements Host {
   private formatter = new DefaultFormatter();
   inputStream: Readable;
