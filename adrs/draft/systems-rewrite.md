@@ -119,22 +119,26 @@ It's probably not worth embedding nestjs - it would have a lot of files and down
 
 ### Node Core Libraries
 
-See further down.
+- `path` was vendored and ported to TypeScript.
+- `assert` was removed in favor of the internal `AssertionError`, with the exception of tests.
 
-```
-import * as path from 'node:path';
-import { inspect } from 'node:util';
-import * as assert from 'node:assert';
-import * as os from 'node:os';
-import { readFile, writeFile } from 'node:fs/promises';
-import * as process$1 from 'node:process';
-import process__default, { stdin, stdout, stderr } from 'node:process';
-import { spawnSync, spawn } from 'node:child_process';
-```
+A `@matanuska/internal` library will be created, which exposes:
 
-```
-import * as readline from 'node:readline/promises';
-```
+- `util.inspect`
+- `os.hostname`
+- `os.userInfo`
+- `os.homedir`
+- `readFile` and `writefile` hooks
+- `process.platform`
+  - Note, `vendor/path` depends on this
+- `process.cwd`
+  - `vendor/path` calls this directly. Shouldn't this delegate to `Host`?
+- `child_process.spawnSync`
+- `ConsoleHost`
+
+This library will be implemented in Node for tests, and in c++ for our runtime.
+
+Another `@matanuska/readline` module will be created to wrap `node:readline/promises`. This will get fully replaced later.
 
 In order to initiate this rewrite, we need to get away from using Node core modules. Most uses of these modules are contained within the `Host` abstraction. But there are a few others we can get away from first.
 

@@ -1,5 +1,3 @@
-import * as assert from 'node:assert';
-
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from './debug';
 //#else
@@ -11,7 +9,12 @@ import { startSpan } from './debug';
 //#if _DEBUG_TRACE_RUNTIME
 import { startTraceExec, traceExec } from './debug';
 //#endif
-import { BaseException, NameError, NotImplementedError } from './exceptions';
+import {
+  BaseException,
+  AssertionError,
+  NameError,
+  NotImplementedError,
+} from './exceptions';
 import type { Executor } from './executor';
 import { Exit } from './exit';
 import { RuntimeFault } from './faults';
@@ -95,7 +98,9 @@ export class Runtime {
 
   private readString(): string {
     const value = this.readConstant();
-    assert.equal(typeof value, 'string', 'Value is string');
+    if (typeof value !== 'string') {
+      throw new AssertionError('Value must be a string');
+    }
     return value as string;
   }
 
@@ -304,10 +309,9 @@ export class Runtime {
               // done with the main program.
               return a;
             default:
-              assert.ok(
-                this.pc < this.chunk.code.length,
-                'Program counter out of bounds',
-              );
+              if (this.pc >= this.chunk.code.length) {
+                throw new AssertionError('Program counter out of bounds');
+              }
               this.notImplemented(`Unknown opcode: ${instruction}`);
           }
         }
