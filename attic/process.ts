@@ -1,10 +1,10 @@
 import * as nodeProcess from 'node:process';
 
-import { Channel } from './channel';
-import { NotImplementedError } from './exceptions';
-import { formatter } from './format';
-import { Value } from './value';
-import { nullish } from './value/nullness';
+import { Channel } from '../channel';
+import { NotImplementedError } from '../exceptions';
+import { formatter } from '../format';
+import { Value } from '../value';
+import { nullish } from '../value/nullness';
 
 export type Pid = number;
 

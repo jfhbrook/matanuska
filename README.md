@@ -28,7 +28,19 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Vendor `text-table`
   - [x] Vendor `strftime`
   - [x] Disable OpenTelemetry
-  - [ ] Rip out NestJS
+  - [x] Rip out NestJS
+  - [ ] Write actually not terrible Container abstraction
+  - [x] Disable process/job shenanigans
+  - [ ] Vendor node path module
+  - [ ] Rip out node assert module
+  - [ ] Stub out util.inspect
+  - [ ] Stub out node os module
+  - [ ] Implement fake readline
+  - [ ] Remove Node version from format output
+  - [ ] Rewrite `ConsoleHost` in QT
+  - [ ] Add QT versions to format output
+  - [ ] Rewrite OpenTelemetry in c++
+  - [ ] Implement readline in c++/rust
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands

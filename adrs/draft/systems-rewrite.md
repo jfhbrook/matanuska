@@ -122,16 +122,24 @@ It's probably not worth embedding nestjs - it would have a lot of files and down
 See further down.
 
 ```
+import * as path from 'node:path';
+import { inspect } from 'node:util';
+import * as assert from 'node:assert';
+import * as os from 'node:os';
+```
+
+```
+import * as readline from 'node:readline/promises';
+```
+
+```
+import { readFile, writeFile } from 'node:fs/promises';
+```
+
+```
 import * as process$1 from 'node:process';
 import process__default, { stdin, stdout, stderr } from 'node:process';
-import { inspect } from 'node:util';
-import { readFile, writeFile } from 'node:fs/promises';
-import * as path from 'node:path';
-import { basename } from 'node:path';
-import * as os from 'node:os';
 import { spawnSync, spawn } from 'node:child_process';
-import * as readline from 'node:readline/promises';
-import * as assert from 'node:assert';
 ```
 
 In order to initiate this rewrite, we need to get away from using Node core modules. Most uses of these modules are contained within the `Host` abstraction. But there are a few others we can get away from first.
