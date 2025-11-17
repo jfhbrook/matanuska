@@ -1,7 +1,6 @@
-import { basename } from 'node:path';
-
 import { describe, expect, test } from 'vitest';
 
+import { basename } from '../vendor/path';
 import { run } from './helpers/cli';
 import { EXAMPLES } from './helpers/files';
 

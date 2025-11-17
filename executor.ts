@@ -1,5 +1,4 @@
 import * as readline from 'node:readline/promises';
-import * as path from 'node:path';
 
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from './debug';
@@ -28,6 +27,7 @@ import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
 import { Value, Undef } from './value';
+import * as path from './vendor/path';
 
 import { Line, Cmd, Program } from './ast';
 

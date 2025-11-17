@@ -126,20 +126,14 @@ import * as path from 'node:path';
 import { inspect } from 'node:util';
 import * as assert from 'node:assert';
 import * as os from 'node:os';
+import { readFile, writeFile } from 'node:fs/promises';
+import * as process$1 from 'node:process';
+import process__default, { stdin, stdout, stderr } from 'node:process';
+import { spawnSync, spawn } from 'node:child_process';
 ```
 
 ```
 import * as readline from 'node:readline/promises';
-```
-
-```
-import { readFile, writeFile } from 'node:fs/promises';
-```
-
-```
-import * as process$1 from 'node:process';
-import process__default, { stdin, stdout, stderr } from 'node:process';
-import { spawnSync, spawn } from 'node:child_process';
 ```
 
 In order to initiate this rewrite, we need to get away from using Node core modules. Most uses of these modules are contained within the `Host` abstraction. But there are a few others we can get away from first.

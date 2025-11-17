@@ -1,5 +1,4 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import * as path from 'node:path';
 import * as os from 'node:os';
 import { spawnSync } from 'node:child_process';
 // import { spawn, spawnSync, ChildProcess } from 'node:child_process';
@@ -11,6 +10,7 @@ import { ErrorCode } from './errors';
 import { BaseException, FileError } from './exceptions';
 import { Exit, ExitCode } from './exit';
 import { DefaultFormatter } from './format';
+import * as path from './vendor/path';
 // import { ProcessSpec, nodeSpawnArguments } from './process';
 
 /**

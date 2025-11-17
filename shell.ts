@@ -1,4 +1,4 @@
-import { basename } from 'node:path';
+import { basename } from './vendor/path';
 import strftime from './vendor/strftime';
 
 import MATBAS from 'consts:matbas';

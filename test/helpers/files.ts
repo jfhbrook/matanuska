@@ -1,5 +1,6 @@
-import { join, relative, resolve } from 'node:path';
 import { readFileSync, readdirSync } from 'node:fs';
+
+import { join, relative, resolve } from '../../vendor/path';
 
 export const FILENAME = '/home/josh/script.bas';
 

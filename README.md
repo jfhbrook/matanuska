@@ -32,6 +32,10 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Write actually not terrible Container abstraction
   - [x] Disable process/job shenanigans
   - [ ] Vendor node path module
+    - basename
+    - join
+    - relative
+    - resolve
   - [ ] Rip out node assert module
   - [ ] Stub out util.inspect
   - [ ] Stub out node os module
