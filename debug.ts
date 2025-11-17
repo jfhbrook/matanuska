@@ -1,4 +1,9 @@
-import { Attributes, context, Context, Span, SpanOptions, trace } from '@opentelemetry/api';
+// import { Attributes, context, Context, Span, SpanOptions, trace } from '@opentelemetry/api';
+//
+type Attributes = any;
+type Context = any;
+type Span = any;
+type SpanOptions = any;
 
 import type { Chunk } from './bytecode/chunk';
 import type { Runtime } from './runtime';
@@ -90,7 +95,7 @@ export function traceExec(rt: Runtime): void {
   //#endif
 }
 
-const tracer = trace.getTracer('main');
+// const tracer = trace.getTracer('main');
 
 export { startSpan };
 
@@ -119,49 +124,57 @@ function startSpan<F extends (span: Span) => ReturnType<F>>(
   fn: F
 ): ReturnType<F>;
 function startSpan<F extends (span: Span) => ReturnType<F>>(
-  name: string,
+  _name: string,
   arg2?: F | SpanOptions,
   arg3?: F | Context,
   arg4?: F
 ): ReturnType<F> | undefined {
-  let opts: SpanOptions | undefined;
-  let ctx: Context | undefined;
+  let _opts: SpanOptions | undefined;
+  let _ctx: Context | undefined;
   let fn: F;
   if (arguments.length < 2) {
     return;
   } else if (arguments.length === 2) {
     fn = arg2 as F;
   } else if (arguments.length === 3) {
-    opts = arg2 as SpanOptions | undefined;
+    _opts = arg2 as SpanOptions | undefined;
     fn = arg3 as F;
   } else {
-    opts = arg2 as SpanOptions | undefined;
-    ctx = arg3 as Context | undefined;
+    _opts = arg2 as SpanOptions | undefined;
+    _ctx = arg3 as Context | undefined;
     fn = arg4 as F;
   }
   const wrapped = (span: Span) => {
     try {
       return fn(span);
     } catch (err) {
-      span.recordException(err);
+      console.log('span.recordException');
+      // span.recordException(err);
   throw err;
     } finally {
-      span.end();
+      // span.end();
     }
   }
 
+  return wrapped(null);
+  /*
   const parentContext = ctx ?? context.active();
   const span = tracer.startSpan(name, opts, parentContext);
   const contextWithSpanSet = trace.setSpan(parentContext, span);
   return context.with(contextWithSpanSet, wrapped, undefined, span);
+  */
 }
 
 // A convenience function for adding events when you don't have the span
 // immediately on-hand. Like startSpan, this is not hidden behind jscc and
 // should instead be conditionally imported/called at the site of use.
-export function addEvent(message: string, attributes: Attributes = {}): void {
+export function addEvent(_message: string, _attributes: Attributes = {}): void {
+  /*
   const span = trace.getActiveSpan();
   if (span) {
     span.addEvent(message, attributes);
   }
+  */
 }
+
+export { Span };

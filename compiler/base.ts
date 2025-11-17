@@ -1,5 +1,5 @@
 //#if _MATBAS_BUILD == 'debug'
-import { Span } from '@opentelemetry/api';
+import { Span } from '../debug';
 //#else
 //#unset _DEBUG_SHOW_CHUNK
 //#endif

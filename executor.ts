@@ -3,7 +3,7 @@ import * as path from 'node:path';
 
 import { Injectable, Inject } from '@nestjs/common';
 //#if _MATBAS_BUILD == 'debug'
-import { Span } from '@opentelemetry/api';
+import { Span } from './debug';
 //#endif
 
 import { Chunk } from './bytecode/chunk';

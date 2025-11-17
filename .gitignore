@@ -8,6 +8,7 @@ debug.ts
 /bundle/target
 /node_modules
 /bin/matbas
+/bin/matbasjs
 /src/dist.h
 .make.*.env
 

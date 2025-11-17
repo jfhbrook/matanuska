@@ -88,15 +88,6 @@ import * as dotenv from 'dotenv';
 
 We can ditch dotenv in favor of injecting parameters from QT.
 
-### nestjs
-
-```
-import { Injectable, Inject, Module } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-```
-
-It's probably not worth embedding nestjs - it would have a lot of files and downstream dependencies.
-
 ### ansi-colors, text-table and strftime
 
 ```
@@ -108,6 +99,23 @@ import strftime from 'strftime';
 - `ansi-colors` was removed in favor of small custom helpers
 - `text-table` was vendored
 - `strftime` was vendored
+
+### OpenTelemetry
+
+```
+import { trace, context } from '@opentelemetry/api';
+```
+
+OpenTelemetry was ripped out temporarily. It will likely get replaced by a C++ solution.
+
+### nestjs
+
+```
+import { Injectable, Inject, Module } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+```
+
+It's probably not worth embedding nestjs - it would have a lot of files and downstream dependencies.
 
 ### Node Core Libraries
 
@@ -125,14 +133,6 @@ import { spawnSync, spawn } from 'node:child_process';
 import * as readline from 'node:readline/promises';
 import * as assert from 'node:assert';
 ```
-
-### OpenTelemetry
-
-```
-import { trace, context } from '@opentelemetry/api';
-```
-
-OpenTelemetry is a Bigger Problem. We can rip this out for now.
 
 In order to initiate this rewrite, we need to get away from using Node core modules. Most uses of these modules are contained within the `Host` abstraction. But there are a few others we can get away from first.
 

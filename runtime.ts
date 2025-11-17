@@ -1,7 +1,7 @@
 import * as assert from 'node:assert';
 
 //#if _MATBAS_BUILD == 'debug'
-import { Span } from '@opentelemetry/api';
+import { Span } from './debug';
 //#else
 //#unset _DEBUG_TRACE_RUNTIME
 //#endif

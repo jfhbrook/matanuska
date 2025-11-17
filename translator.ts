@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 //#if _MATBAS_BUILD == 'debug'
-import { Span } from '@opentelemetry/api';
+import { Span } from './debug';
 //#endif
 
 import { Config } from './config';
