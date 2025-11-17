@@ -15,7 +15,7 @@ $(call TARGET_ENV,MATBAS_BUILD):
 	if [[ '$(MATBAS_BUILD)' == 'debug' ]]; then cp .env $@; else cp release.env $@; fi
 
 # internal
-packages/internal/dist/index.js packages/internal/dist/index.d.js packages/internal/dist/index.js.map: packages/internal/src/index.ts
+packages/internal/dist/index.js packages/internal/dist/index.d.js packages/internal/dist/index.js.map: packages/internal/index.ts
 	npm run build:internal
 
 # ast
