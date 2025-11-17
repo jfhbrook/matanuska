@@ -3,10 +3,11 @@
   "version": "1.0.2",
   "description": "Node.js implementations of Matanuska internals",
   "type": "module",
-  "main": "index.mjs",
+  "main": "dist/index.js",
   "scripts": {
-    "format": "prettier --write \"*.mjs\" \"*.d.ts\"",
-    "lint": "eslint \"src/**.mjs\" --fix"
+    "format": "prettier --write \"src/*.ts\"",
+    "lint": "eslint \"src/**.ts\" --fix",
+    "build": "tsc -p tsconfig.build.json"
   },
   "keywords": [
   ],
@@ -25,5 +26,5 @@
     "typescript-eslint": "^8.39.0",
     "vitest": "^3.2.4"
   },
-  "types": "./index.d.ts"
+  "types": "dist/index.d.ts"
 }
