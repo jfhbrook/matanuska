@@ -18,12 +18,12 @@ import { ErrorCode } from './errors';
 import { BaseException, FileError } from './exceptions';
 import { Exit, ExitCode } from './exit';
 import { DefaultFormatter } from './format';
-import pathModule from '@matanuska/path';
+import pathTool from '@matanuska/path';
 // import { ProcessSpec, nodeSpawnArguments } from './process';
 
 import { Host, Level } from './host';
 
-const path = pathModule(process);
+const PATH = pathTool(process);
 
 /**
  * A host for a standard terminal console.
@@ -184,7 +184,7 @@ export class ConsoleHost implements Host {
     if (process.env.__MATBAS_DOLLAR_ZERO) {
       return process.env.__MATBAS_DOLLAR_ZERO;
     }
-    return path.basename(process.argv[1]);
+    return PATH.basename(process.argv[1]);
   }
 
   // TODO: JavaScript Dates aren't very good. Is there a sensible replacement?
@@ -230,11 +230,11 @@ export class ConsoleHost implements Host {
     if (p.startsWith('/') || p.startsWith('\\')) {
       return p;
     }
-    return path.resolve(path.join(this.cwd, p));
+    return PATH.resolve(PATH.join(this.cwd, p));
   }
 
   relativePath(from: string, to: string): string {
-    return path.relative(this.resolvePath(from), this.resolvePath(to));
+    return PATH.relative(this.resolvePath(from), this.resolvePath(to));
   }
 
   async readFile(filename: string): Promise<string> {

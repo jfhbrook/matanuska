@@ -39,7 +39,7 @@ interface PathObject {
   ext?: string;
 }
 
-interface PathModule {
+interface PathTool {
   resolve: (...args: string[]) => string;
   normalize: (path: string) => string;
   isAbsolute: (path: string) => boolean;
@@ -209,7 +209,7 @@ function _format(sep: string, pathObject: PathObject): string {
 
 const forwardSlashRegExp: RegExp = /\//g;
 
-export function win32PathModule(host: Host): PathModule {
+export function win32PathTool(host: Host): PathTool {
   return {
     resolve(...args: string[]): string {
       let resolvedDevice = '';
@@ -1177,7 +1177,7 @@ export function win32PathModule(host: Host): PathModule {
   };
 }
 
-export function posixPathModule(host: Host): PathModule {
+export function posixPathTool(host: Host): PathTool {
   const posixCwd: () => string = (() => {
     if (isWindows(host)) {
       // Converts Windows' backslash path separators to POSIX forward slashes
@@ -1575,10 +1575,10 @@ export function posixPathModule(host: Host): PathModule {
   };
 }
 
-export default function pathModule(host: Host) {
+export default function pathTool(host: Host) {
   if (isWindows(host)) {
-    return win32PathModule(host);
+    return win32PathTool(host);
   } else {
-    return posixPathModule(host);
+    return posixPathTool(host);
   }
 }

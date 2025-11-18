@@ -1,11 +1,10 @@
-import pathModule from '@matanuska/path';
+import pathTool from '@matanuska/path';
 import strftime from './vendor/strftime';
 
 import MATBAS from 'consts:matbas';
 import { Host } from './host';
 
-const path = pathModule(process);
-const basename = path.basename.bind(path);
+const PATH = pathTool(process);
 
 const shortVersion = MATBAS.version.split('.').slice(0, 2).join('.');
 
@@ -192,7 +191,7 @@ export class Prompt {
           case 'l':
             tty = this.host.tty();
             if (tty) {
-              ps += basename(tty);
+              ps += PATH.basename(tty);
             } else {
               // git bash shows this as cons0 in Windows. That's probably an
               // acceptable stand-in, nobody's using this for maintaining
@@ -228,7 +227,7 @@ export class Prompt {
             ps += abbreviateHome(this.host.cwd, this.host);
             break;
           case 'W':
-            ps += abbreviateHome(basename(this.host.cwd), this.host);
+            ps += abbreviateHome(PATH.basename(this.host.cwd), this.host);
             break;
           case '!':
             ps += cmdNo + this.historyFileSize + 1;

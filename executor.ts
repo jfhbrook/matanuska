@@ -27,9 +27,9 @@ import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
 import { Value, Undef } from './value';
-import pathModule from '@matanuska/path';
+import pathTool from '@matanuska/path';
 
-const path = pathModule({
+const PATH = pathTool({
   platform: process.platform,
   cwd: process.cwd,
   env: process.env,
@@ -184,7 +184,7 @@ export class Executor {
   }
 
   private get historyFile(): string {
-    return path.join(this.host.homedir(), '.matbas_history');
+    return PATH.join(this.host.homedir(), '.matbas_history');
   }
 
   /**
