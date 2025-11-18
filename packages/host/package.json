@@ -1,0 +1,30 @@
+{
+  "name": "@matanuska/host",
+  "version": "1.0.0",
+  "description": "Node.js implementation of Matanuska's host",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "format": "prettier --write '**.ts'",
+    "lint": "eslint '**.ts' --fix",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "keywords": [
+  ],
+  "author": "Josh Holbrook",
+  "license": "MPL 2.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^3.2.4"
+  },
+  "types": "dist/index.d.ts"
+}
