@@ -1,16 +1,14 @@
-import { Readable, Writable } from '@matanuska/internal';
-
-import { Channel } from './channel';
-
-/**
- * A logging level.
- */
-export enum Level {
-  Debug = 0,
-  Info = 1,
-  Warn = 2,
-  Error = 3,
-}
+import type {
+  Channel,
+  StdChannel,
+  Level,
+  Readable,
+  Writable,
+  HostException,
+  ExitError,
+  FileReadError,
+  FileWriteError,
+} from '@matanuska/host';
 
 /**
  * An interface that encapsulates platform specific behavior. This includes:
@@ -22,25 +20,54 @@ export enum Level {
  * - Networking and other ports
  */
 export interface Host {
+  /**
+   * Node compatible argv and environment
+   */
+  argv: string[];
+  env: Record<string, string | undefined>;
+
+  /**
+   * Node.js style platform string. Possible values are 'aix', 'darwin',
+   * 'freebsd', 'linux', 'openbsd', 'sunos' and 'win32'.
+   */
+  platform: string;
+
+  /**
+   * The OS's hostname.
+   */
+  hostname(): string;
+
+  /**
+   * The current user's home directory.
+   */
+  homedir(): string;
+
+  /**
+   * Object inspector. Compatible with Node.js, for now.
+   */
+  inspect: (object: any, ...args: any[]) => any;
+
+  /**
+   * Node.js object streams. Required for readline.
+   */
+  stdin: Readable;
+  stdout: Writable;
+  stderr: Writable;
+
   //
-  // Ground floor I/O. IO is exposed as stdio streams so that lower level
-  // components (like readline) can use them directly.
+  // Channels
   //
 
-  /**
-   * The standard input stream.
-   */
-  inputStream: Readable;
+  stdChannel(channel: Channel): StdChannel;
 
-  /**
-   * The standard output stream.
-   */
-  outputStream: Writable;
+  //
+  // Errors
+  //
 
-  /**
-   * The standard error stream.
-   */
-  errorStream: Writable;
+  isHostException(err: any): err is HostException;
+  isHostExit(err: any): err is ExitError;
+  isFileReadError(err: any): err is FileReadError;
+  isFileWriteError(err: any): err is FileWriteError;
 
   //
   // Logging concerns. It's arguable these shouldn't be the Host's problem,
@@ -48,10 +75,10 @@ export interface Host {
   //
 
   /**
-   * The current logging level. Used to suppress debug, info and warning
+   * Get the current logging level. Used to suppress debug, info and warning
    * messages.
    */
-  level: Level;
+  getLevel(): Level;
 
   /**
    * Set the current logging level.
@@ -134,11 +161,6 @@ export interface Host {
   exit(code: number): void;
 
   /**
-   * The OS's hostname.
-   */
-  hostname(): string;
-
-  /**
    * The OS's tty (if available).
    */
   tty(): string | null;
@@ -147,7 +169,7 @@ export interface Host {
    * The basename of Matanuska BASIC's entry point script. This is a decent
    * approximation for the shell command as invoked.
    */
-  shell(): string;
+  shell: string;
 
   /**
    * The current date and time.
@@ -175,12 +197,6 @@ export interface Host {
   homedir(): string;
 
   /**
-   * The shell's current working directory. This is not the same as the
-   * process's current working directory.
-   */
-  cwd: string;
-
-  /**
    * Change the shell's current working directory.
    *
    * @param path The path to change the directory to.
@@ -192,7 +208,7 @@ export interface Host {
    *
    * @param follow Whether or not to follow symlinks.
    */
-  pwd(follow: boolean): void;
+  pwd(follow: boolean): string;
 
   /**
    * Resolve a relative path into a full path.
@@ -218,7 +234,7 @@ export interface Host {
    * @param filename The path to the file.
    * @returns The contents of the file.
    */
-  readFile(filename: string): Promise<string>;
+  readTextFile(filename: string): Promise<string>;
 
   /**
    * Write a file to disk.
@@ -226,7 +242,7 @@ export interface Host {
    * @param filename The path to the file.
    * @param contents The contents of the file.
    */
-  writeFile(filename: string, contents: string): Promise<void>;
+  writeTextFile(filename: string, contents: string): Promise<void>;
 
   /**
    * Spawn a child process.
@@ -236,3 +252,7 @@ export interface Host {
    */
   // spawn(process: ProcessSpec, background: boolean): ChildProcess;
 }
+
+import * as consoleHost from '@matanuska/host';
+
+const host: Host = consoleHost;

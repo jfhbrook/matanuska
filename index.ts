@@ -1,8 +1,9 @@
+import consoleHost from '@matanuska/host';
+
 import { Exit } from './exit';
 import { Translator } from './translator';
 import { Config, Argv, Env } from './config';
 import { Host } from './host';
-import { ConsoleHost } from './console';
 import { Editor } from './editor';
 import { Executor } from './executor';
 
@@ -26,7 +27,7 @@ export class Container {
     argv: string[] = process.argv.slice(2),
     env: Record<string, string | undefined> = process.env,
     exitFn: ExitFn = exit,
-    host: Host = new ConsoleHost(),
+    host: Host = consoleHost,
   ) {
     this.argv = argv;
     this.env = env;

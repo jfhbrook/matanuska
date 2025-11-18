@@ -7,7 +7,7 @@ import { formatter } from '../../format';
 import { Runtime } from '../../runtime';
 import { Value } from '../../value';
 
-import { MockConsoleHost } from './host';
+import { mockConsoleHost } from './host';
 
 export interface ChunkTests {
   effect?: [Value[], Value[]];
@@ -20,7 +20,7 @@ export async function testChunk(
   tests: ChunkTests = {},
 ): Promise<void> {
   const [stackBefore, stackAfter] = tests.effect || [[], []];
-  const host = new MockConsoleHost();
+  const host = mockConsoleHost();
   const runtime = new Runtime(host, {} as Executor);
 
   runtime.stack.stack = stackBefore;
@@ -45,8 +45,8 @@ export async function testChunk(
     t.equal(err.exitCode, tests.exitCode || 0);
   }
 
-  t.matchSnapshot(host.outputStream.output);
-  t.matchSnapshot(host.errorStream.output);
+  t.matchSnapshot(host.stdout.output);
+  t.matchSnapshot(host.stderr.output);
 
   t.same(runtime.stack.stack, stackAfter);
 }

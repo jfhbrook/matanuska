@@ -29,7 +29,7 @@ export function hostException(message: string): HostException {
   return Object.assign(new Error(message), { __type__ });
 }
 
-export function isHostException(err: any): err is Exit {
+export function isHostException(err: any): err is HostException {
   if (err.__type__ !== 'exception') {
     return false;
   }
@@ -37,17 +37,17 @@ export function isHostException(err: any): err is Exit {
   return err instanceof Error;
 }
 
-export interface Exit extends HostError {
+export interface ExitError extends HostError {
   __type__: HostErrorExitType;
   exitCode: number;
 }
 
-export function exitError(exitCode: number): Exit {
+export function exitError(exitCode: number): ExitError {
   const __type__: HostErrorExitType = 'exit';
-  return Object.assign(new Error('Exit'), { __type__, exitCode });
+  return Object.assign(new Error('ExitError'), { __type__, exitCode });
 }
 
-export function isExit(err: any): err is Exit {
+export function isHostExit(err: any): err is ExitError {
   if (typeof err.exitCode === 'undefined') {
     return false;
   }
@@ -151,7 +151,7 @@ export function fileWriteError(err: NodeJS.ErrnoException): FileWriteError {
   });
 }
 
-export function isFileWriteError(err: any): err is FileReadError {
+export function isFileWriteError(err: any): err is FileWriteError {
   if (err.__type__ !== 'write') {
     return false;
   }

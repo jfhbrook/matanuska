@@ -200,7 +200,7 @@ export class Prompt {
             }
             break;
           case 's':
-            ps += this.host.shell();
+            ps += this.host.shell;
             break;
           case 't':
             ps += strftime('%H:%M:%S', now());
@@ -224,10 +224,10 @@ export class Prompt {
             ps += MATBAS.version;
             break;
           case 'w':
-            ps += abbreviateHome(this.host.cwd, this.host);
+            ps += abbreviateHome(this.host.pwd(true), this.host);
             break;
           case 'W':
-            ps += abbreviateHome(PATH.basename(this.host.cwd), this.host);
+            ps += abbreviateHome(PATH.basename(this.host.pwd(true)), this.host);
             break;
           case '!':
             ps += cmdNo + this.historyFileSize + 1;

@@ -6,12 +6,27 @@ import { Readable, Writable } from 'node:stream';
 import { inspect } from 'node:util';
 import * as PATH from 'node:path';
 
+import type {
+  StdChannel,
+  Channel
+} from './channel';
+
+import {
+  STDIN,
+  STDOUT,
+  STDERR,
+  WARN,
+  INFO,
+  DEBUG,
+  stdChannel,
+} from './channel';
+
 import {
   HostError,
   HostException,
   isHostException,
-  Exit,
-  isExit,
+  ExitError,
+  isHostExit,
   FileReadError,
   isFileReadError,
   FileWriteError,
@@ -37,30 +52,51 @@ export {
   Writable,
 };
 
+export type {
+  StdChannel,
+  Channel
+};
+
 export {
+  STDIN,
+  STDOUT,
+  STDERR,
+  WARN,
+  INFO,
+  DEBUG,
+  stdChannel,
+};
+
+export type {
   HostError,
   HostException,
-  isHostException,
-  Exit,
-  isExit,
+  ExitError,
   FileReadError,
-  isFileReadError,
   FileWriteError,
+};
+
+export {
+  isHostException,
+  isHostExit,
+  isFileReadError,
   isFileWriteError,
 };
 
-type Channel = 0 | 1 | 2 | 3 | 4 | 5;
-type Level = 0 | 1 | 2 | 3;
+/**
+ * A logging LEVEL.
+ */
+export enum Level {
+  Debug = 0,
+  Info = 1,
+  Warn = 2,
+  Error = 3,
+}
 
 export interface HostFormatter {
   format: (obj: any) => string;
 }
 
-const LEVEL_DEBUG: Level = 0;
-const LEVEL_INFO: Level = 1;
-const LEVEL_WARN: Level = 2;
-
-let LEVEL: Level = LEVEL_INFO;
+let LEVEL: Level = Level.Info;
 
 let TTY: string | null | undefined = undefined;
 
@@ -72,8 +108,12 @@ let FORMATTER: HostFormatter = {
   },
 };
 
-export function setLevel(level: Level): void {
-  LEVEL = level;
+export function setLevel(lvl: Level): void {
+  LEVEL = lvl;
+}
+
+export function getLevel(): Level {
+  return LEVEL;
 }
 
 export function setFormatter(formatter: HostFormatter): void {
@@ -97,19 +137,19 @@ export function writeErrorLine(value: any): void {
 }
 
 export function writeDebug(value: any): void {
-  if (LEVEL <= LEVEL_DEBUG) {
+  if (LEVEL <= Level.Debug) {
     stderr.write(`DEBUG: ${FORMATTER.format(value)}\n`);
   }
 }
 
 export function writeInfo(value: any): void {
-  if (LEVEL <= LEVEL_INFO) {
+  if (LEVEL <= Level.Info) {
     stderr.write(`INFO: ${FORMATTER.format(value)}\n`);
   }
 }
 
 export function writeWarn(value: any): void {
-  if (LEVEL <= LEVEL_WARN) {
+  if (LEVEL <= Level.Warn) {
     this.errorStream.write(`WARN: ${FORMATTER.format(value)}\n`);
   }
 }
@@ -241,7 +281,7 @@ export function resolvePath(p: string): string {
   if (p.startsWith('/') || p.startsWith('\\')) {
     return p;
   }
-  return PATH.resolve(PATH.join(this.cwd, p));
+  return PATH.resolve(PATH.join(CWD, p));
 }
 
 export function relativePath(from: string, to: string): string {

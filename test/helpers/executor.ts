@@ -5,7 +5,7 @@ import { Config } from '../../config';
 import { Executor } from '../../executor';
 import { Host } from '../../host';
 import { CONFIG } from './config';
-import { MockConsoleHost } from './host';
+import { mockConsoleHost } from './host';
 
 class MockExecutor extends Executor {}
 
@@ -29,7 +29,7 @@ class MockContainer extends Container {
 
 export const executorTopic = discuss(
   async () => {
-    const host = new MockConsoleHost();
+    const host = mockConsoleHost();
     const container = new MockContainer(host);
     const editor = container.editor();
     const executor = container.executor();

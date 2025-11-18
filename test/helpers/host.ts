@@ -1,13 +1,14 @@
-import { expect } from 'vitest';
-
-// TODO: strip-ansi v7+ uses .mjs, which completely breaks in typescript if
-// you're compiling imports to commonjs, lolsob
-import stripAnsi from 'strip-ansi';
+import * as consoleHost from '@matanuska/host';
+import { Channel, Level } from '@matanuska/host';
 
 import { Buffer } from 'node:buffer';
 import { Transform, Writable } from 'node:stream';
 
-import { ConsoleHost } from '../../console';
+import { expect } from 'vitest';
+
+import stripAnsi from 'strip-ansi';
+
+import { Host } from '../../host';
 
 import { EXAMPLES } from './files';
 
@@ -73,95 +74,174 @@ const FILES = Object.assign(
   EXAMPLES,
 );
 
-/**
- * A subclass of ConsoleHost with test streams.
- */
-export class MockConsoleHost extends ConsoleHost {
-  declare inputStream: MockInputStream;
-  declare outputStream: MockOutputStream;
-  declare errorStream: MockOutputStream;
-  public files: Record<string, string>;
-  private expectStart: number;
-
-  constructor({ files }: MockConsoleHostOptions = { files: FILES }) {
-    super();
-    this.inputStream = new MockInputStream();
-    this.outputStream = new MockOutputStream();
-    this.errorStream = new MockOutputStream();
-    this.cwd = '/home/josh/matanuska';
-    this.files = Object.fromEntries(
-      Object.entries(files || {}).map(([path, contents]) => {
-        return [this.resolvePath(path), contents];
-      }),
-    );
-    this.expectStart = 0;
-  }
-
-  async expect<T>(
+export interface MockConsoleHost extends Host {
+  files: Record<string, string>;
+  stdin: MockInputStream;
+  stdout: MockOutputStream;
+  stderr: MockOutputStream;
+  expect: <T>(
     action: Promise<T>,
-    input: string | null = null,
+    input: string | null,
     expected: string,
-    outputStream: MockOutputStream | null = null,
-  ): Promise<T> {
-    outputStream = outputStream || this.outputStream;
+    outputStream?: MockOutputStream | null,
+  ) => Promise<T>;
+}
 
-    if (input) {
-      this.inputStream.write(`${input}\n`);
-    }
+/**
+ * A mock console host.
+ */
+export function mockConsoleHost(
+  { files }: MockConsoleHostOptions = { files: FILES },
+): MockConsoleHost {
+  const mockStdin = new MockInputStream();
+  const mockStdout = new MockOutputStream();
+  const mockStderr = new MockOutputStream();
+  return Object.assign({}, consoleHost, {
+    stdin: mockStdin,
+    stdout: mockStdout,
+    stderr: mockStderr,
+    files: Object.fromEntries(
+      Object.entries(files || {}).map(([path, contents]) => {
+        return [consoleHost.resolvePath(path), contents];
+      }),
+    ),
+    expectStart: 0,
 
-    const rv = await action;
+    writeOut(value: any): void {
+      this.stdout.write(`${value}`);
+    },
 
-    let output = stripAnsi(outputStream.output);
-    const expectStart = this.expectStart;
-    this.expectStart = output.length;
-    output = output.slice(expectStart);
+    writeError(value: any): void {
+      this.stderr.write(`${value}`);
+    },
 
-    expect(output, `expect: ${expected}`).toMatch(expected);
+    writeLine(value: any): void {
+      this.stdout.write(`${value}\n`);
+    },
 
-    return rv;
-  }
+    writeErrorLine(value: any): void {
+      this.stderr.write(`${value}\n`);
+    },
 
-  hostname(): string {
-    return 'gibson.local';
-  }
+    writeDebug(value: any): void {
+      if (this.getLevel() <= Level.Debug) {
+        this.stderr.write(`DEBUG: ${value}\n`);
+      }
+    },
 
-  tty(): string | null {
-    return 'tty0';
-  }
+    writeInfo(value: any): void {
+      if (this.getLevel() <= Level.Info) {
+        this.stderr.write(`INFO: ${value}\n`);
+      }
+    },
 
-  shell(): string {
-    return 'matbas';
-  }
+    writeWarn(value: any): void {
+      if (this.getLevel() <= Level.Warn) {
+        this.stderr.write(`WARN: ${value}\n`);
+      }
+    },
 
-  now(): Date {
-    // TODO: Because I'm not handling time zones at all, tests using this
-    // only past in Alaska in the summer.
-    return new Date('23 Jun 2024 13:00:00 PST');
-  }
+    writeException(value: any): void {
+      let exc: any = value;
+      if (
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean'
+      ) {
+        exc = new Error(String(value));
+      }
 
-  uid(): number {
-    return 1000;
-  }
+      this.stderr.write(`${exc}\n`);
+    },
 
-  gid(): number {
-    return 50;
-  }
+    writeChannel(channel: Channel, value: any): void {
+      switch (channel) {
+        case 1:
+          this.writeOut(value);
+          break;
+        case 2:
+          this.writeError(value);
+          break;
+        case 3:
+          this.writeWarn(value);
+          break;
+        case 4:
+          this.writeInfo(value);
+          break;
+        case 5:
+          this.writeDebug(value);
+          break;
+        default:
+          throw new Error(`#${channel}`);
+      }
+    },
 
-  username(): string {
-    return 'josh';
-  }
+    async expect<T>(
+      action: Promise<T>,
+      input: string | null,
+      expected: string,
+      outputStream: MockOutputStream | null = null,
+    ): Promise<T> {
+      outputStream = outputStream || this.stdout;
 
-  homedir(): string {
-    return '/home/josh';
-  }
+      if (input) {
+        this.inputStream.write(`${input}\n`);
+      }
 
-  async readFile(filename: string): Promise<string> {
-    const contents = this.files[this.resolvePath(filename)];
-    expect(contents).not.toBeUndefined();
-    return contents;
-  }
+      const rv = await action;
 
-  async writeFile(filename: string, contents: string): Promise<void> {
-    this.files[this.resolvePath(filename)] = contents;
-  }
+      let output = stripAnsi(this.stdout.output);
+      const expectStart = this.expectStart;
+      this.expectStart = output.length;
+      output = output.slice(expectStart);
+
+      expect(output, `expect: ${expected}`).toMatch(expected);
+
+      return rv;
+    },
+
+    hostname(): string {
+      return 'gibson.local';
+    },
+
+    tty(): string | null {
+      return 'tty0';
+    },
+
+    shell(): string {
+      return 'matbas';
+    },
+
+    now(): Date {
+      // TODO: Because I'm not handling time zones at all, tests using this
+      // only past in Alaska in the summer.
+      return new Date('23 Jun 2024 13:00:00 PST');
+    },
+
+    uid(): number {
+      return 1000;
+    },
+
+    gid(): number {
+      return 50;
+    },
+
+    username(): string {
+      return 'josh';
+    },
+
+    homedir(): string {
+      return '/home/josh';
+    },
+
+    async readTextFile(filename: string): Promise<string> {
+      const contents = this.files[this.resolvePath(filename)];
+      expect(contents).not.toBeUndefined();
+      return contents;
+    },
+
+    async writeTextFile(filename: string, contents: string): Promise<void> {
+      this.files[this.resolvePath(filename)] = contents;
+    },
+  });
 }

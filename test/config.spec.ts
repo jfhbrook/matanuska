@@ -1,9 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
+import { Level } from '@matanuska/host';
+
 import { Exit } from '../exit';
 import { Config } from '../config';
 import { UsageFault } from '../faults';
-import { Level } from '../host';
 
 function expectExit(err: any, message: string | RegExp): void {
   expect(err).toBeInstanceOf(Exit);

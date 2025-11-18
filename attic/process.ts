@@ -1,6 +1,7 @@
 import * as nodeProcess from 'node:process';
 
-import { Channel } from '../channel';
+import type { Channel } from '@matanuska/host';
+
 import { NotImplementedError } from '../exceptions';
 import { formatter } from '../format';
 import { Value } from '../value';

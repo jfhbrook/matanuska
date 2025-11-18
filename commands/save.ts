@@ -29,7 +29,7 @@ export default {
         editor.filename = filename;
       }
 
-      await host.writeFile(editor.filename, editor.list() + '\n');
+      await host.writeTextFile(editor.filename, editor.list() + '\n');
       //#if _MATBAS_BUILD == 'debug'
     });
     //#endif

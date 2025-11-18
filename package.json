@@ -12,6 +12,7 @@
     "packages/entrypoint",
     "packages/fireball",
     "packages/grabthar",
+    "packages/host",
     "packages/internal",
     "packages/path",
     "packages/telemetry",

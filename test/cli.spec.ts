@@ -17,8 +17,8 @@ describe('examples', () => {
           const { exitCode, host } = await run([p], process.env);
           expect({
             exitCode,
-            stdout: host.outputStream.output,
-            stderr: host.errorStream.output,
+            stdout: host.stdout.output,
+            stderr: host.stderr.output,
           }).toMatchSnapshot();
         });
     }

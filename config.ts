@@ -1,6 +1,7 @@
 import MATBAS from 'consts:matbas';
+import { Level } from '@matanuska/host';
+
 import { UsageFault } from './faults';
-import { Level } from './host';
 import { Exit, ExitCode } from './exit';
 
 let TRACE_USAGE = '';

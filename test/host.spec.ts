@@ -3,17 +3,16 @@ import { t } from './helpers/tap';
 
 import { discuss } from '@jfhbrook/swears';
 
-import { Channel } from '../channel';
-import { Level } from '../host';
-import { MockConsoleHost } from './helpers/host';
+import { Level, Channel } from '@matanuska/host';
+import { mockConsoleHost, MockConsoleHost } from './helpers/host';
 
-const topic = discuss(async () => {
-  return new MockConsoleHost();
+const topic = discuss(async (): Promise<MockConsoleHost> => {
+  return mockConsoleHost();
 });
 
 const STREAM = {
-  writeOut: 'outputStream',
-  writeError: 'errorStream',
+  writeOut: 'stdout',
+  writeError: 'stderr',
 };
 
 function outputTest(method: 'writeOut' | 'writeError'): () => void {
@@ -50,11 +49,11 @@ function logTest(
 
           if (level >= setLevel) {
             test('it writes a message', () => {
-              t.equal(host.errorStream.output, `${LOG_PREFIX[method]}: test\n`);
+              t.equal(host.stderr.output, `${LOG_PREFIX[method]}: test\n`);
             });
           } else {
             test('it suppresses the message', () => {
-              t.equal(host.errorStream.output, '');
+              t.equal(host.stderr.output, '');
             });
           }
         });
@@ -69,7 +68,7 @@ describe('when calling writeWarn', logTest('writeWarn', Level.Warn));
 
 function channelTest(
   channel: Channel,
-  stream: 'outputStream' | 'errorStream',
+  stream: 'stdout' | 'stderr',
   expected: string,
 ): () => void {
   return async (): Promise<void> => {
@@ -84,19 +83,13 @@ function channelTest(
   };
 }
 
-describe('when writing to channel 1', channelTest(1, 'outputStream', 'test'));
-describe('when writing to channel 2', channelTest(2, 'errorStream', 'test'));
-describe(
-  'when writing to channel 3',
-  channelTest(3, 'errorStream', 'WARN: test\n'),
-);
-describe(
-  'when writing to channel 4',
-  channelTest(4, 'errorStream', 'INFO: test\n'),
-);
+describe('when writing to channel 1', channelTest(1, 'stdout', 'test'));
+describe('when writing to channel 2', channelTest(2, 'stderr', 'test'));
+describe('when writing to channel 3', channelTest(3, 'stderr', 'WARN: test\n'));
+describe('when writing to channel 4', channelTest(4, 'stderr', 'INFO: test\n'));
 describe(
   'when writing to channel 5',
-  channelTest(5, 'errorStream', 'DEBUG: test\n'),
+  channelTest(5, 'stderr', 'DEBUG: test\n'),
 );
 
 type RelativePath = string;

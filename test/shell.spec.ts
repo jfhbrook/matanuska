@@ -4,10 +4,10 @@ import { discuss } from '@jfhbrook/swears';
 import { Host } from '../host';
 import { abbreviateHome, Prompt } from '../shell';
 
-import { MockConsoleHost } from './helpers/host';
+import { mockConsoleHost, MockConsoleHost } from './helpers/host';
 
 const hostTopic = discuss(async () => {
-  return new MockConsoleHost();
+  return mockConsoleHost();
 });
 
 const rootHostTopic = hostTopic.discuss<MockConsoleHost>(async (host) => {

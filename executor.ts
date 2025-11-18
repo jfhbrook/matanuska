@@ -175,8 +175,8 @@ export class Executor {
 
   private createInterface(): readline.Interface {
     return readline.createInterface({
-      input: this.host.inputStream,
-      output: this.host.outputStream,
+      input: this.host.stdin,
+      output: this.host.stdout,
       terminal: true,
       history: this.history,
       historySize: this.config.historySize,
@@ -195,7 +195,9 @@ export class Executor {
     await startSpan('Executor#loadHistory', async (_: Span) => {
       //#endif
       try {
-        this.history = (await this.host.readFile(this.historyFile)).split('\n');
+        this.history = (await this.host.readTextFile(this.historyFile)).split(
+          '\n',
+        );
       } catch (err) {
         if (err.code !== 'ENOENT') {
           this.host.writeWarn(err);
@@ -218,7 +220,7 @@ export class Executor {
       );
       const history = this.history.slice(sliceAt);
       try {
-        await this.host.writeFile(this.historyFile, history.join('\n'));
+        await this.host.writeTextFile(this.historyFile, history.join('\n'));
       } catch (err) {
         this.host.writeWarn(err);
       }
@@ -279,7 +281,7 @@ export class Executor {
     //#if _MATBAS_BUILD == 'debug'
     await startSpan('Executor#load', async (_: Span) => {
       //#endif
-      const source = await this.host.readFile(filename);
+      const source = await this.host.readTextFile(filename);
 
       let result: ParseResult<Program>;
 
