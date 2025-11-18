@@ -27,7 +27,13 @@ import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
 import { Value, Undef } from './value';
-import * as path from './vendor/path';
+import pathModule from '@matanuska/path';
+
+const path = pathModule({
+  platform: process.platform,
+  cwd: process.cwd,
+  env: process.env,
+});
 
 import { Line, Cmd, Program } from './ast';
 

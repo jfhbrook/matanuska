@@ -13,6 +13,7 @@
     "packages/fireball",
     "packages/grabthar",
     "packages/internal",
+    "packages/path",
     "packages/telemetry",
     "packages/test-generator"
   ],

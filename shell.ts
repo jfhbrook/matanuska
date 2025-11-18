@@ -1,8 +1,11 @@
-import { basename } from './vendor/path';
+import pathModule from '@matanuska/path';
 import strftime from './vendor/strftime';
 
 import MATBAS from 'consts:matbas';
 import { Host } from './host';
+
+const path = pathModule(process);
+const basename = path.basename.bind(path);
 
 const shortVersion = MATBAS.version.split('.').slice(0, 2).join('.');
 

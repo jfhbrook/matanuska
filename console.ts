@@ -18,10 +18,12 @@ import { ErrorCode } from './errors';
 import { BaseException, FileError } from './exceptions';
 import { Exit, ExitCode } from './exit';
 import { DefaultFormatter } from './format';
-import * as path from './vendor/path';
+import pathModule from '@matanuska/path';
 // import { ProcessSpec, nodeSpawnArguments } from './process';
 
 import { Host, Level } from './host';
+
+const path = pathModule(process);
 
 /**
  * A host for a standard terminal console.
