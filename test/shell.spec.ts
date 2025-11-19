@@ -17,7 +17,6 @@ async function promptConsoleHost(
 ): Promise<void> {
   await mockConsoleHost(undefined, async (host) => {
     fn(renderer(host));
-    (host as any).uid = () => 0;
   });
 }
 

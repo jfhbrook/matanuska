@@ -10,6 +10,8 @@ import type {
   FileWriteError,
 } from '@matanuska/host';
 
+import type { Formatter } from './format';
+
 /**
  * An interface that encapsulates platform specific behavior. This includes:
  *
@@ -86,6 +88,8 @@ export interface Host {
    * @param level The new logging level.
    */
   setLevel(level: Level): void;
+
+  setFormatter(formatter: Formatter): void;
 
   /**
    * Write a value to the output channel, without a newline.

@@ -1,10 +1,8 @@
 import { describe, test } from 'vitest';
 import { t } from './helpers/tap';
 
-import { discuss } from '@jfhbrook/swears';
-
 import { Level, Channel } from '@matanuska/host';
-import { mockConsoleHost, MockConsoleHost } from './helpers/host';
+import { mockConsoleHost } from './helpers/host';
 
 const STREAM = {
   writeOut: 'stdout',
@@ -41,6 +39,8 @@ function logTest(
       describe(`at level ${setLevel}`, async () => {
         await mockConsoleHost(undefined, async (host) => {
           host.setLevel(setLevel);
+          console.log(method);
+          console.log(host);
           host[method]('test');
 
           if (level >= setLevel) {

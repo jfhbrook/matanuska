@@ -6,20 +6,9 @@ import { Readable, Writable } from 'node:stream';
 import { inspect } from 'node:util';
 import * as PATH from 'node:path';
 
-import type {
-  StdChannel,
-  Channel
-} from './channel';
+import type { StdChannel, Channel } from './channel';
 
-import {
-  INPUT,
-  OUTPUT,
-  ERROR,
-  WARN,
-  INFO,
-  DEBUG,
-  stdChannel,
-} from './channel';
+import { INPUT, OUTPUT, ERROR, WARN, INFO, DEBUG, stdChannel } from './channel';
 
 import {
   HostError,
@@ -52,20 +41,9 @@ export {
   Writable,
 };
 
-export type {
-  StdChannel,
-  Channel
-};
+export type { StdChannel, Channel };
 
-export {
-  INPUT,
-  OUTPUT,
-  ERROR,
-  WARN,
-  INFO,
-  DEBUG,
-  stdChannel,
-};
+export { INPUT, OUTPUT, ERROR, WARN, INFO, DEBUG, stdChannel };
 
 export type {
   HostError,
@@ -75,12 +53,7 @@ export type {
   FileWriteError,
 };
 
-export {
-  isHostException,
-  isHostExit,
-  isFileReadError,
-  isFileWriteError,
-};
+export { isHostException, isHostExit, isFileReadError, isFileWriteError };
 
 /**
  * A logging LEVEL.
@@ -128,7 +101,12 @@ let STDERR: Writable = stderr;
 
 type IOStreamsContext<T> = () => Promise<T>;
 
-export async function withIOStreams<T>(stdin: Readable, stdout: Writable, stderr: Writable, fn: IOStreamsContext<T>): Promise<T> {
+export async function withIOStreams<T>(
+  stdin: Readable,
+  stdout: Writable,
+  stderr: Writable,
+  fn: IOStreamsContext<T>,
+): Promise<T> {
   const _stdin = STDIN;
   const _stdout = STDOUT;
   const _stderr = STDERR;
@@ -176,7 +154,7 @@ export function writeInfo(value: any): void {
 
 export function writeWarn(value: any): void {
   if (LEVEL <= Level.Warn) {
-    this.errorStream.write(`WARN: ${FORMATTER.format(value)}\n`);
+    STDERR.write(`WARN: ${FORMATTER.format(value)}\n`);
   }
 }
 
@@ -303,7 +281,7 @@ export function cd(path: string): void {
 }
 
 export function resolvePath(p: string): string {
-  p = p.replace(/^~\//, this.homedir() + '/');
+  p = p.replace(/^~\//, homedir() + '/');
   if (p.startsWith('/') || p.startsWith('\\')) {
     return p;
   }
@@ -327,7 +305,7 @@ export async function writeTextFile(
   contents: string,
 ): Promise<void> {
   try {
-    await writeFile(this.resolvePath(filename), contents, 'utf8');
+    await writeFile(resolvePath(filename), contents, 'utf8');
   } catch (err) {
     throw fileWriteError(err);
   }

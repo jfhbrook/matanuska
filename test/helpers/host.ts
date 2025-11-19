@@ -8,6 +8,7 @@ import { expect } from 'vitest';
 import stripAnsi from 'strip-ansi';
 
 import { Host } from '../../host';
+import { formatter } from '../../format';
 
 import { EXAMPLES } from './files';
 
@@ -93,6 +94,8 @@ export async function mockConsoleHost<T>(
   { files }: MockConsoleHostOptions = { files: FILES },
   fn: (host: MockConsoleHost) => Promise<T>,
 ): Promise<T> {
+  consoleHost.setFormatter(formatter);
+
   const mockStdin = new MockInputStream();
   const mockStdout = new MockOutputStream();
   const mockStderr = new MockOutputStream();
