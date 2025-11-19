@@ -1,32 +1,37 @@
 import { describe, expect, test } from 'vitest';
-import { discuss } from '@jfhbrook/swears';
 
 import { Host } from '../host';
 import { abbreviateHome, Prompt } from '../shell';
 
-import { mockConsoleHost, MockConsoleHost } from './helpers/host';
+import { mockConsoleHost } from './helpers/host';
 
-const hostTopic = discuss(async () => {
-  return mockConsoleHost();
-});
-
-const rootHostTopic = hostTopic.discuss<MockConsoleHost>(async (host) => {
-  (host as any).uid = () => 0;
-  return host;
-});
-
-async function renderer(host: Host) {
+function renderer(host: Host) {
   return function renderPrompt(ps1: string): string {
     const prompt = new Prompt(ps1, 500, host);
     return prompt.render(0);
   };
 }
 
-const promptTopic = hostTopic.discuss(renderer);
-const rootPromptTopic = rootHostTopic.discuss(renderer);
+async function promptConsoleHost(
+  fn: (render: (ps1: string) => string) => Promise<void>,
+): Promise<void> {
+  await mockConsoleHost(undefined, async (host) => {
+    fn(renderer(host));
+    (host as any).uid = () => 0;
+  });
+}
+
+async function rootPromptConsoleHost(
+  fn: (render: (ps1: string) => string) => Promise<void>,
+): Promise<void> {
+  await mockConsoleHost(undefined, async (host) => {
+    (host as any).uid = () => 0;
+    fn(renderer(host));
+  });
+}
 
 describe('abbreviateHome', async () => {
-  await hostTopic.swear(async (host) => {
+  await mockConsoleHost(undefined, async (host) => {
     test("when it's in the home directory", () => {
       expect(abbreviateHome('/home/josh/matanuska', host)).toBe('~/matanuska');
     });
@@ -42,7 +47,7 @@ describe('abbreviateHome', async () => {
 });
 
 describe('renderPrompt', async () => {
-  await promptTopic.swear(async (renderPrompt) => {
+  await promptConsoleHost(async (renderPrompt) => {
     test('empty prompt', () => {
       expect(renderPrompt('')).toBe('');
     });
@@ -132,7 +137,7 @@ describe('renderPrompt', async () => {
     });
 
     test('$ for root', async () => {
-      await rootPromptTopic.swear(async (renderPrompt) => {
+      await rootPromptConsoleHost(async (renderPrompt) => {
         expect(renderPrompt('\\$')).toBe('#');
       });
     });

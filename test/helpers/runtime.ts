@@ -20,33 +20,34 @@ export async function testChunk(
   tests: ChunkTests = {},
 ): Promise<void> {
   const [stackBefore, stackAfter] = tests.effect || [[], []];
-  const host = mockConsoleHost();
-  const runtime = new Runtime(host, {} as Executor);
+  await mockConsoleHost(undefined, async (host) => {
+    const runtime = new Runtime(host, {} as Executor);
 
-  runtime.stack.stack = stackBefore;
+    runtime.stack.stack = stackBefore;
 
-  if (tests.throws) {
-    t.throws(() => {
-      try {
-        runtime.interpret(chunk);
-      } catch (err) {
-        if (!(err instanceof Exit)) {
-          t.matchSnapshot(formatter.format(err));
-          throw err;
+    if (tests.throws) {
+      t.throws(() => {
+        try {
+          runtime.interpret(chunk);
+        } catch (err) {
+          if (!(err instanceof Exit)) {
+            t.matchSnapshot(formatter.format(err));
+            throw err;
+          }
         }
-      }
-    }, tests.throws);
-    return;
-  }
+      }, tests.throws);
+      return;
+    }
 
-  try {
-    await runtime.interpret(chunk);
-  } catch (err) {
-    t.equal(err.exitCode, tests.exitCode || 0);
-  }
+    try {
+      await runtime.interpret(chunk);
+    } catch (err) {
+      t.equal(err.exitCode, tests.exitCode || 0);
+    }
 
-  t.matchSnapshot(host.stdout.output);
-  t.matchSnapshot(host.stderr.output);
+    t.matchSnapshot(host.stdout.output);
+    t.matchSnapshot(host.stderr.output);
 
-  t.same(runtime.stack.stack, stackAfter);
+    t.same(runtime.stack.stack, stackAfter);
+  });
 }

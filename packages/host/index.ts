@@ -12,9 +12,9 @@ import type {
 } from './channel';
 
 import {
-  STDIN,
-  STDOUT,
-  STDERR,
+  INPUT,
+  OUTPUT,
+  ERROR,
   WARN,
   INFO,
   DEBUG,
@@ -58,9 +58,9 @@ export type {
 };
 
 export {
-  STDIN,
-  STDOUT,
-  STDERR,
+  INPUT,
+  OUTPUT,
+  ERROR,
   WARN,
   INFO,
   DEBUG,
@@ -120,31 +120,57 @@ export function setFormatter(formatter: HostFormatter): void {
   FORMATTER = formatter;
 }
 
+let STDIN: Readable = stdin;
+let STDOUT: Writable = stdout;
+let STDERR: Writable = stderr;
+
+// For testing
+
+type IOStreamsContext<T> = () => Promise<T>;
+
+export async function withIOStreams<T>(stdin: Readable, stdout: Writable, stderr: Writable, fn: IOStreamsContext<T>): Promise<T> {
+  const _stdin = STDIN;
+  const _stdout = STDOUT;
+  const _stderr = STDERR;
+
+  STDIN = stdin;
+  STDOUT = stdout;
+  STDERR = stderr;
+
+  const ret = await fn();
+
+  STDIN = _stdin;
+  STDOUT = _stdout;
+  STDERR = _stderr;
+
+  return ret;
+}
+
 export function writeOut(value: any): void {
-  stdout.write(FORMATTER.format(value));
+  STDOUT.write(FORMATTER.format(value));
 }
 
 export function writeError(value: any): void {
-  stderr.write(FORMATTER.format(value));
+  STDERR.write(FORMATTER.format(value));
 }
 
 export function writeLine(value: any): void {
-  stdout.write(`${FORMATTER.format(value)}\n`);
+  STDOUT.write(`${FORMATTER.format(value)}\n`);
 }
 
 export function writeErrorLine(value: any): void {
-  stderr.write(`${FORMATTER.format(value)}\n`);
+  STDERR.write(`${FORMATTER.format(value)}\n`);
 }
 
 export function writeDebug(value: any): void {
   if (LEVEL <= Level.Debug) {
-    stderr.write(`DEBUG: ${FORMATTER.format(value)}\n`);
+    STDERR.write(`DEBUG: ${FORMATTER.format(value)}\n`);
   }
 }
 
 export function writeInfo(value: any): void {
   if (LEVEL <= Level.Info) {
-    stderr.write(`INFO: ${FORMATTER.format(value)}\n`);
+    STDERR.write(`INFO: ${FORMATTER.format(value)}\n`);
   }
 }
 
@@ -164,7 +190,7 @@ export function writeException(value: any): void {
     exc = hostException(FORMATTER.format(value));
   }
 
-  stderr.write(`${FORMATTER.format(exc)}\n`);
+  STDERR.write(`${FORMATTER.format(exc)}\n`);
 }
 
 export function writeChannel(channel: Channel, value: any): void {

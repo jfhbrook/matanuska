@@ -1,4 +1,4 @@
-import consoleHost from '@matanuska/host';
+import * as consoleHost from '@matanuska/host';
 
 import { Exit } from './exit';
 import { Translator } from './translator';

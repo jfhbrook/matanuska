@@ -1,11 +1,10 @@
-import { discuss } from '@jfhbrook/swears';
-
 import { Container } from '../../index';
 import { Config } from '../../config';
+import { Editor } from '../../editor';
 import { Executor } from '../../executor';
 import { Host } from '../../host';
 import { CONFIG } from './config';
-import { mockConsoleHost } from './host';
+import { mockConsoleHost, MockConsoleHost } from './host';
 
 class MockExecutor extends Executor {}
 
@@ -27,22 +26,16 @@ class MockContainer extends Container {
   }
 }
 
-export const executorTopic = discuss(
-  async () => {
-    const host = mockConsoleHost();
+export async function mockExecutor<T>(
+  fn: (executor: Executor, host: MockConsoleHost, editor: Editor) => Promise<T>,
+): Promise<T> {
+  return await mockConsoleHost(undefined, async (host): Promise<T> => {
     const container = new MockContainer(host);
     const editor = container.editor();
     const executor = container.executor();
 
     await executor.init();
 
-    return {
-      host,
-      editor,
-      executor,
-    };
-  },
-  async ({ executor }) => {
-    await executor.close();
-  },
-);
+    return await fn(executor, host, editor);
+  });
+}

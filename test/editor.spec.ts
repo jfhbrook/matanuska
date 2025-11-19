@@ -9,21 +9,26 @@ import { mockConsoleHost } from './helpers/host';
 
 type InsertFn = (source: string) => void;
 
-const topic = discuss(async (): Promise<[Editor, InsertFn]> => {
-  const editor = new Editor(mockConsoleHost());
-  function insert(source: string) {
-    const [result] = parseInput(source);
-    expect(result.input.length).toBe(1);
-    const line = result.input[0];
-    expect(line).toBeInstanceOf(Line);
-    editor.setLine(line as Line, null);
-  }
+async function withMockEditor(
+  fn: (editor: Editor, insert: InsertFn) => void,
+): Promise<void> {
+  await mockConsoleHost(undefined, async (host) => {
+    const editor = new Editor(host);
 
-  return [editor, insert];
-});
+    function insert(source: string) {
+      const [result] = parseInput(source);
+      expect(result.input.length).toBe(1);
+      const line = result.input[0];
+      expect(line).toBeInstanceOf(Line);
+      editor.setLine(line as Line, null);
+    }
+
+    fn(editor, insert);
+  });
+}
 
 test('editor inserts', async () => {
-  await topic.swear(async ([editor, insert]) => {
+  await withMockEditor((editor, insert) => {
     insert('10 print "hello"');
     insert('30 print "world"');
     insert('20 print "hey"');
@@ -45,7 +50,7 @@ test('editor inserts', async () => {
 // warnings!
 describe('editor renum', async () => {
   test('mixed double/triple to all double', async () => {
-    await topic.swear(async ([editor, insert]) => {
+    await withMockEditor((editor, insert) => {
       insert('10 print "foo"');
       insert('50 print "foo"');
       insert('100 print "foo"');
@@ -63,7 +68,7 @@ describe('editor renum', async () => {
   });
 
   test('left justified to left justified', async () => {
-    await topic.swear(async ([editor, insert]) => {
+    await withMockEditor((editor, insert) => {
       insert('10  print "foo"');
       insert('50  print "foo"');
       insert('100 print "foo"');
@@ -82,7 +87,7 @@ describe('editor renum', async () => {
   });
 
   test('left justified to right justified', async () => {
-    await topic.swear(async ([editor, insert]) => {
+    await withMockEditor((editor, insert) => {
       editor.justify = Justify.Right;
 
       insert('10  print "foo"');
@@ -103,7 +108,7 @@ describe('editor renum', async () => {
   });
 
   test('right justified to left justified', async () => {
-    await topic.swear(async ([editor, insert]) => {
+    await withMockEditor((editor, insert) => {
       insert(' 10 print "foo"');
       insert(' 50 print "foo"');
       insert('100 print "foo"');

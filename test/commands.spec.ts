@@ -1,10 +1,10 @@
 import { test } from 'vitest';
 import { t } from './helpers/tap';
 
-import { executorTopic as topic } from './helpers/executor';
+import { mockExecutor } from './helpers/executor';
 
 test('editing', async () => {
-  await topic.swear(async ({ executor, editor, host }) => {
+  await mockExecutor(async (executor, host, editor) => {
     executor.interactive = true;
     await executor.eval('load "./examples/001-hello-world.bas"');
 

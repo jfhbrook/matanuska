@@ -6,10 +6,6 @@ import { discuss } from '@jfhbrook/swears';
 import { Level, Channel } from '@matanuska/host';
 import { mockConsoleHost, MockConsoleHost } from './helpers/host';
 
-const topic = discuss(async (): Promise<MockConsoleHost> => {
-  return mockConsoleHost();
-});
-
 const STREAM = {
   writeOut: 'stdout',
   writeError: 'stderr',
@@ -18,7 +14,7 @@ const STREAM = {
 function outputTest(method: 'writeOut' | 'writeError'): () => void {
   return (): void => {
     test('it writes to the stream', async () => {
-      await topic.swear(async (host) => {
+      await mockConsoleHost(undefined, async (host) => {
         host[method]('test');
 
         t.equal(host[STREAM[method]].output, 'test');
@@ -43,7 +39,7 @@ function logTest(
   return (): void => {
     for (const setLevel of [0, 1, 2, 3]) {
       describe(`at level ${setLevel}`, async () => {
-        await topic.swear(async (host) => {
+        await mockConsoleHost(undefined, async (host) => {
           host.setLevel(setLevel);
           host[method]('test');
 
@@ -72,7 +68,7 @@ function channelTest(
   expected: string,
 ): () => void {
   return async (): Promise<void> => {
-    await topic.swear(async (host) => {
+    await mockConsoleHost(undefined, async (host) => {
       host.setLevel(Level.Debug);
       host.writeChannel(channel, 'test');
 
@@ -114,7 +110,7 @@ const RESOLVE_PATH_CASES: Array<[RelativePath, AbsolutePath]> = [
 ];
 
 test('relativePath', async () => {
-  await topic.swear(async (host) => {
+  await mockConsoleHost(undefined, async (host) => {
     for (const [from, to, expected] of RELATIVE_PATH_CASES) {
       t.equal(host.relativePath(from, to), expected);
     }
@@ -122,7 +118,7 @@ test('relativePath', async () => {
 });
 
 test('resolvePath', async () => {
-  await topic.swear(async (host) => {
+  await mockConsoleHost(undefined, async (host) => {
     for (const [relative, expected] of RESOLVE_PATH_CASES) {
       t.equal(host.resolvePath(relative), expected);
     }
