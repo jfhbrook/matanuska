@@ -1,5 +1,3 @@
-import * as consoleHost from '@matanuska/host';
-
 import { Buffer } from 'node:buffer';
 import { Transform, Writable } from 'node:stream';
 
@@ -7,8 +5,7 @@ import { expect } from 'vitest';
 
 import stripAnsi from 'strip-ansi';
 
-import { Host } from '../../host';
-import { formatter } from '../../format';
+import { host, ConsoleHost } from '../../host';
 
 import { EXAMPLES } from './files';
 
@@ -74,7 +71,7 @@ const FILES = Object.assign(
   EXAMPLES,
 );
 
-export interface MockConsoleHost extends Host {
+export interface MockConsoleHost extends ConsoleHost {
   files: Record<string, string>;
   stdin: MockInputStream;
   stdout: MockOutputStream;
@@ -94,98 +91,88 @@ export async function mockConsoleHost<T>(
   { files }: MockConsoleHostOptions = { files: FILES },
   fn: (host: MockConsoleHost) => Promise<T>,
 ): Promise<T> {
-  consoleHost.setFormatter(formatter);
+  const stdin = new MockInputStream();
+  const stdout = new MockOutputStream();
+  const stderr = new MockOutputStream();
 
-  const mockStdin = new MockInputStream();
-  const mockStdout = new MockOutputStream();
-  const mockStderr = new MockOutputStream();
-
-  return await consoleHost.withIOStreams(
-    mockStdin,
-    mockStdout,
-    mockStderr,
-    async (): Promise<T> => {
-      const host = Object.assign({}, consoleHost, {
-        stdin: mockStdin,
-        stdout: mockStdout,
-        stderr: mockStderr,
-        files: Object.fromEntries(
-          Object.entries(files || {}).map(([path, contents]) => {
-            return [consoleHost.resolvePath(path), contents];
-          }),
-        ),
-        expectStart: 0,
-
-        async expect<T>(
-          action: Promise<T>,
-          input: string | null,
-          expected: string,
-          outputStream: MockOutputStream | null = null,
-        ): Promise<T> {
-          outputStream = outputStream || this.stdout;
-
-          if (input) {
-            this.inputStream.write(`${input}\n`);
-          }
-
-          const rv = await action;
-
-          let output = stripAnsi(this.stdout.output);
-          const expectStart = this.expectStart;
-          this.expectStart = output.length;
-          output = output.slice(expectStart);
-
-          expect(output, `expect: ${expected}`).toMatch(expected);
-
-          return rv;
-        },
-
-        hostname(): string {
-          return 'gibson.local';
-        },
-
-        tty(): string | null {
-          return 'tty0';
-        },
-
-        shell(): string {
-          return 'matbas';
-        },
-
-        now(): Date {
-          // TODO: Because I'm not handling time zones at all, tests using this
-          // only past in Alaska in the summer.
-          return new Date('23 Jun 2024 13:00:00 PST');
-        },
-
-        uid(): number {
-          return 1000;
-        },
-
-        gid(): number {
-          return 50;
-        },
-
-        username(): string {
-          return 'josh';
-        },
-
-        homedir(): string {
-          return '/home/josh';
-        },
-
-        async readTextFile(filename: string): Promise<string> {
-          const contents = this.files[this.resolvePath(filename)];
-          expect(contents).not.toBeUndefined();
-          return contents;
-        },
-
-        async writeTextFile(filename: string, contents: string): Promise<void> {
-          this.files[this.resolvePath(filename)] = contents;
-        },
-      });
-
-      return await fn(host);
-    },
+  const _files = Object.fromEntries(
+    Object.entries(files || {}).map(([path, contents]) => {
+      return [host.resolvePath(path), contents];
+    }),
   );
+
+  const mockHost = {
+    ...host,
+    stdin,
+    stdout,
+    stderr,
+    files: _files,
+    async expect<T>(
+      action: Promise<T>,
+      input: string | null,
+      expected: string,
+      outputStream: MockOutputStream | null = null,
+    ): Promise<T> {
+      outputStream = outputStream || this.stdout;
+
+      if (input) {
+        this.stdin.write(`${input}\n`);
+      }
+
+      const rv = await action;
+
+      let output = stripAnsi(this.stdout.output);
+      const expectStart = this.expectStart;
+      this.expectStart = output.length;
+      output = output.slice(expectStart);
+
+      expect(output, `expect: ${expected}`).toMatch(expected);
+
+      return rv;
+    },
+
+    hostname(): string {
+      return 'gibson.local';
+    },
+
+    tty(): string | null {
+      return 'tty0';
+    },
+
+    shell: 'matbas',
+
+    now(): Date {
+      // TODO: Because I'm not handling time zones at all, tests using this
+      // only past in Alaska in the summer.
+      return new Date('23 Jun 2024 13:00:00 PST');
+    },
+
+    uid(): number {
+      return 1000;
+    },
+
+    gid(): number {
+      return 50;
+    },
+
+    username(): string {
+      return 'josh';
+    },
+
+    homedir(): string {
+      return '/home/josh';
+    },
+
+    async readTextFile(filename: string): Promise<string> {
+      const contents = this.files[this.resolvePath(filename)];
+      expect(contents).not.toBeUndefined();
+      return contents;
+    },
+
+    async writeTextFile(filename: string, contents: string): Promise<void> {
+      this.files[this.resolvePath(filename)] = contents;
+    },
+  };
+
+  return await fn(mockHost);
 }

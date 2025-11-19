@@ -1,10 +1,8 @@
-import * as consoleHost from '@matanuska/host';
-
 import { Exit } from './exit';
-import { formatter } from './format';
 import { Translator } from './translator';
 import { Config, Argv, Env } from './config';
 import { Host } from './host';
+import { host as consoleHost } from './host';
 import { Editor } from './editor';
 import { Executor } from './executor';
 
@@ -34,8 +32,6 @@ export class Container {
     this.env = env;
     this.exitFn = exitFn;
     this.host = host;
-
-    this.host.setFormatter(formatter);
   }
 
   public config(): Config {
@@ -51,7 +47,7 @@ export class Container {
       // Normally we would count on the Translator to handle these sorts of
       // errors. In this case, the error is thrown before the Translator is
       // stood up, so we have to special case it here.
-      if (this.host.isHostExit(err) || err instanceof Exit) {
+      if (err instanceof Exit) {
         if (err.message.length) {
           console.log(err.message);
         }

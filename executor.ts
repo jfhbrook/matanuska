@@ -22,7 +22,7 @@ import {
 } from './exceptions';
 import { RuntimeFault } from './faults';
 import { inspector } from './format';
-import type { Host } from './host';
+import type { Host, ConsoleHost } from './host';
 import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Prompt } from './shell';
@@ -175,8 +175,8 @@ export class Executor {
 
   private createInterface(): readline.Interface {
     return readline.createInterface({
-      input: this.host.stdin,
-      output: this.host.stdout,
+      input: (this.host as ConsoleHost).stdin,
+      output: (this.host as ConsoleHost).stdout,
       terminal: true,
       history: this.history,
       historySize: this.config.historySize,

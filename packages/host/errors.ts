@@ -17,6 +17,7 @@ export type HostErrorType =
 
 export interface HostError extends Error {
   __type__: HostErrorType;
+  message: string;
 }
 
 export interface HostException extends HostError {

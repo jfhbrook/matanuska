@@ -38,9 +38,7 @@ function logTest(
     for (const setLevel of [0, 1, 2, 3]) {
       describe(`at level ${setLevel}`, async () => {
         await mockConsoleHost(undefined, async (host) => {
-          host.setLevel(setLevel);
-          console.log(method);
-          console.log(host);
+          host.level = setLevel;
           host[method]('test');
 
           if (level >= setLevel) {
@@ -69,7 +67,7 @@ function channelTest(
 ): () => void {
   return async (): Promise<void> => {
     await mockConsoleHost(undefined, async (host) => {
-      host.setLevel(Level.Debug);
+      host.level = Level.Debug;
       host.writeChannel(channel, 'test');
 
       test('it writes to that stream', () => {
