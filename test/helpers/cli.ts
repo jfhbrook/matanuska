@@ -30,18 +30,18 @@ export async function run(
   env: Env,
   options?: MockConsoleHostOptions,
 ): Promise<RunResult> {
-  return await mockConsoleHost(options, (host): Promise<RunResult> => {
-    return new Promise((resolve, reject) => {
-      const exitFn = async (exitCode: number): Promise<void> => {
-        resolve({
-          exitCode,
-          host,
-        });
-      };
+  const host = mockConsoleHost(options);
 
-      const container = new MockContainer(argv, env, exitFn, host);
-      const main = container.translator();
-      return main.start().catch((err) => reject(err));
-    });
+  return await new Promise((resolve, reject) => {
+    const exitFn = async (exitCode: number): Promise<void> => {
+      resolve({
+        exitCode,
+        host,
+      });
+    };
+
+    const container = new MockContainer(argv, env, exitFn, host);
+    const main = container.translator();
+    return main.start().catch((err) => reject(err));
   });
 }

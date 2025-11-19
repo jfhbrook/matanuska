@@ -87,10 +87,9 @@ export interface MockConsoleHost extends ConsoleHost {
 /**
  * A mock console host.
  */
-export async function mockConsoleHost<T>(
+export function mockConsoleHost(
   { files }: MockConsoleHostOptions = { files: FILES },
-  fn: (host: MockConsoleHost) => Promise<T>,
-): Promise<T> {
+): MockConsoleHost {
   const stdin = new MockInputStream();
   const stdout = new MockOutputStream();
   const stderr = new MockOutputStream();
@@ -178,5 +177,5 @@ export async function mockConsoleHost<T>(
 
   mockHost.files = mockHost._files();
 
-  return await fn(mockHost);
+  return mockHost;
 }

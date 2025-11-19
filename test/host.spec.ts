@@ -1,8 +1,14 @@
 import { describe, test } from 'vitest';
 import { t } from './helpers/tap';
 
+import { discuss } from '@jfhbrook/swears';
+
 import { Level, Channel } from '@matanuska/host';
-import { mockConsoleHost } from './helpers/host';
+import { mockConsoleHost, MockConsoleHost } from './helpers/host';
+
+const topic = discuss(async (): Promise<MockConsoleHost> => {
+  return mockConsoleHost();
+});
 
 const STREAM = {
   writeOut: 'stdout',
@@ -12,7 +18,7 @@ const STREAM = {
 function outputTest(method: 'writeOut' | 'writeError'): () => void {
   return (): void => {
     test('it writes to the stream', async () => {
-      await mockConsoleHost(undefined, async (host) => {
+      await topic.swear(async (host) => {
         host[method]('test');
 
         t.equal(host[STREAM[method]].output, 'test');
@@ -37,7 +43,7 @@ function logTest(
   return (): void => {
     for (const setLevel of [0, 1, 2, 3]) {
       describe(`at level ${setLevel}`, async () => {
-        await mockConsoleHost(undefined, async (host) => {
+        await topic.swear(async (host) => {
           host.level = setLevel;
           host[method]('test');
 
@@ -66,7 +72,7 @@ function channelTest(
   expected: string,
 ): () => void {
   return async (): Promise<void> => {
-    await mockConsoleHost(undefined, async (host) => {
+    await topic.swear(async (host) => {
       host.level = Level.Debug;
       host.writeChannel(channel, 'test');
 
@@ -108,7 +114,7 @@ const RESOLVE_PATH_CASES: Array<[RelativePath, AbsolutePath]> = [
 ];
 
 test('relativePath', async () => {
-  await mockConsoleHost(undefined, async (host) => {
+  await topic.swear(async (host) => {
     for (const [from, to, expected] of RELATIVE_PATH_CASES) {
       t.equal(host.relativePath(from, to), expected);
     }
@@ -116,7 +122,7 @@ test('relativePath', async () => {
 });
 
 test('resolvePath', async () => {
-  await mockConsoleHost(undefined, async (host) => {
+  await topic.swear(async (host) => {
     for (const [relative, expected] of RESOLVE_PATH_CASES) {
       t.equal(host.resolvePath(relative), expected);
     }
