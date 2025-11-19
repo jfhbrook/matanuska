@@ -29,6 +29,7 @@ import { Formatter } from './format';
 import { Level } from './level';
 
 export {
+  inspect,
   Readable,
   Writable,
   Transform,
@@ -275,11 +276,6 @@ export interface ConsoleHost extends Host {
   _cwd: string;
 
   /**
-   * Node.js compatible object inspector.
-   */
-  inspect: typeof inspect;
-
-  /**
    * Node.js standard IO streams. Required for readline.
    */
   stdin: Readable;
@@ -301,7 +297,6 @@ export const host: ConsoleHost = {
       return inspect(obj);
     },
   },
-  inspect,
   stdin,
   stdout,
   stderr,

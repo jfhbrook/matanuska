@@ -13,7 +13,6 @@
     "packages/fireball",
     "packages/grabthar",
     "packages/host",
-    "packages/internal",
     "packages/path",
     "packages/telemetry",
     "packages/test-generator"
@@ -22,6 +21,7 @@
     "build": "dotenvx run -f \"${ENV_FILE:-.env}\" -- grabthar build",
     "build:ast": "citree ast/index.citree",
     "build:entrypoint": "entrypoint ./bin/matbasjs",
+    "build:path": "npm run build -w packages/path",
     "build:host": "npm run build -w packages/host",
     "build:test": "dotenvx run -f test.env --overload -- test-generator ./test",
     "build:test:activate": "dotenvx run -f test.env --overload -- test-generator --activate ./test",

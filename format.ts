@@ -1,5 +1,5 @@
 import VERSIONS from 'consts:versions';
-import { inspect } from '@matanuska/internal';
+import { inspect } from '@matanuska/host';
 
 import {
   BaseException,

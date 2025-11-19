@@ -15,6 +15,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_UP_TO=0x060000 # disables all APIs deprecated in Qt 6.0.0 and earlier
 
 # Input
-HEADERS += dist.h config.h
+HEADERS += config.h
 RESOURCES = dist.qrc
 SOURCES += main.cpp

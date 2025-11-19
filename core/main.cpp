@@ -1,4 +1,3 @@
-#include "dist.h"
 #include <QCoreApplication>
 #include <QDebug>
 #include <QJSEngine>
