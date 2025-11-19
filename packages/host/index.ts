@@ -461,7 +461,7 @@ export const host: ConsoleHost = {
   },
 
   resolvePath(p: string): string {
-    p = p.replace(/^~\//, homedir() + '/');
+    p = p.replace(/^~\//, this.homedir() + '/');
     if (p.startsWith('/') || p.startsWith('\\')) {
       return p;
     }

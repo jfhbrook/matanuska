@@ -95,25 +95,27 @@ export async function mockConsoleHost<T>(
   const stdout = new MockOutputStream();
   const stderr = new MockOutputStream();
 
-  const _files = Object.fromEntries(
-    Object.entries(files || {}).map(([path, contents]) => {
-      return [host.resolvePath(path), contents];
-    }),
-  );
-
   const mockHost = {
     ...host,
     stdin,
     stdout,
     stderr,
-    files: _files,
+    _cwd: '/home/josh/matanuska',
+    files: {},
+    _files() {
+      return Object.fromEntries(
+        Object.entries(files || {}).map(([path, contents]) => {
+          return [this.resolvePath(path), contents];
+        }),
+      );
+    },
     async expect<T>(
       action: Promise<T>,
       input: string | null,
       expected: string,
       outputStream: MockOutputStream | null = null,
     ): Promise<T> {
-      outputStream = outputStream || this.stdout;
+      const stream = outputStream || this.stdout;
 
       if (input) {
         this.stdin.write(`${input}\n`);
@@ -121,7 +123,7 @@ export async function mockConsoleHost<T>(
 
       const rv = await action;
 
-      let output = stripAnsi(this.stdout.output);
+      let output = stripAnsi(stream.output);
       const expectStart = this.expectStart;
       this.expectStart = output.length;
       output = output.slice(expectStart);
@@ -173,6 +175,8 @@ export async function mockConsoleHost<T>(
       this.files[this.resolvePath(filename)] = contents;
     },
   };
+
+  mockHost.files = mockHost._files();
 
   return await fn(mockHost);
 }
