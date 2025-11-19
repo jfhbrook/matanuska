@@ -7,11 +7,11 @@
   ],
   "compilerOptions": {
     "outDir": "dist",
-    "module": "es2022",
+    "module": "es2016",
     "moduleResolution": "bundler",
-    "target": "es2022",
+    "target": "es2016",
     "lib": [
-      "es2022"
+      "es2016"
     ],
     "esModuleInterop": true,
     "incremental": true,

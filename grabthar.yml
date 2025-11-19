@@ -2,6 +2,7 @@ entrypoint: ./main.ts
 exclude:
   - bin
   - packages
+target: es2015
 build:
   minify: false
 check:
