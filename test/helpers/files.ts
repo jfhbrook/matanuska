@@ -1,8 +1,5 @@
 import { readFileSync, readdirSync } from 'node:fs';
-
-import pathModule from '@matanuska/path';
-
-const path = pathModule(process);
+import * as path from 'node:path';
 
 export const FILENAME = '/home/josh/script.bas';
 

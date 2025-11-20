@@ -1,11 +1,9 @@
-import { describe, expect, test } from 'vitest';
+import * as PATH from 'node:path';
 
-import pathTool from '@matanuska/path';
+import { describe, expect, test } from 'vitest';
 
 import { run } from './helpers/cli';
 import { EXAMPLES } from './helpers/files';
-
-const PATH = pathTool(process);
 
 describe('examples', () => {
   for (const p of Object.keys(EXAMPLES)) {
