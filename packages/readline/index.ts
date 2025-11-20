@@ -2,14 +2,22 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import * as path from 'node:path';
 import { stdin, stdout, stderr } from 'node:process';
-import * as readline from 'node:readline/promises';
+import { Interface, createInterface } from 'node:readline/promises';
 
-interface Prompt {
+export interface Prompt {
   render(cmdNo: number): string;
 }
 
+export interface Repl {
+  ps1: Prompt;
+  historySize: number;
+  historyFileSize: number;
+  eval(input: string): Promise<void>;
+  error(err: any): void;
+}
+
 export class Readline {
-  private _readline: readline.Interface | null;
+  private _readline: Interface | null;
   private history: string[];
 
   // The number of commands which have been run in the current session.
@@ -21,6 +29,7 @@ export class Readline {
   constructor(
     private ps1: Prompt,
     private historySize: number,
+    private historyFileSize: number,
   ) {
     this._readline = null;
     this.history = [];
@@ -106,7 +115,7 @@ export class Readline {
     }
   }
 
-  private get readline(): readline.Interface {
+  private get readline(): Interface {
     if (this._readline === null) {
       // If readline hasn't been initialized, create a default one.
       this._readline = this.createInterface();
@@ -115,12 +124,12 @@ export class Readline {
     return this._readline;
   }
 
-  private set readline(rl: readline.Interface) {
+  private set readline(rl: Interface) {
     this._readline = rl;
   }
 
-  private createInterface(): readline.Interface {
-    return readline.createInterface({
+  private createInterface(): Interface {
+    return createInterface({
       input: stdin,
       output: stdout,
       terminal: true,
@@ -137,26 +146,21 @@ export class Readline {
    * Load REPL history.
    */
   public async loadHistory(): Promise<void> {
-      try {
-        this.history = (await readFile(this.historyFile, "utf8")).split(
-          '\n',
-        );
-      } catch (err) {
-        if (err.code !== 'ENOENT') {
-          // TODO: Respect levels
-          stderr.write(`WARN: ${err}\n`);
-        } else {
-          // TODO: Respect levels
-          stderr.write(`DEBUG: ${err}\n`);
-        }
+    try {
+      this.history = (await readFile(this.historyFile, 'utf8')).split('\n');
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        // TODO: Respect levels
+        stderr.write(`WARN: ${err}\n`);
+      } else {
+        // TODO: Respect levels
+        stderr.write(`DEBUG: ${err}\n`);
       }
+    }
   }
 
   public async saveHistory(): Promise<void> {
-    const sliceAt = Math.max(
-      this.history.length - this.historySize,
-      0,
-    );
+    const sliceAt = Math.max(this.history.length - this.historyFileSize, 0);
     const history = this.history.slice(sliceAt);
     try {
       await writeFile(this.historyFile, history.join('\n'));
@@ -187,4 +191,23 @@ export class Readline {
     this.cmdNo++;
     return ans;
   }
+}
+
+export async function readline(repl: Repl) {
+  const readline = new Readline(
+    repl.ps1,
+    repl.historySize,
+    repl.historyFileSize,
+  );
+
+  await readline.using(async () => {
+    while (true) {
+      try {
+        const input = await readline.prompt();
+        await repl.eval(input);
+      } catch (err) {
+        repl.error(err);
+      }
+    }
+  });
 }

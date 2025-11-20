@@ -5,3 +5,4 @@ test/*.js
 node_modules
 dist
 coverage
+.matbas_history

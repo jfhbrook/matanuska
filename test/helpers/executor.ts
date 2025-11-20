@@ -23,26 +23,19 @@ class MockContainer extends Container {
   }
 
   public executor(): Executor {
-    return new MockExecutor(this.config(), this.editor(), this.host);
+    return new MockExecutor(this.editor(), this.host);
   }
 }
 
-export const executorTopic = discuss(
-  async () => {
-    const host = mockConsoleHost();
-    const container = new MockContainer(host);
-    const editor = container.editor();
-    const executor = container.executor();
+export const executorTopic = discuss(async () => {
+  const host = mockConsoleHost();
+  const container = new MockContainer(host);
+  const editor = container.editor();
+  const executor = container.executor();
 
-    await executor.init();
-
-    return {
-      host,
-      editor,
-      executor,
-    };
-  },
-  async ({ executor }) => {
-    await executor.close();
-  },
-);
+  return {
+    host,
+    editor,
+    executor,
+  };
+});

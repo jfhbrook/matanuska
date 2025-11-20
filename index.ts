@@ -5,6 +5,7 @@ import { Host } from './host';
 import { host as consoleHost } from './host';
 import { Editor } from './editor';
 import { Executor } from './executor';
+import { Prompt } from './shell';
 
 type ExitFn = (code: number) => Promise<any>;
 
@@ -17,6 +18,7 @@ export class Container {
   public env: Env;
   public exitFn: (code: number) => Promise<any>;
   public host: Host;
+  public _ps1: Prompt | null = null;
   private _config: Config | null = null;
   private _editor: Editor | null = null;
   private _executor: Executor | null = null;
@@ -57,6 +59,20 @@ export class Container {
     }
   }
 
+  public ps1(): Prompt {
+    if (this._ps1) {
+      return this._ps1;
+    }
+
+    this._ps1 = new Prompt(
+      '\\u@\\h:\\w\\$',
+      this.config().historyFileSize,
+      this.host,
+    );
+
+    return this._ps1;
+  }
+
   public editor(): Editor {
     if (this._editor) {
       return this._editor;
@@ -70,7 +86,7 @@ export class Container {
     if (this._executor) {
       return this._executor;
     }
-    const executor = new Executor(this.config(), this.editor(), this.host);
+    const executor = new Executor(this.editor(), this.host);
     this._executor = executor;
     return executor;
   }
@@ -81,6 +97,7 @@ export class Container {
     }
     const translator = new Translator(
       this.host,
+      this.ps1(),
       this.exitFn,
       this.config(),
       this.executor(),
