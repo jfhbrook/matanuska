@@ -14,6 +14,7 @@
     "packages/grabthar",
     "packages/host",
     "packages/path",
+    "packages/readline",
     "packages/telemetry",
     "packages/test-generator"
   ],

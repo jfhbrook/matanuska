@@ -95,7 +95,7 @@ export function fileReadError(
   }
 
   const __type__: HostErrorReadType = 'read';
-  const path = err.path;
+  const path = err.path || '<unknown>';
 
   return Object.assign(new Error(msg), {
     __type__,
@@ -142,7 +142,7 @@ export function fileWriteError(err: NodeJS.ErrnoException): FileWriteError {
   }
 
   const __type__: HostErrorWriteType = 'write';
-  const path: string = err.path;
+  const path: string = err.path || '<unknown>';
 
   return Object.assign(new Error(msg), {
     __type__,

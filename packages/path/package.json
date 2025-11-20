@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Matanuska BASIC's path library, based on the one from Node.js",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "format": "prettier --write '**.ts'",
     "lint": "eslint '**.ts' --fix",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -f *.js *.js.map *.d.ts"
   },
   "keywords": [
   ],
@@ -26,5 +27,5 @@
     "typescript-eslint": "^8.39.0",
     "vitest": "^3.2.4"
   },
-  "types": "dist/index.d.ts"
+  "types": "index.d.ts"
 }

@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2022",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,

@@ -29,6 +29,7 @@ import { Prompt } from './shell';
 import { Value, Undef } from './value';
 import pathTool from '@matanuska/path';
 
+// TODO: Attach to host
 const PATH = pathTool({
   platform: process.platform,
   cwd: process.cwd,
