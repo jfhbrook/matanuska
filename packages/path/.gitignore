@@ -1,7 +1,0 @@
-*.js
-*.map.js
-*.d.ts
-test/*.js
-node_modules
-dist
-coverage

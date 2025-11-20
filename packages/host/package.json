@@ -10,11 +10,11 @@
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -f *.js *.js.map *.d.ts"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "Josh Holbrook",
   "license": "MPL 2.0",
   "dependencies": {
+    "@matanuska/path": "file:../path"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

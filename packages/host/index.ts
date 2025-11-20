@@ -4,7 +4,9 @@ import { hostname, userInfo, homedir } from 'node:os';
 import { stdin, stdout, stderr, platform, cwd, env, argv } from 'node:process';
 import { Readable, Writable, Transform } from 'node:stream';
 import { inspect } from 'node:util';
-import * as PATH from 'node:path';
+
+import pathTool from './path';
+import type { PathObject, PathTool } from './path';
 
 import type { StdChannel, Channel } from './channel';
 
@@ -60,6 +62,8 @@ export type {
   ExitError,
   FileReadError,
   FileWriteError,
+  PathObject,
+  PathTool,
 };
 
 /**
@@ -87,6 +91,8 @@ export interface Host {
    * 'freebsd', 'linux', 'openbsd', 'sunos' and 'win32'.
    */
   platform: string;
+
+  path: PathTool;
 
   /**
    * The OS's hostname.
@@ -283,6 +289,12 @@ export interface ConsoleHost extends Host {
   stderr: Writable;
 }
 
+const path: PathTool = pathTool({
+  platform,
+  env,
+  cwd,
+});
+
 export const host: ConsoleHost = {
   argv,
   env,
@@ -297,6 +309,7 @@ export const host: ConsoleHost = {
       return inspect(obj);
     },
   },
+  path,
   stdin,
   stdout,
   stderr,
@@ -421,7 +434,7 @@ export const host: ConsoleHost = {
   // As a fallback, just grab the basename of process.argv[1]. In most cases
   // it will be incorrect, but it's better than nothing.
 
-  shell: env.__MATBAS_DOLLAR_ZERO || PATH.basename(argv[1]),
+  shell: env.__MATBAS_DOLLAR_ZERO || path.basename(argv[1]),
 
   // TODO: JavaScript Dates aren't very good. Is there a sensible replacement?
   // TODO: Can we control locale-awareness better?
@@ -460,11 +473,11 @@ export const host: ConsoleHost = {
     if (p.startsWith('/') || p.startsWith('\\')) {
       return p;
     }
-    return PATH.resolve(PATH.join(this._cwd, p));
+    return path.resolve(path.join(this._cwd, p));
   },
 
   relativePath(from: string, to: string): string {
-    return PATH.relative(this.resolvePath(from), this.resolvePath(to));
+    return path.relative(this.resolvePath(from), this.resolvePath(to));
   },
 
   async readTextFile(filename: string): Promise<string> {

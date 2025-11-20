@@ -31,7 +31,7 @@ interface Host {
   env: Record<string, string | undefined>;
 }
 
-interface PathObject {
+export interface PathObject {
   dir?: string;
   root?: string;
   base?: string;
@@ -39,7 +39,7 @@ interface PathObject {
   ext?: string;
 }
 
-interface PathTool {
+export interface PathTool {
   resolve: (...args: string[]) => string;
   normalize: (path: string) => string;
   isAbsolute: (path: string) => boolean;
