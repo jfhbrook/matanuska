@@ -68,7 +68,7 @@ export class Executor {
       try {
         result = this.parser.parseProgram(
           source,
-          this.host.resolvePath(filename),
+          this.host.path.resolve(filename),
         );
       } catch (err) {
         if (err instanceof Exception) {

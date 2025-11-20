@@ -273,11 +273,11 @@ export class Editor {
   }
 
   get filename(): string {
-    return this.host.relativePath('.', this.program.filename);
+    return this.host.path.relative('.', this.program.filename);
   }
 
   set filename(filename: string) {
-    this.program.filename = this.host.resolvePath(filename);
+    this.program.filename = this.host.path.resolve(filename);
   }
 
   /**

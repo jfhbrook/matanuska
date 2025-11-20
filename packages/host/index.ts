@@ -235,24 +235,6 @@ export interface Host {
   pwd(follow: boolean): string;
 
   /**
-   * Resolve a relative path into a full path.
-   *
-   * @param path A relative path.
-   * @returns The absolute path.
-   */
-  resolvePath(path: string): string;
-
-  /**
-   * Return a path relative to the current working directory.
-   *
-   * @param from The path the output is relative to, itself relative to the
-   *             current working directory.
-   * @param to The path to get the relative path for.
-   * @returns The relative path.
-   */
-  relativePath(from: string, to: string): string;
-
-  /**
    * Read a file from disk.
    *
    * @param filename The path to the file.
@@ -287,6 +269,9 @@ export interface ConsoleHost extends Host {
   stdin: Readable;
   stdout: Writable;
   stderr: Writable;
+
+  _resolvePath: typeof path.resolve;
+  _relativePath: typeof path.relative;
 }
 
 const path: PathTool = pathTool({
@@ -309,7 +294,19 @@ export const host: ConsoleHost = {
       return inspect(obj);
     },
   },
-  path,
+  _resolvePath(p: string): string {
+    p = p.replace(/^~\//, this.homedir() + '/');
+    if (p.startsWith('/') || p.startsWith('\\')) {
+      return p;
+    }
+    return path.resolve(path.join(this._cwd, p));
+  },
+  _relativePath(from: string, to: string): string {
+    return path.relative(this._resolvePath(from), this._resolvePath(to));
+  },
+  path: {
+    ...path,
+  },
   stdin,
   stdout,
   stderr,
@@ -465,24 +462,12 @@ export const host: ConsoleHost = {
       return;
     }
     // TODO: `-` changes to previous path
-    this._cwd = this.resolvePath(path);
-  },
-
-  resolvePath(p: string): string {
-    p = p.replace(/^~\//, this.homedir() + '/');
-    if (p.startsWith('/') || p.startsWith('\\')) {
-      return p;
-    }
-    return path.resolve(path.join(this._cwd, p));
-  },
-
-  relativePath(from: string, to: string): string {
-    return path.relative(this.resolvePath(from), this.resolvePath(to));
+    this._cwd = this.path.resolve(path);
   },
 
   async readTextFile(filename: string): Promise<string> {
     try {
-      return await readFile(this.resolvePath(filename), 'utf8');
+      return await readFile(this.path.resolve(filename), 'utf8');
     } catch (err) {
       throw fileReadError(err);
     }
@@ -490,7 +475,7 @@ export const host: ConsoleHost = {
 
   async writeTextFile(filename: string, contents: string): Promise<void> {
     try {
-      await writeFile(this.resolvePath(filename), contents, 'utf8');
+      await writeFile(this.path.resolve(filename), contents, 'utf8');
     } catch (err) {
       throw fileWriteError(err);
     }
@@ -502,3 +487,6 @@ export const host: ConsoleHost = {
   }
   */
 };
+
+host.path.resolve = host._resolvePath.bind(host);
+host.path.relative = host._relativePath.bind(host);

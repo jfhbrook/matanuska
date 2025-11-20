@@ -113,18 +113,19 @@ const RESOLVE_PATH_CASES: Array<[RelativePath, AbsolutePath]> = [
   ],
 ];
 
-test('relativePath', async () => {
+// TODO: Move these tests to host
+test('path.relative', async () => {
   await topic.swear(async (host) => {
     for (const [from, to, expected] of RELATIVE_PATH_CASES) {
-      t.equal(host.relativePath(from, to), expected);
+      t.equal(host.path.relative(from, to), expected);
     }
   });
 });
 
-test('resolvePath', async () => {
+test('path.resolve', async () => {
   await topic.swear(async (host) => {
     for (const [relative, expected] of RESOLVE_PATH_CASES) {
-      t.equal(host.resolvePath(relative), expected);
+      t.equal(host.path.resolve(relative), expected);
     }
   });
 });

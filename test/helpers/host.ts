@@ -104,7 +104,7 @@ export function mockConsoleHost(
     _files() {
       return Object.fromEntries(
         Object.entries(files || {}).map(([path, contents]) => {
-          return [this.resolvePath(path), contents];
+          return [this.path.resolve(path), contents];
         }),
       );
     },
@@ -165,16 +165,18 @@ export function mockConsoleHost(
     },
 
     async readTextFile(filename: string): Promise<string> {
-      const contents = this.files[this.resolvePath(filename)];
+      const contents = this.files[this.path.resolve(filename)];
       expect(contents).not.toBeUndefined();
       return contents;
     },
 
     async writeTextFile(filename: string, contents: string): Promise<void> {
-      this.files[this.resolvePath(filename)] = contents;
+      this.files[this.path.resolve(filename)] = contents;
     },
   };
 
+  mockHost.path.resolve = host._resolvePath.bind(mockHost);
+  mockHost.path.relative = host._relativePath.bind(mockHost);
   mockHost.files = mockHost._files();
 
   return mockHost;
