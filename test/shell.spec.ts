@@ -1,10 +1,11 @@
 import { describe, expect, test } from 'vitest';
 import { discuss } from '@jfhbrook/swears';
+import { MockConsoleHost } from '@matanuska/host/test';
 
 import { Host } from '../host';
 import { abbreviateHome, Prompt } from '../shell';
 
-import { mockConsoleHost, MockConsoleHost } from './helpers/host';
+import { mockConsoleHost } from './helpers/host';
 
 const hostTopic = discuss(async () => {
   return mockConsoleHost();

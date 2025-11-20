@@ -1,10 +1,11 @@
 import { describe, test } from 'vitest';
+import { MockConsoleHost } from '@matanuska/host/test';
 import { t } from './helpers/tap';
 
 import { discuss } from '@jfhbrook/swears';
 
 import { Level, Channel } from '@matanuska/host';
-import { mockConsoleHost, MockConsoleHost } from './helpers/host';
+import { mockConsoleHost } from './helpers/host';
 
 const topic = discuss(async (): Promise<MockConsoleHost> => {
   return mockConsoleHost();

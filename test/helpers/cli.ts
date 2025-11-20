@@ -1,14 +1,11 @@
-import { Container } from '../../index';
+import { MockConsoleHost } from '@matanuska/host/test';
 
+import { Container } from '../../index';
 import { Config, Argv, Env } from '../../config';
 import { ExitCode } from '../../exit';
 import { Host } from '../../host';
 
-import {
-  mockConsoleHost,
-  MockConsoleHost,
-  MockConsoleHostOptions,
-} from './host';
+import { mockConsoleHost, MockConsoleHostOptions } from './host';
 
 export interface RunResult {
   exitCode: ExitCode;
@@ -30,7 +27,7 @@ export async function run(
   env: Env,
   options?: MockConsoleHostOptions,
 ): Promise<RunResult> {
-  const host = mockConsoleHost(options);
+  const host = mockConsoleHost(options?.files);
 
   return await new Promise((resolve, reject) => {
     const exitFn = async (exitCode: number): Promise<void> => {

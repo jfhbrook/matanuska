@@ -5,12 +5,18 @@ import { stdin, stdout, stderr, platform, cwd, env, argv } from 'node:process';
 import { Readable, Writable, Transform } from 'node:stream';
 import { inspect } from 'node:util';
 
-import pathTool from './path';
-import type { PathObject, PathTool } from './path';
-
-import type { StdChannel, Channel } from './channel';
-
-import { INPUT, OUTPUT, ERROR, WARN, INFO, DEBUG, stdChannel } from './channel';
+import pathTool from './path.js';
+import type { PathObject, PathTool } from './path.js';
+import type { StdChannel, Channel } from './channel.js';
+import {
+  INPUT,
+  OUTPUT,
+  ERROR,
+  WARN,
+  INFO,
+  DEBUG,
+  stdChannel,
+} from './channel.js';
 import {
   HostError,
   HostException,
@@ -26,9 +32,9 @@ import {
   fileReadError,
   fileWriteError,
   channelError,
-} from './errors';
-import { Formatter } from './format';
-import { Level } from './level';
+} from './errors.js';
+import { Formatter } from './format.js';
+import { Level } from './level.js';
 
 export {
   inspect,
