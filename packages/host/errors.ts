@@ -45,7 +45,7 @@ export interface ExitError extends HostError {
 
 export function exitError(exitCode: number): ExitError {
   const __type__: HostErrorExitType = 'exit';
-  return Object.assign(new Error('ExitError'), { __type__, exitCode });
+  return Object.assign(new Error(''), { __type__, exitCode });
 }
 
 export function isHostExit(err: any): err is ExitError {
