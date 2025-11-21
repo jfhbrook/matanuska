@@ -3,6 +3,9 @@ set dotenv-load := true
 start: build
   npm start
 
+start-qt:
+  PATH="${PATH}:$(pwd)/bin" bin/matbas
+
 build: 
   make MATBAS_BUILD="${MATBAS_BUILD}"
 
