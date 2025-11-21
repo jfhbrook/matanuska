@@ -41,11 +41,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Stub out node os module
   - [x] Implement Node.js readline
   - [x] Remove Node version from format output
+  - [ ] Finish ADR
+- [ ] Implement QT entry point
   - [ ] Convince Vite to drop external dependencies
-  - [ ] Rewrite `ConsoleHost` in QT
+  - [ ] Implement `@matanuska/host`
+  - [ ] Implement `@matanuska/debug`
+  - [ ] Implement `@matanuska/readline`
   - [ ] Add QT versions to format output
-  - [ ] Rewrite OpenTelemetry in c++
-  - [ ] Implement readline in c++/rust
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands
