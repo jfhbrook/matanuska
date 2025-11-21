@@ -12,6 +12,9 @@ const MATBAS_BUILD =
   process.env.MATBAS_BUILD === 'release' ? 'release' : 'debug';
 
 export default defineConfig({
+  ssr: {
+    external: ['@matanuska/host', '@matanuska/readline'],
+  },
   plugins: [
     consts({
       matbas: {
@@ -34,4 +37,7 @@ export default defineConfig({
       },
     }),
   ],
+  optimizeDeps: {
+    exclude: ['@matanuska/host', '@matanuska/readline'],
+  },
 });

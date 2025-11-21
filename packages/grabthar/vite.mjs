@@ -15,31 +15,33 @@ export const testConfig = {
 };
 
 export function defineConfig(cfg) {
-  return defineViteConfig(
-    Object.assign({}, cfg, {
-      build: {
-        ...config.build,
-        ssr: config.entrypoint,
-        outDir: config.outDir,
-        rollupOptions:
-          config.moduleType === 'commonjs'
-            ? {
-                output: {
-                  format: 'cjs',
-                },
-              }
-            : {},
-      },
-      ssr: { ...(cfg.ssr || {}) },
-      test: {
-        ...(cfg.test || {}),
-        ...testConfig,
-      },
-      plugins: [
-        ...(cfg.plugins || []),
-        swc.vite(swcConfig),
-        config.build.minify && minify(),
-      ],
-    }),
-  );
+  const c = Object.assign({}, cfg, {
+    build: {
+      ...config.build,
+      ssr: config.entrypoint,
+      outDir: config.outDir,
+      rollupOptions:
+        config.moduleType === 'commonjs'
+          ? {
+              output: {
+                format: 'cjs',
+              },
+            }
+          : {},
+    },
+    ssr: { ...(cfg.ssr || {}) },
+    test: {
+      ...(cfg.test || {}),
+      ...testConfig,
+    },
+    plugins: [
+      ...(cfg.plugins || []),
+      swc.vite(swcConfig),
+      config.build.minify && minify(),
+    ],
+  });
+
+  // console.log(c);
+
+  return defineViteConfig(c);
 }

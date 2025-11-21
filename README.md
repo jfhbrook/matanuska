@@ -27,20 +27,21 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Rip out `ansi-colors`
   - [x] Vendor `text-table`
   - [x] Vendor `strftime`
-  - [x] Disable OpenTelemetry
+  - [x] Move OpenTelemetry to external package
   - [x] Rip out NestJS
   - [x] Write actually not terrible Container abstraction
   - [x] Disable process/job shenanigans
-  - [ ] Vendor node path module
+  - [x] Vendor node path module
     - basename
     - join
     - relative
     - resolve
-  - [ ] Rip out node assert module
-  - [ ] Stub out util.inspect
-  - [ ] Stub out node os module
-  - [ ] Implement fake readline
-  - [ ] Remove Node version from format output
+  - [x] Rip out node assert module
+  - [x] Stub out util.inspect
+  - [x] Stub out node os module
+  - [x] Implement Node.js readline
+  - [x] Remove Node version from format output
+  - [ ] Convince Vite to drop external dependencies
   - [ ] Rewrite `ConsoleHost` in QT
   - [ ] Add QT versions to format output
   - [ ] Rewrite OpenTelemetry in c++
