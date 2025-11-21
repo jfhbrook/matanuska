@@ -41,6 +41,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Stub out node os module
   - [x] Implement Node.js readline
   - [x] Remove Node version from format output
+  - [ ] Move host tests to host
+  - [ ] Move readline tests for readline
   - [ ] Finish ADR
 - [ ] Implement QT entry point
   - [ ] Convince Vite to drop external dependencies
