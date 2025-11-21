@@ -1,0 +1,8 @@
+*.js
+*.js.map
+*.d.ts
+test/*.js
+node_modules
+dist
+coverage
+tsconfig.build.tsbuildinfo

@@ -1,9 +1,7 @@
-// import { Attributes, context, Context, Span, SpanOptions, trace } from '@opentelemetry/api';
-//
-type Attributes = any;
-type Context = any;
-type Span = any;
-type SpanOptions = any;
+import type { Attributes, Context, Span, SpanOptions } from '@matanuska/debug';
+import { startSpan, addEvent } from '@matanuska/debug';
+
+export { startSpan, addEvent };
 
 import type { Chunk } from './bytecode/chunk';
 import type { Runtime } from './runtime';
@@ -94,87 +92,3 @@ export function traceExec(rt: Runtime): void {
   }
   //#endif
 }
-
-// const tracer = trace.getTracer('main');
-
-export { startSpan };
-
-// Very similar to OpenTelemetry's implementation of startActiveSpan, except
-// the callback function closes the span and attaches annotations in error
-// cases.
-//
-// This is currently defined regardless of whether or not we're in debug
-// mode, so that calling startSpan without a guard won't crash the program.
-// In practice, guards are placed at the call site.
-//
-// See: https://github.com/open-telemetry/opentelemetry-js/blob/main/api/src/trace/NoopTracer.ts#L56-L100
-function startSpan<F extends (span: Span) => ReturnType<F>>(
-  name: string,
-  fn: F
-): ReturnType<F>;
-function startSpan<F extends (span: Span) => ReturnType<F>>(
-  name: string,
-  opts: SpanOptions | undefined,
-  fn: F
-): ReturnType<F>;
-function startSpan<F extends (span: Span) => ReturnType<F>>(
-  name: string,
-  opts: SpanOptions | undefined,
-  ctx: Context | undefined,
-  fn: F
-): ReturnType<F>;
-function startSpan<F extends (span: Span) => ReturnType<F>>(
-  _name: string,
-  arg2?: F | SpanOptions,
-  arg3?: F | Context,
-  arg4?: F
-): ReturnType<F> | undefined {
-  let _opts: SpanOptions | undefined;
-  let _ctx: Context | undefined;
-  let fn: F;
-  if (arguments.length < 2) {
-    return;
-  } else if (arguments.length === 2) {
-    fn = arg2 as F;
-  } else if (arguments.length === 3) {
-    _opts = arg2 as SpanOptions | undefined;
-    fn = arg3 as F;
-  } else {
-    _opts = arg2 as SpanOptions | undefined;
-    _ctx = arg3 as Context | undefined;
-    fn = arg4 as F;
-  }
-  const wrapped = (span: Span) => {
-    try {
-      return fn(span);
-    } catch (err) {
-      console.log('span.recordException');
-      // span.recordException(err);
-  throw err;
-    } finally {
-      // span.end();
-    }
-  }
-
-  return wrapped(null);
-  /*
-  const parentContext = ctx ?? context.active();
-  const span = tracer.startSpan(name, opts, parentContext);
-  const contextWithSpanSet = trace.setSpan(parentContext, span);
-  return context.with(contextWithSpanSet, wrapped, undefined, span);
-  */
-}
-
-// A convenience function for adding events when you don't have the span
-// immediately on-hand. Like startSpan, this is not hidden behind jscc and
-// should instead be conditionally imported/called at the site of use.
-export function addEvent(_message: string, _attributes: Attributes = {}): void {
-  /*
-  const span = trace.getActiveSpan();
-  if (span) {
-    span.addEvent(message, attributes);
-  }
-  */
-}
-
-export { Span };
