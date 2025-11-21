@@ -1,7 +1,8 @@
-import type { Attributes, Context, Span, SpanOptions } from '@matanuska/debug';
+import type { Span } from '@matanuska/debug';
 import { startSpan, addEvent } from '@matanuska/debug';
 
 export { startSpan, addEvent };
+export type { Span };
 
 import type { Chunk } from './bytecode/chunk';
 import type { Runtime } from './runtime';

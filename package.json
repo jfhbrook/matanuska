@@ -9,6 +9,7 @@
   },
   "workspaces": [
     "packages/citree",
+    "packages/debug",
     "packages/entrypoint",
     "packages/fireball",
     "packages/grabthar",
@@ -20,6 +21,8 @@
   "scripts": {
     "build": "dotenvx run -f \"${ENV_FILE:-.env}\" -- grabthar build",
     "build:ast": "citree ast/index.citree",
+    "build:citree": "npm run build -w packages/debug",
+    "build:debug": "npm run build -w packages/debug",
     "build:entrypoint": "entrypoint ./bin/matbasjs",
     "build:path": "npm run build -w packages/path",
     "build:host": "npm run build -w packages/host",
@@ -40,7 +43,8 @@
     "test:env": "dotenvx run -f test.env --overload -- ./scripts/test-env.sh",
     "snap": "dotenvx run -f test.env -- grabthar snap",
     "prepare": "husky",
-    "report": "./scripts/report.sh"
+    "report": "./scripts/report.sh",
+    "clean": "rm -rf dist"
   },
   "keywords": [
     "basic",
@@ -64,8 +68,11 @@
     "@jfhbrook/grabthar": "^0.0.1",
     "@jfhbrook/swears": "^1.0.2",
     "@matanuska/citree": "^1.0.2",
+    "@matanuska/debug": "^1.0.0",
     "@matanuska/entrypoint": "^1.0.0",
     "@matanuska/fireball": "^1.0.0",
+    "@matanuska/host": "^1.0.0",
+    "@matanuska/readline": "^1.0.0",
     "@matanuska/telemetry": "^1.0.0",
     "@matanuska/test-generator": "^0.0.1",
     "@types/strftime": "^0.9.8",
