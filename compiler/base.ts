@@ -123,6 +123,12 @@ export function isRootBlock(block: Block): boolean {
 // if, else, else if and endif
 //
 
+// QJSEngine does not allow circular references. We work around this by
+// stubbing out the references ahead of time, then setting them after the
+// relevant blocks are defined.
+let ElseBlock: any = null;
+let ElseIfBlock: any = null;
+
 class IfBlock extends Block {
   kind = 'if';
 
@@ -149,7 +155,7 @@ class IfBlock extends Block {
   }
 }
 
-class ElseBlock extends Block {
+class _ElseBlock extends Block {
   kind = 'else';
 
   constructor(public endJump: Short) {
@@ -160,7 +166,7 @@ class ElseBlock extends Block {
     this.compiler.endIf(this.endJump);
     this.end();
 
-    let block: Block | null = this.previous;
+    let block: any = this.previous;
     while (block instanceof ElseIfBlock) {
       block.compiler.endIf(block.endJump);
       block.end();
@@ -169,7 +175,7 @@ class ElseBlock extends Block {
   }
 }
 
-class ElseIfBlock extends IfBlock {
+class _ElseIfBlock extends IfBlock {
   kind = 'else if';
 
   constructor(
@@ -184,7 +190,7 @@ class ElseIfBlock extends IfBlock {
     this.compiler.endIf(endJump);
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let block: Block | null = this;
+    let block: any = this;
     while (block instanceof ElseIfBlock) {
       block.compiler.endIf(block.endJump);
       block.end();
@@ -192,6 +198,10 @@ class ElseIfBlock extends IfBlock {
     }
   }
 }
+
+// Update the references here
+ElseBlock = _ElseBlock;
+ElseIfBlock = _ElseIfBlock;
 
 //
 // For, while, and repeat/until

@@ -208,3 +208,9 @@ OpenTelemetry will likely need to be implemented in C++, and exposed to `QJSEngi
 ## Inspect
 
 QT has a function called `QDebug`, which will probably work reasonably well. Otherwise, we can hand-roll a solution and move on.
+
+## Idiosyncrasies of QJSEngine
+
+All QJSEngine code runs in `strict` mode. This means that `eval` and `arguments` are forbidden names.
+
+QJSEngine can not reference classes before they are defined, during definition. This presents challenges in both `format.ts` (which references a global instance before definition) and `compiler/base.ts` (which contains circular references between `IfBlock`, `ElseBlock` and `IfElseBlock`).

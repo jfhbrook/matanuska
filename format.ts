@@ -286,6 +286,12 @@ function inspectArray(
 }
 
 /**
+ * The default formatter. We need to create a reference so DefaultFormatter's
+ * definition is accepted by QJSEngine. We will initialize and export it later.
+ */
+let formatter: any = null;
+
+/**
  * A default, standard formatter.
  */
 export class DefaultFormatter extends Formatter {
@@ -782,10 +788,9 @@ export class DefaultFormatter extends Formatter {
   }
 }
 
-/**
- * The default formatter, initialized for your convenience.
- */
-export const formatter = new DefaultFormatter();
+// Set and export the default formatter.
+formatter = new DefaultFormatter();
+export { formatter };
 
 export class Inspector extends DefaultFormatter {
   public colors: boolean = true;
