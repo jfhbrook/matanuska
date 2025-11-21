@@ -41,11 +41,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [x] Stub out node os module
   - [x] Implement Node.js readline
   - [x] Remove Node version from format output
-  - [ ] Move host tests to host
-  - [ ] Move readline tests for readline
-  - [ ] Finish ADR
+  - [x] Finish ADR
+- [ ] Package testing
+  - [ ] Move host tests to packages/host
+  - [ ] Implement readline tests
+  - [ ] Vendor/use tape
+- [ ] Convince Vite to drop external dependencies
 - [ ] Implement QT entry point
-  - [ ] Convince Vite to drop external dependencies
   - [ ] Implement `@matanuska/host`
   - [ ] Implement `@matanuska/debug`
   - [ ] Implement `@matanuska/readline`
