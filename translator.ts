@@ -35,8 +35,8 @@ async function repl(
       ps1,
       historySize: config.historySize,
       historyFileSize: config.historyFileSize,
-      async eval(input: string): Promise<void> {
-        await executor.eval(input);
+      async evaluate(input: string): Promise<void> {
+        await executor.evaluate(input);
       },
       error(err: any): void {
         if (err instanceof BaseFault || err instanceof Exit) {

@@ -12,7 +12,7 @@ export interface Repl {
   ps1: Prompt;
   historySize: number;
   historyFileSize: number;
-  eval(input: string): Promise<void>;
+  evaluate(input: string): Promise<void>;
   error(err: any): void;
 }
 
@@ -204,7 +204,7 @@ export async function readline(repl: Repl) {
     while (true) {
       try {
         const input = await readline.prompt();
-        await repl.eval(input);
+        await repl.evaluate(input);
       } catch (err) {
         repl.error(err);
       }

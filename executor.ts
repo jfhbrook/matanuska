@@ -145,7 +145,7 @@ export class Executor {
    * @param input Source code to eval.
    * @returns A promise.
    */
-  async eval(input: string): Promise<void> {
+  async evaluate(input: string): Promise<void> {
     //#if _MATBAS_BUILD == 'debug'
     await startSpan('Executor#eval', async (_: Span) => {
       //#endif
