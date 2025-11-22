@@ -45,7 +45,7 @@ ast/expr.ts ast/instr.ts ast/index.ts: ast/index.citree
 
 citree: $(CITREE_JS_FILES) packages/citree/test/__snapshots__/*.spec.ts.snap
 
-$(CITREE_JS_FILES): $(CITREE_TS_FILES) packages/citree/package.json packages/citree/package-lock.json packages/citree/example/ast.citree
+$(CITREE_JS_FILES): $(CITREE_TS_FILES) packages/citree/package.json packages/citree/example/ast.citree
 	npm run build -w packages/citree
 
 packages/citree/example/ast.citree: ast/index.citree
@@ -63,13 +63,13 @@ $(DEBUG_JS_FILES): $(DEBUG_TS_FILES) packages/debug/package.json packages/debug/
 # entrypoint
 entrypoint: packages/entrypoint/dist/index.js packages/entrypoint/dist/main.js
 
-packages/entrypoint/dist/index.js packages/entrypoint/dist/main.js: $(ENTRYPOINT_TS_FILES) packages/entrypoint/matbas.sh.tftpl packages/entrypoint/package.json packages/entrypoint/package-lock.json packages/entrypoint/tsconfig.json packages/entrypoint/tsconfig.build.json
+packages/entrypoint/dist/index.js packages/entrypoint/dist/main.js: $(ENTRYPOINT_TS_FILES) packages/entrypoint/matbas.sh.tftpl packages/entrypoint/package.json packages/entrypoint/tsconfig.json packages/entrypoint/tsconfig.build.json
 	npm run build:entrypoint
 
 # fireball
 fireball: packages/fireball/dist/index.js packages/fireball/dist/main.js
 
-packages/fireball/dist/index.js packages/fireball/dist/main.js: $(FIREBALL_TS_FILES) packages/fireball/matbas.sh.tftpl packages/fireball/package.json packages/fireball/package-lock.json packages/fireball/tsconfig.json packages/fireball/tsconfig.build.json
+packages/fireball/dist/index.js packages/fireball/dist/main.js: $(FIREBALL_TS_FILES) packages/fireball/matbas.sh.tftpl packages/fireball/package.json packages/fireball/tsconfig.json packages/fireball/tsconfig.build.json
 	npm run build:fireball
 
 # host
@@ -81,7 +81,7 @@ $(READLINE_JS_FILES): $(READLINE_TS_FILES)
 	npm run build:readline
 
 # telemetry
-packages/telemetry/dist/index.js: packages/telemetry/index.ts packages/telemetry/grabthar.yml packages/telemetry/package.json packages/telemetry/package-lock.json packages/telemetry/vite.config.mjs
+packages/telemetry/dist/index.js: packages/telemetry/index.ts packages/telemetry/grabthar.yml packages/telemetry/package.json packages/telemetry/vite.config.mjs
 	npm run build:telemetry
 
 # test-generator
@@ -93,7 +93,7 @@ packages/test-generator/dist/%: packages/test-generator/*.ts packages/test-gener
 # dist
 dist: dist/main.js dist/main.js.map
 
-dist/main.js dist/main.js.map: grabthar.yml package.json package-lock.json .env release.env packages/host/index.js $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
+dist/main.js dist/main.js.map: grabthar.yml package.json .env release.env packages/host/index.js $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # bin
