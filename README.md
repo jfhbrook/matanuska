@@ -23,6 +23,12 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Prioritized Backlog
 
 - [ ] Fallout from QT Refactor
+  - [ ] Iterate on `make` build
+    - It double-builds because of churn in package-lock
+    - It takes a long time to load file lists
+    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
+  - [ ] Convince Vite to drop external dependencies
+    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
   - [ ] Implement proper assert module
     - Possibly by vendoring node's assert module
   - [ ] Refactor `path`
@@ -34,11 +40,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Revisit bundling `ansi-colors`
     - It handles sophisticated logic that my little helpers do not
     - Possibly a good target for a `grabthar` build
-  - [ ] Convince Vite to drop external dependencies
-    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
-  - [ ] Iterate `make` build
-    - It double-builds
-    - It takes a long time to load file lists
 - [ ] Package testing
   - [ ] Move host tests to packages/host
   - [ ] Implement readline tests
