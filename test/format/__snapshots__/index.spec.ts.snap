@@ -243,6 +243,8 @@ Traceback:
 Matanuska BASIC: v0.0.1
 swc: v1.7.26
 vite: v1.7.26
+Node.js: NODE_VERSION
+
 This is a bug in Matanuska BASIC. If you copy this entire message and post it
 to the issues tracker:
 
@@ -297,6 +299,8 @@ Traceback:
 Matanuska BASIC: v0.0.1
 swc: v1.7.26
 vite: v1.7.26
+Node.js: NODE_VERSION
+
 This is a bug in Matanuska BASIC. If you copy this entire message and post it
 to the issues tracker:
 

@@ -2,21 +2,14 @@ import { spawnSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import { hostname, userInfo, homedir } from 'node:os';
 import { stdin, stdout, stderr, platform, cwd, env, argv } from 'node:process';
+import { version as nodeVersion } from 'node:process';
 import { Readable, Writable, Transform } from 'node:stream';
 import { inspect } from 'node:util';
 
 import pathTool from './path.js';
 import type { PathObject, PathTool } from './path.js';
 import type { StdChannel, Channel } from './channel.js';
-import {
-  INPUT,
-  OUTPUT,
-  ERROR,
-  WARN,
-  INFO,
-  DEBUG,
-  stdChannel,
-} from './channel.js';
+import { INPUT, OUTPUT, ERROR, WARN, INFO, DEBUG, stdChannel } from './channel.js';
 import {
   HostError,
   HostException,
@@ -33,11 +26,11 @@ import {
   fileWriteError,
   channelError,
 } from './errors.js';
-import { Formatter } from './format.js';
 import { Level } from './level.js';
 
 export {
   inspect,
+  nodeVersion,
   Readable,
   Writable,
   Transform,
@@ -71,6 +64,10 @@ export type {
   PathObject,
   PathTool,
 };
+
+export interface Formatter {
+  format: (obj: any) => string;
+}
 
 /**
  * An interface that encapsulates platform specific behavior. This includes:

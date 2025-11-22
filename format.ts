@@ -1,5 +1,5 @@
 import VERSIONS from 'consts:versions';
-import { inspect } from '@matanuska/host';
+import { inspect, nodeVersion } from '@matanuska/host';
 
 import {
   BaseException,
@@ -492,6 +492,9 @@ export class DefaultFormatter extends Formatter {
     report += `Matanuska BASIC: v${VERSIONS.matbas}\n`;
     report += `swc: v${VERSIONS.swc}\n`;
     report += `vite: v${VERSIONS.swc}\n`;
+    // TODO: This will need to be the version used in builds, when we switch
+    // to QT. We will also want to include information about the C++ stack.
+    report += `Node.js: ${nodeVersion}\n\n`;
     report +=
       'This is a bug in Matanuska BASIC. If you copy this entire message and post it\n';
     report += 'to the issues tracker:\n\n';

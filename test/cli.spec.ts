@@ -1,4 +1,4 @@
-import * as PATH from 'node:path';
+import { basename } from 'node:path';
 
 import { describe, expect, test } from 'vitest';
 
@@ -7,7 +7,7 @@ import { EXAMPLES } from './helpers/files';
 
 describe('examples', () => {
   for (const p of Object.keys(EXAMPLES)) {
-    const name = PATH.basename(p);
+    const name = basename(p);
     switch (name) {
       // TODO: Some scripts will need mocked input
       default:

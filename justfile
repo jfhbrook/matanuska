@@ -22,9 +22,6 @@ format:
   npm run format
   clang-format -i core/*.cpp core/*.h
 
-format-markdown file:
-  npm run format-markdown -- '{{ file }}'
-
 fireball:
   npm run fireball
 
@@ -39,13 +36,6 @@ test:
   make build
   npm run test:env
   npm test
-
-test-citree:
-  make citree
-  npm test -w packages/citree
-
-test-grabthar:
-  npm test -w packages/grabthar
 
 snap:
   npm run snap

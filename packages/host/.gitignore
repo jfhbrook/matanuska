@@ -5,4 +5,4 @@ test/*.js
 node_modules
 dist
 coverage
-tsconfig.build.tsbuildinfo
+*.tsbuildinfo

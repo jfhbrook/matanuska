@@ -1,8 +1,10 @@
 *.js
+index.mjs
 *.js.map
+*.mjs.map
 *.d.ts
 test/*.js
 node_modules
 dist
 coverage
-tsconfig.build.tsbuildinfo
+*.tsbuildinfo

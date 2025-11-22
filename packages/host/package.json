@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier --write '**.ts'",
+    "check": "tsc --noEmit",
     "lint": "eslint '**.ts' --ignore-pattern '**.d.ts' --fix",
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -f *.js *.js.map *.d.ts"

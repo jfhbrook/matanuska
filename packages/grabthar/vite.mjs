@@ -41,7 +41,10 @@ export function defineConfig(cfg) {
     ],
   });
 
-  // console.log(c);
+  console.log('Running Vite with the following configuration:');
+  console.log('---');
+  console.log(c);
+  console.log('---');
 
   return defineViteConfig(c);
 }

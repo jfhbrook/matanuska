@@ -1,5 +1,4 @@
-import type { Span } from '@matanuska/debug';
-import { startSpan, addEvent } from '@matanuska/debug';
+import { Span, startSpan, addEvent } from '@matanuska/debug';
 
 export { startSpan, addEvent };
 export type { Span };

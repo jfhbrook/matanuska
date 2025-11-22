@@ -13,8 +13,25 @@ const MATBAS_BUILD =
 
 export default defineConfig({
   ssr: {
-    external: ['@matanuska/host', '@matanuska/readline'],
+    external: [
+      '@matanuska/debug',
+      '@matanuska/host',
+      '@matanuska/host/path',
+      '@matanuska/host/test',
+      '@matanuska/readline',
+    ],
   },
+  /*
+  build: {
+    external: [
+      '@matanuska/debug',
+      '@matanuska/host',
+      '@matanuska/host/path',
+      '@matanuska/host/test',
+      '@matanuska/readline'
+    ],
+  },
+  */
   plugins: [
     consts({
       matbas: {
@@ -37,7 +54,15 @@ export default defineConfig({
       },
     }),
   ],
+  /*
   optimizeDeps: {
-    exclude: ['@matanuska/host', '@matanuska/readline'],
+    exclude: [
+      '@matanuska/debug',
+      '@matanuska/host', 
+      '@matanuska/host/path',
+      '@matanuska/host/test',
+      '@matanuska/readline'
+    ],
   },
+  */
 });

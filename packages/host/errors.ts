@@ -1,3 +1,5 @@
+import type { Channel } from './channel.js';
+
 export const ENOENT: string = 'ENOENT';
 export const EACCES: string = 'EACCES';
 
@@ -174,8 +176,6 @@ export interface FileReadErrorParams {
   exitCode?: number;
   path: string;
 }
-
-type Channel = 0 | 1 | 2 | 3 | 4 | 5;
 
 export function channelError(channel: Channel): FileWriteError {
   const __type__: HostErrorWriteType = 'write';

@@ -22,31 +22,27 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Spike on QT
-  - [x] Hello world
-  - [x] Rip out `ansi-colors`
-  - [x] Vendor `text-table`
-  - [x] Vendor `strftime`
-  - [x] Move OpenTelemetry to external package
-  - [x] Rip out NestJS
-  - [x] Write actually not terrible Container abstraction
-  - [x] Disable process/job shenanigans
-  - [x] Vendor node path module
-    - basename
-    - join
-    - relative
-    - resolve
-  - [x] Rip out node assert module
-  - [x] Stub out util.inspect
-  - [x] Stub out node os module
-  - [x] Implement Node.js readline
-  - [x] Remove Node version from format output
-  - [x] Finish ADR
+- [ ] Fallout from QT Refactor
+  - [ ] Implement proper assert module
+    - Possibly by vendoring node's assert module
+  - [ ] Refactor `path`
+    - Use a class
+    - Potentially move out of `host`
+  - [ ] Refactor `readline`
+    - [ ] Expose the `input` method to the executor
+    - [ ] Should the `prompt` method be named `read`?
+  - [ ] Revisit bundling `ansi-colors`
+    - It handles sophisticated logic that my little helpers do not
+    - Possibly a good target for a `grabthar` build
+  - [ ] Convince Vite to drop external dependencies
+    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
+  - [ ] Iterate `make` build
+    - It double-builds
+    - It takes a long time to load file lists
 - [ ] Package testing
   - [ ] Move host tests to packages/host
   - [ ] Implement readline tests
   - [ ] Vendor/use tape
-- [ ] Convince Vite to drop external dependencies
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
   - [ ] Implement `@matanuska/debug`
@@ -100,6 +96,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
+- Is `format-markdown` script necessary?
 - User cmdlets
   - Dust off `./adrs/draft/cmdlets.md`
   - Import cmdlets from some directory

@@ -7,11 +7,9 @@ import {
   trace,
 } from '@opentelemetry/api';
 
-export type { Attributes, Context, Span, SpanOptions };
+export { Attributes, Context, Span, SpanOptions };
 
 const tracer = trace.getTracer('main');
-
-export { startSpan };
 
 // Very similar to OpenTelemetry's implementation of startActiveSpan, except
 // the callback function closes the span and attaches annotations in error
@@ -74,6 +72,8 @@ function startSpan<F extends (span: Span) => ReturnType<F>>(
   const contextWithSpanSet = trace.setSpan(parentContext, span);
   return context.with(contextWithSpanSet, wrapped, undefined, span);
 }
+
+export { startSpan };
 
 // A convenience function for adding events when you don't have the span
 // immediately on-hand. Like startSpan, this is not hidden behind jscc and

@@ -2,7 +2,7 @@
  * This module is based on https://npm.im/strftime by Sami Samhuri and
  * contributors.
  *
- * This software is released under the MIT license:
+ * This software is released under the MIT license.
  */
 
 //

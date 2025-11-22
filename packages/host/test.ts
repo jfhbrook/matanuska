@@ -79,7 +79,10 @@ export interface MockConsoleHost extends ConsoleHost {
   ) => Promise<T>;
 }
 
-export function mockHost(files: Files, host_: ConsoleHost = host): MockConsoleHost {
+export function mockHost(
+  files: Files,
+  host_: ConsoleHost = host,
+): MockConsoleHost {
   const stdin = new MockInputStream();
   const stdout = new MockOutputStream();
   const stderr = new MockOutputStream();

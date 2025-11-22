@@ -5,9 +5,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write '**.ts'",
+    "check": "tsc --noEmit",
     "lint": "eslint '**.ts' --fix",
+    "build": "tsc -p tsconfig.build.json",
     "test": "tests-of-the-sierra-madre",
     "clean": "rm -f *.js *.js.map *.d.ts"
   },

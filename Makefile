@@ -23,6 +23,11 @@ READLINE_JS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -
 default: bin
 
 # environment shenanigans
+#
+# This is a hack to get Make to depend on changes to the MATBAS_BUILD
+# environment variable. See:
+#
+#     https://stackoverflow.com/questions/11647859/make-targets-depend-on-variables
 
 TARGET_ENV = .make.$(shell echo $($(1))).env
 
