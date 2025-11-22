@@ -22,24 +22,9 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Fallout from QT Refactor
-  - [x] Convince Vite to drop external dependencies
-    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
-  - [ ] Iterate on `make` build
-    - It double-builds because of churn in package-lock
-    - It takes a long time to load file lists
-    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
-  - [ ] Implement proper assert module
-    - Possibly by vendoring node's assert module
-  - [ ] Refactor `path`
-    - Use a class
-    - Potentially move out of `host`
-  - [ ] Refactor `readline`
-    - [ ] Expose the `input` method to the executor
-    - [ ] Should the `prompt` method be named `read`?
-  - [ ] Revisit bundling `ansi-colors`
-    - It handles sophisticated logic that my little helpers do not
-    - Possibly a good target for a `grabthar` build
+- [ ] Refactor `readline`
+  - [ ] Expose the `input` method to the executor
+  - [ ] Should the `prompt` method be named `read`?
 - [ ] Package testing
   - [ ] Move host tests to packages/host
   - [ ] Implement readline tests
@@ -98,6 +83,17 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Up Next
 
 - Is `format-markdown` script necessary?
+- Iterate on `make` build
+  - See [ADR 028](./adrs/028-cpp-runtime.md) for details
+- Fallout from QT Refactor
+  - [ ] Implement proper assert module
+    - Possibly by vendoring node's assert module
+  - [ ] Refactor `path`
+    - Use a class
+    - Potentially move out of `host`
+  - [ ] Revisit bundling `ansi-colors`
+    - It handles sophisticated logic that my little helpers do not
+    - Possibly a good target for a `grabthar` build
 - User cmdlets
   - Dust off `./adrs/draft/cmdlets.md`
   - Import cmdlets from some directory
