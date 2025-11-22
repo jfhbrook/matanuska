@@ -11,6 +11,7 @@ debug.ts
 /bin/matbasjs
 /src/dist.h
 .make.*.env
+*.tgz
 
 # Logs
 logs

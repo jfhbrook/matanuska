@@ -9,7 +9,15 @@ import { inspect } from 'node:util';
 import pathTool from './path.js';
 import type { PathObject, PathTool } from './path.js';
 import type { StdChannel, Channel } from './channel.js';
-import { INPUT, OUTPUT, ERROR, WARN, INFO, DEBUG, stdChannel } from './channel.js';
+import {
+  INPUT,
+  OUTPUT,
+  ERROR,
+  WARN,
+  INFO,
+  DEBUG,
+  stdChannel,
+} from './channel.js';
 import {
   HostError,
   HostException,

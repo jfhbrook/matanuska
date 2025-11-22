@@ -8,17 +8,17 @@ CITREE_TS_FILES := $(shell find . -name '*.ts' -path './packages/citree/*' -not 
 CITREE_JS_FILES := $(shell find . -name '*.ts' -path './packages/citree/*' -not -path './packages/citree/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
 
 DEBUG_TS_FILES := $(shell find . -name '*.ts' -path './packages/debug/*' -not -path './packages/debug/node_modules/*' -not -path './packages/debug/example/*' | grep -v '.d.ts')
-DEBUG_JS_FILES := $(shell find . -name '*.ts' -path './packages/debug/*' -not -path './packages/debug/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
+DEBUG_JS_FILES := $(shell find . -name '*.ts' -path './packages/debug/*' -not -path './packages/debug/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/' | sed 's^packages/debug^node_modules/@matanuska/debug^')
 
 ENTRYPOINT_TS_FILES := $(shell find . -name '*.ts' -path './packages/entrypoint/src/*')
 
 FIREBALL_TS_FILES := $(shell find . -name '*.ts' -path './packages/fireball/src/*')
 
 HOST_TS_FILES := $(shell find . -name '*.ts' -path './packages/host/*' -not -path './packages/host/node_modules/*' | grep -v '.d.ts')
-HOST_JS_FILES := $(shell find . -name '*.ts' -path './packages/host/*' -not -path './packages/host/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
+HOST_JS_FILES := $(shell find . -name '*.ts' -path './packages/host/*' -not -path './packages/host/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/' | sed 's^packages^node_modules/@matanuska/host^')
 
-READLINE_TS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/host/node_modules/*' | grep -v '.d.ts')
-READLINE_JS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/host/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
+READLINE_TS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/readline/node_modules/*' | grep -v '.d.ts')
+READLINE_JS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/readline/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/' | sed 's^packages^node_modules/@matanuska/readline^')
 
 default: bin
 
@@ -57,8 +57,10 @@ packages/citree/test/__snapshots__/%.spec.ts.snap: packages/citree/example/%.ts
 # debug
 debug: $(DEBUG_JS_FILES)
 
-$(DEBUG_JS_FILES): $(DEBUG_TS_FILES) packages/debug/package.json packages/debug/package.lock.json
-	npm run build:debug
+$(DEBUG_JS_FILES): $(DEBUG_TS_FILES) packages/debug/package.json packages/debug/package-lock.json
+	cd packages/debug && npm run build
+	cd packages/debug && npm pack
+	npm i packages/debug/matanuska-debug-1.0.0.tgz
 
 # entrypoint
 entrypoint: packages/entrypoint/dist/index.js packages/entrypoint/dist/main.js
@@ -74,11 +76,15 @@ packages/fireball/dist/index.js packages/fireball/dist/main.js: $(FIREBALL_TS_FI
 
 # host
 $(HOST_JS_FILES): $(HOST_TS_FILES)
-	npm run build:host
+	cd packages/host && npm run build
+	cd packages/host && npm pack
+	npm i packages/host/matanuska-host-1.0.0.tgz
 
 # readline
 $(READLINE_JS_FILES): $(READLINE_TS_FILES)
-	npm run build:readline
+	cd packages/readline && npm run build
+	cd packages/host && npm pack
+	npm i packages/readline/matanuska-readline-1.0.0.tgz
 
 # telemetry
 packages/telemetry/dist/index.js: packages/telemetry/index.ts packages/telemetry/grabthar.yml packages/telemetry/package.json packages/telemetry/package-lock.json packages/telemetry/vite.config.mjs
@@ -93,7 +99,7 @@ packages/test-generator/dist/%: packages/test-generator/*.ts packages/test-gener
 # dist
 dist: dist/main.js dist/main.js.map
 
-dist/main.js dist/main.js.map: grabthar.yml package.json package-lock.json .env release.env packages/host/index.js $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
+dist/main.js dist/main.js.map: grabthar.yml package.json package-lock.json .env release.env $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES) $(DEBUG_JS_FILES) $(HOST_JS_FILES) $(READLINE_JS_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # bin
@@ -112,9 +118,9 @@ bin/matbasjs:
 # clean
 clean:
 	npm run clean -w packages/citree
-	npm run clean -w packages/debug
+	cd packages/debug && npm run clean
 	npm run clean -w packages/entrypoint
-	npm run clean -w packages/host
-	npm run clean -w packages/readline
+	cd packages/host && npm run clean
+	cd packages/readline && npm run clean
 	npm run clean -w packages/test-generator
 	npm run clean
