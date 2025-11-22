@@ -19,7 +19,8 @@
     "lint:shell": "shellcheck ./scripts/*",
     "check": "tsc --noEmit",
     "console": "npm run build && ts-node",
-    "prepublishOnly": "npm run build && npm run build:readme"
+    "prepublishOnly": "npm run build && npm run build:readme",
+    "clean": "rm -rf ./dist"
   },
   "keywords": [
     "ast",

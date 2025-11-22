@@ -10,7 +10,8 @@
     "start": "npm run build && node --enable-source-maps ./dist/main.js",
     "test": "tests-of-the-sierra-madre",
     "lint": "grabthar lint",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "clean": "rm -rf ./dist"
   },
   "author": "Josh Holbrook",
   "license": "MIT",

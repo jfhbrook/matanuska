@@ -1,9 +1,6 @@
-import process from 'node:process';
-import { inspect } from 'node:util';
-
-import c from 'ansi-colors';
-
 import VERSIONS from 'consts:versions';
+import { inspect, nodeVersion } from '@matanuska/host';
+
 import {
   BaseException,
   AssertionError,
@@ -70,6 +67,14 @@ import {
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
 import { Token } from './tokens';
+
+function red(text: string): string {
+  return `\x1b[31m${text}\x1b[39m`;
+}
+
+function green(text: string): string {
+  return `\x1b[32m${text}\x1b[39m`;
+}
 
 /**
  * Objects implementing this interface can be formatted.
@@ -249,7 +254,7 @@ export function inspectString(
   }
 
   if (options.colors) {
-    fmt = c.green(fmt);
+    fmt = green(fmt);
   }
 
   return fmt;
@@ -279,6 +284,12 @@ function inspectArray(
   formatted += ']';
   return formatted;
 }
+
+/**
+ * The default formatter. We need to create a reference so DefaultFormatter's
+ * definition is accepted by QJSEngine. We will initialize and export it later.
+ */
+let formatter: any = null;
 
 /**
  * A default, standard formatter.
@@ -481,7 +492,9 @@ export class DefaultFormatter extends Formatter {
     report += `Matanuska BASIC: v${VERSIONS.matbas}\n`;
     report += `swc: v${VERSIONS.swc}\n`;
     report += `vite: v${VERSIONS.swc}\n`;
-    report += `Node.js: ${process.version}\n\n`;
+    // TODO: This will need to be the version used in builds, when we switch
+    // to QT. We will also want to include information about the C++ stack.
+    report += `Node.js: ${nodeVersion}\n\n`;
     report +=
       'This is a bug in Matanuska BASIC. If you copy this entire message and post it\n';
     report += 'to the issues tracker:\n\n';
@@ -778,10 +791,9 @@ export class DefaultFormatter extends Formatter {
   }
 }
 
-/**
- * The default formatter, initialized for your convenience.
- */
-export const formatter = new DefaultFormatter();
+// Set and export the default formatter.
+formatter = new DefaultFormatter();
+export { formatter };
 
 export class Inspector extends DefaultFormatter {
   public colors: boolean = true;
@@ -862,9 +874,9 @@ export class Inspector extends DefaultFormatter {
     let exitCode: string = String(exit.exitCode);
 
     if (exit.exitCode) {
-      exitCode = c.red(exitCode);
+      exitCode = red(exitCode);
     } else {
-      exitCode = c.green(exitCode);
+      exitCode = green(exitCode);
     }
     return `Exit ${exitCode}${exit.message.length ? ': ' + exit.message : ''}`;
   }

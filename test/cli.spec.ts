@@ -6,17 +6,17 @@ import { run } from './helpers/cli';
 import { EXAMPLES } from './helpers/files';
 
 describe('examples', () => {
-  for (const path of Object.keys(EXAMPLES)) {
-    const name = basename(path);
+  for (const p of Object.keys(EXAMPLES)) {
+    const name = basename(p);
     switch (name) {
       // TODO: Some scripts will need mocked input
       default:
         test(name, async () => {
-          const { exitCode, host } = await run([path], process.env);
+          const { exitCode, host } = await run([p], process.env);
           expect({
             exitCode,
-            stdout: host.outputStream.output,
-            stderr: host.errorStream.output,
+            stdout: host.stdout.output,
+            stderr: host.stderr.output,
           }).toMatchSnapshot();
         });
     }

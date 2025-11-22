@@ -10,6 +10,7 @@ type Expr in './expr' {
   RealLiteral    => value: number
   BoolLiteral    => value: boolean
   StringLiteral  => value: string
+  ShellLiteral   => value: string
   PromptLiteral  => value: string
   NilLiteral!
 }
@@ -26,7 +27,7 @@ type Instr in './instr' {
   Exit       => expression: Expr | null
   End!
   New        => filename: Expr | null
-  Load       => filename: Expr, run: boolean
+  Load       => params: Expr[]
   List       => lineStart: number | null, lineEnd: number | null
   Renum!
   Run!
@@ -43,14 +44,7 @@ type Instr in './instr' {
   EndWhile!
   Repeat!
   Until      => condition: Expr
-  Cd         => path: string
-  Cp         => from: string[], to: string, force: boolean, recursive: boolean
-  Rm         => paths: string[], recursive: boolean, force: boolean, directory: boolean
-  Touch      => paths: string[]
-  Mv         => from: string[], to: string
-  MkDir      => path: string, parents: boolean, mode: number | null
-  RmDir      => path: string, parents: boolean
-  Pwd        => follow: boolean
+  Command    => name: Expr, params: Expr[]
 }
 
 type Tree in './index' {

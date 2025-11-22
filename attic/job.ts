@@ -1,10 +1,10 @@
 import { ChildProcess } from 'node:child_process';
 
-import { Host } from './host';
-import { RuntimeError } from './exceptions';
+import { Host } from '../host';
+import { RuntimeError } from '../exceptions';
 import type { Pid, Env } from './process';
 import { ProcessSpec, INHERIT } from './process';
-import { Value } from './value';
+import { Value } from '../value';
 
 export type JobId = number;
 export type Group = string;
@@ -12,9 +12,11 @@ export type Group = string;
 export const FOREGROUND: Group = 'foreground';
 export const BACKGROUND: Group = 'background';
 
+/*
 function isBackgroundGroup(group: Group): boolean {
   return group === BACKGROUND;
 }
+*/
 
 export interface Job {
   group: Group;
@@ -69,13 +71,13 @@ export class JobManager {
   public spawn(spec: JobSpec): Job {
     const processes: Map<JobId, ChildProcess> = new Map();
 
-    for (const sp of spec.processes) {
-      const proc = this.host.spawn(sp, isBackgroundGroup(spec.group));
+    for (const _sp of spec.processes) {
+      const proc = { pid: undefined }; // this.host.spawn(sp, isBackgroundGroup(spec.group));
       if (typeof proc.pid === 'undefined') {
         // TODO: Better error
         throw new RuntimeError('Process failed to spawn');
       }
-      processes.set(proc.pid, proc);
+      processes.set(proc.pid, proc as any);
     }
 
     return {

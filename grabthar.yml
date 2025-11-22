@@ -2,6 +2,9 @@ entrypoint: ./main.ts
 exclude:
   - bin
   - packages
+target: es2015
+build:
+  minify: false
 check:
   compilerOptions:
     declaration: true
@@ -13,7 +16,6 @@ check:
     noFallthroughCasesInSwitch: false
   shellcheck:
     files:
-      - bin/*
       - scripts/*.sh
       - .husky/pre-commit
     externalSources: true

@@ -1,19 +1,19 @@
 import { describe, test } from 'vitest';
+import { MockConsoleHost } from '@matanuska/host/test';
 import { t } from './helpers/tap';
 
 import { discuss } from '@jfhbrook/swears';
 
-import { Channel } from '../channel';
-import { Level } from '../host';
-import { MockConsoleHost } from './helpers/host';
+import { Level, Channel } from '@matanuska/host';
+import { mockConsoleHost } from './helpers/host';
 
-const topic = discuss(async () => {
-  return new MockConsoleHost();
+const topic = discuss(async (): Promise<MockConsoleHost> => {
+  return mockConsoleHost();
 });
 
 const STREAM = {
-  writeOut: 'outputStream',
-  writeError: 'errorStream',
+  writeOut: 'stdout',
+  writeError: 'stderr',
 };
 
 function outputTest(method: 'writeOut' | 'writeError'): () => void {
@@ -45,16 +45,16 @@ function logTest(
     for (const setLevel of [0, 1, 2, 3]) {
       describe(`at level ${setLevel}`, async () => {
         await topic.swear(async (host) => {
-          host.setLevel(setLevel);
+          host.level = setLevel;
           host[method]('test');
 
           if (level >= setLevel) {
             test('it writes a message', () => {
-              t.equal(host.errorStream.output, `${LOG_PREFIX[method]}: test\n`);
+              t.equal(host.stderr.output, `${LOG_PREFIX[method]}: test\n`);
             });
           } else {
             test('it suppresses the message', () => {
-              t.equal(host.errorStream.output, '');
+              t.equal(host.stderr.output, '');
             });
           }
         });
@@ -69,12 +69,12 @@ describe('when calling writeWarn', logTest('writeWarn', Level.Warn));
 
 function channelTest(
   channel: Channel,
-  stream: 'outputStream' | 'errorStream',
+  stream: 'stdout' | 'stderr',
   expected: string,
 ): () => void {
   return async (): Promise<void> => {
     await topic.swear(async (host) => {
-      host.setLevel(Level.Debug);
+      host.level = Level.Debug;
       host.writeChannel(channel, 'test');
 
       test('it writes to that stream', () => {
@@ -84,19 +84,13 @@ function channelTest(
   };
 }
 
-describe('when writing to channel 1', channelTest(1, 'outputStream', 'test'));
-describe('when writing to channel 2', channelTest(2, 'errorStream', 'test'));
-describe(
-  'when writing to channel 3',
-  channelTest(3, 'errorStream', 'WARN: test\n'),
-);
-describe(
-  'when writing to channel 4',
-  channelTest(4, 'errorStream', 'INFO: test\n'),
-);
+describe('when writing to channel 1', channelTest(1, 'stdout', 'test'));
+describe('when writing to channel 2', channelTest(2, 'stderr', 'test'));
+describe('when writing to channel 3', channelTest(3, 'stderr', 'WARN: test\n'));
+describe('when writing to channel 4', channelTest(4, 'stderr', 'INFO: test\n'));
 describe(
   'when writing to channel 5',
-  channelTest(5, 'errorStream', 'DEBUG: test\n'),
+  channelTest(5, 'stderr', 'DEBUG: test\n'),
 );
 
 type RelativePath = string;
@@ -120,18 +114,19 @@ const RESOLVE_PATH_CASES: Array<[RelativePath, AbsolutePath]> = [
   ],
 ];
 
-test('relativePath', async () => {
+// TODO: Move these tests to host
+test('path.relative', async () => {
   await topic.swear(async (host) => {
     for (const [from, to, expected] of RELATIVE_PATH_CASES) {
-      t.equal(host.relativePath(from, to), expected);
+      t.equal(host.path.relative(from, to), expected);
     }
   });
 });
 
-test('resolvePath', async () => {
+test('path.resolve', async () => {
   await topic.swear(async (host) => {
     for (const [relative, expected] of RESOLVE_PATH_CASES) {
-      t.equal(host.resolvePath(relative), expected);
+      t.equal(host.path.resolve(relative), expected);
     }
   });
 });

@@ -1,16 +1,25 @@
-import { Test as Testing } from '@nestjs/testing';
+import { MockConsoleHost } from '@matanuska/host/test';
 
-import { Translator } from '../../translator';
+import { Container } from '../../index';
 import { Config, Argv, Env } from '../../config';
-import { Editor } from '../../editor';
-import { Executor } from '../../executor';
 import { ExitCode } from '../../exit';
+import { Host } from '../../host';
 
-import { MockConsoleHost, MockConsoleHostOptions } from './host';
+import { mockConsoleHost, MockConsoleHostOptions } from './host';
 
 export interface RunResult {
   exitCode: ExitCode;
   host: MockConsoleHost;
+}
+
+class MockContainer extends Container {
+  constructor(argv: Argv, env: Env, exitFn: any, host: Host) {
+    super(argv, env, exitFn, host);
+  }
+
+  public config(): Config {
+    return Config.load(this.argv, this.env);
+  }
 }
 
 export async function run(
@@ -18,46 +27,18 @@ export async function run(
   env: Env,
   options?: MockConsoleHostOptions,
 ): Promise<RunResult> {
-  const host = new MockConsoleHost(options);
+  const host = mockConsoleHost(options?.files);
 
   return await new Promise((resolve, reject) => {
-    Testing.createTestingModule({
-      providers: [
-        {
-          provide: 'Host',
-          useValue: host,
-        },
-        {
-          provide: 'argv',
-          useValue: argv,
-        },
-        {
-          provide: 'env',
-          useValue: env,
-        },
-        {
-          provide: Config,
-          useValue: Config.load(argv, env),
-        },
-        {
-          provide: 'exitFn',
-          useValue: async (exitCode: number): Promise<void> => {
-            resolve({
-              exitCode,
-              host,
-            });
-          },
-        },
-        Editor,
-        Executor,
-        Translator,
-      ],
-    })
-      .compile()
-      .then((deps) => {
-        const main = deps.get(Translator);
-        return main.start();
-      })
-      .catch(reject);
+    const exitFn = async (exitCode: number): Promise<void> => {
+      resolve({
+        exitCode,
+        host,
+      });
+    };
+
+    const container = new MockContainer(argv, env, exitFn, host);
+    const main = container.translator();
+    return main.start().catch((err) => reject(err));
   });
 }

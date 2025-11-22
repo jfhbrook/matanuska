@@ -1,4 +1,4 @@
-import * as assert from 'node:assert';
+import { AssertionError } from './exceptions';
 import { Formattable, Formatter } from './format';
 
 export class Stack<V> implements Formattable {
@@ -10,7 +10,9 @@ export class Stack<V> implements Formattable {
 
   pop(): V {
     const val = this.stack.pop();
-    assert.notEqual(typeof val, 'undefined', 'Popped empty stack');
+    if (typeof val === 'undefined') {
+      throw new AssertionError('Popped empty stack');
+    }
     return val as V;
   }
 

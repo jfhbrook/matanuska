@@ -16,23 +16,23 @@
  *
  */
 
-export const STDIN = 0;
-export const STDOUT = 1;
-export const STDERR = 2;
-export const WARN = 3;
+export const INPUT = 0;
+export const OUTPUT = 1;
 export const INFO = 4;
+export const WARN = 3;
 export const DEBUG = 5;
+export const ERROR = 2;
 
 export type StdChannel = 0 | 1 | 2;
 export type Channel = 0 | 1 | 2 | 3 | 4 | 5;
 
 export function stdChannel(channel: Channel): StdChannel {
   switch (channel) {
-    case STDIN:
-    case STDOUT:
-    case STDERR:
+    case INPUT:
+    case OUTPUT:
+    case ERROR:
       return channel;
     default:
-      return STDERR;
+      return ERROR;
   }
 }

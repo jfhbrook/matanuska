@@ -5,12 +5,12 @@ import { Editor, Justify } from '../editor';
 import { Line } from '../ast';
 
 import { parseInput } from './helpers/parser';
-import { MockConsoleHost } from './helpers/host';
+import { mockConsoleHost } from './helpers/host';
 
 type InsertFn = (source: string) => void;
 
 const topic = discuss(async (): Promise<[Editor, InsertFn]> => {
-  const editor = new Editor(new MockConsoleHost());
+  const editor = new Editor(mockConsoleHost());
   function insert(source: string) {
     const [result] = parseInput(source);
     expect(result.input.length).toBe(1);

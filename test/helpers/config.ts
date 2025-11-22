@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { Level } from '../../host';
+import { Level } from '@matanuska/host';
 
 export const CONFIG = new Config(
   null,

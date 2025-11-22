@@ -1,6 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { readline } from '@matanuska/readline';
+
 //#if _MATBAS_BUILD == 'debug'
-import { Span } from '@opentelemetry/api';
+import { Span } from './debug';
 //#endif
 
 import { Config } from './config';
@@ -13,20 +14,31 @@ import type { ExitFn } from './exit';
 import { Executor } from './executor';
 import { BaseFault, RuntimeFault, UsageFault } from './faults';
 import type { Host } from './host';
+import { Prompt } from './shell';
 
 //
 // Run the REPL.
 //
-async function repl(executor: Executor, host: Host) {
+async function repl(
+  ps1: Prompt,
+  executor: Executor,
+  host: Host,
+  config: Config,
+) {
   executor.interactive = true;
-  while (true) {
-    //#if _MATBAS_BUILD == 'debug'
-    await startSpan('read-eval-print', async (_: Span) => {
-      //#endif
-      try {
-        const input = await executor.prompt();
-        await executor.eval(input);
-      } catch (err) {
+
+  //#if _MATBAS_BUILD == 'debug'
+  await startSpan('read-eval-print', async (_: Span) => {
+    //#endif
+
+    await readline({
+      ps1,
+      historySize: config.historySize,
+      historyFileSize: config.historyFileSize,
+      async evaluate(input: string): Promise<void> {
+        await executor.evaluate(input);
+      },
+      error(err: any): void {
         if (err instanceof BaseFault || err instanceof Exit) {
           throw err;
         }
@@ -37,31 +49,32 @@ async function repl(executor: Executor, host: Host) {
         }
 
         throw RuntimeFault.fromError(err, null);
-      }
-      //#if _MATBAS_BUILD == 'debug'
+      },
     });
-    //#endif
-  }
+    //#if _MATBAS_BUILD == 'debug'
+  });
+  //#endif
+  //
   executor.interactive = false;
 }
 
-@Injectable()
 export class Translator {
   /**
    * The main entry point for the application.
    */
   constructor(
-    @Inject('Host') private host: Host,
-    @Inject('exitFn') private exit: ExitFn,
+    private host: Host,
+    private ps1: Prompt,
+    private exit: ExitFn,
     private config: Config,
     private executor: Executor,
   ) {}
 
   public async start(): Promise<void> {
-    const { host, exit, config, executor } = this;
+    const { host, exit, config, ps1, executor } = this;
     let error: any = null;
 
-    host.setLevel(config.level);
+    host.level = config.level;
 
     function errorExit(error: any): void {
       exit(
@@ -83,20 +96,18 @@ export class Translator {
     process.on('unhandledRejection', errorHandler);
 
     try {
-      await executor.using(async () => {
-        if (config.script) {
-          //#if _MATBAS_BUILD == 'debug'
-          await startSpan('script', async (_: Span) => {
-            //#endif
-            await executor.load(config.script as string);
-            await executor.run();
-            //#if _MATBAS_BUILD == 'debug'
-          });
+      if (config.script) {
+        //#if _MATBAS_BUILD == 'debug'
+        await startSpan('script', async (_: Span) => {
           //#endif
-        } else {
-          await repl(executor, host);
-        }
-      });
+          await executor.load(config.script as string);
+          await executor.run();
+          //#if _MATBAS_BUILD == 'debug'
+        });
+        //#endif
+      } else {
+        await repl(ps1, executor, host, config);
+      }
     } catch (err) {
       reportError(err, host);
       error = err;

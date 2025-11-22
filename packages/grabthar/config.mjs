@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+
 import yaml from 'yaml';
 
 import { merge } from './util.mjs';

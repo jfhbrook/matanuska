@@ -1,46 +1,41 @@
-import { Test as Testing } from '@nestjs/testing';
 import { discuss } from '@jfhbrook/swears';
 
+import { Container } from '../../index';
 import { Config } from '../../config';
-import { Editor } from '../../editor';
 import { Executor } from '../../executor';
+import { Host } from '../../host';
 import { CONFIG } from './config';
-import { MockConsoleHost } from './host';
+import { mockConsoleHost } from './host';
 
 class MockExecutor extends Executor {}
 
-export const executorTopic = discuss(
-  async () => {
-    const host = new MockConsoleHost();
-    const deps = await Testing.createTestingModule({
-      providers: [
-        {
-          provide: 'Host',
-          useValue: host,
-        },
-        {
-          provide: Config,
-          useValue: CONFIG,
-        },
-        Editor,
-        {
-          provide: Executor,
-          useClass: MockExecutor,
-        },
-      ],
-    }).compile();
-    const editor = deps.get(Editor);
-    const executor = deps.get(Executor);
+const exitFn = async (_code: number): Promise<any> => {
+  process.exit(0);
+};
 
-    await executor.init();
+class MockContainer extends Container {
+  constructor(host: Host) {
+    super(process.argv.slice(2), process.env, exitFn, host);
+  }
 
-    return {
-      host,
-      editor,
-      executor,
-    };
-  },
-  async ({ executor }) => {
-    await executor.close();
-  },
-);
+  public config(): Config {
+    return CONFIG;
+  }
+
+  public executor(): Executor {
+    return new MockExecutor(this.editor(), this.host);
+  }
+}
+
+export const executorTopic = discuss(async () => {
+  const host = mockConsoleHost();
+  const container = new MockContainer(host);
+  const editor = container.editor();
+  const executor = container.executor();
+
+  return {
+    host,
+    editor,
+    executor,
+  };
+});

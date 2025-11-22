@@ -1,6 +1,4 @@
-import * as assert from 'node:assert';
-
-import { RuntimeError } from '../exceptions';
+import { AssertionError, RuntimeError } from '../exceptions';
 import { RuntimeFault } from '../faults';
 import { formatter } from '../format';
 import {
@@ -94,7 +92,9 @@ export abstract class Block implements InstrVisitor<void> {
 
   // End the current block.
   public end(): void {
-    assert.ok(this.parent);
+    if (!this.parent) {
+      throw new AssertionError('Must have parent');
+    }
     this.compiler.block = this.parent;
   }
 

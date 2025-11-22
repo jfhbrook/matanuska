@@ -1,5 +1,4 @@
-import { basename } from 'node:path';
-import strftime from 'strftime';
+import strftime from './vendor/strftime';
 
 import MATBAS from 'consts:matbas';
 import { Host } from './host';
@@ -189,7 +188,7 @@ export class Prompt {
           case 'l':
             tty = this.host.tty();
             if (tty) {
-              ps += basename(tty);
+              ps += this.host.path.basename(tty);
             } else {
               // git bash shows this as cons0 in Windows. That's probably an
               // acceptable stand-in, nobody's using this for maintaining
@@ -198,7 +197,7 @@ export class Prompt {
             }
             break;
           case 's':
-            ps += this.host.shell();
+            ps += this.host.shell;
             break;
           case 't':
             ps += strftime('%H:%M:%S', now());
@@ -222,10 +221,13 @@ export class Prompt {
             ps += MATBAS.version;
             break;
           case 'w':
-            ps += abbreviateHome(this.host.cwd, this.host);
+            ps += abbreviateHome(this.host.pwd(true), this.host);
             break;
           case 'W':
-            ps += abbreviateHome(basename(this.host.cwd), this.host);
+            ps += abbreviateHome(
+              this.host.path.basename(this.host.pwd(true)),
+              this.host,
+            );
             break;
           case '!':
             ps += cmdNo + this.historyFileSize + 1;

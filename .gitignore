@@ -5,8 +5,12 @@
 constants.ts
 debug.ts
 /dist
+/bundle/target
 /node_modules
 /bin/matbas
+/bin/matbasjs
+/src/dist.h
+.make.*.env
 
 # Logs
 logs

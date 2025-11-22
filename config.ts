@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
-
 import MATBAS from 'consts:matbas';
+import { Level } from '@matanuska/host';
+
 import { UsageFault } from './faults';
-import { Level } from './host';
 import { Exit, ExitCode } from './exit';
 
 let TRACE_USAGE = '';
@@ -92,7 +91,6 @@ function parseSize(arg: string): number {
 /**
  * Basic configuration for Matanuska BASIC.
  */
-@Injectable()
 export class Config {
   public readonly eval: string | null;
 
