@@ -23,11 +23,11 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Prioritized Backlog
 
 - [ ] Fallout from QT Refactor
+  - [x] Convince Vite to drop external dependencies
+    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
   - [ ] Iterate on `make` build
     - It double-builds because of churn in package-lock
     - It takes a long time to load file lists
-    - See [ADR 028](./adrs/028-cpp-runtime.md) for details
-  - [ ] Convince Vite to drop external dependencies
     - See [ADR 028](./adrs/028-cpp-runtime.md) for details
   - [ ] Implement proper assert module
     - Possibly by vendoring node's assert module
