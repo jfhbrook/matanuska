@@ -1,0 +1,9 @@
+*.js
+*.js.map
+*.d.ts
+test/*.js
+node_modules
+dist
+coverage
+.matbas_history
+*.tsbuildinfo
