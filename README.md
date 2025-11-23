@@ -22,22 +22,14 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Testing Framework, Yikes
-  - Motivated by both in-BASIC and in-QT tests
-  - Implement from scratch, `tape` is not useful here
-  - Test runners for QT, Vitest _and_ BASIC
-  - Runtime "test mode" and entrypoint subcommand
-  - Reporter, possibly based off node-tap
-- [ ] Package Testing
-  - [x] Core test framework
-  - [x] Vitest component of test framework
-  - [x] Solve potential issues with `@matanuska/host/test`
-  - [ ] Move host tests to packages/host
-  - [ ] Implement readline tests
+- Iterate on `make` build
+  - See [ADR 028](./adrs/028-cpp-runtime.md) for details
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
-  - [ ] Implement `@matanuska/debug`
+  - [ ] Run host tests in QT
   - [ ] Implement `@matanuska/readline`
+  - [ ] run readline tests in QT
+  - [ ] Implement `@matanuska/debug`
   - [ ] Add node build version to format output
   - [ ] Add QT versions to format output
 - [ ] Native commands
@@ -88,10 +80,13 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
+- Test Shenanigans
+  - Proper assert module
+  - `test` and `assert` commands
+  - BASIC runtime "test mode" and entrypoint subcommand
+  - Reporter, possibly based off node-tap
 - Revisit `format-markdown` script
   - Pandoc introduces newlines by default, which is less than ideal
-- Iterate on `make` build
-  - See [ADR 028](./adrs/028-cpp-runtime.md) for details
 - Fallout from QT Refactor
   - [ ] Implement proper assert module
     - Possibly by vendoring node's assert module
@@ -144,9 +139,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - automatically update package.json
   - lint-staged and husky support
   - `grabthar clean`
-- Assert module
-  - Wrap 'node:assert'
-  - Throw RuntimeFault
 - Investigate [Node.js inspector](https://nodejs.org/en/learn/getting-started/debugging)
 - Escaped newlines
 - Arrays

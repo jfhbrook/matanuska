@@ -13,7 +13,8 @@ export type AssertionType =
   | 'rejects'
   | 'resolves'
   | 'match'
-  | 'doesNotMatch';
+  | 'doesNotMatch'
+  | 'snapshot';
 
 export interface Assertion {
   path: string[];
@@ -43,6 +44,7 @@ export interface Assert {
   resolves(fn: () => Promise<void>, message?: string): Promise<void>;
   match(value: unknown, regexp: RegExp, message?: string): void;
   doesNotMatch(value: unknown, regexp: RegExp, message?: string): void;
+  snapshot(actual: unknown, message?: string): void;
   test(name: string, test: (t: Assert) => Promise<void>): Promise<void>;
 }
 
@@ -251,6 +253,15 @@ export class TestImpl implements Test {
           type: 'doesNotMatch',
           actual: value,
           expected: regexp,
+          message: message || null,
+        });
+      },
+      snapshot(actual: unknown, message?: string): void {
+        asserts.push({
+          path,
+          type: 'snapshot',
+          actual,
+          expected: null,
           message: message || null,
         });
       },

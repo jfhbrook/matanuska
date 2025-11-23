@@ -14,6 +14,7 @@
     "packages/fireball",
     "packages/grabthar",
     "packages/host",
+    "packages/mock",
     "packages/output",
     "packages/path",
     "packages/readline",

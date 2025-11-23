@@ -170,6 +170,8 @@ packages/artifacts/matanuska-path.tgz: $(PATH_JS_FILES)
 	npm install packages/artifacts/matanuska-path.tgz
 
 # readline
+readline: packages/artifacts/matanuska-readline.tgz
+
 $(READLINE_JS_FILES): $(READLINE_TS_FILES)
 	cd packages/readline && npm run build
 
@@ -213,9 +215,8 @@ packages/artifacts/matanuska-test-generator.tgz: $(TEST_GENERATOR_JS_FILES)
 	mv packages/test-generator/matanuska-test-generator-*.tgz packages/artifacts/matanuska-test-generator.tgz
 	npm install packages/artifacts/matanuska-test-generator.tgz
 
-
 # vitest 
-vitest-framework: packages/artifacts/matanuska-vitest.tgz
+vitest: packages/artifacts/matanuska-vitest.tgz
 
 $(VITEST_JS_FILES): $(VITEST_TS_FILES)
 	cd packages/vitest && npm run build

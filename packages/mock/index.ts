@@ -1,4 +1,5 @@
 import { host, ConsoleHost, Transform, Writable } from '@matanuska/host';
+import { Prompt, Readline } from '@matanuska/readline';
 
 // TODO: export from host
 import { Buffer } from 'node:buffer';
@@ -185,4 +186,34 @@ export function mockHost(
   mockHost.files = mockHost._files();
 
   return mockHost;
+}
+
+export const mockPs1: Prompt = {
+  render() {
+    return '> ';
+  }
+}
+
+export class MockReadline extends Readline {
+  public stdin: MockInputStream;
+  public stdout: MockOutputStream;
+
+  constructor(host: MockConsoleHost) {
+    super(host, mockPs1, 100, 100);
+
+    this.stdin = host.stdin;
+    this.stdout = host.stdout;
+  }
+
+  get historyFile(): string {
+    return './.matbas_history';
+  }
+}
+
+export async function mockReadline(host: MockConsoleHost, fn: (readline: MockReadline) => Promise<void>): Promise<void> {
+  const readline = new MockReadline(host);
+
+  await readline.using(async () => {
+    await fn(readline);
+  });
 }

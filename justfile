@@ -15,7 +15,8 @@ release:
 dist:
   make dist MATBAS_BUILD="${MATBAS_BUILD}"
 
-check: dist
+check:
+  make test
   npm run check
 
 format:

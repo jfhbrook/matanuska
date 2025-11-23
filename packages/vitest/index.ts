@@ -77,6 +77,8 @@ export function test(name: string, suite: Suite): void {
               case 'doesNotMatch':
                 expect(actual).not.toMatch(expected);
                 break;
+              case 'snapshot':
+                expect(actual).toMatchSnapshot();
             }
           });
         }

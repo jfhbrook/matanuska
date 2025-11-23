@@ -1,8 +1,11 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import * as path from 'node:path';
-import { stdin, stdout, stderr } from 'node:process';
+import { stdin, stdout } from 'node:process';
 import { Interface, createInterface } from 'node:readline/promises';
+import { Readable, Writable } from 'node:stream';
+
+import type { Host } from '@matanuska/host';
 
 export interface Prompt {
   render(cmdNo: number): string;
@@ -14,6 +17,9 @@ export interface Repl {
 }
 
 export class Readline {
+  public stdin: Readable;
+  public stdout: Writable;
+
   private _readline: Interface | null;
   private history: string[];
 
@@ -24,10 +30,14 @@ export class Readline {
   private cmdNo: number = 0;
 
   constructor(
+    private host: Host,
     private ps1: Prompt,
     private historySize: number,
     private historyFileSize: number,
   ) {
+    this.stdin = stdin;
+    this.stdout = stdout;
+
     this._readline = null;
     this.history = [];
     this.ps1 = ps1;
@@ -68,7 +78,7 @@ export class Readline {
     //
     // Either way, I should dig into this more.
     this.readline.on('SIGINT', () => {
-      stderr.write('\nReceived SIGINT (ctrl-c)\n');
+      this.host.writeOut('\nReceived SIGINT (ctrl-c)\n');
       this.close();
     });
     this.readline.on('history', (history) => {
@@ -127,15 +137,15 @@ export class Readline {
 
   private createInterface(): Interface {
     return createInterface({
-      input: stdin,
-      output: stdout,
+      input: this.stdin,
+      output: this.stdout,
       terminal: true,
       history: this.history,
       historySize: this.historySize,
     });
   }
 
-  private get historyFile(): string {
+  public get historyFile(): string {
     return path.join(homedir(), '.matbas_history');
   }
 
@@ -147,11 +157,9 @@ export class Readline {
       this.history = (await readFile(this.historyFile, 'utf8')).split('\n');
     } catch (err) {
       if (err.code !== 'ENOENT') {
-        // TODO: Respect levels
-        stderr.write(`WARN: ${err}\n`);
+        this.host.writeWarn(err);
       } else {
-        // TODO: Respect levels
-        stderr.write(`DEBUG: ${err}\n`);
+        this.host.writeDebug(err);
       }
     }
   }
@@ -162,8 +170,7 @@ export class Readline {
     try {
       await writeFile(this.historyFile, history.join('\n'));
     } catch (err) {
-      // TODO: Respect levels
-      stderr.write(`WARN: ${err}`);
+      this.host.writeWarn(err);
     }
   }
 

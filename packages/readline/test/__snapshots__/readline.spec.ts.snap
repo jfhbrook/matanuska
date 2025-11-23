@@ -102,3 +102,5 @@ print 997
 print 998
 print 999"
 `;
+
+exports[`when history is saved > and the history is long history is saved > snapshot 1`] = `""`;

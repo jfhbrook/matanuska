@@ -1,62 +1,53 @@
-import { describe, expect, test } from 'vitest';
-import { discuss } from '@jfhbrook/swears';
+import type { Assert } from '@matanuska/test';
+import { test } from '@matanuska/vitest';
 
-import { readFileSync } from 'node:fs';
+import {
+  mockHost,
+  MockConsoleHost,
+  mockReadline,
+  MockReadline,
+} from '@matanuska/mock';
 
-import { Readline } from '../';
-
-class MockReadline extends Readline {
-  constructor() {
-    super(
-      {
-        render() {
-          return '> ';
-        },
-      },
-      100,
-      100,
-    );
-  }
-
-  get historyFile(): string {
-    return './.matbas_history';
-  }
+async function topic(
+  fn: (host: MockConsoleHost, readline: MockReadline) => Promise<void>,
+): Promise<void> {
+  const host = mockHost();
+  await mockReadline(host, async (readline) => {
+    await fn(host, readline);
+  });
 }
 
-export const topic = discuss(
-  async (): Promise<MockReadline> => {
-    const readline = new MockReadline();
-    await readline.init();
-    return readline;
-  },
-  async (readline): Promise<void> => {
-    readline.close();
-  },
-);
-
-describe.skip('when prompted for a command', () => {
-  test('it gets a command', async () => {
-    await topic.swear(async (readline) => {
-      const command = readline.prompt();
-      expect(command).toEqual('print "hello world"');
+test('when prompted for a command', async (t: Assert) => {
+  await t.test('it gets a command', async (t: Assert) => {
+    await topic(async (host, readline) => {
+      const command = await host.expect(
+        readline.prompt(),
+        'print "hello world"',
+        'print "hello world"',
+      );
+      t.equal(command, 'print "hello world"');
     });
   });
 });
 
-describe.skip('when input is requested', () => {
-  test('input is received?', async () => {
-    await topic.swear(async (readline) => {
-      const input = readline.input('what is your favorite color?');
+test('when input is requested', async (t: Assert) => {
+  await t.test('input is received?', async (t: Assert) => {
+    await topic(async (host, readline) => {
+      const input = await host.expect(
+        readline.input('what is your favorite color?'),
+        'blue',
+        'blue',
+      );
 
-      expect(input).toEqual('blue');
+      t.equal(input, 'blue');
     });
   });
 });
 
-describe('when history is saved', () => {
-  describe('and the history is long', () => {
-    test('history is saved', async () => {
-      await topic.swear(async (readline) => {
+test('when history is saved', async (t: Assert) => {
+  await t.test('and the history is long', async (t: Assert) => {
+    await t.test('history is saved', async (t: Assert) => {
+      await topic(async (host, readline) => {
         (readline as any).history = [];
         for (let i = 0; i < 1000; i++) {
           (readline as any).history.push(`print ${i}`);
@@ -64,7 +55,7 @@ describe('when history is saved', () => {
 
         await readline.saveHistory();
 
-        expect(readFileSync(readline.historyFile, 'utf8')).toMatchSnapshot();
+        t.snapshot(host.files['/home/josh/.matbas_history']);
       });
     });
   });
