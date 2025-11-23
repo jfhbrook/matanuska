@@ -1,4 +1,4 @@
-.PHONY: default target ast citree debug entrypoint fireball host output readline test-framework test-generator dist test bin
+.PHONY: default target ast citree debug entrypoint fireball host output path readline test-framework test-generator dist test bin
 
 MATBAS_BUILD = debug
 
@@ -21,6 +21,9 @@ HOST_JS_FILES := $(shell find . -name '*.ts' -path './packages/host/*' -not -pat
 
 OUTPUT_TS_FILES := $(shell find . -name '*.ts' -path './packages/output/*' -not -path './packages/output/node_modules/*' | grep -v '.d.ts')
 OUTPUT_JS_FILES := $(shell find . -name '*.ts' -path './packages/output/*' -not -path './packages/output/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
+
+PATH_TS_FILES := $(shell find . -name '*.ts' -path './packages/path/*' -not -path './packages/path/node_modules/*' | grep -v '.d.ts')
+PATH_JS_FILES := $(shell find . -name '*.ts' -path './packages/path/*' -not -path './packages/path/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
 
 READLINE_TS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/readline/node_modules/*' | grep -v '.d.ts')
 READLINE_JS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/readline/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
@@ -134,7 +137,19 @@ packages/artifacts/matanuska-output.tgz: $(OUTPUT_JS_FILES)
 	cd packages/output && npm pack
 	mkdir -p packages/artifacts
 	mv packages/output/matanuska-output-*.tgz packages/artifacts/matanuska-output.tgz
-	npm install packages/output/matanuska-output.tgz
+	npm install packages/artifacts/matanuska-output.tgz
+
+# path
+path: packages/artifacts/matanuska-path.tgz
+
+$(PATH_JS_FILES): $(PATH_TS_FILES)
+	cd packages/path && npm run build
+
+packages/artifacts/matanuska-path.tgz: $(PATH_JS_FILES)
+	cd packages/path && npm pack
+	mkdir -p packages/artifacts
+	mv packages/path/matanuska-path-*.tgz packages/artifacts/matanuska-path.tgz
+	npm install packages/artifacts/matanuska-path.tgz
 
 # readline
 $(READLINE_JS_FILES): $(READLINE_TS_FILES)
@@ -181,11 +196,11 @@ packages/artifacts/matanuska-test-generator.tgz: $(TEST_GENERATOR_JS_FILES)
 	npm install packages/artifacts/matanuska-test-generator.tgz
 
 # dist
-dist: dist/main.js dist/main.js.map dist/main.js dist/main.js.map grabthar.yml package.json .env release.env packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
+dist: dist/main.js dist/main.js.map dist/main.js dist/main.js.map grabthar.yml package.json .env release.env packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-output.tgz packages/artifacts/matanuska-path.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # test
-test: grabthar.yml package.json test.env packages/host/index.js packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
+test: grabthar.yml package.json test.env packages/host/index.js packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-output.tgz packages/artifacts/matanuska-path.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
 
 # bin
 bin: $(call TARGET_ENV,MATBAS_BUILD) bin/matbas bin/matbasjs

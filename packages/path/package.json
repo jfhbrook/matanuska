@@ -1,7 +1,7 @@
 {
-  "name": "@matanuska/host",
+  "name": "@matanuska/path",
   "version": "1.0.0",
-  "description": "Node.js implementation of Matanuska's host",
+  "description": "Matanuska's path library, based on the one from Node.js",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -13,10 +13,9 @@
   },
   "keywords": [],
   "author": "Josh Holbrook",
-  "license": "MPL 2.0",
+  "license": "MIT",
   "dependencies": {
     "@matanuska/output": "^1.0.0",
-    "@matanuska/path": "^1.0.0",
     "strip-ansi": "^7.1.2"
   },
   "devDependencies": {

@@ -15,6 +15,7 @@
     "packages/grabthar",
     "packages/host",
     "packages/output",
+    "packages/path",
     "packages/readline",
     "packages/telemetry",
     "packages/test",

@@ -1,4 +1,4 @@
-import type { Channel } from './channel.js';
+import type { Channel } from '@matanuska/output';
 
 export const ENOENT: string = 'ENOENT';
 export const EACCES: string = 'EACCES';
