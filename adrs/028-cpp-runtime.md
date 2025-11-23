@@ -89,26 +89,25 @@ Additionally, `clang-format` has been introduced to format C++ source files. I u
 
 The three internal packages (`@matanuska/host`, `@matanuska/readline`, and `@matanuska/debug`) are build with `tsc`. This is because using `tsc` allows for each file to remain separate. This will make it easier to import sub-libraries of `@matanuska/host` (such as `@matanuska/host/path`) as JavaScript, while replacing `@matanuska/host`'s core with C++ in the QT implementation.
 
+### Dependency Management
+
+All dependencies are built as tarballs with `npm pack`, and installed from tarball with `npm i`. In addition, all packages are currently build by `tsc` with the `nodenext` build type.
+
+The reason for tarball builds is that Vite aggressively bundles linked dependencies, and it is difficult to disable in both the build and the tests reliably. Installing tarballs ensures that Vite, when combined with an appropriate configuration, at least does not bundle them into the build.
+
+The reason for `nodenext` builds is two-fold.
+
+First, Vitest still insists on bundling the dependencies, and struggles to bundle commonjs. Compiling to `nodenext` modules sidesteps this issue, at the cost of Node's whacky import requirements, discussed in [ADR 017](./017-grabthar.md).
+
+Second, at least some files are intended to be imported by QT. These files must be separate (making `grabthar` bundling problematic), and they must use import syntax.
+
+An issue that will be tackled in the future is potential use by QT of the `@matanuska/host/test` module. This module imports entities from local files, which have Node.js style import paths. This will cause problems if we attempt to import this file into QT. However, it's currently only in use by Vitest in the main build, and would potentially need refactoring to support tape-driven tests anyway. Figuring this out will be deferred until there's a practical need for it.
+
 ## Ongoing Issues
-
-### Undesirable Vite Bundling
-
-Vite currently aggressively bundles everything in `./packages`, both in the build and in tests. This is undesirable, as they include Node.js imports.
-
-There are a few potential ways out of this:
-
-1. Figure out how to get Vite to behave the way I want. This will, at this point, require posting on Q&A sites, such as Stack Overflow.
-2. Publish the packages to `npm`, and then install them. This flow is less than ideal, but is listed for completeness.
-3. Pack the dependencies with `npm pack` and install them from tarball. This approach has been proved viable, minus additional challenges with the build. See [PR #71](https://github.com/jfhbrook/matanuska/pull/71) for details.
-4. Switch to a different bundling strategy completely. This is likely not viable.
-
-An additional wrinkle comes from the use of `tsc` with the `nodenext` build type. This is undesirable for reasons discussed in [ADR 017](./017-grabthar.md). Ideally, we would use the `commonjs` build type. Interestingly, Vite will respect the SSR exclude setting on these modules during builds. However, `vitest` does not. Given a workable strategy for avoiding these bundles, we should make this switch.
-
-This issue will be tackled in future work.
 
 ### Idiosyncrasies with Make
 
-The `make` build has some problems. The listed file dependencies are unwieldy, and Make seems to struggle. It does not always pick up the changes I expect it to, and it seems to run some tasks twice.
+The `make` build has some problems. The listed file dependencies are unwieldy, and Make seems to struggle. In addition, unexpected changes in dependent files can cause Make to either not build something I expect it to, or run a build multiple times.
 
 There are a few potential options.
 
