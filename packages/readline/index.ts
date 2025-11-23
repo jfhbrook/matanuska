@@ -9,9 +9,6 @@ export interface Prompt {
 }
 
 export interface Repl {
-  ps1: Prompt;
-  historySize: number;
-  historyFileSize: number;
   evaluate(input: string): Promise<void>;
   error(err: any): void;
 }
@@ -191,23 +188,17 @@ export class Readline {
     this.cmdNo++;
     return ans;
   }
-}
 
-export async function readline(repl: Repl) {
-  const readline = new Readline(
-    repl.ps1,
-    repl.historySize,
-    repl.historyFileSize,
-  );
-
-  await readline.using(async () => {
-    while (true) {
-      try {
-        const input = await readline.prompt();
-        await repl.evaluate(input);
-      } catch (err) {
-        repl.error(err);
+  async repl(repl: Repl): Promise<void> {
+    await this.using(async () => {
+      while (true) {
+        try {
+          const input = await this.prompt();
+          await repl.evaluate(input);
+        } catch (err) {
+          repl.error(err);
+        }
       }
-    }
-  });
+    });
+  }
 }

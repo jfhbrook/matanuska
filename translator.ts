@@ -1,4 +1,4 @@
-import { readline } from '@matanuska/readline';
+import { Readline } from '@matanuska/readline';
 
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from './debug';
@@ -30,11 +30,14 @@ async function repl(
   //#if _MATBAS_BUILD == 'debug'
   await startSpan('read-eval-print', async (_: Span) => {
     //#endif
-
-    await readline({
+    //
+    const readline = new Readline(
       ps1,
-      historySize: config.historySize,
-      historyFileSize: config.historyFileSize,
+      config.historySize,
+      config.historyFileSize,
+    );
+
+    await readline.repl({
       async evaluate(input: string): Promise<void> {
         await executor.evaluate(input);
       },

@@ -22,10 +22,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Revisit `format-markdown` script
 - [ ] Refactor `readline`
   - [ ] Expose the `input` method to the executor
-  - [ ] Should the `prompt` method be named `read`?
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
   - [ ] Implement `@matanuska/debug`
@@ -84,12 +82,14 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Testing Framework, Yikes
   - Motivated by both in-BASIC and in-QT tests
   - Implement from scratch, `tape` is not useful here
-  - Test runners for QT, Vitest *and* BASIC
+  - Test runners for QT, Vitest _and_ BASIC
   - Runtime "test mode" and entrypoint subcommand
   - Reporter, possibly based off node-tap
 
 ### Up Next
 
+- Revisit `format-markdown` script
+  - Pandoc introduces newlines by default, which is less than ideal
 - Iterate on `make` build
   - See [ADR 028](./adrs/028-cpp-runtime.md) for details
 - Fallout from QT Refactor
