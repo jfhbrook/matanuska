@@ -22,8 +22,15 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- Iterate on `make` build
+- [ ] Iterate on `make` build
   - See [ADR 028](./adrs/028-cpp-runtime.md) for details
+- [ ] Implement grabthar for libraries
+  - `@matanuska/output`
+  - `@matanuska/host`
+  - `@matanuska/mock`
+  - `@matanuska/readline`
+  - `@matanuska/test`
+  - `@matanuska/vitest`
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
   - [ ] Run host tests in QT
