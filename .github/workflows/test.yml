@@ -1,20 +1,20 @@
-name: host
+name: test
 on:
   pull_request:
     paths:
-      - 'packages/host/**.ts'
-      - 'packages/host/**.json'
-      - '.github/workflows/host.yml'
+      - 'packages/test/**.ts'
+      - 'packages/test/**.json'
+      - '.github/workflows/test.yml'
   push:
     branches:
       - main
     paths:
-      - 'packages/host/**.ts'
-      - 'packages/host/**.json'
-      - '.github/workflows/host.yml'
+      - 'packages/test/**.ts'
+      - 'packages/test/**.json'
+      - '.github/workflows/test.yml'
 jobs:
-  host:
-    name: host
+  test:
+    name: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,8 +30,8 @@ jobs:
       - name: Install
         run: npm install
       - name: Build
-        run: npm run build -w packages/host
+        run: npm run build -w packages/test
       - name: Test
         run: vitest --run
       - name: Lint
-        run: cd ./packages/host && npm run lint
+        run: cd ./packages/test && npm run lint

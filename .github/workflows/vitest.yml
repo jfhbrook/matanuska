@@ -1,21 +1,21 @@
-name: host
+name: vitest
 on:
   pull_request:
     paths:
-      - 'packages/host/**.ts'
-      - 'packages/host/**.json'
-      - '.github/workflows/host.yml'
+      - 'packages/vitest/**.ts'
+      - 'packages/vitest/**.json'
+      - '.github/workflows/vitest.yml'
   push:
     branches:
       - main
     paths:
-      - 'packages/host/**.ts'
-      - 'packages/host/**.json'
-      - '.github/workflows/host.yml'
+      - 'packages/vitest/**.ts'
+      - 'packages/vitest/**.json'
+      - '.github/workflows/vitest.yml'
 jobs:
-  host:
-    name: host
-    runs-on: ubuntu-latest
+  vitest:
+    name: vitest
+    runs-on: ubuntu-lavitest
     strategy:
       matrix:
         node-version: ['lts/Iron', 'latest']
@@ -30,8 +30,8 @@ jobs:
       - name: Install
         run: npm install
       - name: Build
-        run: npm run build -w packages/host
+        run: npm run build -w packages/vitest
       - name: Test
         run: vitest --run
       - name: Lint
-        run: cd ./packages/host && npm run lint
+        run: cd ./packages/vitest && npm run lint
