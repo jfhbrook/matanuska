@@ -15,9 +15,6 @@
   "keywords": [],
   "author": "Josh Holbrook",
   "license": "MPL 2.0",
-  "dependencies": {
-    "vitest": "^4.0.13"
-  },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
@@ -26,7 +23,8 @@
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.39.0"
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^4.0.13"
   },
   "types": "index.d.ts"
 }
