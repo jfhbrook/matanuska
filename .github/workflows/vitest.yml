@@ -15,7 +15,7 @@ on:
 jobs:
   vitest:
     name: vitest
-    runs-on: ubuntu-lavitest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: ['lts/Iron', 'latest']
