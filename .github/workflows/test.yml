@@ -32,6 +32,6 @@ jobs:
       - name: Build
         run: npm run build -w packages/test
       - name: Test
-        run: vitest --run
+        run: npm test -w packages/test
       - name: Lint
         run: cd ./packages/test && npm run lint
