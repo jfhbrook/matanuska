@@ -37,6 +37,9 @@ TEST_JS_FILES := $(shell find . -name '*.ts' -path './packages/test/*' -not -pat
 TEST_GENERATOR_TS_FILES := $(shell find . -name '*.ts' -path './packages/test-generator/*' -not -path './packages/test-generator/node_modules/*' | grep -v '.d.ts')
 TEST_GENERATOR_JS_FILES := $(shell find . -name '*.ts' -path './packages/test-generator/*' -not -path './packages/test-generator/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/' | sed 's^test-generator^test-generator/dist^')
 
+VITEST_TS_FILES := $(shell find . -name '*.ts' -path './packages/vitest/*' -not -path './packages/vitest/node_modules/*' | grep -v '.d.ts')
+VITEST_JS_FILES := $(shell find . -name '*.ts' -path './packages/vitest/*' -not -path './packages/vitest/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
+
 default: bin
 
 # environment shenanigans
@@ -210,12 +213,25 @@ packages/artifacts/matanuska-test-generator.tgz: $(TEST_GENERATOR_JS_FILES)
 	mv packages/test-generator/matanuska-test-generator-*.tgz packages/artifacts/matanuska-test-generator.tgz
 	npm install packages/artifacts/matanuska-test-generator.tgz
 
+
+# vitest 
+vitest-framework: packages/artifacts/matanuska-vitest.tgz
+
+$(VITEST_JS_FILES): $(VITEST_TS_FILES)
+	cd packages/vitest && npm run build
+
+packages/artifacts/matanuska-vitest.tgz: $(VITEST_JS_FILES)
+	cd packages/vitest && npm pack
+	mkdir -p packages/artifacts
+	mv packages/vitest/matanuska-vitest-*.tgz packages/artifacts/matanuska-vitest.tgz
+	npm install packages/artifacts/matanuska-vitest.tgz
+
 # dist
 dist: dist/main.js dist/main.js.map dist/main.js dist/main.js.map grabthar.yml package.json .env release.env packages/artifacts/matanuska-debug.tgz packages/artifacts/jfhbrook-grabthar.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-output.tgz packages/artifacts/matanuska-path.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # test
-test: grabthar.yml package.json test.env packages/host/index.js packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-mock.tgz packages/artifacts/matanuska-output.tgz packages/artifacts/matanuska-path.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
+test: grabthar.yml package.json test.env packages/host/index.js packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-mock.tgz packages/artifacts/matanuska-output.tgz packages/artifacts/matanuska-path.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz packages/artifacts/matanuska-vitest.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
 
 # bin
 bin: $(call TARGET_ENV,MATBAS_BUILD) bin/matbas bin/matbasjs

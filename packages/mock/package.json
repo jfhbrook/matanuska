@@ -15,8 +15,10 @@
   "author": "Josh Holbrook",
   "license": "MPL 2.0",
   "dependencies": {
-    "@matanuska/host": "^1.0.0",
     "strip-ansi": "^7.1.2"
+  },
+  "peerDependencies": {
+    "@matanuska/host": "^1.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

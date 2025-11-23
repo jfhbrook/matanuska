@@ -19,7 +19,8 @@
     "packages/readline",
     "packages/telemetry",
     "packages/test",
-    "packages/test-generator"
+    "packages/test-generator",
+    "packages/vitest"
   ],
   "scripts": {
     "build": "dotenvx run -f \"${ENV_FILE:-.env}\" -- grabthar build",
@@ -65,6 +66,7 @@
     "@matanuska/mock": "file:packages/artifacts/matanuska-mock.tgz",
     "@matanuska/path": "^1.0.0",
     "@matanuska/test": "^1.0.0",
+    "@matanuska/vitest": "^1.0.0",
     "@types/text-table": "^0.2.5",
     "envinfo": "^7.20.0",
     "reflect-metadata": "^0.2.2"

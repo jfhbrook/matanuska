@@ -22,16 +22,24 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
+- [ ] Testing Framework, Yikes
+  - Motivated by both in-BASIC and in-QT tests
+  - Implement from scratch, `tape` is not useful here
+  - Test runners for QT, Vitest _and_ BASIC
+  - Runtime "test mode" and entrypoint subcommand
+  - Reporter, possibly based off node-tap
+- [ ] Package Testing
+  - [x] Core test framework
+  - [x] Vitest component of test framework
+  - [x] Solve potential issues with `@matanuska/host/test`
+  - [ ] Move host tests to packages/host
+  - [ ] Implement readline tests
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
   - [ ] Implement `@matanuska/debug`
   - [ ] Implement `@matanuska/readline`
   - [ ] Add node build version to format output
   - [ ] Add QT versions to format output
-- [ ] Package Testing
-  - [ ] Move host tests to packages/host
-  - [ ] Implement readline tests
-  - [ ] Solve potential issues with `@matanuska/host/test`
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands
@@ -77,12 +85,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Spike on Rust Jobs Implementation
   - Use `neon`
   - Potentially implement process groups
-- [ ] Testing Framework, Yikes
-  - Motivated by both in-BASIC and in-QT tests
-  - Implement from scratch, `tape` is not useful here
-  - Test runners for QT, Vitest _and_ BASIC
-  - Runtime "test mode" and entrypoint subcommand
-  - Reporter, possibly based off node-tap
 
 ### Up Next
 

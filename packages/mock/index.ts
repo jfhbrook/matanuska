@@ -9,9 +9,17 @@ import { expect } from 'vitest';
 // TODO: vendor strip-ansi
 import stripAnsi from 'strip-ansi';
 
+/**
+ * File mocks
+ */
 type FullPath = string;
 type Contents = string;
 type Files = Record<FullPath, Contents>;
+
+export const FILES: Files = {
+  '/home/josh/.matbas_history': '',
+  '/home/josh/script.bas': '100 print "hello world!"',
+};
 
 /**
  * An input stream for testing.
@@ -82,8 +90,8 @@ export interface MockConsoleHost extends ConsoleHost {
 }
 
 export function mockHost(
-  files: Files,
   host_: ConsoleHost = host,
+  files: Files = FILES,
 ): MockConsoleHost {
   const stdin = new MockInputStream();
   const stdout = new MockOutputStream();
