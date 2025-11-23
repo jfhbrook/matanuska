@@ -32,6 +32,10 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - `@matanuska/test`
   - `@matanuska/vitest`
 - [ ] Implement QT entry point
+  - [ ] Figure out lingering node dependencies
+    - Node class exports in `@matanuska/host`
+    - Use of `Buffer` in `@matanuska/mock`
+    - Use of `strip-ansi` in `@matanuska/mock`
   - [ ] Implement `@matanuska/host`
   - [ ] Run host tests in QT
   - [ ] Implement `@matanuska/readline`
