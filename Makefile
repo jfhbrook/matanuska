@@ -1,4 +1,4 @@
-.PHONY: default target ast citree debug entrypoint fireball host readline test-generator dist test bin
+.PHONY: default target ast citree debug entrypoint fireball host output readline test-framework test-generator dist test bin
 
 MATBAS_BUILD = debug
 
@@ -18,6 +18,9 @@ GRABTHAR_JS_FILES := $(shell find . -name '*.mjs' -path './packages/grabthar/*' 
 
 HOST_TS_FILES := $(shell find . -name '*.ts' -path './packages/host/*' -not -path './packages/host/node_modules/*' | grep -v '.d.ts')
 HOST_JS_FILES := $(shell find . -name '*.ts' -path './packages/host/*' -not -path './packages/host/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
+
+OUTPUT_TS_FILES := $(shell find . -name '*.ts' -path './packages/output/*' -not -path './packages/output/node_modules/*' | grep -v '.d.ts')
+OUTPUT_JS_FILES := $(shell find . -name '*.ts' -path './packages/output/*' -not -path './packages/output/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
 
 READLINE_TS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/readline/node_modules/*' | grep -v '.d.ts')
 READLINE_JS_FILES := $(shell find . -name '*.ts' -path './packages/readline/*' -not -path './packages/readline/node_modules/*' | grep -v '.d.ts' | sed 's/.ts/.js/')
@@ -110,6 +113,8 @@ packages/artifacts/jfhbrook-grabthar.tgz: $(GRABTHAR_JS_FILES) packages/grabthar
 	npm install packages/artifacts/matanuska-fireball.tgz
 
 # host
+host: packages/artifacts/matanuska-host.tgz
+
 $(HOST_JS_FILES): $(HOST_TS_FILES)
 	cd packages/host && npm run build
 
@@ -117,7 +122,19 @@ packages/artifacts/matanuska-host.tgz: $(HOST_JS_FILES)
 	cd packages/host && npm pack
 	mkdir -p packages/artifacts
 	mv packages/host/matanuska-host-*.tgz packages/artifacts/matanuska-host.tgz
-	npm install packages/host/matanuska-host.tgz
+	npm install packages/artifacts/matanuska-host.tgz
+
+# output
+output: packages/artifacts/matanuska-output.tgz
+
+$(OUTPUT_JS_FILES): $(OUTPUT_TS_FILES)
+	cd packages/output && npm run build
+
+packages/artifacts/matanuska-output.tgz: $(OUTPUT_JS_FILES)
+	cd packages/output && npm pack
+	mkdir -p packages/artifacts
+	mv packages/output/matanuska-output-*.tgz packages/artifacts/matanuska-output.tgz
+	npm install packages/output/matanuska-output.tgz
 
 # readline
 $(READLINE_JS_FILES): $(READLINE_TS_FILES)
@@ -129,16 +146,6 @@ packages/artifacts/matanuska-readline.tgz: $(READLINE_JS_FILES)
 	mv packages/readline/matanuska-readline-*.tgz packages/artifacts/matanuska-readline.tgz
 	npm install packages/artifacts/matanuska-readline.tgz
 
-# test 
-$(TEST_JS_FILES): $(TEST_TS_FILES)
-	cd packages/test && npm run build
-
-packages/artifacts/matanuska-test.tgz: $(TEST_JS_FILES)
-	cd packages/test && npm pack
-	mkdir -p packages/artifacts
-	mv packages/test/matanuska-test-*.tgz packages/artifacts/matanuska-test.tgz
-	npm install packages/artifacts/matanuska-test.tgz
-
 # telemetry
 packages/telemetry/dist/index.js: packages/telemetry/index.ts packages/telemetry/grabthar.yml packages/telemetry/package.json packages/telemetry/vite.config.mjs
 	cd packages/telemetry && npm run build
@@ -149,8 +156,20 @@ packages/artifacts/matanuska-telemetry.tgz: packages/telemetry/dist/index.js
 	mv packages/telemetry/matanuska-telemetry-*.tgz packages/artifacts/matanuska-telemetry.tgz
 	npm install packagess/artifacts/matanuska-telemetry.tgz
 
+# test 
+test-framework: packages/artifacts/matanuska-test.tgz
+
+$(TEST_JS_FILES): $(TEST_TS_FILES)
+	cd packages/test && npm run build
+
+packages/artifacts/matanuska-test.tgz: $(TEST_JS_FILES)
+	cd packages/test && npm pack
+	mkdir -p packages/artifacts
+	mv packages/test/matanuska-test-*.tgz packages/artifacts/matanuska-test.tgz
+	npm install packages/artifacts/matanuska-test.tgz
+
 # test-generator
-test-generator: packages/test-generator/dist/*
+test-generator: packages/artifacts/matanuska-test-generator.tgz
 
 $(TEST_GENERATOR_JS_FILES): $(TEST_GENERATOR_TS_FILES) packages/test-generator/package.json
 	npm run build -w packages/test-generator
