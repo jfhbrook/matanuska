@@ -22,18 +22,21 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
+- [ ] Revisit `format-markdown` script
 - [ ] Refactor `readline`
   - [ ] Expose the `input` method to the executor
   - [ ] Should the `prompt` method be named `read`?
-- [ ] Package testing
-  - [ ] Move host tests to packages/host
-  - [ ] Implement readline tests
-  - [ ] Vendor/use tape
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
   - [ ] Implement `@matanuska/debug`
   - [ ] Implement `@matanuska/readline`
+  - [ ] Add node build version to format output
   - [ ] Add QT versions to format output
+- [ ] Package testing
+  - [ ] Move host tests to packages/host
+  - [ ] Implement readline tests
+  - [ ] Vendor/use tape
+  - [ ] Solve potential issues with `@matanuska/host/test`
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands
@@ -82,7 +85,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Up Next
 
-- Is `format-markdown` script necessary?
 - Iterate on `make` build
   - See [ADR 028](./adrs/028-cpp-runtime.md) for details
 - Fallout from QT Refactor
