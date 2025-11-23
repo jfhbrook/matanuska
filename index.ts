@@ -1,3 +1,5 @@
+import { Readline } from '@matanuska/readline';
+
 import { Exit } from './exit';
 import { Translator } from './translator';
 import { Config, Argv, Env } from './config';
@@ -22,6 +24,7 @@ export class Container {
   private _config: Config | null = null;
   private _editor: Editor | null = null;
   private _executor: Executor | null = null;
+  private _readline: Readline | null = null;
   private _translator: Translator | null = null;
 
   constructor(
@@ -91,16 +94,30 @@ export class Container {
     return executor;
   }
 
+  public readline(): Readline {
+    if (this._readline) {
+      return this._readline;
+    }
+    const config = this.config();
+    const readline = new Readline(
+      this.ps1(),
+      config.historySize,
+      config.historyFileSize,
+    );
+    this._readline = readline;
+    return readline;
+  }
+
   public translator(): Translator {
     if (this._translator) {
       return this._translator;
     }
     const translator = new Translator(
       this.host,
-      this.ps1(),
       this.exitFn,
       this.config(),
       this.executor(),
+      this.readline(),
     );
     this._translator = translator;
     return translator;

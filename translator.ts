@@ -1,4 +1,4 @@
-import { Readline } from '@matanuska/readline';
+import type { Readline } from '@matanuska/readline';
 
 //#if _MATBAS_BUILD == 'debug'
 import { Span } from './debug';
@@ -14,28 +14,16 @@ import type { ExitFn } from './exit';
 import { Executor } from './executor';
 import { BaseFault, RuntimeFault, UsageFault } from './faults';
 import type { Host } from './host';
-import { Prompt } from './shell';
 
 //
 // Run the REPL.
 //
-async function repl(
-  ps1: Prompt,
-  executor: Executor,
-  host: Host,
-  config: Config,
-) {
+async function repl(host: Host, executor: Executor, readline: Readline) {
   executor.interactive = true;
 
   //#if _MATBAS_BUILD == 'debug'
   await startSpan('read-eval-print', async (_: Span) => {
     //#endif
-    //
-    const readline = new Readline(
-      ps1,
-      config.historySize,
-      config.historyFileSize,
-    );
 
     await readline.repl({
       async evaluate(input: string): Promise<void> {
@@ -67,14 +55,14 @@ export class Translator {
    */
   constructor(
     private host: Host,
-    private ps1: Prompt,
     private exit: ExitFn,
     private config: Config,
     private executor: Executor,
+    private readline: Readline,
   ) {}
 
   public async start(): Promise<void> {
-    const { host, exit, config, ps1, executor } = this;
+    const { host, exit, config, executor, readline } = this;
     let error: any = null;
 
     host.level = config.level;
@@ -109,7 +97,7 @@ export class Translator {
         });
         //#endif
       } else {
-        await repl(ps1, executor, host, config);
+        await repl(host, executor, readline);
       }
     } catch (err) {
       reportError(err, host);
