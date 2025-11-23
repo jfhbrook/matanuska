@@ -33,7 +33,7 @@ lint-staged:
   npm run lint:staged
 
 test:
-  make build
+  make test
   npm run test:env
   npm test
 

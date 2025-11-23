@@ -16,6 +16,7 @@
     "packages/host",
     "packages/readline",
     "packages/telemetry",
+    "packages/test",
     "packages/test-generator"
   ],
   "scripts": {
@@ -58,6 +59,7 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
+    "@matanuska/test": "^1.0.0",
     "@types/text-table": "^0.2.5",
     "envinfo": "^7.20.0",
     "reflect-metadata": "^0.2.2"

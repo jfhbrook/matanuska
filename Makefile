@@ -132,6 +132,16 @@ packages/artifacts/matanuska-readline.tgz: $(READLINE_JS_FILES)
 	mv packages/readline/matanuska-readline-*.tgz packages/artifacts/matanuska-readline.tgz
 	npm install packages/artifacts/matanuska-readline.tgz
 
+# test 
+$(TEST_JS_FILES): $(TEST_TS_FILES)
+	cd packages/test && npm run build
+
+packages/artifacts/matanuska-test.tgz: $(TEST_JS_FILES)
+	cd packages/test && npm pack
+	mkdir -p packages/artifacts
+	mv packages/test/matanuska-test-*.tgz packages/artifacts/matanuska-test.tgz
+	npm install packages/artifacts/matanuska-test.tgz
+
 # telemetry
 packages/telemetry/dist/index.js: packages/telemetry/index.ts packages/telemetry/grabthar.yml packages/telemetry/package.json packages/telemetry/vite.config.mjs
 	cd packages/telemetry && npm run build
@@ -155,13 +165,11 @@ packages/artifacts/matanuska-test-generator.tgz: $(TEST_GENERATOR_JS_FILES)
 	npm install packages/artifacts/matanuska-test-generator.tgz
 
 # dist
-dist: dist/main.js dist/main.js.map
-
-dist/main.js dist/main.js.map: grabthar.yml package.json .env release.env packages/host/index.js $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
+dist: dist/main.js dist/main.js.map dist/main.js dist/main.js.map grabthar.yml package.json .env release.env packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
 	ENV_FILE='$(call TARGET_ENV,MATBAS_BUILD)' npm run build
 
 # test
-test: grabthar.yml package.json test.env packages/host/index.js $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
+test: grabthar.yml package.json test.env packages/host/index.js packages/artifacts/matanuska-debug.tgz packages/artifacts/matanuska-host.tgz packages/artifacts/matanuska-readline.tgz packages/artifacts/matanuska-test.tgz $(call TARGET_ENV,MATBAS_BUILD) $(DIST_TS_FILES)
 
 # bin
 bin: $(call TARGET_ENV,MATBAS_BUILD) bin/matbas bin/matbasjs
