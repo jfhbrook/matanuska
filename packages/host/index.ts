@@ -1,15 +1,25 @@
 import { spawnSync } from 'node:child_process';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { hostname, userInfo, homedir } from 'node:os';
 import { stdin, stdout, stderr, platform, cwd, env, argv } from 'node:process';
 import { version as nodeVersion } from 'node:process';
 import { Readable, Writable, Transform } from 'node:stream';
 import { inspect } from 'node:util';
 
-import pathTool from './path.js';
-import type { PathObject, PathTool } from './path.js';
-import type { StdChannel, Channel } from './channel.js';
-import { INPUT, OUTPUT, ERROR, WARN, INFO, DEBUG, stdChannel } from './channel.js';
+import type { StdChannel, Channel } from '@matanuska/output';
+import {
+  INPUT,
+  OUTPUT,
+  ERROR,
+  WARN,
+  INFO,
+  DEBUG,
+  stdChannel,
+  Level,
+} from '@matanuska/output';
+import pathTool from '@matanuska/path';
+import type { PathObject, PathTool } from '@matanuska/path';
+
 import {
   HostError,
   HostException,
@@ -26,7 +36,6 @@ import {
   fileWriteError,
   channelError,
 } from './errors.js';
-import { Level } from './level.js';
 
 export {
   inspect,
@@ -67,6 +76,11 @@ export type {
 
 export interface Formatter {
   format: (obj: any) => string;
+}
+
+export interface ReaddirOptions {
+  withFileTypes?: boolean;
+  recursive?: boolean;
 }
 
 /**
@@ -252,6 +266,8 @@ export interface Host {
    * @param contents The contents of the file.
    */
   writeTextFile(filename: string, contents: string): Promise<void>;
+
+  readdir(path: string, options?: ReaddirOptions): Promise<string[]>;
 
   /**
    * Spawn a child process.
@@ -482,6 +498,10 @@ export const host: ConsoleHost = {
     } catch (err) {
       throw fileWriteError(err);
     }
+  },
+
+  async readdir(path: string, options?: ReaddirOptions): Promise<string[]> {
+    return await readdir(path, options as any);
   },
 
   /*

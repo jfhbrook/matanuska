@@ -91,6 +91,7 @@ export class Container {
     }
     const config = this.config();
     const readline = new Readline(
+      this.host,
       this.ps1(),
       config.historySize,
       config.historyFileSize,

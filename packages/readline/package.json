@@ -10,13 +10,17 @@
     "lint": "eslint '**.ts' --fix",
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest --run",
+    "snap": "vitest --update --run",
     "clean": "rm -f *.js *.js.map *.d.ts"
   },
   "keywords": [],
   "author": "Josh Holbrook",
   "license": "MPL 2.0",
-  "dependencies": {},
+  "dependencies": {
+    "@matanuska/host": "^1.0.0"
+  },
   "devDependencies": {
+    "@matanuska/vitest": "^1.0.0",
     "@eslint/js": "^9.33.0",
     "@jfhbrook/swears": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^8.39.0",

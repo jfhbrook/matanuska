@@ -14,9 +14,14 @@
     "packages/fireball",
     "packages/grabthar",
     "packages/host",
+    "packages/mock",
+    "packages/output",
+    "packages/path",
     "packages/readline",
     "packages/telemetry",
-    "packages/test-generator"
+    "packages/test",
+    "packages/test-generator",
+    "packages/vitest"
   ],
   "scripts": {
     "build": "dotenvx run -f \"${ENV_FILE:-.env}\" -- grabthar build",
@@ -26,6 +31,7 @@
     "build:entrypoint": "entrypoint ./bin/matbasjs",
     "build:path": "npm run build -w packages/path",
     "build:host": "npm run build -w packages/host",
+    "build:output": "npm run build -w packages/output",
     "build:readline": "npm run build -w packages/readline",
     "build:test": "dotenvx run -f test.env --overload -- test-generator ./test",
     "build:test:activate": "dotenvx run -f test.env --overload -- test-generator --activate ./test",
@@ -58,6 +64,10 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
+    "@matanuska/mock": "file:packages/artifacts/matanuska-mock.tgz",
+    "@matanuska/path": "^1.0.0",
+    "@matanuska/test": "^1.0.0",
+    "@matanuska/vitest": "^1.0.0",
     "@types/text-table": "^0.2.5",
     "envinfo": "^7.20.0",
     "reflect-metadata": "^0.2.2"
@@ -71,6 +81,7 @@
     "@matanuska/entrypoint": "^1.0.0",
     "@matanuska/fireball": "^1.0.0",
     "@matanuska/host": "^1.0.0",
+    "@matanuska/output": "^1.0.0",
     "@matanuska/readline": "^1.0.0",
     "@matanuska/telemetry": "^1.0.0",
     "@matanuska/test-generator": "^0.0.1",

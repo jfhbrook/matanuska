@@ -9,16 +9,20 @@
     "check": "tsc --noEmit",
     "lint": "eslint '**.ts' --ignore-pattern '**.d.ts' --fix",
     "build": "tsc -p tsconfig.build.json",
+    "test": "vitest --run",
     "clean": "rm -f *.js *.js.map *.d.ts"
   },
   "keywords": [],
   "author": "Josh Holbrook",
   "license": "MPL 2.0",
   "dependencies": {
-    "@matanuska/path": "file:../path",
+    "@matanuska/output": "^1.0.0",
+    "@matanuska/path": "^1.0.0",
     "strip-ansi": "^7.1.2"
   },
   "devDependencies": {
+    "@matanuska/mock": "^1.0.0",
+    "@matanuska/vitest": "^1.0.0",
     "@eslint/js": "^9.33.0",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",

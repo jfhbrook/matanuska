@@ -31,7 +31,7 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build -w packages/readline
-      # - name: Test
-      #   run: vitest --run
+      - name: Test
+        run: npm test -w packages/readline
       - name: Lint
         run: cd ./packages/readline && npm run lint

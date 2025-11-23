@@ -1,15 +1,26 @@
-import { Buffer } from 'node:buffer';
-import { Transform, Writable } from 'node:stream';
+import { host, ConsoleHost, Transform, Writable } from '@matanuska/host';
+import { Prompt, Readline } from '@matanuska/readline';
 
+// TODO: export from host
+import { Buffer } from 'node:buffer';
+
+// TODO: Integrate @matanuska/test
 import { expect } from 'vitest';
 
+// TODO: vendor strip-ansi
 import stripAnsi from 'strip-ansi';
 
-import { host, ConsoleHost } from './index.js';
-
+/**
+ * File mocks
+ */
 type FullPath = string;
 type Contents = string;
 type Files = Record<FullPath, Contents>;
+
+export const FILES: Files = {
+  '/home/josh/.matbas_history': '',
+  '/home/josh/script.bas': '100 print "hello world!"',
+};
 
 /**
  * An input stream for testing.
@@ -80,8 +91,8 @@ export interface MockConsoleHost extends ConsoleHost {
 }
 
 export function mockHost(
-  files: Files,
   host_: ConsoleHost = host,
+  files: Files = FILES,
 ): MockConsoleHost {
   const stdin = new MockInputStream();
   const stdout = new MockOutputStream();
@@ -175,4 +186,34 @@ export function mockHost(
   mockHost.files = mockHost._files();
 
   return mockHost;
+}
+
+export const mockPs1: Prompt = {
+  render() {
+    return '> ';
+  }
+}
+
+export class MockReadline extends Readline {
+  public stdin: MockInputStream;
+  public stdout: MockOutputStream;
+
+  constructor(host: MockConsoleHost) {
+    super(host, mockPs1, 100, 100);
+
+    this.stdin = host.stdin;
+    this.stdout = host.stdout;
+  }
+
+  get historyFile(): string {
+    return './.matbas_history';
+  }
+}
+
+export async function mockReadline(host: MockConsoleHost, fn: (readline: MockReadline) => Promise<void>): Promise<void> {
+  const readline = new MockReadline(host);
+
+  await readline.using(async () => {
+    await fn(readline);
+  });
 }

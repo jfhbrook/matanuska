@@ -1,7 +1,5 @@
-import * as assert from 'node:assert';
-
 import { host } from '../../host';
-import { mockHost, MockConsoleHost } from '@matanuska/host/test';
+import { mockHost, MockConsoleHost } from '@matanuska/mock';
 
 import { EXAMPLES } from './files';
 
@@ -19,6 +17,5 @@ const FILES: Record<string, string> = Object.assign(
 export function mockConsoleHost(
   files: Record<string, string> = FILES,
 ): MockConsoleHost {
-  assert.ok(files);
-  return mockHost(files, host);
+  return mockHost(host, files);
 }

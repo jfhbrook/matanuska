@@ -22,16 +22,23 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
+- [ ] Iterate on `make` build
+  - See [ADR 028](./adrs/028-cpp-runtime.md) for details
+- [ ] Implement grabthar for libraries
+  - `@matanuska/output`
+  - `@matanuska/host`
+  - `@matanuska/mock`
+  - `@matanuska/readline`
+  - `@matanuska/test`
+  - `@matanuska/vitest`
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
-  - [ ] Implement `@matanuska/debug`
+  - [ ] Run host tests in QT
   - [ ] Implement `@matanuska/readline`
+  - [ ] run readline tests in QT
+  - [ ] Implement `@matanuska/debug`
   - [ ] Add node build version to format output
   - [ ] Add QT versions to format output
-- [ ] Package Testing
-  - [ ] Move host tests to packages/host
-  - [ ] Implement readline tests
-  - [ ] Solve potential issues with `@matanuska/host/test`
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands
@@ -77,19 +84,16 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Spike on Rust Jobs Implementation
   - Use `neon`
   - Potentially implement process groups
-- [ ] Testing Framework, Yikes
-  - Motivated by both in-BASIC and in-QT tests
-  - Implement from scratch, `tape` is not useful here
-  - Test runners for QT, Vitest _and_ BASIC
-  - Runtime "test mode" and entrypoint subcommand
-  - Reporter, possibly based off node-tap
 
 ### Up Next
 
+- Test Shenanigans
+  - Proper assert module
+  - `test` and `assert` commands
+  - BASIC runtime "test mode" and entrypoint subcommand
+  - Reporter, possibly based off node-tap
 - Revisit `format-markdown` script
   - Pandoc introduces newlines by default, which is less than ideal
-- Iterate on `make` build
-  - See [ADR 028](./adrs/028-cpp-runtime.md) for details
 - Fallout from QT Refactor
   - [ ] Implement proper assert module
     - Possibly by vendoring node's assert module
@@ -142,9 +146,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - automatically update package.json
   - lint-staged and husky support
   - `grabthar clean`
-- Assert module
-  - Wrap 'node:assert'
-  - Throw RuntimeFault
 - Investigate [Node.js inspector](https://nodejs.org/en/learn/getting-started/debugging)
 - Escaped newlines
 - Arrays
