@@ -251,7 +251,7 @@ export class TestImpl implements Test {
         });
       },
       async test(name: string, test: Suite): Promise<void> {
-        const t = new _TestImpl(this.path.concat([name]), test);
+        const t = new _TestImpl(path.concat([name]), test);
         asserts = asserts.concat(await t.run());
       },
     });
