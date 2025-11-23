@@ -22,8 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Refactor `readline`
-  - [ ] Expose the `input` method to the executor
 - [ ] Implement QT entry point
   - [ ] Implement `@matanuska/host`
   - [ ] Implement `@matanuska/debug`
