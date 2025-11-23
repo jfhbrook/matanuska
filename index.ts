@@ -85,15 +85,6 @@ export class Container {
     return editor;
   }
 
-  public executor(): Executor {
-    if (this._executor) {
-      return this._executor;
-    }
-    const executor = new Executor(this.editor(), this.host);
-    this._executor = executor;
-    return executor;
-  }
-
   public readline(): Readline {
     if (this._readline) {
       return this._readline;
@@ -106,6 +97,15 @@ export class Container {
     );
     this._readline = readline;
     return readline;
+  }
+
+  public executor(): Executor {
+    if (this._executor) {
+      return this._executor;
+    }
+    const executor = new Executor(this.editor(), this.host, this.readline());
+    this._executor = executor;
+    return executor;
   }
 
   public translator(): Translator {

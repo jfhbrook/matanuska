@@ -1,12 +1,10 @@
-//#if _MATBAS_BUILD == 'debug'
-import { Span } from './debug';
-//#endif
+import type { Readline } from '@matanuska/readline';
 
 import { Chunk } from './bytecode/chunk';
 import { BUILTINS, Command, CommandIndex, Context, Deferred } from './commands';
 import { compileInstructions, compileProgram } from './compiler';
 //#if _MATBAS_BUILD == 'debug'
-import { startSpan } from './debug';
+import { Span, startSpan } from './debug';
 //#endif
 import { Editor } from './editor';
 import {
@@ -37,6 +35,7 @@ export class Executor {
   constructor(
     private editor: Editor,
     private host: Host,
+    public readline: Readline,
   ) {
     this.parser = new Parser();
     this.runtime = new Runtime(host, this);
