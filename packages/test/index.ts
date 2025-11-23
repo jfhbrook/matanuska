@@ -35,8 +35,12 @@ export interface Assert {
   deepNotEqual(actual: unknown, expected: unknown, message?: string): void;
   throws(fn: () => void, expected: unknown, message?: string): void;
   doesNotThrow(fn: () => void, message?: string): void;
-  rejects(fn: () => Promise<void>, expected: unknown, message?: string): void;
-  resolves(fn: () => Promise<void>, message?: string): void;
+  rejects(
+    fn: () => Promise<void>,
+    expected: unknown,
+    message?: string,
+  ): Promise<void>;
+  resolves(fn: () => Promise<void>, message?: string): Promise<void>;
   match(value: unknown, regexp: RegExp, message?: string): void;
   doesNotMatch(value: unknown, regexp: RegExp, message?: string): void;
   test(name: string, test: (t: Assert) => Promise<void>): Promise<void>;
@@ -211,9 +215,9 @@ export class TestImpl implements Test {
           message: message || null,
         });
       },
-      resolves(fn: () => Promise<void>, message?: string): void {
+      async resolves(fn: () => Promise<void>, message?: string): Promise<void> {
         try {
-          fn();
+          await fn();
         } catch (err) {
           asserts.push({
             path,
