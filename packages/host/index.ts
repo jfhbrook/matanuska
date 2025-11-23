@@ -6,10 +6,11 @@ import { version as nodeVersion } from 'node:process';
 import { Readable, Writable, Transform } from 'node:stream';
 import { inspect } from 'node:util';
 
-import pathTool from './path.js';
-import type { PathObject, PathTool } from './path.js';
 import type { StdChannel, Channel } from '@matanuska/output';
 import { INPUT, OUTPUT, ERROR, WARN, INFO, DEBUG, stdChannel, Level } from '@matanuska/output';
+import pathTool from '@matanuska/path';
+import type { PathObject, PathTool } from '@matanuska/path';
+
 import {
   HostError,
   HostException,

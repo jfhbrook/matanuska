@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { discuss } from '@jfhbrook/swears';
-import { MockConsoleHost } from '@matanuska/host/test';
+import { MockConsoleHost } from '@matanuska/mock';
 
 import { Host } from '../host';
 import { abbreviateHome, Prompt } from '../shell';

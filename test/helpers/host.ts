@@ -1,7 +1,7 @@
 import * as assert from 'node:assert';
 
 import { host } from '../../host';
-import { mockHost, MockConsoleHost } from '@matanuska/host/test';
+import { mockHost, MockConsoleHost } from '@matanuska/mock';
 
 import { EXAMPLES } from './files';
 

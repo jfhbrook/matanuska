@@ -1,5 +1,5 @@
 import { describe, test } from 'vitest';
-import { MockConsoleHost } from '@matanuska/host/test';
+import { MockConsoleHost } from '@matanuska/mock';
 import { t } from './helpers/tap';
 
 import { discuss } from '@jfhbrook/swears';

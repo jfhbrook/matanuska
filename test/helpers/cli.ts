@@ -1,4 +1,4 @@
-import { MockConsoleHost } from '@matanuska/host/test';
+import { MockConsoleHost } from '@matanuska/mock';
 
 import { Container } from '../../index';
 import { Config, Argv, Env } from '../../config';

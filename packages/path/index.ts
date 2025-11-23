@@ -1,9 +1,9 @@
 /*
  * This is Node.js's path module, ported to TypeScript, minus matchesGlob.
  *
- * Copyright 2025 Josh Holbrook 😅
  */
 
+// Copyright 2025 Josh Holbrook 😅
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
