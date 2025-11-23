@@ -32,11 +32,14 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Implement `@matanuska/readline`
   - [ ] Add node build version to format output
   - [ ] Add QT versions to format output
-- [ ] Package testing
+- [ ] Package testing Part 1
   - [ ] Move host tests to packages/host
   - [ ] Implement readline tests
-  - [ ] Vendor/use tape
   - [ ] Solve potential issues with `@matanuska/host/test`
+- [ ] Package Testing Part 2
+  - Implement test framework LAUL
+    - Tape is not viable to vendor. It's surprisingly large, has a million dependencies and is full of legacy bullshit.
+  - Use test framework in QT
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands
