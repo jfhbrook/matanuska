@@ -32,14 +32,10 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] Implement `@matanuska/readline`
   - [ ] Add node build version to format output
   - [ ] Add QT versions to format output
-- [ ] Package testing Part 1
+- [ ] Package Testing
   - [ ] Move host tests to packages/host
   - [ ] Implement readline tests
   - [ ] Solve potential issues with `@matanuska/host/test`
-- [ ] Package Testing Part 2
-  - Implement test framework LAUL
-    - Tape is not viable to vendor. It's surprisingly large, has a million dependencies and is full of legacy bullshit.
-  - Use test framework in QT
 - [ ] Native commands
   - [x] jobs ADR
   - [x] parse native commands
@@ -85,6 +81,12 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] Spike on Rust Jobs Implementation
   - Use `neon`
   - Potentially implement process groups
+- [ ] Testing Framework, Yikes
+  - Motivated by both in-BASIC and in-QT tests
+  - Implement from scratch, `tape` is not useful here
+  - Test runners for QT, Vitest *and* BASIC
+  - Runtime "test mode" and entrypoint subcommand
+  - Reporter, possibly based off node-tap
 
 ### Up Next
 
@@ -167,10 +169,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - Hashes
 - Date/time language support
 - Exception language support
-- Test harness
-  - `test` and `assert` commands
-  - Runtime "test mode" and entrypoint subcommand
-  - Reporter, possibly based off node-tap
 - File I/O
 - Research garbage collection
   - TypeScript is obviously garbage collected
