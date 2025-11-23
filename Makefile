@@ -51,7 +51,7 @@ ast/expr.ts ast/instr.ts ast/index.ts: ast/index.citree
 
 # citree
 
-citree: $(CITREE_JS_FILES) packages/citree/example/expr.ts packages/citree/example/index.ts packages/citree/example/instr.ts packages/citree/example/ast.citree packages/citree/test/__snapshots__/%.spec.ts.snap
+citree: $(CITREE_JS_FILES) packages/citree/example/expr.ts packages/citree/example/index.ts packages/citree/example/instr.ts packages/citree/example/ast.citree
 
 $(CITREE_JS_FILES): $(CITREE_TS_FILES) packages/citree/package.json
 
@@ -66,9 +66,6 @@ packages/artifacts/matanuska-citree.tgz: $(CITREE_JS_FILES) packages/citree/pack
 
 packages/citree/example/ast.citree: ast/index.citree
 	cp ast/index.citree packages/citree/example/ast.citree
-
-packages/citree/test/__snapshots__/%.spec.ts.snap: packages/citree/example/%.ts
-	cd packages/citree && npm run snap
 
 # debug
 debug: $(DEBUG_JS_FILES)
