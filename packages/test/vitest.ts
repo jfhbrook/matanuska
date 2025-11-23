@@ -1,4 +1,4 @@
-import { test as vitest, expect } from 'vitest';
+import { describe, test as vitest, expect } from 'vitest';
 
 import { Assertion, Test, TestImpl, Suite } from './index.js';
 
@@ -18,42 +18,59 @@ export async function test(name: string, suite: Suite): Promise<void> {
   }
 
   for (let [name, asserts] of Object.entries(collected)) {
-    vitest(name, async () => {
+    describe(name, async () => {
       for (let assert of asserts) {
         const { type, actual, expected, message } = assert;
 
-        switch (type) {
-          case 'fail':
-            break;
-          case 'pass':
-            break;
-          case 'ok':
-            break;
-          case 'notOk':
-            break;
-          case 'error':
-            break;
-          case 'equal':
-            break;
-          case 'notEqual':
-            break;
-          case 'deepEqual':
-            break;
-          case 'deepNotEqual':
-            break;
-          case 'throws':
-            break;
-          case 'doesNotThrow':
-            break;
-          case 'rejects':
-            break;
-          case 'resolves':
-            break;
-          case 'match':
-            break;
-          case 'doesNotMatch':
-            break;
-        }
+        vitest(message || type, () => {
+          switch (type) {
+            case 'fail':
+              expect.assert(false);
+              break;
+            case 'pass':
+              expect.assert(true);
+              break;
+            case 'ok':
+              expect(actual).toBeTruthy();
+              break;
+            case 'notOk':
+              expect(actual).toBeFalsy();
+              break;
+            case 'error':
+              expect(actual).toBeInstanceOf(Error);
+              break;
+            case 'equal':
+              expect(actual).toBe(expected);
+              break;
+            case 'notEqual':
+              expect(actual).not.toBe(expected);
+              break;
+            case 'deepEqual':
+              expect(actual).toEqual(expected);
+              break;
+            case 'deepNotEqual':
+              expect(actual).not.toEqual(expected);
+              break;
+            case 'throws':
+              expect(actual).toThrowError();
+              break;
+            case 'doesNotThrow':
+              expect(actual).not.toThrowError();
+              break;
+            case 'rejects':
+              expect(actual).rejects.toThrowError();
+              break;
+            case 'resolves':
+              expect(actual).rejects.not.toThrowError();
+              break;
+            case 'match':
+              expect(actual).toMatch(expected);
+              break;
+            case 'doesNotMatch':
+              expect(actual).not.toMatch(expected);
+              break;
+          }
+        });
       }
     });
   }
