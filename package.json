@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
-    "@matanuska/mock": "file:packages/artifacts/matanuska-mock.tgz",
+    "@matanuska/mock": "^1.0.0",
     "@matanuska/path": "^1.0.0",
     "@matanuska/test": "^1.0.0",
     "@matanuska/vitest": "^1.0.0",
