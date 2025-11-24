@@ -23,10 +23,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 ### Prioritized Backlog
 
 - [ ] Implement QT entry point
-  - [ ] Figure out lingering node dependencies
-    - Node class exports in `@matanuska/host`
-    - Use of `Buffer` in `@matanuska/mock`
-    - Use of `strip-ansi` in `@matanuska/mock`
+  - [ ] Deal with Node class exports in `@matanuska/host`
   - [ ] Implement `@matanuska/host`
   - [ ] Run host tests in QT
   - [ ] Implement `@matanuska/readline`
