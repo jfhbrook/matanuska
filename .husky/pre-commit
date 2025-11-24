@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-just check
-just test
-just lint-staged
+make testdeps
+npm run check
+npm test
+npm run lint:staged
 just report
