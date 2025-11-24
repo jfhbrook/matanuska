@@ -31,8 +31,8 @@ export function defineConfig(cfg) {
     },
     ssr: { ...(cfg.ssr || {}) },
     test: {
-      ...(cfg.test || {}),
       ...testConfig,
+      ...(cfg.test || {}),
     },
     plugins: [
       ...(cfg.plugins || []),

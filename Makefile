@@ -1,4 +1,4 @@
-.PHONY: default target ast citree debug entrypoint fireball host mock output path readline telemetry test-framework test-generator dist test bin
+.PHONY: default target ast citree debug entrypoint fireball grabthar host mock output path readline telemetry test-framework test-generator dist test bin
 
 MATBAS_BUILD = debug
 
@@ -96,11 +96,14 @@ packages/artifacts/matanuska-fireball.tgz: $(FIREBALL_TS_FILES) packages/firebal
 	mv packages/fireball/matanuska-fireball-*.tgz packages/artifacts/matanuska-fireball.tgz
 	npm install packages/artifacts/matanuska-fireball.tgz
 
+# grabthar
+grabthar: packages/artifacts/jfhbrook-grabthar.tgz
+
 packages/artifacts/jfhbrook-grabthar.tgz: $(GRABTHAR_JS_FILES) packages/grabthar/package.json
 	cd packages/grabthar && npm pack
 	mkdir -p packages/artifacts
 	mv packages/grabthar/jfhbrook-grabthar-*.tgz packages/artifacts/jfhbrook-grabthar.tgz
-	npm install packages/artifacts/matanuska-grabthar.tgz
+	npm install packages/artifacts/jfhbrook-grabthar.tgz
 
 # host
 host: packages/artifacts/matanuska-host.tgz

@@ -9,14 +9,15 @@ export default [
   ...tseslint.configs.recommended,
   {
     ignores: ['.eslintrc.js', 'tap-snapshots'],
-  }, {
+  },
+  {
     rules: {
       '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': [
-        "error",
+        'error',
         {
           args: 'all',
           argsIgnorePattern: '^_',
@@ -25,9 +26,9 @@ export default [
           destructuredArrayIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           ignoreRestSiblings: true,
-        }
+        },
       ],
-      '@typescript-eslint/no-unused-expressions': ['error', {}]
-    }
-  }
+      '@typescript-eslint/no-unused-expressions': ['error', {}],
+    },
+  },
 ];

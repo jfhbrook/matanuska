@@ -1,4 +1,10 @@
-import { host, ConsoleHost, Transform, Writable, Buffer } from '@matanuska/host';
+import {
+  host,
+  ConsoleHost,
+  Transform,
+  Writable,
+  Buffer,
+} from '@matanuska/host';
 import { Prompt, Readline } from '@matanuska/readline';
 
 // TODO: Integrate @matanuska/test
@@ -188,8 +194,8 @@ export function mockHost(
 export const mockPs1: Prompt = {
   render() {
     return '> ';
-  }
-}
+  },
+};
 
 export class MockReadline extends Readline {
   public stdin: MockInputStream;
@@ -207,7 +213,10 @@ export class MockReadline extends Readline {
   }
 }
 
-export async function mockReadline(host: MockConsoleHost, fn: (readline: MockReadline) => Promise<void>): Promise<void> {
+export async function mockReadline(
+  host: MockConsoleHost,
+  fn: (readline: MockReadline) => Promise<void>,
+): Promise<void> {
   const readline = new MockReadline(host);
 
   await readline.using(async () => {

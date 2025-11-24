@@ -2,10 +2,7 @@ import { defineConfig } from '@jfhbrook/grabthar/vite';
 
 export default defineConfig({
   ssr: {
-    external: [
-      '@matanuska/output',
-      '@matanuska/path',
-    ],
+    external: ['@matanuska/output', '@matanuska/path'],
   },
   /*
   build: {

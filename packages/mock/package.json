@@ -7,7 +7,7 @@
   "scripts": {
     "format": "grabthar format",
     "check": "grabthar check",
-    "lint": "grabthar lint",
+    "lint": "eslint 'src/**.ts' --ignore-pattern '**.d.ts' --fix",
     "build": "grabthar build",
     "clean": "rm -f *.js *.js.map *.d.ts"
   },
