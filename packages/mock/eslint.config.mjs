@@ -8,7 +8,7 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ['.eslintrc.js', 'tap-snapshots'],
+    ignores: ['.eslintrc.js'],
   },
   {
     rules: {
