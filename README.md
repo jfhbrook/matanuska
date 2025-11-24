@@ -22,14 +22,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Implement grabthar for libraries
-  - `@matanuska/output`
-  - `@matanuska/host`
-  - `@matanuska/mock`
-  - `@matanuska/readline`
-  - `@matanuska/test`
-  - `@matanuska/vitest`
-  - `strip-ansi` (vendored)
+- [ ] Make `@matanuska/mock` use `@matanuska/test`
 - [ ] Implement QT entry point
   - [ ] Figure out lingering node dependencies
     - Node class exports in `@matanuska/host`

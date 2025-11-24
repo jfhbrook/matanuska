@@ -1,14 +1,11 @@
-import { host, ConsoleHost, Transform, Writable } from '@matanuska/host';
+import { host, ConsoleHost, Transform, Writable, Buffer } from '@matanuska/host';
 import { Prompt, Readline } from '@matanuska/readline';
-
-// TODO: export from host
-import { Buffer } from 'node:buffer';
 
 // TODO: Integrate @matanuska/test
 import { expect } from 'vitest';
 
 // TODO: vendor strip-ansi
-import stripAnsi from 'strip-ansi';
+import stripAnsi from '../../../vendor/strip-ansi';
 
 /**
  * File mocks

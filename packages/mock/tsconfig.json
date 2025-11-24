@@ -1,23 +1,28 @@
 {
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
-    "module": "nodenext",
-    "declaration": true,
-    "removeComments": true,
+    "outDir": ".",
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "target": "es2015",
+    "lib": [
+      "es2015"
+    ],
+    "esModuleInterop": true,
+    "incremental": true,
+    "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2015",
-    "sourceMap": true,
-    "outDir": "./",
-    "baseUrl": "./",
-    "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
+    "declaration": true,
+    "removeComments": true,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "esModuleInterop": true
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": false
   }
 }
