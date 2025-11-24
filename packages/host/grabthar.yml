@@ -1,0 +1,38 @@
+entrypoint: ./src/index.ts
+outDir: .
+exclude: []
+target: es2015
+check:
+  compilerOptions:
+    declaration: true
+    removeComments: true
+    strictNullChecks: true
+    noImplicitAny: false
+    strictBindCallApply: false
+    forceConsistentCasingInFileNames: true
+    noFallthroughCasesInSwitch: false
+  shellcheck:
+    files: []
+    externalSources: true
+coverage:
+  exclude:
+    - index.ts
+format:
+  singleQuote: true
+  trailingComma: all
+lint:
+  rules:
+    no-constant-condition: off
+    '@typescript-eslint/interface-name-prefix': off
+    '@typescript-eslint/explicit-function-return-type': off
+    '@typescript-eslint/explicit-module-boundary-types': off
+    '@typescript-eslint/no-explicit-any': off
+    '@typescript-eslint/no-unused-vars':
+      - error
+      - args: all
+        argsIgnorePattern: ^_
+        caughtErrors: all
+        caughtErrorsIgnorePattern: ^_
+        destructuredArrayIgnorePattern: ^_
+        varsIgnorePattern: ^_
+        ignoreRestSiblings: true
