@@ -1,6 +1,7 @@
 set dotenv-load := true
 
 start: build
+  make MATBAS_BUILD="${MATBAS_BUILD}" dist
   npm start
 
 start-qt:
@@ -16,7 +17,7 @@ dist:
   make dist MATBAS_BUILD="${MATBAS_BUILD}"
 
 check:
-  make test
+  make testdeps
   npm run check
 
 format:
