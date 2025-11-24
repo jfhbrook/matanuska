@@ -332,7 +332,10 @@ const create = (host?: Host): Colors => {
   const ansi = (style: any) => {
     const open = (style.open = `\u001b[${style.codes[0]}m`);
     const close = (style.close = `\u001b[${style.codes[1]}m`);
-    const regex = (style.regex = new RegExp(`\\u001b\\[${style.codes[1]}m`, 'g'));
+    const regex = (style.regex = new RegExp(
+      `\\u001b\\[${style.codes[1]}m`,
+      'g',
+    ));
     style.wrap = (input: string, newline: boolean) => {
       if (input.includes(close)) input = input.replace(regex, close + open);
       const output = open + input + close;
