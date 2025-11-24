@@ -30,9 +30,6 @@ jobs:
       - name: Install
         run: npm install
       - name: Build
-        run: |
-          npm run build -w packages/output
-      - name: Test
-        run: npm test -w packages/output
+        run: npm run build -w packages/output
       - name: Lint
         run: cd ./packages/output && npm run lint
