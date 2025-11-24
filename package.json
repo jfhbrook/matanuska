@@ -26,7 +26,7 @@
   "scripts": {
     "build": "dotenvx run -f \"${ENV_FILE:-.env}\" -- grabthar build",
     "build:ast": "citree ast/index.citree",
-    "build:citree": "npm run build -w packages/debug",
+    "build:citree": "npm run build -w packages/citree",
     "build:debug": "npm run build -w packages/debug",
     "build:entrypoint": "entrypoint ./bin/matbasjs",
     "build:path": "npm run build -w packages/path",

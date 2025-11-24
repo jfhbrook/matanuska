@@ -16,7 +16,7 @@ dist:
   make dist MATBAS_BUILD="${MATBAS_BUILD}"
 
 check:
-  make test
+  make testdeps
   npm run check
 
 format:
@@ -34,7 +34,7 @@ lint-staged:
   npm run lint:staged
 
 test:
-  make test
+  make testdeps
   npm run test:env
   npm test
 
