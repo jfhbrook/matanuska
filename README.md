@@ -22,8 +22,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
-- [ ] Fix build
-- [ ] Make `@matanuska/mock` use `@matanuska/test`
 - [ ] Implement QT entry point
   - [ ] Figure out lingering node dependencies
     - Node class exports in `@matanuska/host`

@@ -1,3 +1,5 @@
+import { expect } from 'vitest';
+
 import { host } from '../../host';
 import { mockHost, MockConsoleHost } from '@matanuska/mock';
 
@@ -17,5 +19,16 @@ const FILES: Record<string, string> = Object.assign(
 export function mockConsoleHost(
   files: Record<string, string> = FILES,
 ): MockConsoleHost {
-  return mockHost(host, files);
+  return mockHost(
+    {
+      ok(value: unknown, message?: string): void {
+        expect(value, message).toBeTruthy();
+      },
+      match(value: unknown, regexp: RegExp | string, message?: string): void {
+        expect(value, message).toMatch(regexp);
+      },
+    },
+    host,
+    files,
+  );
 }

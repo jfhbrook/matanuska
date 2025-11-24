@@ -42,8 +42,8 @@ export interface Assert {
     message?: string,
   ): Promise<void>;
   resolves(fn: () => Promise<void>, message?: string): Promise<void>;
-  match(value: unknown, regexp: RegExp, message?: string): void;
-  doesNotMatch(value: unknown, regexp: RegExp, message?: string): void;
+  match(value: unknown, regexp: RegExp | string, message?: string): void;
+  doesNotMatch(value: unknown, regexp: RegExp | string, message?: string): void;
   snapshot(actual: unknown, message?: string): void;
   test(name: string, test: (t: Assert) => Promise<void>): Promise<void>;
 }
@@ -238,7 +238,7 @@ export class TestImpl implements Test {
           message: message || null,
         });
       },
-      match(value: unknown, regexp: RegExp, message?: string): void {
+      match(value: unknown, regexp: RegExp | string, message?: string): void {
         asserts.push({
           path,
           type: 'match',
@@ -247,7 +247,11 @@ export class TestImpl implements Test {
           message: message || null,
         });
       },
-      doesNotMatch(value: unknown, regexp: RegExp, message?: string): void {
+      doesNotMatch(
+        value: unknown,
+        regexp: RegExp | string,
+        message?: string,
+      ): void {
         asserts.push({
           path,
           type: 'doesNotMatch',

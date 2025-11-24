@@ -1,8 +1,11 @@
-import { host, ConsoleHost, Transform, Writable, Buffer } from '@matanuska/host';
+import {
+  host,
+  ConsoleHost,
+  Transform,
+  Writable,
+  Buffer,
+} from '@matanuska/host';
 import { Prompt, Readline } from '@matanuska/readline';
-
-// TODO: Integrate @matanuska/test
-import { expect } from 'vitest';
 
 /**
  * Vendored from strip-ansi and ansi-regex by Sindre Sorhus. Modified by
@@ -132,7 +135,14 @@ export interface MockConsoleHost extends ConsoleHost {
   ) => Promise<T>;
 }
 
+interface Assert {
+  ok(value: unknown, message?: string): void;
+  match(value: unknown, regexp: RegExp | string, message?: string): void;
+}
+export type ExpectFn = (output: string, expected: string) => void;
+
 export function mockHost(
+  assert: Assert,
   host_: ConsoleHost = host,
   files: Files = FILES,
 ): MockConsoleHost {
@@ -175,7 +185,7 @@ export function mockHost(
       this.expectStart = output.length;
       output = output.slice(expectStart);
 
-      expect(output, `expect: ${expected}`).toMatch(expected);
+      assert.match(output, expected, `expect: ${expected}`);
 
       return rv;
     },
@@ -214,7 +224,7 @@ export function mockHost(
 
     async readTextFile(filename: string): Promise<string> {
       const contents = this.files[this.path.resolve(filename)];
-      expect(contents).not.toBeUndefined();
+      assert.ok(contents);
       return contents;
     },
 
@@ -233,8 +243,8 @@ export function mockHost(
 export const mockPs1: Prompt = {
   render() {
     return '> ';
-  }
-}
+  },
+};
 
 export class MockReadline extends Readline {
   public stdin: MockInputStream;
@@ -252,7 +262,10 @@ export class MockReadline extends Readline {
   }
 }
 
-export async function mockReadline(host: MockConsoleHost, fn: (readline: MockReadline) => Promise<void>): Promise<void> {
+export async function mockReadline(
+  host: MockConsoleHost,
+  fn: (readline: MockReadline) => Promise<void>,
+): Promise<void> {
   const readline = new MockReadline(host);
 
   await readline.using(async () => {
