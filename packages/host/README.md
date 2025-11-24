@@ -35,14 +35,14 @@ Finally, it defines and exports `Host` and `ConsoleHost` interfaces, as well as 
 - `formatter`, which is stubbed to use `util.inspect`, is replaced with Matanuska's default formatter
 - Methods which throw host-internal errors are wrapped so they throw Matanuska-native exceptions
 
-For details, view the `Host` and `ConsoleHost` types in `index.ts`. 
+For details, view the `Host` and `ConsoleHost` types in `index.ts`.
 
 ## Testing
 
 The module `@matanuska/host/test` contains tools for mocking out tests in Matanuska's core test suite:
 
-* `MockInputStream`, `MockOutputStream` and `MockErrorStream`, which are used for testing host logging and output features
-* `MockConsoleHost`, a subtype of `ConsoleHost` which types the stdio streams to expect our mocks, exposes a mock file system, and includes an `expect` method for testing outputs from the mock streams
-* `mockConsoleHost`, which takes a mock file system and outputs a `MockConsoleHost`
+- `MockInputStream`, `MockOutputStream` and `MockErrorStream`, which are used for testing host logging and output features
+- `MockConsoleHost`, a subtype of `ConsoleHost` which types the stdio streams to expect our mocks, exposes a mock file system, and includes an `expect` method for testing outputs from the mock streams
+- `mockConsoleHost`, which takes a mock file system and outputs a `MockConsoleHost`
 
 You can see its use in Matanuska's test suite.
