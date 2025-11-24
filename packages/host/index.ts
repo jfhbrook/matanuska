@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer';
 import { spawnSync } from 'node:child_process';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { hostname, userInfo, homedir } from 'node:os';
@@ -39,7 +38,6 @@ import {
 } from './errors.js';
 
 export {
-  Buffer,
   inspect,
   nodeVersion,
   Readable,
