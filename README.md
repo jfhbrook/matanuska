@@ -29,7 +29,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - `@matanuska/readline`
   - `@matanuska/test`
   - `@matanuska/vitest`
-  - `ansi-colors` (vendored)
   - `strip-ansi` (vendored)
 - [ ] Implement QT entry point
   - [ ] Figure out lingering node dependencies

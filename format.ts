@@ -67,14 +67,7 @@ import {
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
 import { Token } from './tokens';
-
-function red(text: string): string {
-  return `\x1b[31m${text}\x1b[39m`;
-}
-
-function green(text: string): string {
-  return `\x1b[32m${text}\x1b[39m`;
-}
+import c from './vendor/ansi-colors';
 
 /**
  * Objects implementing this interface can be formatted.
@@ -254,7 +247,7 @@ export function inspectString(
   }
 
   if (options.colors) {
-    fmt = green(fmt);
+    fmt = c.green(fmt);
   }
 
   return fmt;
@@ -874,9 +867,9 @@ export class Inspector extends DefaultFormatter {
     let exitCode: string = String(exit.exitCode);
 
     if (exit.exitCode) {
-      exitCode = red(exitCode);
+      exitCode = c.red(exitCode);
     } else {
-      exitCode = green(exitCode);
+      exitCode = c.green(exitCode);
     }
     return `Exit ${exitCode}${exit.message.length ? ': ' + exit.message : ''}`;
   }
