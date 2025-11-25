@@ -48,13 +48,13 @@ $(call TARGET_ENV,MATBAS_BUILD):
 	if [[ '$(MATBAS_BUILD)' == 'debug' ]]; then cp .env $@; else cp release.env $@; fi
 
 # buffer
-buffer: packages/artifacts/buffer.tgz
+buffer: packages/artifacts/matanuska-buffer.tgz
 
-packages/artifacts/buffer.tgz: $(BUFFER_JS_FILES) packages/buffer/package.json
+packages/artifacts/matanuska-buffer.tgz: $(BUFFER_JS_FILES) packages/buffer/package.json
 	cd packages/buffer && npm pack
 	mkdir -p packages/artifacts
-	mv packages/buffer/buffer-*.tgz packages/artifacts/buffer.tgz
-	npm install packages/artifacts/buffer.tgz
+	mv packages/buffer/matanuska-buffer-*.tgz packages/artifacts/matanuska-buffer.tgz
+	npm install packages/artifacts/matanuska-buffer.tgz
 
 # ast
 ast: packages/artifacts/matanuska-citree.tgz ast/expr.ts ast/instr.ts ast/index.ts

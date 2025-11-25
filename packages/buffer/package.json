@@ -1,5 +1,5 @@
 {
-  "name": "buffer",
+  "name": "@matanuska/buffer",
   "description": "Node.js Buffer API, for the browser",
   "version": "6.0.3",
   "type": "module",

@@ -58,6 +58,10 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
+- [ ] Vendor buffer
+  - [ ] Copy all dependencies code into `packages/buffer`
+  - [ ] Convert into es6 shenanigans
+  - [ ] Check `typeof process` and return Node.js buffer
 - [ ] Implement QT entry point
   - [ ] Deal with Node class exports in `@matanuska/host`
   - [ ] Implement `@matanuska/host`

@@ -8,6 +8,7 @@
     "matbas": "bin/matbas"
   },
   "workspaces": [
+    "packages/buffer",
     "packages/citree",
     "packages/debug",
     "packages/entrypoint",
@@ -64,12 +65,12 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
+    "@matanuska/buffer": "^6.0.3",
     "@matanuska/mock": "^1.0.0",
     "@matanuska/path": "^1.0.0",
     "@matanuska/test": "^1.0.0",
     "@matanuska/vitest": "^1.0.0",
     "@types/text-table": "^0.2.5",
-    "buffer": "file:packages/artifacts/buffer.tgz",
     "envinfo": "^7.20.0",
     "reflect-metadata": "^0.2.2"
   },

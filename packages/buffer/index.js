@@ -1,3 +1,7 @@
+/**
+ * Vendored for Matanuska by Josh Holbrook.
+ */
+
 /*!
  * The buffer module from node.js, for the browser.
  *
