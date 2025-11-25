@@ -1,6 +1,8 @@
-.PHONY: default target ast citree debug entrypoint fireball host mock output path readline telemetry test-framework test-generator dist test bin
+.PHONY: default buffer ast citree debug entrypoint fireball host mock output path readline telemetry test test-generator dist testdeps bin
 
 MATBAS_BUILD = debug
+
+BUFFER_JS_FILES := $(shell find . -name '*.mjs' -path './packages/buffer/*' -not -path './packages/buffer/node_modules/*')
 
 DIST_TS_FILES := $(shell find . -name '*.ts' -not -path './node_modules/*' -not -path './packages/*')
 
@@ -44,6 +46,15 @@ TARGET_ENV = .make.$(shell echo $($(1))).env
 $(call TARGET_ENV,MATBAS_BUILD):
 	rm -rf .make.*.env
 	if [[ '$(MATBAS_BUILD)' == 'debug' ]]; then cp .env $@; else cp release.env $@; fi
+
+# buffer
+buffer: packages/artifacts/buffer.tgz
+
+packages/artifacts/buffer.tgz: $(BUFFER_JS_FILES) packages/buffer/package.json
+	cd packages/buffer && npm pack
+	mkdir -p packages/artifacts
+	mv packages/buffer/buffer-*.tgz packages/artifacts/buffer.tgz
+	npm install packages/artifacts/buffer.tgz
 
 # ast
 ast: packages/artifacts/matanuska-citree.tgz ast/expr.ts ast/instr.ts ast/index.ts
@@ -96,11 +107,14 @@ packages/artifacts/matanuska-fireball.tgz: $(FIREBALL_TS_FILES) packages/firebal
 	mv packages/fireball/matanuska-fireball-*.tgz packages/artifacts/matanuska-fireball.tgz
 	npm install packages/artifacts/matanuska-fireball.tgz
 
+# grabthar
+grabthar: packages/artifacts/jfhbrook-grabthar.tgz
+
 packages/artifacts/jfhbrook-grabthar.tgz: $(GRABTHAR_JS_FILES) packages/grabthar/package.json
 	cd packages/grabthar && npm pack
 	mkdir -p packages/artifacts
 	mv packages/grabthar/jfhbrook-grabthar-*.tgz packages/artifacts/jfhbrook-grabthar.tgz
-	npm install packages/artifacts/matanuska-grabthar.tgz
+	npm install packages/artifacts/jfhbrook-grabthar.tgz
 
 # host
 host: packages/artifacts/matanuska-host.tgz

@@ -69,6 +69,7 @@
     "@matanuska/test": "^1.0.0",
     "@matanuska/vitest": "^1.0.0",
     "@types/text-table": "^0.2.5",
+    "buffer": "file:packages/artifacts/buffer.tgz",
     "envinfo": "^7.20.0",
     "reflect-metadata": "^0.2.2"
   },
