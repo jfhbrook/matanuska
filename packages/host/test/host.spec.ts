@@ -114,3 +114,65 @@ test('path.resolve', async (t: Assert) => {
     t.equal(host.path.resolve(relative), expected);
   }
 });
+
+test('cd', async (t: Assert) => {
+  const host = mockHost();
+  t.equal(
+    host.pwd(true),
+    '/home/josh/matanuska',
+    'start at /home/josh/matanuska',
+  );
+
+  host.cd('.');
+  t.equal(
+    host.pwd(true),
+    '/home/josh/matanuska',
+    'cd . -> /home/josh/matanuska',
+  );
+
+  host.cd('..');
+  t.equal(host.pwd(true), '/home/josh', 'cd .. -> /home/josh');
+
+  host.cd('matanuska');
+  t.equal(
+    host.pwd(true),
+    '/home/josh/matanuska',
+    'cd matanuska -> /home/josh/matanuska',
+  );
+
+  host.cd('./packages');
+  t.equal(
+    host.pwd(true),
+    '/home/josh/matanuska/packages',
+    'cd ./packages -> /home/josh/matanuska/packages',
+  );
+
+  host.cd('..');
+  host.cd('packages');
+  t.equal(
+    host.pwd(true),
+    '/home/josh/matanuska/packages',
+    'cd packages -> /home/josh/matanuska/packages',
+  );
+
+  host.cd('-');
+  t.equal(
+    host.pwd(true),
+    '/home/josh/matanuska',
+    'cd - -> /home/josh/matanuska',
+  );
+
+  host.cd('~');
+  t.equal(host.pwd(true), '/home/josh', 'cd ~ -> /home/josh');
+
+  host.cd('~/matanuska');
+  t.equal(
+    host.pwd(true),
+    '/home/josh/matanuska',
+    'cd ~/matanuska -> /home/josh/matanuska',
+  );
+
+  // TODO: Implement in C with <unisttd.h> and getpwuid()
+  // host.cd('~kenz');
+  // t.equal(host.pwd(true), '/home/kenz');
+});

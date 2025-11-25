@@ -22,6 +22,7 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### Prioritized Backlog
 
+- [ ] Fully featured `cd` command
 - [ ] Implement QT entry point
   - [ ] Deal with Node class exports in `@matanuska/host`
   - [ ] Implement `@matanuska/host`
@@ -41,7 +42,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] use jobs to implement `pwd`
   - [ ] support \j in prompt rendering
   - `./adrs/draft/processes.md`
-- [ ] Fully featured `cd` command
 - [ ] Revisit draft ADRs
   - `./adrs/draft/end-keyword.md`
   - `./adrs/draft/peek-poke.md`
@@ -185,6 +185,8 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 
 ### The Future
 
+- Implement `cd ~kenz` -> `/home/kenz`
+  - Needs C: <https://stackoverflow.com/questions/2910377/get-home-directory-in-linux>
 - Optimize identifier constants - see ADR 019
 - Reimplement citree in Rust and [chumsky](https://docs.rs/chumsky/latest/chumsky/#example-brainfuck-parser)
 - String templates

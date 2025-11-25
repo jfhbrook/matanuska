@@ -283,6 +283,7 @@ export interface Host {
 export interface ConsoleHost extends Host {
   _tty: string | null | undefined;
   _cwd: string;
+  _dirStack: string[];
 
   /**
    * Node.js standard IO streams. Required for readline.
@@ -310,13 +311,14 @@ export const host: ConsoleHost = {
   level: Level.Info,
   _tty: undefined,
   _cwd: cwd(),
+  _dirStack: [cwd()],
   formatter: {
     format(obj: any): string {
       return inspect(obj);
     },
   },
   _resolvePath(p: string): string {
-    p = p.replace(/^~\//, this.homedir() + '/');
+    p = p.replace(/^~/, this.homedir() + '/');
     if (p.startsWith('/') || p.startsWith('\\')) {
       return p;
     }
@@ -478,12 +480,24 @@ export const host: ConsoleHost = {
   },
 
   cd(path: string): void {
+    if (path === '-') {
+      if (this._dirStack.length) {
+        this._cwd = this._dirStack.pop();
+      }
+      return;
+    }
+
+    const set = (path) => {
+      this._dirStack.push(this._cwd);
+      this._cwd = path;
+    };
+
     if (path === '') {
-      this._cwd = this.homedir();
+      set(this.homedir());
       return;
     }
     // TODO: `-` changes to previous path
-    this._cwd = this.path.resolve(path);
+    set(this.path.resolve(path));
   },
 
   async readTextFile(filename: string): Promise<string> {
