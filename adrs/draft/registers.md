@@ -8,9 +8,23 @@
 
 Typically, a hardware architecture has a fixed set of registers. It's not unusual for bytecode VMs to have registers as well, though `clox` in _Crafting Interpreters_ stores values on the C stack with scope.
 
-Matanuska BASIC currently has a _program counter_ (`PC`) and will eventually have a _stack pointer_ (`SP`) as well. But its current use of "registers" is two `Value`s "a" and "b" stored in the scope of the switch-loop.
+While Matanuska has ad-hoc registers, the design has not been formalized. We would now like to do that here.
 
-Long term, it could be good (and fun) to specify the registers and their semantics.
+### Types of Registers
+
+There are a few general types of registers to consider:
+
+1. **Pointers and Counters.** These point to locations in memory. The stack pointer points to a location in the stack, and the program counter (or instruction pointer) points to a location in the chunk.
+2. **Accumulators.** These are used to store intermediate results of execution.
+3. **Flags.** These are usually internal things that an engineer wouldn't need to be aware of.
+
+### Matanuska
+
+Matanuska doesn't have an explicit register abstraction yet. That said, it does have a `PC` which points to the current chunk. Some additional memory locations to point to include the memory stack (`SP`), the call stack, and global namespace.
+
+It also has two accumulators, the variables `a` and `b`. Unlike a real processor, these variables contain full `Value`s. It's unlikely at this point that Matanuska will require additional accumulators.
+
+Matanuska doesn't currently have any runtime flags, but will probably eventually have them. A particularly likely flag is a "testing" flag, which will cause the runtime to execute tests and output their results. Flags supporting interrupts and/or a "break" state may also be in the future.
 
 ### MEG-4 BASIC
 
@@ -43,13 +57,6 @@ Minicube64 has the following registers:
 - P1 (input register)
 
 I believe the registers store raw bytes, not `Value`s.
-
-### Programmable Tile Machine
-
-- project page: <https://github.com/FernandoAiresCastello/PTM>
-- instruction set: <https://docs.google.com/spreadsheets/d/1uPhPh0LLgRmL87Uo9hDXGUhOOFIESIYAcZ_nJOlN2VI/edit?gid=1742699342#gid=1742699342>
-
-Programmable Tile Machine does not specify registers. However, it _does_ act as an example of an instruction set VM which deals with full `Value`s stored in values or references.
 
 ## Decision
 

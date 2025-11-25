@@ -13,7 +13,7 @@ There currently aren't any installable packages for Matanuska. If you would like
 Matanuska BASIC uses `npm`, `just` and `make` to coordinate its increasingly complex builds. Generally speaking, top level `just` tasks will run the right build steps:
 
 ```
-❯ just --list       
+❯ just --list
 Available recipes:
     build    # Run a development build
     check    # Run TypeScript type checks
@@ -58,12 +58,6 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
-- [ ] Revisit draft ADRs
-  - `./adrs/draft/end-keyword.md`
-  - `./adrs/draft/peek-poke.md`
-  - `./adrs/draft/stack-effects.md`
-  - `./adrs/draft/sigil-typecasting.md`
-  - `./adrs/draft/registers.md`
 - [ ] Implement QT entry point
   - [ ] Deal with Node class exports in `@matanuska/host`
   - [ ] Implement `@matanuska/host`
@@ -216,6 +210,7 @@ For more information, check out the backlog...
 
 ### The Future
 
+- Registers
 - Implement `cd ~kenz` -> `/home/kenz`
   - Needs C: <https://stackoverflow.com/questions/2910377/get-home-directory-in-linux>
 - Optimize identifier constants - see ADR 019
@@ -223,11 +218,6 @@ For more information, check out the backlog...
 - String templates
 - Module system
 - Package manager
-- Partial rewrite in Rust and/or C/C++
-- Implement entry point in Rust or C/C++
-- Port to bun?
-  - Nice FFI
-  - Support for bundled executable
 - Object support
 - Vector/matrix support for 1D/2D integer/float arrays
 - Assembler mini-language

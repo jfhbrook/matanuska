@@ -33,12 +33,17 @@ import { Short, bytesToShort } from './bytecode/short';
 import * as op from './operations';
 
 export type Globals = Record<string, Value>;
+export type RegisterName = string;
 
 export class Runtime {
   public stack: Stack<Value>;
   public pc: number = -1;
   public chunk: Chunk = new Chunk();
   public globals: Globals = {};
+  public acc: Record<RegisterName, Value> = {
+    a: undef,
+    b: undef,
+  };
 
   constructor(
     private host: Host,
@@ -51,6 +56,15 @@ export class Runtime {
     this.stack = new Stack();
     this.chunk = new Chunk();
     this.pc = 0;
+  }
+
+  public get registers(): Record<RegisterName, Value> {
+    return {
+      PC: this.pc,
+      SP: -1,
+      A: this.acc.a,
+      B: this.acc.b,
+    };
   }
 
   /**
@@ -128,8 +142,6 @@ export class Runtime {
     //#if _MATBAS_BUILD == 'debug'
     return startSpan('Runtime#run', async (_: Span): Promise<Value> => {
       //#endif
-      let a: Value | null = null;
-      let b: Value | null = null;
 
       //#if _DEBUG_TRACE_RUNTIME
       startTraceExec();
@@ -162,43 +174,47 @@ export class Runtime {
               this.stack.pop();
               break;
             case OpCode.GetLocal:
-              a = this.readByte();
-              this.stack.push(this.stack.peek(a) as Value);
+              this.acc.a = this.readByte();
+              this.stack.push(this.stack.peek(this.acc.a) || undef);
               break;
             case OpCode.SetLocal:
-              a = this.readByte();
-              this.stack.set(a, this.stack.peek() as Value);
+              this.acc.a = this.readByte();
+              this.stack.set(this.acc.a, this.stack.peek() || undef);
               break;
             case OpCode.GetGlobal:
               // Reads the constant, does not operate on the stack
-              a = this.readString();
-              b = this.globals[a];
-              if (typeof b === 'undefined') {
-                throw new NameError(`Variable ${a} is undefined`);
+              this.acc.a = this.readString();
+              this.acc.b = this.globals[this.acc.a];
+              if (typeof this.acc.b === 'undefined') {
+                throw new NameError(`Variable ${this.acc.a} is undefined`);
               }
-              this.stack.push(b);
+              this.stack.push(this.acc.b);
               break;
             case OpCode.DefineGlobal:
               // Identifier from instruction
-              a = this.readString();
+              this.acc.a = this.readString();
               // Variable value from values stack
               // NOTE: Pops afterwards for garbage collection reasons
-              b = this.stack.peek();
-              if (typeof this.globals[a] !== 'undefined') {
-                throw new NameError(`Cannot define variable ${a} twice`);
+              this.acc.b = this.stack.peek() || undef;
+              if (typeof this.globals[this.acc.a] !== 'undefined') {
+                throw new NameError(
+                  `Cannot define variable ${this.acc.a} twice`,
+                );
               }
-              this.globals[a] = b as Value;
+              this.globals[this.acc.a] = this.acc.b;
               // NOTE: Pop here
               this.stack.pop();
               break;
             case OpCode.SetGlobal:
               // Identifier from instruction
-              a = this.readString();
-              b = this.stack.peek();
-              if (typeof this.globals[a] === 'undefined') {
-                throw new NameError(`Cannot assign to undefined variable ${a}`);
+              this.acc.a = this.readString();
+              this.acc.b = this.stack.peek() || undef;
+              if (typeof this.globals[this.acc.a] === 'undefined') {
+                throw new NameError(
+                  `Cannot assign to undefined variable ${this.acc.a}`,
+                );
               }
-              this.globals[a] = b as Value;
+              this.globals[this.acc.a] = this.acc.b;
               // TODO: We currently do not pop the value after setting a global
               // variable. This is because our reference vm, clox, treats
               // assignments as expressions with the assigned value as the
@@ -208,78 +224,78 @@ export class Runtime {
               // during implementation.
               break;
             case OpCode.Eq:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.eq(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.eq(this.acc.a, this.acc.b));
               break;
             case OpCode.Gt:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.gt(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.gt(this.acc.a, this.acc.b));
               break;
             case OpCode.Ge:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.ge(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.ge(this.acc.a, this.acc.b));
               break;
             case OpCode.Lt:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.lt(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.lt(this.acc.a, this.acc.b));
               break;
             case OpCode.Le:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.le(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.le(this.acc.a, this.acc.b));
               break;
             case OpCode.Ne:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.ne(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.ne(this.acc.a, this.acc.b));
               break;
             case OpCode.Not:
-              a = this.stack.pop();
-              this.stack.push(op.not(a));
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.not(this.acc.a));
               break;
             case OpCode.Add:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.add(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.add(this.acc.a, this.acc.b));
               break;
             case OpCode.Sub:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.sub(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.sub(this.acc.a, this.acc.b));
               break;
             case OpCode.Mul:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.mul(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.mul(this.acc.a, this.acc.b));
               break;
             case OpCode.Div:
-              b = this.stack.pop();
-              a = this.stack.pop();
-              this.stack.push(op.div(a, b));
+              this.acc.b = this.stack.pop();
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.div(this.acc.a, this.acc.b));
               break;
             case OpCode.Neg:
-              a = this.stack.pop();
-              this.stack.push(op.neg(a));
+              this.acc.a = this.stack.pop();
+              this.stack.push(op.neg(this.acc.a));
               break;
             case OpCode.Print:
               this.host.writeLine(this.stack.pop());
               break;
             case OpCode.Exit:
-              a = this.stack.pop();
-              if (typeof a === 'number') {
-                b = Math.floor(a);
-              } else if (nullish(a)) {
-                b = 0;
-              } else if (a) {
-                b = 1;
+              this.acc.a = this.stack.pop();
+              if (typeof this.acc.a === 'number') {
+                this.acc.b = Math.floor(this.acc.a);
+              } else if (nullish(this.acc.a)) {
+                this.acc.b = 0;
+              } else if (this.acc.a) {
+                this.acc.b = 1;
               } else {
-                b = 0;
+                this.acc.b = 0;
               }
-              this.host.exit(b);
+              this.host.exit(this.acc.b);
               return undef;
             case OpCode.Command:
               await this.command();
@@ -287,27 +303,27 @@ export class Runtime {
             case OpCode.Jump:
               // Note: readShort increments the pc. If we didn't assign before,
               // we would need to add extra to skip over those bytes!
-              a = this.readShort();
-              this.pc += a;
+              this.acc.a = this.readShort();
+              this.pc += this.acc.a;
               break;
             case OpCode.JumpIfFalse:
-              a = this.readShort();
-              b = this.stack.peek();
+              this.acc.a = this.readShort();
+              this.acc.b = this.stack.peek() || undef;
 
-              if (falsey(b!)) {
-                this.pc += a;
+              if (falsey(this.acc.b!)) {
+                this.pc += this.acc.a;
               }
               break;
             case OpCode.Loop:
               // Note: Same caveat as Jump
-              a = this.readShort();
-              this.pc -= a;
+              this.acc.a = this.readShort();
+              this.pc -= this.acc.a;
               break;
             case OpCode.Return:
-              a = this.stack.pop();
+              this.acc.a = this.stack.pop();
               // TODO: Clean up the current frame, and only return if we're
               // done with the main program.
-              return a;
+              return this.acc.a;
             default:
               if (this.pc >= this.chunk.code.length) {
                 throw new AssertionError('Program counter out of bounds');
