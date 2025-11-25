@@ -103,17 +103,13 @@ For more information, check out the backlog...
   - `test` and `assert` commands
   - BASIC runtime "test mode" and entrypoint subcommand
   - Reporter, possibly based off node-tap
+- Add trace events to parser and compiler
 - Revisit `format-markdown` script
   - Pandoc introduces newlines by default, which is less than ideal
 - Fallout from QT Refactor
-  - [ ] Implement proper assert module
-    - Possibly by vendoring node's assert module
   - [ ] Refactor `path`
     - Use a class
     - Potentially move out of `host`
-  - [ ] Revisit bundling `ansi-colors`
-    - It handles sophisticated logic that my little helpers do not
-    - Possibly a good target for a `grabthar` build
 - User cmdlets
   - Dust off `./adrs/draft/cmdlets.md`
   - Import cmdlets from some directory
@@ -146,7 +142,6 @@ For more information, check out the backlog...
 - Type-checking compiler
   - Implement type analogues to operations
   - Simulated stack in the compiler
-- Add trace events to parser and compiler
 - Audit/document OTEL environment variables
 - Add `tflint` and `terraform validate`
   - [ ] entrypoint
