@@ -10,7 +10,27 @@ There currently aren't any installable packages for Matanuska. If you would like
 
 ## Development
 
-Matanuska BASIC uses `npm` for all of its tasks. Refer to `package.json` for details.
+Matanuska BASIC uses `npm`, `just` and `make` to coordinate its increasingly complex builds. Generally speaking, top level `just` tasks will run the right build steps:
+
+```
+❯ just --list       
+Available recipes:
+    build    # Run a development build
+    check    # Run TypeScript type checks
+    clean    # Clean build files, start from scratch
+    dist     # Build Matanuska BASIC's JavaScript core
+    fireball # Run fireball, Matanuska's OpenTelemetry backend
+    format   # Format code with prettier and clang-format
+    lint     # Lint code with eslint and shellcheck
+    release  # Run a release build
+    report   # Generate a report of SLOC and other statistics
+    snap     # Run top-level JavaScript tests, taking snapshots
+    start    # Start the pure Node.js implementation of Matanuska BASIC
+    start-qt # Start the burgeoning QT based implementation of Matanuska BASIC
+    test     # Run top-level JavaScript tests
+```
+
+For more details, check out ADRs [017](./adrs/017-grabthar.md) and [028](./adrs/028-cpp-runtime.md).
 
 ## ADRs
 
@@ -18,11 +38,32 @@ Architectural decisions are documented in [./adrs](./adrs). Notes on future deci
 
 ## Current Status and Next Steps
 
-The interpreter can run "hello world" in a REPL and evaluate simple expressions. Now is time to add some basic features and button up a few gaps.
+Matanuska can do the following:
+
+1. Evaluate expressions
+2. Define variables
+3. Check conditionals
+4. Run loops
+5. Edit files in a BASIC style REPL
+
+However, some important capabilities are still missing, including (but not limited to):
+
+1. System commands and shell jobs
+2. Functions
+3. Arrays and other higher level types
+4. Compiler level type assertions
+5. Multi-line instructions
+
+For more information, check out the backlog...
 
 ### Prioritized Backlog
 
-- [ ] Fully featured `cd` command
+- [ ] Revisit draft ADRs
+  - `./adrs/draft/end-keyword.md`
+  - `./adrs/draft/peek-poke.md`
+  - `./adrs/draft/stack-effects.md`
+  - `./adrs/draft/sigil-typecasting.md`
+  - `./adrs/draft/registers.md`
 - [ ] Implement QT entry point
   - [ ] Deal with Node class exports in `@matanuska/host`
   - [ ] Implement `@matanuska/host`
@@ -42,13 +83,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
   - [ ] use jobs to implement `pwd`
   - [ ] support \j in prompt rendering
   - `./adrs/draft/processes.md`
-- [ ] Revisit draft ADRs
-  - `./adrs/draft/end-keyword.md`
-  - `./adrs/draft/peek-poke.md`
-  - `./adrs/draft/stack-effects.md`
-  - `./adrs/draft/sigil-typecasting.md`
-  - `./adrs/draft/registers.md`
-- [ ] Fully featured `cd` command
 - [ ] Functions
   - [ ] Function syntax ADR
   - [ ] Add keywords to tokens/scanner
@@ -73,9 +107,6 @@ The interpreter can run "hello world" in a REPL and evaluate simple expressions.
 - [ ] STDIO and Background Control
   - `|`, `&` and stream redirection
 - [ ] Spike on `^Z`, `^Y` and `fg`
-- [ ] Spike on Rust Jobs Implementation
-  - Use `neon`
-  - Potentially implement process groups
 
 ### Up Next
 
