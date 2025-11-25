@@ -93,15 +93,9 @@ For more information, check out the backlog...
 - [ ] Tests for `InstrShifter` in editor
 - [ ] Support entering multiple lines in REPL
   - [ ] ADR
-  - Probably a `Reader` class that handles `readline` stuff
   - Probably track block nesting
 - [ ] PS1/PS2 support
   - `SET PS1` and `SET PS2`?
-- [ ] Runtime tests for `Jump` and `Loop`
-- [ ] STDIO and Background Control
-  - `|`, `&` and stream redirection
-- [ ] Spike on `^Z`, `^Y` and `fg`
-
 ### Up Next
 
 - Test Shenanigans
@@ -210,7 +204,14 @@ For more information, check out the backlog...
 
 ### The Future
 
-- Registers
+- [ ] Runtime tests for `Jump` and `Loop`
+- [ ] Advanced commands
+  - [ ] STDIO and Background Control
+    - `|`, `&` and stream redirection
+  - [ ] Spike on `^Z`, `^Y` and `fg`
+- Peek/Poke
+  - ADR
+  - Expose through registers
 - Implement `cd ~kenz` -> `/home/kenz`
   - Needs C: <https://stackoverflow.com/questions/2910377/get-home-directory-in-linux>
 - Optimize identifier constants - see ADR 019
