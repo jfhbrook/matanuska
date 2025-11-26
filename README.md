@@ -58,6 +58,21 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
+- [ ] Functions
+  - [ ] Function syntax ADR
+  - [ ] Implement frames
+    - Is `Runtime#using` basically a function call?
+  - [ ] Add keywords to tokens/scanner
+  - [ ] Add support to parser
+  - [ ] Parser tests for functions
+  - [ ] Add new op codes
+  - [ ] Add support in runtime
+  - [ ] Add support to disassembler
+  - [ ] Add support to compiler
+  - [ ] Compiler tests for functions
+  - [ ] Runtime tests
+  - [ ] Examples
+  - [ ] Native function support
 - [ ] Implement QT entry point
   - [ ] Shim in `node:buffer` with `@matanuska/buffer`
   - [ ] Implement `@matanuska/host`
@@ -77,19 +92,6 @@ For more information, check out the backlog...
   - [ ] use jobs to implement `pwd`
   - [ ] support \j in prompt rendering
   - `./adrs/draft/processes.md`
-- [ ] Functions
-  - [ ] Function syntax ADR
-  - [ ] Add keywords to tokens/scanner
-  - [ ] Add support to parser
-  - [ ] Parser tests for functions
-  - [ ] Add new op codes
-  - [ ] Add support in runtime
-  - [ ] Add support to disassembler
-  - [ ] Add support to compiler
-  - [ ] Compiler tests for functions
-  - [ ] Runtime tests
-  - [ ] Examples
-  - [ ] Native function support
 - [ ] Tests for `InstrShifter` in editor
 - [ ] Support entering multiple lines in REPL
   - [ ] ADR
