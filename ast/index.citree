@@ -45,6 +45,10 @@ type Instr in './instr' {
   Repeat!
   Until      => condition: Expr
   Command    => name: Expr, params: Expr[]
+  Def         => name: string, args: Variable[]
+  Lambda     => name: string, args: Variable[], body: Expr
+  Return     => value: Expr
+  EndDef!
 }
 
 type Tree in './index' {

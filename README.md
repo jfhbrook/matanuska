@@ -59,18 +59,19 @@ For more information, check out the backlog...
 ### Prioritized Backlog
 
 - [ ] Functions
-  - [ ] Function syntax ADR
-  - [ ] Implement frames
-    - Is `Runtime#using` basically a function call?
-  - [ ] Add keywords to tokens/scanner
+  - [x] Add keywords to tokens/scanner
+  - [x] Add `Fn` value type
+  - [x] Add entities to AST
+  - [ ] Format AST more like code
   - [ ] Add support to parser
   - [ ] Parser tests for functions
-  - [ ] Add new op codes
-  - [ ] Add support in runtime
-  - [ ] Add support to disassembler
   - [ ] Add support to compiler
+  - [ ] Implement frames
+    - Isn't `Runtime#using` basically a function call?
+  - [ ] Add support in runtime
   - [ ] Compiler tests for functions
   - [ ] Runtime tests
+  - [ ] Function syntax ADR
   - [ ] Examples
   - [ ] Native function support
 - [ ] Implement QT entry point
@@ -98,6 +99,7 @@ For more information, check out the backlog...
   - Probably track block nesting
 - [ ] PS1/PS2 support
   - `SET PS1` and `SET PS2`?
+
 ### Up Next
 
 - Test Shenanigans

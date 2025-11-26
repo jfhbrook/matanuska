@@ -8,6 +8,10 @@ start: build
 start-qt:
   PATH="${PATH}:$(pwd)/bin" bin/matbas
 
+# Build the AST
+ast:
+  make ast
+
 # Run a development build
 build: 
   make MATBAS_BUILD="${MATBAS_BUILD}"
@@ -22,7 +26,6 @@ dist:
 
 # Run TypeScript type checks
 check:
-  make testdeps
   npm run check
 
 # Format code with prettier and clang-format

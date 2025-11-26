@@ -72,16 +72,6 @@ export enum TokenKind {
   Else = 'else',
   EndIf = 'endif',
 
-  /*
-  Data = 'DATA',
-  Def = 'DEF',
-  Fn = 'FN',
-  DefInt = 'DEFINT',
-  DefDbl = 'DEFDBL',
-  DefStr = 'DEFSTR',
-  Dim = 'DIM',
-  */
-
   For = 'for',
   To = 'to',
   Step = 'step',
@@ -92,28 +82,30 @@ export enum TokenKind {
   Repeat = 'repeat',
   Until = 'until',
 
+  Def = 'def',
+  Lambda = 'lambda',
+  Return = 'return',
+  EndDef = 'enddef',
+
   /*
-  GoSub = 'GOSUB',
-  GoTo = 'GOTO',
-  Return = 'RETURN',
-  While = 'WHILE',
+  GoSub = 'gosub',
+  GoTo = 'goto',
 
-  Erl = 'ERL',
-  Err = 'ERR',
-  Error = 'ERROR',
-  Resume = 'RESUME',
+  Erl = 'erl',
+  Err = 'err',
+  Error = 'error',
+  Resume = 'resume',
 
-  Date = 'DATE',
-  Time = 'TIME',
-
-  Len = 'LEN',
+  Date = 'date',
+  Time = 'time',
   */
 
   Print = 'print',
 
   /*
-  Cls = 'CLS',
-  Export = 'EXPORT',
+  Cls = 'cls',
+  Export = 'export',
+  Provide = 'provide',
   */
 
   Rem = '<rem>',

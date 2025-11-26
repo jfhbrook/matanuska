@@ -29,6 +29,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  Lambda,
+  Return,
+  EndDef,
   Command,
 } from '../ast/instr';
 
@@ -214,6 +218,22 @@ export abstract class Block implements InstrVisitor<void> {
 
   visitUntilInstr(until: Until): void {
     this.mismatched(until, 'until');
+  }
+
+  visitDefInstr(def: Def): void {
+    this.invalid(def, 'def');
+  }
+
+  visitLambdaInstr(lambda: Lambda): void {
+    this.invalid(lambda, 'lambda');
+  }
+
+  visitReturnInstr(ret: Return): void {
+    this.invalid(ret, 'return');
+  }
+
+  visitEndDefInstr(endDef: EndDef): void {
+    this.invalid(endDef, 'enddef');
   }
 
   visitCommandInstr(command: Command): void {

@@ -16,6 +16,7 @@ import {
   ParseError,
   ParseWarning,
   mergeParseErrors,
+  NotImplementedError,
 } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
 import { Token, TokenKind } from '../tokens';
@@ -68,6 +69,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  Lambda,
+  Return,
+  EndDef,
   Command,
 } from '../ast/instr';
 
@@ -821,6 +826,22 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitOnwardInstr(onward: Onward): void {
     this.block.handle(onward);
+  }
+
+  visitDefInstr(_def: Def): void {
+    throw new NotImplementedError('def');
+  }
+
+  visitLambdaInstr(_lambda: Lambda): void {
+    throw new NotImplementedError('lambda');
+  }
+
+  visitReturnInstr(_ret: Return): void {
+    throw new NotImplementedError('return');
+  }
+
+  visitEndDefInstr(_endDef: EndDef): void {
+    throw new NotImplementedError('enddef');
   }
 
   visitCommandInstr(command: Command): void {

@@ -63,6 +63,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  Lambda,
+  Return,
+  EndDef,
   Command,
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
@@ -206,7 +210,10 @@ export abstract class Formatter
   abstract visitEndWhileInstr(endWhile: EndWhile): string;
   abstract visitRepeatInstr(repeat: Repeat): string;
   abstract visitUntilInstr(until: Until): string;
-
+  abstract visitDefInstr(fn: Def): string;
+  abstract visitLambdaInstr(fn: Lambda): string;
+  abstract visitReturnInstr(ret: Return): string;
+  abstract visitEndDefInstr(end: EndDef): string;
   abstract visitCommandInstr(node: Command): string;
 
   abstract visitCmdTree(node: Cmd): string;
@@ -342,7 +349,7 @@ export class DefaultFormatter extends Formatter {
     report += `: ${warn.constructor.name}: ${warn.message}`;
     // TODO: Python also prints the line like so:
     //
-    //  100 print someFn(ident);
+    //  100 print someDef(ident);
 
     return report;
   }
@@ -740,11 +747,11 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitEndWhileInstr(_endWhile: EndWhile): string {
-    return `EndWhile`;
+    return 'EndWhile';
   }
 
   visitRepeatInstr(_repeat: Repeat): string {
-    return `Repeat`;
+    return 'Repeat';
   }
 
   visitUntilInstr(until: Until): string {
@@ -760,6 +767,24 @@ export class DefaultFormatter extends Formatter {
         return this.format(expr);
       })
       .join(' ');
+  }
+
+  visitDefInstr(def: Def): string {
+    const args = def.args.map((arg: Variable) => this.format(arg)).join(', ');
+    return `Function(${args})`;
+  }
+
+  visitLambdaInstr(fn: Lambda): string {
+    const args = fn.args.map((arg) => this.format(arg)).join(',');
+    return `Lambda(${args}) { ${formatter.format(fn.body)} }`;
+  }
+
+  visitReturnInstr(ret: Return): string {
+    return `Return { ${this.format(ret.value)} }`;
+  }
+
+  visitEndDefInstr(_endDef: EndDef): string {
+    return 'EndDef';
   }
 
   visitCommandInstr(command: Command): string {

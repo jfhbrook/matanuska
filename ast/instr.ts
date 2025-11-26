@@ -27,6 +27,10 @@ export interface InstrVisitor<R> {
   visitRepeatInstr(node: Repeat): R;
   visitUntilInstr(node: Until): R;
   visitCommandInstr(node: Command): R;
+  visitDefInstr(node: Def): R;
+  visitLambdaInstr(node: Lambda): R;
+  visitReturnInstr(node: Return): R;
+  visitEndDefInstr(node: EndDef): R;
 }
 
 export abstract class Instr {
@@ -372,5 +376,60 @@ export class Command extends Instr {
 
   accept<R>(visitor: InstrVisitor<R>): R {
     return visitor.visitCommandInstr(this);
+  }
+}
+
+export class Def extends Instr {
+  constructor(
+    public name: string,
+    public args: Variable[],
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitDefInstr(this);
+  }
+}
+
+export class Lambda extends Instr {
+  constructor(
+    public name: string,
+    public args: Variable[],
+    public body: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitLambdaInstr(this);
+  }
+}
+
+export class Return extends Instr {
+  constructor(
+    public value: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitReturnInstr(this);
+  }
+}
+
+export class EndDef extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitEndDefInstr(this);
   }
 }

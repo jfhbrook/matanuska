@@ -59,6 +59,16 @@ Noteworthy callouts here:
 4. While BASIC8 has support for `GOTO` and `GOSUB`, they can not be used within the same program
 5. BASIC8 supports multi arity with a `...` unpacking syntax
 
+### Python
+
+In addition to a full function syntax, Python also has a lambda syntax:
+
+```python
+lambda a, b: a + b
+```
+
+This is relevant to Matanuska because it allows a function to be defined on a single line. Recall that Matanuska distinguishes between a single-line "short if" and a multi-line "block if". This could be relevant here as well.
+
 # Decision
 
 TK

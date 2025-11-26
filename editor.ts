@@ -50,6 +50,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  Lambda,
+  Return,
+  EndDef,
   Command,
 } from './ast/instr';
 
@@ -222,6 +226,26 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
   visitUntilInstr(until: Until): void {
     this.shiftInstr(until);
     until.condition.accept(this);
+  }
+
+  visitDefInstr(fn: Def): void {
+    this.shiftInstr(fn);
+    for (const var_ of fn.args) {
+      var_.accept(this);
+    }
+  }
+
+  visitLambdaInstr(lambda: Lambda): void {
+    this.shiftInstr(lambda);
+    lambda.body.accept(this);
+  }
+
+  visitReturnInstr(ret: Return): void {
+    this.shiftInstr(ret);
+  }
+
+  visitEndDefInstr(endDef: EndDef): void {
+    this.shiftInstr(endDef);
   }
 
   visitCommandInstr(command: Command): void {
