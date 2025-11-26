@@ -28,6 +28,7 @@ import {
   Binary,
   Logical,
   Unary,
+  Call,
   Group,
   Variable,
   IntLiteral,
@@ -912,9 +913,36 @@ export class Parser {
   private unary(): Expr {
     return this.prefixOperator(
       [TokenKind.Minus, TokenKind.Plus],
-      this.primary.bind(this),
+      this.call.bind(this),
       (o, e) => new Unary(o, e),
     );
+  }
+
+  private call(): Expr {
+    let expr = this.primary();
+
+    while (true) {
+      if (this.match(TokenKind.LParen)) {
+        expr = this._call(expr);
+      } else {
+        break;
+      }
+    }
+
+    return expr;
+  }
+
+  private _call(callee: Expr): Expr {
+    const args: Expr[] = [];
+    if (!this.check(TokenKind.RParen)) {
+      do {
+        args.push(this.expression());
+      } while (this.match(TokenKind.Comma));
+    }
+
+    const end = this.consume(TokenKind.RParen, "Expect ')' after arguments.");
+
+    return new Call(callee, end, args);
   }
 
   private primary(): Expr {

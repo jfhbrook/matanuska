@@ -4,6 +4,7 @@ export interface ExprVisitor<R> {
   visitUnaryExpr(node: Unary): R;
   visitBinaryExpr(node: Binary): R;
   visitLogicalExpr(node: Logical): R;
+  visitCallExpr(node: Call): R;
   visitGroupExpr(node: Group): R;
   visitVariableExpr(node: Variable): R;
   visitIntLiteralExpr(node: IntLiteral): R;
@@ -57,6 +58,20 @@ export class Logical extends Expr {
 
   accept<R>(visitor: ExprVisitor<R>): R {
     return visitor.visitLogicalExpr(this);
+  }
+}
+
+export class Call extends Expr {
+  constructor(
+    public callee: Expr,
+    public end: Token,
+    public args: Expr[],
+  ) {
+    super();
+  }
+
+  accept<R>(visitor: ExprVisitor<R>): R {
+    return visitor.visitCallExpr(this);
   }
 }
 

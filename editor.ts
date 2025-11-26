@@ -12,6 +12,7 @@ import {
   Unary,
   Binary,
   Logical,
+  Call,
   Group,
   Variable,
   IntLiteral,
@@ -267,6 +268,13 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
   visitLogicalExpr(logical: Logical): void {
     logical.left.accept(this);
     logical.right.accept(this);
+  }
+
+  visitCallExpr(call: Call): void {
+    call.callee.accept(this);
+    for (const arg of call.args) {
+      arg.accept(this);
+    }
   }
 
   visitGroupExpr(group: Group): void {

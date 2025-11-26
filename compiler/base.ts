@@ -31,6 +31,7 @@ import {
   Unary,
   Binary,
   Logical,
+  Call,
   Group,
   Variable,
   IntLiteral,
@@ -941,6 +942,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.emitByte(OpCode.Pop);
     logical.right.accept(this);
     this.patchJump(endJump);
+  }
+
+  visitCallExpr(_call: Call): void {
+    throw new NotImplementedError('call');
   }
 
   visitGroupExpr(group: Group): void {

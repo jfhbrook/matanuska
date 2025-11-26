@@ -25,6 +25,7 @@ import {
   Binary,
   Logical,
   Unary,
+  Call,
   Group,
   Variable,
   IntLiteral,
@@ -175,6 +176,7 @@ export abstract class Formatter
   abstract visitBinaryExpr(binary: Binary): string;
   abstract visitLogicalExpr(logical: Logical): string;
   abstract visitUnaryExpr(unary: Unary): string;
+  abstract visitCallExpr(call: Call): string;
   abstract visitGroupExpr(group: Group): string;
   abstract visitVariableExpr(variable: Variable): string;
   abstract visitIntLiteralExpr(int: IntLiteral): string;
@@ -602,6 +604,13 @@ export class DefaultFormatter extends Formatter {
     let formatted = `Unary(${unary.op}) {\n`;
     formatted += indent(1, `${this.format(unary.expr)},\n`);
     formatted += '}';
+    return formatted;
+  }
+
+  visitCallExpr(call: Call): string {
+    let formatted = call.callee.accept(this) + '(';
+    formatted += call.args.map((arg) => arg.accept(this)).join(', ');
+    formatted += ')';
     return formatted;
   }
 

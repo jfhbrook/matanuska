@@ -61,8 +61,7 @@ For more information, check out the backlog...
 - [ ] Functions
   - [x] Add keywords to tokens/scanner
   - [x] Add `Fn` value type
-  - [x] Add entities to AST
-  - [ ] Format AST more like code
+  - [x] Add def/call/etc to AST
   - [ ] Add support to parser
   - [ ] Parser tests for functions
   - [ ] Add support to compiler
@@ -74,6 +73,7 @@ For more information, check out the backlog...
   - [ ] Function syntax ADR
   - [ ] Examples
   - [ ] Native function support
+- [ ] Format AST more like code
 - [ ] Implement QT entry point
   - [ ] Shim in `node:buffer` with `@matanuska/buffer`
   - [ ] Implement `@matanuska/host`

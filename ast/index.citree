@@ -4,6 +4,7 @@ type Expr in './expr' {
   Unary          => op: TokenKind, expr: Expr
   Binary         => left: Expr, op: TokenKind, right: Expr
   Logical        => left: Expr, op: TokenKind, right: Expr
+  Call           => callee: Expr, end: Token, args: Expr[]
   Group          => expr: Expr
   Variable       => ident: Token
   IntLiteral     => value: number
