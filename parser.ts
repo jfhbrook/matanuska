@@ -432,14 +432,7 @@ export class Parser {
 
   private syncNextInstr() {
     // Remarks can be handled in the next attempt at parsing a command
-    while (
-      ![
-        TokenKind.Colon,
-        TokenKind.LineEnding,
-        TokenKind.Eof,
-        TokenKind.Rem,
-      ].includes(this.current.kind)
-    ) {
+    while (!this.isInstrBoundary) {
       // TODO: Illegal, UnterminatedString
       this.advance();
     }
@@ -484,8 +477,8 @@ export class Parser {
     let instr: Instr | null = this.instruction();
     const instrs: Instr[] = instr ? [instr] : [];
 
-    // A remark doesn't need to be separated from a prior command by a
-    // colon
+    // Less strict than isInstrBoundary, since that check includes end-of-input
+    // scenarios
     while (this.match(TokenKind.Colon) || this.check(TokenKind.Rem)) {
       try {
         instr = this.instruction();
