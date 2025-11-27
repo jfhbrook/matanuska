@@ -72,6 +72,7 @@ import {
   Repeat,
   Until,
   Def,
+  ShortDef,
   Return,
   EndDef,
   Command,
@@ -830,6 +831,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitDefInstr(_def: Def): void {
+    throw new NotImplementedError('def');
+  }
+
+  visitShortDefInstr(_def: ShortDef): void {
     throw new NotImplementedError('def');
   }
 

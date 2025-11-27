@@ -66,6 +66,7 @@ import {
   Repeat,
   Until,
   Def,
+  ShortDef,
   Return,
   EndDef,
   Command,
@@ -214,6 +215,7 @@ export abstract class Formatter
   abstract visitRepeatInstr(repeat: Repeat): string;
   abstract visitUntilInstr(until: Until): string;
   abstract visitDefInstr(fn: Def): string;
+  abstract visitShortDefInstr(fn: ShortDef): string;
   abstract visitReturnInstr(ret: Return): string;
   abstract visitEndDefInstr(end: EndDef): string;
   abstract visitCommandInstr(node: Command): string;
@@ -785,7 +787,13 @@ export class DefaultFormatter extends Formatter {
 
   visitDefInstr(def: Def): string {
     const args = def.params.map((param: Token) => param.text).join(', ');
-    return `Function(${args})`;
+    return `Def(${args})`;
+  }
+
+  visitShortDefInstr(def: ShortDef): string {
+    const args = def.params.map((param: Token) => param.text).join(', ');
+    const body = def.body.accept(this);
+    return `ShortDef(${args}) { ${body} }`;
   }
 
   visitReturnInstr(ret: Return): string {

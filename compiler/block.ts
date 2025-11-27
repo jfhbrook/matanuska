@@ -30,6 +30,7 @@ import {
   Repeat,
   Until,
   Def,
+  ShortDef,
   Return,
   EndDef,
   Command,
@@ -220,6 +221,10 @@ export abstract class Block implements InstrVisitor<void> {
   }
 
   visitDefInstr(def: Def): void {
+    this.invalid(def, 'def');
+  }
+
+  visitShortDefInstr(def: ShortDef): void {
     this.invalid(def, 'def');
   }
 

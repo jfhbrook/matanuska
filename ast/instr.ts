@@ -29,6 +29,7 @@ export interface InstrVisitor<R> {
   visitUntilInstr(node: Until): R;
   visitCommandInstr(node: Command): R;
   visitDefInstr(node: Def): R;
+  visitShortDefInstr(node: ShortDef): R;
   visitReturnInstr(node: Return): R;
   visitEndDefInstr(node: EndDef): R;
 }
@@ -391,6 +392,22 @@ export class Def extends Instr {
 
   accept<R>(visitor: InstrVisitor<R>): R {
     return visitor.visitDefInstr(this);
+  }
+}
+
+export class ShortDef extends Instr {
+  constructor(
+    public name: Token,
+    public params: Token[],
+    public body: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitShortDefInstr(this);
   }
 }
 

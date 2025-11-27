@@ -59,6 +59,19 @@ Noteworthy callouts here:
 4. While BASIC8 has support for `GOTO` and `GOSUB`, they can not be used within the same program
 5. BASIC8 supports multi arity with a `...` unpacking syntax
 
+### Visual Basic
+
+One question we have has to do with defining lambdas. Most BASIC dialects do not have lambdas, but Visual Basic is an exception.
+
+Its lambdas use [the same overall syntax as its standard functions](https://learn.microsoft.com/en-us/dotnet/visual-basic/programming-guide/language-features/procedures/lambda-expressions), though anonymized:
+
+```basic
+Dim increment1 = Function(x) x + 1
+Dim increment2 = Function(x)
+    Return x + 2
+End Function
+```
+
 # Decision
 
 TK

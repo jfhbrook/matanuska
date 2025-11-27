@@ -86,6 +86,7 @@ export enum TokenKind {
   Lambda = 'fn',
   Return = 'return',
   EndDef = 'enddef',
+  EndLambda = 'endfn',
 
   /*
   GoSub = 'gosub',

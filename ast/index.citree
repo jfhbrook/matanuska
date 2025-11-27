@@ -49,6 +49,7 @@ type Instr in './instr' {
   Until      => condition: Expr
   Command    => name: Expr, params: Expr[]
   Def        => name: Token, params: Token[]
+  ShortDef   => name: Token, params: Token[], body: Expr
   Return     => value: Expr
   EndDef!
 }

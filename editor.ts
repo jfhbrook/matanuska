@@ -53,6 +53,7 @@ import {
   Repeat,
   Until,
   Def,
+  ShortDef,
   Return,
   EndDef,
   Command,
@@ -235,6 +236,15 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
     for (const param of fn.params) {
       this.shiftToken(param);
     }
+  }
+
+  visitShortDefInstr(fn: ShortDef): void {
+    this.shiftInstr(fn);
+    this.shiftToken(fn.name);
+    for (const param of fn.params) {
+      this.shiftToken(param);
+    }
+    fn.body.accept(this);
   }
 
   visitReturnInstr(ret: Return): void {

@@ -54,6 +54,7 @@ export const KEYWORDS: Record<string, TokenKind> = {
   lambda: TokenKind.Lambda,
   return: TokenKind.Return,
   enddef: TokenKind.EndDef,
+  endlambda: TokenKind.EndLambda,
 
   // TODO: error handling
   // TODO: datetime

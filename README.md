@@ -62,13 +62,13 @@ For more information, check out the backlog...
   - [x] Add keywords to tokens/scanner
   - [x] Add `Fn` value type
   - [x] Add def/call/etc to AST
-  - [ ] Add support to parser
+  - [x] Add basic support to parser
   - [ ] Parser tests for functions
   - [ ] Add support to compiler
+  - [ ] Compiler tests for functions
   - [ ] Implement frames
     - Isn't `Runtime#using` basically a function call?
   - [ ] Add support in runtime
-  - [ ] Compiler tests for functions
   - [ ] Runtime tests
   - [ ] Function syntax ADR
   - [ ] Examples

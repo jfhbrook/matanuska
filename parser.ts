@@ -17,7 +17,6 @@ import {
   SyntaxWarning,
   ParseWarning,
   sortParseError,
-  NotImplementedError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
 import { Scanner, KEYWORDS } from './scanner';
@@ -69,6 +68,7 @@ import {
   Repeat,
   Until,
   Def,
+  ShortDef,
   Return,
   EndDef,
   Command,
@@ -558,7 +558,7 @@ export class Parser {
   }
 
   private load(): Instr {
-    const params = this.params();
+    const params = this.commandParams();
     return new Load(params);
   }
 
@@ -787,6 +787,13 @@ export class Parser {
   private function(kind: FunctionKind): Instr {
     const name = this.consumeIdent(`Expect ${kind} name`);
     const params = this.functionParams(kind);
+
+    if (!this.isLineEnding) {
+      const expr = this.expression();
+      this.consume(TokenKind.EndDef, "Expected 'enddef' after function body");
+      return new ShortDef(name, params, expr);
+    }
+
     return new Def(name, params);
   }
 
@@ -841,7 +848,7 @@ export class Parser {
   }
 
   private command(): Instr {
-    const cmd = this.param();
+    const cmd = this.commandParam();
     if (!cmd) {
       const token = this.current;
       this.syntaxError(
@@ -849,8 +856,30 @@ export class Parser {
         `Unexpected token ${token.text.length ? token.text : token.kind}`,
       );
     }
-    const params = this.params();
+    const params = this.commandParams();
     return new Command(cmd, params);
+  }
+
+  private commandParams(): Expr[] {
+    const exprs: Expr[] = [];
+
+    let current = this.commandParam();
+
+    while (current) {
+      exprs.push(current);
+      current = this.commandParam();
+    }
+
+    return exprs;
+  }
+
+  private commandParam(): Expr | null {
+    // Parse literals and groups as expressions
+    if (this.checkPrimaryStart()) {
+      return this.primary();
+    }
+
+    return this.shellLiteral();
   }
 
   //
@@ -1053,8 +1082,10 @@ export class Parser {
   }
 
   private lambda(): Lambda {
-    // TODO: Lambda syntax is currently not specified.
-    throw new NotImplementedError('Lambdas are not implemented');
+    const params = this.functionParams('lambda');
+    const expr = this.expression();
+    this.consume(TokenKind.EndLambda, 'Expected `endfn` after expression');
+    return new Lambda(params, expr);
   }
 
   private group(): Expr {
@@ -1165,32 +1196,6 @@ export class Parser {
     }
 
     return value;
-  }
-
-  //
-  // Command-style parameter parsing
-  //
-
-  private params(): Expr[] {
-    const exprs: Expr[] = [];
-
-    let current = this.param();
-
-    while (current) {
-      exprs.push(current);
-      current = this.param();
-    }
-
-    return exprs;
-  }
-
-  private param(): Expr | null {
-    // Parse literals and groups as expressions
-    if (this.checkPrimaryStart()) {
-      return this.primary();
-    }
-
-    return this.shellLiteral();
   }
 
   private shellLiteral(): Expr | null {
