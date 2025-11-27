@@ -15,6 +15,7 @@ import {
   Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -52,7 +53,6 @@ import {
   Repeat,
   Until,
   Def,
-  Lambda,
   Return,
   EndDef,
   Command,
@@ -231,14 +231,10 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitDefInstr(fn: Def): void {
     this.shiftInstr(fn);
-    for (const var_ of fn.args) {
-      var_.accept(this);
+    this.shiftToken(fn.name);
+    for (const param of fn.params) {
+      this.shiftToken(param);
     }
-  }
-
-  visitLambdaInstr(lambda: Lambda): void {
-    this.shiftInstr(lambda);
-    lambda.body.accept(this);
   }
 
   visitReturnInstr(ret: Return): void {
@@ -283,6 +279,13 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitVariableExpr(variable: Variable): void {
     this.shiftToken(variable.ident);
+  }
+
+  visitLambdaExpr(lambda: Lambda): void {
+    for (const param of lambda.params) {
+      this.shiftToken(param);
+    }
+    lambda.body.accept(this);
   }
 
   visitIntLiteralExpr(_int: IntLiteral): void {}

@@ -17,6 +17,7 @@ import {
   SyntaxWarning,
   ParseWarning,
   sortParseError,
+  NotImplementedError,
 } from './exceptions';
 import { runtimeMethod } from './faults';
 import { Scanner, KEYWORDS } from './scanner';
@@ -31,6 +32,7 @@ import {
   Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -66,6 +68,9 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  Return,
+  EndDef,
   Command,
 } from './ast/instr';
 import { Cmd, Line, Input, Program } from './ast';
@@ -73,6 +78,7 @@ import { sortLines } from './ast/util';
 
 export type ParseResult<T> = [T, ParseWarning | null];
 export type Row = Line | Cmd;
+export type FunctionKind = 'def' | 'lambda';
 
 // The alternative to using exceptions is to set a panicMode flag to ignore
 // emitted errors until we can synchronize. This might be worth trying out
@@ -271,6 +277,10 @@ export class Parser {
     if (this.check(kind)) return this.advance() as Token;
     this.syntaxError(this.current, message);
   }
+
+  //
+  // Errors and Warnings
+  //
 
   private syntaxError(token: Token, message: string): never {
     const exc = new SyntaxError(message, {
@@ -513,6 +523,12 @@ export class Parser {
       instr = this.repeat();
     } else if (this.match(TokenKind.Until)) {
       instr = this.until();
+    } else if (this.match(TokenKind.Def)) {
+      instr = this.function('def');
+    } else if (this.match(TokenKind.Return)) {
+      instr = this.return();
+    } else if (this.match(TokenKind.EndDef)) {
+      instr = this.endDef();
     } else {
       const assign = this.assign();
       if (assign) {
@@ -593,18 +609,41 @@ export class Parser {
     return new Expression(this.expression());
   }
 
+  //
+  // Check, match or consume identifiers. Type checking will occur in the
+  // compiler.
+  //
+
+  private checkIdent(): boolean {
+    return [
+      TokenKind.Ident,
+      TokenKind.IntIdent,
+      TokenKind.RealIdent,
+      TokenKind.BoolIdent,
+      TokenKind.StringIdent,
+    ].reduce((res, tok) => res || this.check(tok), false);
+  }
+
+  private matchIdent(): boolean {
+    return this.match(
+      TokenKind.Ident,
+      TokenKind.IntIdent,
+      TokenKind.RealIdent,
+      TokenKind.BoolIdent,
+      TokenKind.StringIdent,
+    );
+  }
+
+  private consumeIdent(message: string): Token {
+    if (this.checkIdent()) return this.advance() as Token;
+    this.syntaxError(this.current, message);
+  }
+
   // NOTE: Corresponds to parsing declaration()/varDeclaration() in clox.
   private let(): Instr {
     // NOTE: Corresponds to `global` in global-only clox
     let variable: Variable;
-    if (
-      this.match(
-        TokenKind.IntIdent,
-        TokenKind.RealIdent,
-        TokenKind.BoolIdent,
-        TokenKind.StringIdent,
-      )
-    ) {
+    if (this.matchIdent()) {
       // NOTE: Roughly corresponds to parseVariable, though see also
       // emitIdent in compiler/base.ts
       variable = this.variable();
@@ -622,13 +661,7 @@ export class Parser {
   private assign(): Instr | null {
     // We can't match here because we need to check the *next* token
     // before advancing...
-    if (
-      (this.check(TokenKind.IntIdent) ||
-        this.check(TokenKind.RealIdent) ||
-        this.check(TokenKind.BoolIdent) ||
-        this.check(TokenKind.StringIdent)) &&
-      this.checkNext(TokenKind.Eq)
-    ) {
+    if (this.checkIdent() && this.checkNext(TokenKind.Eq)) {
       // ...and so we advance here.
       this.advance();
       const variable = this.variable();
@@ -744,6 +777,38 @@ export class Parser {
   private until(): Instr {
     const condition = this.expression();
     return new Until(condition);
+  }
+
+  //
+  // Currently this only parses functions, but is written to potentially
+  // support methods later.
+  //
+
+  private function(kind: FunctionKind): Instr {
+    const name = this.consumeIdent(`Expect ${kind} name`);
+    const params = this.functionParams(kind);
+    return new Def(name, params);
+  }
+
+  private functionParams(kind: FunctionKind): Token[] {
+    this.consume(TokenKind.LParen, `Expect '(' after ${kind} name`);
+    const params: Token[] = [];
+    if (!this.check(TokenKind.RParen)) {
+      do {
+        params.push(this.consumeIdent('Expect parameter name'));
+      } while (this.match(TokenKind.Comma));
+    }
+    this.consume(TokenKind.RParen, "Expect ')' after parameters");
+    return params;
+  }
+
+  private return(): Instr {
+    const expr = this.expression();
+    return new Return(expr);
+  }
+
+  private endDef(): Instr {
+    return new EndDef();
   }
 
   private checkPrimaryStart(): boolean {
@@ -946,7 +1011,9 @@ export class Parser {
   }
 
   private primary(): Expr {
-    if (
+    if (this.match(TokenKind.Lambda)) {
+      return this.lambda();
+    } else if (
       this.match(
         TokenKind.DecimalLiteral,
         TokenKind.HexLiteral,
@@ -965,14 +1032,7 @@ export class Parser {
       return this.string();
     } else if (this.match(TokenKind.NilLiteral)) {
       return new NilLiteral();
-    } else if (
-      this.match(
-        TokenKind.IntIdent,
-        TokenKind.RealIdent,
-        TokenKind.BoolIdent,
-        TokenKind.StringIdent,
-      )
-    ) {
+    } else if (this.matchIdent()) {
       return this.variable();
     } else if (this.match(TokenKind.LParen)) {
       return this.group();
@@ -990,6 +1050,11 @@ export class Parser {
 
   private variable(): Variable {
     return new Variable(this.previous!);
+  }
+
+  private lambda(): Lambda {
+    // TODO: Lambda syntax is currently not specified.
+    throw new NotImplementedError('Lambdas are not implemented');
   }
 
   private group(): Expr {

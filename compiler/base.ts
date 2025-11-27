@@ -34,6 +34,7 @@ import {
   Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -71,7 +72,6 @@ import {
   Repeat,
   Until,
   Def,
-  Lambda,
   Return,
   EndDef,
   Command,
@@ -833,10 +833,6 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     throw new NotImplementedError('def');
   }
 
-  visitLambdaInstr(_lambda: Lambda): void {
-    throw new NotImplementedError('lambda');
-  }
-
   visitReturnInstr(_ret: Return): void {
     throw new NotImplementedError('return');
   }
@@ -954,6 +950,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitVariableExpr(variable: Variable): void {
     this.scope.get(variable.ident);
+  }
+
+  visitLambdaExpr(_lambda: Lambda): void {
+    throw new NotImplementedError('lambda');
   }
 
   visitIntLiteralExpr(int: IntLiteral): void {

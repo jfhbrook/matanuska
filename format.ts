@@ -28,6 +28,7 @@ import {
   Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -65,7 +66,6 @@ import {
   Repeat,
   Until,
   Def,
-  Lambda,
   Return,
   EndDef,
   Command,
@@ -179,6 +179,7 @@ export abstract class Formatter
   abstract visitCallExpr(call: Call): string;
   abstract visitGroupExpr(group: Group): string;
   abstract visitVariableExpr(variable: Variable): string;
+  abstract visitLambdaExpr(fn: Lambda): string;
   abstract visitIntLiteralExpr(int: IntLiteral): string;
   abstract visitRealLiteralExpr(real: RealLiteral): string;
   abstract visitBoolLiteralExpr(bool: BoolLiteral): string;
@@ -213,7 +214,6 @@ export abstract class Formatter
   abstract visitRepeatInstr(repeat: Repeat): string;
   abstract visitUntilInstr(until: Until): string;
   abstract visitDefInstr(fn: Def): string;
-  abstract visitLambdaInstr(fn: Lambda): string;
   abstract visitReturnInstr(ret: Return): string;
   abstract visitEndDefInstr(end: EndDef): string;
   abstract visitCommandInstr(node: Command): string;
@@ -622,6 +622,11 @@ export class DefaultFormatter extends Formatter {
     return variable.ident.text;
   }
 
+  visitLambdaExpr(fn: Lambda): string {
+    const args = fn.params.map((param: Token) => param.text).join(',');
+    return `Lambda(${args}) { ${formatter.format(fn.body)} }`;
+  }
+
   visitIntLiteralExpr(int: IntLiteral): string {
     return String(int.value);
   }
@@ -779,13 +784,8 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitDefInstr(def: Def): string {
-    const args = def.args.map((arg: Variable) => this.format(arg)).join(', ');
+    const args = def.params.map((param: Token) => param.text).join(', ');
     return `Function(${args})`;
-  }
-
-  visitLambdaInstr(fn: Lambda): string {
-    const args = fn.args.map((arg) => this.format(arg)).join(',');
-    return `Lambda(${args}) { ${formatter.format(fn.body)} }`;
   }
 
   visitReturnInstr(ret: Return): string {

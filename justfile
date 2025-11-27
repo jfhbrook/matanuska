@@ -10,7 +10,7 @@ start-qt:
 
 # Build the AST
 ast:
-  make ast
+  npm run build:ast
 
 # Run a development build
 build: 

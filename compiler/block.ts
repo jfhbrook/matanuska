@@ -30,7 +30,6 @@ import {
   Repeat,
   Until,
   Def,
-  Lambda,
   Return,
   EndDef,
   Command,
@@ -222,10 +221,6 @@ export abstract class Block implements InstrVisitor<void> {
 
   visitDefInstr(def: Def): void {
     this.invalid(def, 'def');
-  }
-
-  visitLambdaInstr(lambda: Lambda): void {
-    this.invalid(lambda, 'lambda');
   }
 
   visitReturnInstr(ret: Return): void {
