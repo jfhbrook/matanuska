@@ -78,7 +78,28 @@ import { sortLines } from './ast/util';
 
 export type ParseResult<T> = [T, ParseWarning | null];
 export type Row = Line | Cmd;
-export type FunctionKind = 'def' | 'lambda';
+
+export abstract class DefKind<T> {
+  abstract create(name: Token | null, params: Token[], body: Expr | null): T;
+}
+
+export class FunctionKind extends DefKind<Instr> {
+  create(name: Token | null, params: Token[], body: Expr | null): Instr {
+    if (body) {
+      return new ShortDef(name!, params, body);
+    }
+    return new Def(name!, params);
+  }
+}
+
+export class LambdaKind extends DefKind<Expr> {
+  create(name: Token | null, params: Token[], body: Expr | null): Expr {
+    return new Lambda(name, params, body!);
+  }
+}
+
+const FUNCTION = new FunctionKind();
+const LAMBDA = new LambdaKind();
 
 // The alternative to using exceptions is to set a panicMode flag to ignore
 // emitted errors until we can synchronize. This might be worth trying out
@@ -441,6 +462,16 @@ export class Parser {
     return this.done || this.current.kind === TokenKind.LineEnding;
   }
 
+  private get isInstrBoundary(): boolean {
+    return (
+      this.isLineEnding ||
+      [TokenKind.Colon, TokenKind.Eof, TokenKind.Rem].reduce(
+        (check, tok) => check || this.check(tok),
+        false,
+      )
+    );
+  }
+
   //
   // Instruction parsing
   //
@@ -524,7 +555,7 @@ export class Parser {
     } else if (this.match(TokenKind.Until)) {
       instr = this.until();
     } else if (this.match(TokenKind.Def)) {
-      instr = this.function('def');
+      instr = this.def(FUNCTION);
     } else if (this.match(TokenKind.Return)) {
       instr = this.return();
     } else if (this.match(TokenKind.EndDef)) {
@@ -621,7 +652,7 @@ export class Parser {
       TokenKind.RealIdent,
       TokenKind.BoolIdent,
       TokenKind.StringIdent,
-    ].reduce((res, tok) => res || this.check(tok), false);
+    ].reduce((check, tok) => check || this.check(tok), false);
   }
 
   private matchIdent(): boolean {
@@ -677,7 +708,7 @@ export class Parser {
     const condition = this.ifCondition();
 
     // A bare "if" with a multi-line block
-    if (!this.isShortIf && this.isLineEnding) {
+    if (!this.isShortIf && this.isInstrBoundary) {
       const if_ = new If(condition);
       return if_;
     }
@@ -784,20 +815,36 @@ export class Parser {
   // support methods later.
   //
 
-  private function(kind: FunctionKind): Instr {
-    const name = this.consumeIdent(`Expect ${kind} name`);
-    const params = this.functionParams(kind);
+  private def<T>(kind: DefKind<T>): T {
+    const name = this.defName(kind);
+    const params = this.defParams(kind);
+    let body: Expr | null = null;
 
-    if (!this.isLineEnding) {
-      const expr = this.expression();
+    if (!this.isInstrBoundary) {
+      body = this.expression();
       this.consume(TokenKind.EndDef, "Expected 'enddef' after function body");
-      return new ShortDef(name, params, expr);
     }
 
-    return new Def(name, params);
+    return kind.create(name, params, body);
   }
 
-  private functionParams(kind: FunctionKind): Token[] {
+  private requiresDefName(kind: DefKind<any>): boolean {
+    return kind instanceof FunctionKind;
+  }
+
+  private defName(kind: DefKind<any>): Token | null {
+    if (this.requiresDefName(kind)) {
+      return this.consumeIdent(`Expect ${kind} name`);
+    }
+
+    if (this.matchIdent()) {
+      return this.previous!;
+    }
+
+    return null;
+  }
+
+  private defParams(kind: DefKind<any>): Token[] {
     this.consume(TokenKind.LParen, `Expect '(' after ${kind} name`);
     const params: Token[] = [];
     if (!this.check(TokenKind.RParen)) {
@@ -887,10 +934,8 @@ export class Parser {
   //
 
   private optionalExpression(): Expr | null {
-    for (const tok of [TokenKind.Colon, TokenKind.LineEnding, TokenKind.Eof]) {
-      if (this.check(tok)) {
-        return null;
-      }
+    if (this.isInstrBoundary) {
+      return null;
     }
     return this.expression();
   }
@@ -1040,8 +1085,8 @@ export class Parser {
   }
 
   private primary(): Expr {
-    if (this.match(TokenKind.Lambda)) {
-      return this.lambda();
+    if (this.match(TokenKind.Def)) {
+      return this.def(LAMBDA);
     } else if (
       this.match(
         TokenKind.DecimalLiteral,
@@ -1079,13 +1124,6 @@ export class Parser {
 
   private variable(): Variable {
     return new Variable(this.previous!);
-  }
-
-  private lambda(): Lambda {
-    const params = this.functionParams('lambda');
-    const expr = this.expression();
-    this.consume(TokenKind.EndLambda, 'Expected `endfn` after expression');
-    return new Lambda(params, expr);
   }
 
   private group(): Expr {

@@ -7,7 +7,7 @@ type Expr in './expr' {
   Call           => callee: Expr, end: Token, args: Expr[]
   Group          => expr: Expr
   Variable       => ident: Token
-  Lambda         => params: Token[], body: Expr
+  Lambda         => name: Token | null, params: Token[], body: Expr
   IntLiteral     => value: number
   RealLiteral    => value: number
   BoolLiteral    => value: boolean

@@ -98,6 +98,7 @@ export class Variable extends Expr {
 
 export class Lambda extends Expr {
   constructor(
+    public name: Token | null,
     public params: Token[],
     public body: Expr,
   ) {
