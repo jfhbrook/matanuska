@@ -814,6 +814,8 @@ export class Parser {
     let body: Expr | null = null;
 
     if (!this.isInstrBoundary) {
+      // Optional return
+      this.match(TokenKind.Return);
       body = this.expression();
       this.consume(TokenKind.EndDef, "Expected 'enddef' after function body");
     }

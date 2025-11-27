@@ -63,7 +63,7 @@ For more information, check out the backlog...
   - [x] Add `Fn` value type
   - [x] Add def/call/etc to AST
   - [x] Add basic support to parser
-  - [ ] Parser tests for functions
+  - [x] Parser tests for functions
   - [ ] Add support to compiler
   - [ ] Compiler tests for functions
   - [ ] Implement frames
