@@ -21,7 +21,7 @@ import { RuntimeFault } from './faults';
 import { Host } from './host';
 import { Stack } from './stack';
 import { Traceback } from './traceback';
-import { Value, nil, undef } from './value';
+import { Routine, Value, nil, undef } from './value';
 import { falsey } from './value/truthiness';
 import { nullish } from './value/nullness';
 
@@ -82,8 +82,8 @@ export class Runtime {
     return ret;
   }
 
-  public async interpret(chunk: Chunk): Promise<Value> {
-    this.chunk = chunk;
+  public async interpret(routine: Routine): Promise<Value> {
+    this.chunk = routine.chunk;
     this.pc = 0;
     return await this.run();
   }

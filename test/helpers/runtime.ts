@@ -5,7 +5,7 @@ import { Chunk } from '../../bytecode/chunk';
 import { Executor } from '../../executor';
 import { formatter } from '../../format';
 import { Runtime } from '../../runtime';
-import { Value } from '../../value';
+import { Routine, RoutineType, Value } from '../../value';
 
 import { mockConsoleHost } from './host';
 
@@ -25,10 +25,13 @@ export async function testChunk(
 
   runtime.stack.stack = stackBefore;
 
+  const routine = new Routine(RoutineType.Program);
+  routine.chunk = chunk;
+
   if (tests.throws) {
     t.throws(() => {
       try {
-        runtime.interpret(chunk);
+        runtime.interpret(routine);
       } catch (err) {
         if (!(err instanceof Exit)) {
           t.matchSnapshot(formatter.format(err));
@@ -40,7 +43,7 @@ export async function testChunk(
   }
 
   try {
-    await runtime.interpret(chunk);
+    await runtime.interpret(routine);
   } catch (err) {
     t.equal(err.exitCode, tests.exitCode || 0);
   }

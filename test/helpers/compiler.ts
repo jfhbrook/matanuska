@@ -10,11 +10,12 @@ import {
   CompilerOptions,
   CompileResult,
 } from '../../compiler';
+import { Routine } from '../../value';
 
 export function compile(
   ast: Program | Instr,
   options: CompilerOptions = {},
-): CompileResult<Chunk> {
+): CompileResult<Routine> {
   if (ast instanceof Program) {
     return compileProgram(ast, options);
   } else {
@@ -26,7 +27,7 @@ export type TestCase = [string, Instr | Program, Chunk];
 
 export function runCompilerTest([source, ast, expected]: TestCase): void {
   test(source, () => {
-    const actual = compile(ast)[0];
+    const actual = compile(ast)[0].chunk;
 
     // NOTE: Test chunks typically do not have an initialized filename
     expected.filename = actual.filename;

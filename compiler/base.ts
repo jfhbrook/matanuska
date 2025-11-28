@@ -346,7 +346,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
    * @param filename The source filename.
    */
   @runtimeMethod
-  compile(): CompileResult<Chunk> {
+  compile(): CompileResult<Routine> {
     let instr: Instr | null = this.advance();
     while (instr) {
       try {
@@ -380,7 +380,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     //#if _DEBUG_SHOW_CHUNK
     showChunk(this.routine.chunk);
     //#endif
-    return [this.routine.chunk, null];
+    return [this.routine, null];
   }
 
   private get routineType(): RoutineType {
@@ -1019,9 +1019,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 export function compileInstruction(
   instr: Instr,
   options: CompilerOptions = {},
-): CompileResult<Chunk> {
+): CompileResult<Routine> {
   //#if _MATBAS_BUILD == 'debug'
-  return startSpan('compileInstruction', (_: Span): CompileResult<Chunk> => {
+  return startSpan('compileInstruction', (_: Span): CompileResult<Routine> => {
     //#endif
     const { cmdNo, cmdSource } = options;
     const lines = [
@@ -1045,13 +1045,13 @@ export function compileInstruction(
 export function compileInstructions(
   cmds: Instr[],
   options: CompilerOptions = {},
-): CompileResult<Chunk[]> {
-  const results: CompileResult<Chunk>[] = cmds.map((cmd) => {
-    const [chunk, warning] = compileInstruction(cmd, options);
-    return [chunk, warning];
+): CompileResult<Routine[]> {
+  const results: CompileResult<Routine>[] = cmds.map((cmd) => {
+    const [routine, warning] = compileInstruction(cmd, options);
+    return [routine, warning];
   });
 
-  const commands: Chunk[] = results.map(([chunk, _]) => chunk);
+  const commands: Routine[] = results.map(([routine, _]) => routine);
   const warnings: Array<ParseWarning | null> = results.reduce(
     (acc, [_, warns]) => (warns ? acc.concat(warns) : acc),
     [] as Array<ParseWarning | null>,
@@ -1069,9 +1069,9 @@ export function compileInstructions(
 export function compileProgram(
   program: Program,
   options: CompilerOptions = {},
-): CompileResult<Chunk> {
+): CompileResult<Routine> {
   //#if _MATBAS_BUILD == 'debug'
-  return startSpan('compileProgram', (_: Span): CompileResult<Chunk> => {
+  return startSpan('compileProgram', (_: Span): CompileResult<Routine> => {
     //#endif
     const compiler = new LineCompiler(
       program.lines,
