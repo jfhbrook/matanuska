@@ -1,4 +1,4 @@
-import { Value } from '../value';
+import type { Value } from '../value';
 
 import { Byte } from './byte';
 import { OpCode } from './opcodes';

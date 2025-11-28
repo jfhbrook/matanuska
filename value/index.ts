@@ -1,4 +1,4 @@
-import type { Chunk } from '../bytecode/chunk';
+import { Chunk } from '../bytecode/chunk';
 import type { Instr } from '../ast/instr';
 import { SHOW_UNDEF } from '../debug';
 import { BaseException } from '../exceptions';
@@ -19,13 +19,47 @@ export class Undef implements Formattable {
 export const nil = new Nil();
 export const undef = new Undef();
 
-export class Fn implements Formattable {
+export enum RoutineType {
+  Instruction,
+  Program,
+  Function,
+}
+
+export class Routine implements Formattable {
+  public filename: string;
+  public name: string;
+  public chunk: Chunk;
+
   constructor(
-    public name: string,
-    public arity: number,
-    public chunk: Chunk,
-    public definition: Instr[],
-  ) {}
+    public type: RoutineType,
+    filename: string | null = null,
+    name: string | null = null,
+    public arity: number = 0,
+    public definition: Instr[] = [],
+  ) {
+    if (typeof filename === 'string') {
+      this.filename = filename;
+    } else if (type === RoutineType.Instruction) {
+      this.filename = '<repl>';
+    } else if (type === RoutineType.Program) {
+      this.filename = '<main>';
+    } else {
+      this.filename = '<none>';
+    }
+
+    if (typeof name === 'string') {
+      this.name = name;
+    } else if (type == RoutineType.Instruction) {
+      this.name = '<instr>';
+    } else if (type === RoutineType.Program) {
+      this.name = '<main>';
+    } else {
+      this.name = '<anonymous>';
+    }
+
+    this.chunk = new Chunk();
+    this.chunk.filename = this.filename;
+  }
 
   format(formatter: Formatter): string {
     return formatter.format(this.definition);
@@ -37,6 +71,6 @@ export type Value =
   | boolean
   | string
   | BaseException
-  | Function
+  | Routine
   | Nil
   | Undef;

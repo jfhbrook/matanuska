@@ -28,6 +28,9 @@ export function runCompilerTest([source, ast, expected]: TestCase): void {
   test(source, () => {
     const actual = compile(ast)[0];
 
+    // NOTE: Test chunks typically do not have an initialized filename
+    expected.filename = actual.filename;
+
     expect({
       constants: actual.constants,
       code: disassemble(actual),

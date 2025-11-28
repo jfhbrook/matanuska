@@ -22,7 +22,8 @@ import {
   EndIf,
 } from '../ast/instr';
 import { Block } from '../compiler/block';
-import { LineCompiler, RoutineType } from '../compiler/base';
+import { LineCompiler } from '../compiler/base';
+import { RoutineType } from '../value';
 
 import { FILENAME } from './helpers/files';
 

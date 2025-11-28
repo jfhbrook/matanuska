@@ -58,9 +58,9 @@ export abstract class Block implements InstrVisitor<void> {
 
   public init(
     compiler: LineCompiler,
-    instr: Instr | null,
-    previous: Block | null,
-    parent: Block | null,
+    instr: Instr | null = null,
+    previous: Block | null = null,
+    parent: Block | null = null,
   ) {
     this._compiler = compiler;
     this.instr = instr;
@@ -78,7 +78,7 @@ export abstract class Block implements InstrVisitor<void> {
   }
 
   // Open a new block, maintaining a reference to the parent block.
-  public begin(instr: Instr, block: Block): void {
+  public begin(instr: Instr | null, block: Block): void {
     block.init(this.compiler, instr, null, this.compiler.block);
     this.compiler.block = block;
   }

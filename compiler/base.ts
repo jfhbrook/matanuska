@@ -12,6 +12,7 @@ import { showChunk } from '../debug';
 //#endif
 import { errorType } from '../errors';
 import {
+  AssertionError,
   SyntaxError,
   ParseError,
   ParseWarning,
@@ -19,8 +20,8 @@ import {
   NotImplementedError,
 } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
-import { Token, TokenKind } from '../tokens';
-import { nil, Value } from '../value';
+import { emptyToken, Token, TokenKind } from '../tokens';
+import { nil, Routine, RoutineType, Value } from '../value';
 // import { Type } from './value/types';
 // import { Stack } from './stack';
 import { Line, Program } from '../ast';
@@ -85,11 +86,6 @@ import { Short, shortToBytes } from '../bytecode/short';
 import { Chunk } from '../bytecode/chunk';
 import { OpCode } from '../bytecode/opcodes';
 
-export enum RoutineType {
-  Instruction,
-  Program,
-}
-
 @errorType('Synchronize')
 class Synchronize extends Error {
   constructor() {
@@ -114,16 +110,28 @@ class ProgramBlock extends Block {
   kind = 'program';
 }
 
-class CommandBlock extends Block {
+class InstructionBlock extends Block {
   kind = 'command';
 }
 
 export function isRootBlock(block: Block): boolean {
   return (
     block instanceof ProgramBlock ||
-    block instanceof CommandBlock ||
+    block instanceof InstructionBlock ||
     block instanceof GlobalBlock
   );
+}
+
+//
+// Functions
+//
+
+class _DefBlock extends Block {
+  kind = 'def';
+
+  visitReturnInstr(_ret: Return): void {}
+
+  visitEndDefInstr(_endDef: EndDef): void {}
 }
 
 //
@@ -279,13 +287,10 @@ class RepeatBlock extends Block {
 // or a single line in the context of a compiled instruction.
 //
 export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
-  private currentChunk: Chunk;
+  private routine: Routine;
   private lines: Line[] = [];
   private currentInstrNo: number = -1;
   private currentLine: number = 0;
-
-  private filename: string;
-  private routineType: RoutineType = RoutineType.Instruction;
 
   // private stack: Stack<Type> = new Stack();
 
@@ -307,24 +312,31 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     { filename }: CompilerOptions,
   ) {
     this.lines = lines;
-    this.routineType = routineType;
-    this.currentChunk = new Chunk();
-    this.filename = filename || '<unknown>';
-    this.currentChunk.filename = this.filename;
-    this.routineType = routineType;
+    this.routine = new Routine(routineType, filename || null);
     this.isError = false;
     this.errors = [];
 
     this.global = new GlobalBlock();
     this.global.init(this, null, null, null);
 
-    this.block =
-      routineType === RoutineType.Program
-        ? new ProgramBlock()
-        : new CommandBlock();
+    this.block = new GlobalBlock();
+
+    if (routineType === RoutineType.Program) {
+      this.block = new ProgramBlock();
+    } else if (routineType === RoutineType.Instruction) {
+      this.block = new InstructionBlock();
+    } else {
+      throw new AssertionError(
+        'Line compiler must be initialized with a program or instruction',
+      );
+    }
+
     this.block.init(this, null, null, this.global);
 
     this.scope = new Scope(this);
+
+    // TODO: Come back to this
+    const _local = this.scope.addLocal(emptyToken());
   }
 
   /**
@@ -364,17 +376,26 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
     this.emitReturn();
 
+    // TODO: Return routine, not chunk
     //#if _DEBUG_SHOW_CHUNK
-    showChunk(this.chunk);
+    showChunk(this.routine.chunk);
     //#endif
-    return [this.chunk, null];
+    return [this.routine.chunk, null];
+  }
+
+  private get routineType(): RoutineType {
+    return this.routine.type;
+  }
+
+  private get filename(): string {
+    return this.routine.filename;
   }
 
   /**
    * Get the current chunk.
    **/
   get chunk(): Chunk {
-    return this.currentChunk;
+    return this.routine.chunk;
   }
 
   // Parsing navigation methods. These are only used when compiling a full
@@ -494,7 +515,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   public emitByte(byte: number): void {
-    this.currentChunk.writeOp(byte, this.lineNo);
+    this.chunk.writeOp(byte, this.lineNo);
   }
 
   public emitBytes(...bytes: number[]): void {
@@ -548,7 +569,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   private makeConstant(value: Value): number {
     // TODO: clox validates that the return value is byte sized.
-    return this.currentChunk.addConstant(value);
+    return this.chunk.addConstant(value);
   }
 
   public makeIdent(ident: Token): Short {

@@ -114,6 +114,8 @@ export enum TokenKind {
   Eof = '<EOF>',
   Illegal = '<illegal>',
   UnterminatedStringLiteral = '<unterminated-string>',
+
+  Empty = '<empty>',
 }
 
 /**
@@ -179,4 +181,16 @@ export class Token implements Formattable {
   format(formatter: Formatter): string {
     return formatter.formatToken(this);
   }
+}
+
+export function emptyToken(): Token {
+  return new Token({
+    kind: TokenKind.Empty,
+    index: -1,
+    row: -1,
+    offsetStart: -1,
+    offsetEnd: -1,
+    text: '',
+    value: null,
+  });
 }
