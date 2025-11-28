@@ -125,12 +125,7 @@ export class Executor {
         this.host.writeWarn(warning);
       }
 
-      await this.runtime.using(async () => {
-        const interactive = this.interactive;
-        this.interactive = false;
-        await this.runtime.interpret(routine);
-        this.interactive = interactive;
-      });
+      await this.runtime.interpret(routine);
 
       //#if _MATBAS_BUILD == 'debug'
     });

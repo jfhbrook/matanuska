@@ -35,10 +35,15 @@ import * as op from './operations';
 export type Globals = Record<string, Value>;
 export type RegisterName = string;
 
+export interface Frame {
+  routine: Routine;
+  pc: number;
+  slot: number;
+}
+
 export class Runtime {
   public stack: Stack<Value>;
-  public pc: number = -1;
-  public chunk: Chunk = new Chunk();
+  public frames: Stack<Frame>;
   public globals: Globals = {};
   public acc: Record<RegisterName, Value> = {
     a: undef,
@@ -50,42 +55,47 @@ export class Runtime {
     private executor: Executor,
   ) {
     this.stack = new Stack();
+    this.frames = new Stack();
+
+    this.reset();
   }
 
   public reset(): void {
     this.stack = new Stack();
-    this.chunk = new Chunk();
-    this.pc = 0;
+    this.frames = new Stack();
+  }
+
+  public get frame(): Frame {
+    return this.frames.peek(0)!;
+  }
+
+  public get chunk(): Chunk {
+    return this.frame.routine.chunk;
   }
 
   public get registers(): Record<RegisterName, Value> {
     return {
-      PC: this.pc,
-      SP: -1,
+      PC: this.frame.pc,
+      SP: this.frames.size - 1,
       A: this.acc.a,
       B: this.acc.b,
     };
   }
 
-  /**
-   * Create a context under which it is safe to interpret a new chunk while
-   * another program is executing.
-   *
-   * TODO: I'm not satisfied with this naming...
-   */
-  public async using<R>(fn: () => Promise<R>): Promise<R> {
-    const chunk = this.chunk;
-    const pc = this.pc;
-    const ret = await fn();
-    this.chunk = chunk;
-    this.pc = pc;
-    return ret;
+  private slot(n: number): number {
+    return this.frame.slot + n;
   }
 
   public async interpret(routine: Routine): Promise<Value> {
-    this.chunk = routine.chunk;
-    this.pc = 0;
-    return await this.run();
+    this.frames.push({
+      routine,
+      pc: 0,
+      slot: this.stack.size,
+    });
+    const rv = await this.run();
+    // TODO: clox does not seem to do this
+    this.frames.pop();
+    return rv;
   }
 
   // TODO: Using templates can help decrease boilerplate while increasing the
@@ -93,8 +103,8 @@ export class Runtime {
   // consider porting this to C++ anyway.
 
   private readByte(): Byte {
-    const byte = this.chunk.code[this.pc];
-    this.pc++;
+    const byte = this.chunk.code[this.frame.pc];
+    this.frame.pc++;
     return byte;
   }
 
@@ -122,7 +132,7 @@ export class Runtime {
     return new Traceback(
       null,
       this.chunk.filename,
-      this.chunk.lines[this.pc - 1],
+      this.chunk.lines[this.frame.pc - 1],
     );
   }
 
@@ -175,11 +185,11 @@ export class Runtime {
               break;
             case OpCode.GetLocal:
               this.acc.a = this.readByte();
-              this.stack.push(this.stack.peek(this.acc.a) || undef);
+              this.stack.push(this.stack.peek(this.slot(this.acc.a)) || undef);
               break;
             case OpCode.SetLocal:
               this.acc.a = this.readByte();
-              this.stack.set(this.acc.a, this.stack.peek() || undef);
+              this.stack.set(this.slot(this.acc.a), this.stack.peek() || undef);
               break;
             case OpCode.GetGlobal:
               // Reads the constant, does not operate on the stack
@@ -304,20 +314,20 @@ export class Runtime {
               // Note: readShort increments the pc. If we didn't assign before,
               // we would need to add extra to skip over those bytes!
               this.acc.a = this.readShort();
-              this.pc += this.acc.a;
+              this.frame.pc += this.acc.a;
               break;
             case OpCode.JumpIfFalse:
               this.acc.a = this.readShort();
               this.acc.b = this.stack.peek() || undef;
 
               if (falsey(this.acc.b!)) {
-                this.pc += this.acc.a;
+                this.frame.pc += this.acc.a;
               }
               break;
             case OpCode.Loop:
               // Note: Same caveat as Jump
               this.acc.a = this.readShort();
-              this.pc -= this.acc.a;
+              this.frame.pc -= this.acc.a;
               break;
             case OpCode.Return:
               this.acc.a = this.stack.pop();
@@ -325,7 +335,7 @@ export class Runtime {
               // done with the main program.
               return this.acc.a;
             default:
-              if (this.pc >= this.chunk.code.length) {
+              if (this.frame.pc >= this.chunk.code.length) {
                 throw new AssertionError('Program counter out of bounds');
               }
               this.notImplemented(`Unknown opcode: ${instruction}`);

@@ -64,13 +64,11 @@ For more information, check out the backlog...
   - [x] Add def/call/etc to AST
   - [x] Add basic support to parser
   - [x] Parser tests for functions
+  - [x] Implement frames
   - [ ] Add support to compiler
-  - [ ] Compiler tests for functions
-  - [ ] Implement frames
-    - Isn't `Runtime#using` basically a function call?
-  - [ ] Add support in runtime
+  - [ ] Compiler tests
   - [ ] Runtime tests
-  - [ ] Function syntax ADR
+  - [ ] Functions ADR
   - [ ] Examples
   - [ ] Native function support
 - [ ] Format AST more like code

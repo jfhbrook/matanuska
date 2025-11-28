@@ -335,8 +335,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
     this.scope = new Scope(this);
 
-    // TODO: Come back to this
-    const _local = this.scope.addLocal(emptyToken());
+    // Add local for executing routine
+    this.scope.addLocal(emptyToken());
   }
 
   /**
