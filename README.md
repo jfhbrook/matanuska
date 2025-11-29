@@ -68,6 +68,8 @@ For more information, check out the backlog...
   - [x] Compile functions
   - [x] Compile calls
   - [x] Execute calls
+  - [ ] Handle "this" argument
+  - [ ] Support Routine type in `typeOf` and operations
   - [ ] Update stack traces
   - [ ] Examples
   - [ ] Tests
