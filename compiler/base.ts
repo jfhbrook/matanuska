@@ -16,7 +16,6 @@ import {
   ParseError,
   ParseWarning,
   mergeParseErrors,
-  NotImplementedError,
 } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
 import { emptyToken, Token, TokenKind } from '../tokens';
@@ -1018,8 +1017,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.patchJump(endJump);
   }
 
-  visitCallExpr(_call: Call): void {
-    throw new NotImplementedError('call');
+  visitCallExpr(call: Call): void {
+    for (const arg of call.args) {
+      arg.accept(this);
+    }
+    this.emitBytes(OpCode.Call, call.args.length);
   }
 
   visitGroupExpr(group: Group): void {

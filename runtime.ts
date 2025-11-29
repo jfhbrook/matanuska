@@ -330,6 +330,9 @@ export class Runtime {
               this.acc.a = this.readShort();
               this.frame.pc -= this.acc.a;
               break;
+            case OpCode.Call:
+              this.notImplemented(`Call`);
+              break;
             case OpCode.Return:
               this.acc.a = this.stack.pop();
               // TODO: Clean up the current frame, and only return if we're
