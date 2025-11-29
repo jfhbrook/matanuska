@@ -223,7 +223,9 @@ export class Parser {
         warning = new ParseWarning(warnings);
       }
 
+      //#if _DEBUG_SHOW_TREE
       showTree(program);
+      //#endif
 
       return [program, warning];
 
