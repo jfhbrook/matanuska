@@ -47,7 +47,7 @@
     "lint:staged": "lint-staged",
     "test": "dotenvx run -f test.env --overload -- grabthar test",
     "test:env": "dotenvx run -f test.env --overload -- ./scripts/test-env.sh",
-    "snap": "dotenvx run -f test.env -- grabthar snap",
+    "snap": "dotenvx run -f test.env --overload -- grabthar snap",
     "prepare": "husky",
     "report": "./scripts/report.sh",
     "clean": "rm -rf dist"

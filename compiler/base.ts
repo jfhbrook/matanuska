@@ -692,8 +692,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     if (value) {
       value.accept(this);
     } else {
-      // TODO: emit undef?
-      this.emitByte(OpCode.Nil);
+      this.emitByte(OpCode.Undef);
     }
     this.scope.define(target);
   }
@@ -897,7 +896,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.scope.begin();
 
     // These variables are initialized to null, and will get filled in later.
-    for (let param of def.params) {
+    for (const param of def.params) {
       this.let_(param, null);
     }
   }

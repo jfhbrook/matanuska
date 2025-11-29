@@ -66,7 +66,6 @@ For more information, check out the backlog...
   - [x] Parser tests for functions
   - [x] Implement frames
   - [x] Compile functions
-  - [ ] Should uninitialized variables emit undef?
   - [ ] Test compile functions
   - [ ] Compile calls
   - [ ] Test compile calls
