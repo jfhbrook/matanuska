@@ -88,7 +88,11 @@ export class Runtime {
   }
 
   public async interpret(routine: Routine): Promise<Value> {
+    // "this"
+    this.stack.push(routine);
+
     this.call(routine, 0);
+
     const rv = await this.run();
     // TODO: clox does not seem to do this
     this.frames.pop();
@@ -162,7 +166,7 @@ export class Runtime {
       routine: callee,
       pc: 0,
       // TODO: Shouldn't this slot be down -1 to account for `this`?
-      slot: this.stack.size - argCount,
+      slot: this.stack.size - argCount - 1,
     });
   }
 

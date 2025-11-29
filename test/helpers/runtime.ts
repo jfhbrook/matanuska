@@ -19,7 +19,14 @@ export async function testChunk(
   chunk: Chunk,
   tests: ChunkTests = {},
 ): Promise<void> {
-  const [stackBefore, stackAfter] = tests.effect || [[], []];
+  const [stackBefore, stackAfter] = tests.effect || [[], [
+    {
+      "arity": 0,
+      "filename": "<main>",
+      "name": "<main>",
+      "type": 1,
+    },
+  ]];
   const host = mockConsoleHost();
   const runtime = new Runtime(host, {} as Executor);
 
@@ -51,5 +58,17 @@ export async function testChunk(
   t.matchSnapshot(host.stdout.output);
   t.matchSnapshot(host.stderr.output);
 
-  t.same(runtime.stack.stack, stackAfter);
+  const stack = runtime.stack.stack.map(value => {
+    if (value instanceof Routine) {
+      return {
+        type: value.type,
+        filename: value.filename,
+        name: value.name,
+        arity: value.arity,
+      };
+    }
+    return value;
+  });
+
+  t.same(stack, stackAfter);
 }
