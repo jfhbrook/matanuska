@@ -13,6 +13,7 @@ import {
   BaseException,
   AssertionError,
   NameError,
+  RuntimeError,
   NotImplementedError,
 } from './exceptions';
 import type { Executor } from './executor';
@@ -87,11 +88,7 @@ export class Runtime {
   }
 
   public async interpret(routine: Routine): Promise<Value> {
-    this.frames.push({
-      routine,
-      pc: 0,
-      slot: this.stack.size,
-    });
+    this.call(routine, 0);
     const rv = await this.run();
     // TODO: clox does not seem to do this
     this.frames.pop();
@@ -147,6 +144,26 @@ export class Runtime {
     const name = this.stack.pop();
 
     await this.executor.command(name as string, args);
+  }
+
+  private call(callee: Value, argCount: number): void {
+    if (!(callee instanceof Routine)) {
+      throw new RuntimeError('Value is not callable');
+    }
+
+    // TODO: How do I want to handle arity? This is copied from lox
+    if (argCount !== callee.arity) {
+      throw new RuntimeError(
+        `Expected ${callee.arity} arguments, received ${argCount}`,
+      );
+    }
+
+    this.frames.push({
+      routine: callee,
+      pc: 0,
+      // TODO: Shouldn't this slot be down -1 to account for `this`?
+      slot: this.stack.size - argCount,
+    });
   }
 
   private async run(): Promise<Value> {
@@ -331,7 +348,9 @@ export class Runtime {
               this.frame.pc -= this.acc.a;
               break;
             case OpCode.Call:
-              this.notImplemented(`Call`);
+              // arg count
+              this.acc.a = this.readByte();
+              this.call(this.stack.peek(this.acc.a)!, this.acc.a);
               break;
             case OpCode.Return:
               this.acc.a = this.stack.pop();

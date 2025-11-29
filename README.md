@@ -66,12 +66,16 @@ For more information, check out the backlog...
   - [x] Parser tests for functions
   - [x] Implement frames
   - [x] Compile functions
-  - [ ] Test compile functions
-  - [ ] Compile calls
-  - [ ] Test compile calls
-  - [ ] Runtime tests
-  - [ ] Functions ADR
+  - [x] Compile calls
+  - [x] Execute calls
+  - [ ] Update stack traces
   - [ ] Examples
+  - [ ] Tests
+    - [ ] Compile functions
+    - [ ] Compile calls
+    - [ ] Runtime calls
+  - [ ] `this` doesn't seem to be working
+  - [ ] Functions ADR
   - [ ] Native function support
 - [ ] Format AST more like code
 - [ ] Implement QT entry point
