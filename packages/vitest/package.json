@@ -10,7 +10,7 @@
     "lint": "eslint '**.ts' --fix",
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest --run",
-    "clean": "rm -f *.js *.js.map *.d.ts"
+    "clean": "rm -f *.js *.js.map *.d.ts *.tsbuildinfo"
   },
   "keywords": [],
   "author": "Josh Holbrook",

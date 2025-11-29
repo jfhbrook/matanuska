@@ -66,6 +66,8 @@ For more information, check out the backlog...
   - [x] Parser tests for functions
   - [x] Implement frames
   - [ ] Add support to compiler
+  - [ ] Disassembler should show function name, not filename
+  - [ ] Should uninitialized variables emit undef?
   - [ ] Compiler tests
   - [ ] Runtime tests
   - [ ] Functions ADR

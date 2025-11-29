@@ -683,15 +683,16 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitLetInstr(let_: Let): void {
-    this.let_(let_.variable, let_.value);
+    this.let_(let_.variable.ident, let_.value);
   }
 
   // NOTE: Corresponds to varDeclaration() in clox
-  private let_(variable: Variable, value: Expr | null): void {
-    const target = this.scope.ident(variable.ident);
+  private let_(ident: Token, value: Expr | null): void {
+    const target = this.scope.ident(ident);
     if (value) {
       value.accept(this);
     } else {
+      // TODO: emit undef?
       this.emitByte(OpCode.Nil);
     }
     this.scope.define(target);
@@ -779,7 +780,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.scope.begin();
 
     // Define the variable
-    this.let_(variable, value);
+    this.let_(variable.ident, value);
 
     // Loop starts here
     const loopStart = this.chunk.code.length;
@@ -892,10 +893,20 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
     this.parents.push(this.routine);
     this.routine = routine;
+
+    this.scope.begin();
+
+    // These variables are initialized to null, and will get filled in later.
+    for (let param of def.params) {
+      this.let_(param, null);
+    }
   }
 
   public endFunction(): void {
     this.showChunk();
+
+    this.scope.end();
+
     const routine = this.routine;
     this.routine = this.parents.pop()!;
     this.emitConstant(routine);
