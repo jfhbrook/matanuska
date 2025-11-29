@@ -1,3 +1,4 @@
+import { OpCode } from '../bytecode/opcodes';
 import { AssertionError, RuntimeError } from '../exceptions';
 import { RuntimeFault } from '../faults';
 import { formatter } from '../format';
@@ -229,7 +230,12 @@ export abstract class Block implements InstrVisitor<void> {
   }
 
   visitReturnInstr(ret: Return): void {
-    this.invalid(ret, 'return');
+    if (ret.value) {
+      ret.value.accept(this.compiler);
+      this.compiler.emitByte(OpCode.Return);
+    } else {
+      this.compiler.emitReturn();
+    }
   }
 
   visitEndDefInstr(endDef: EndDef): void {

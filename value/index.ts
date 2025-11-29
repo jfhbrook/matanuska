@@ -20,7 +20,7 @@ export const nil = new Nil();
 export const undef = new Undef();
 
 export enum RoutineType {
-  Instruction,
+  Input,
   Program,
   Function,
 }
@@ -39,8 +39,8 @@ export class Routine implements Formattable {
   ) {
     if (typeof filename === 'string') {
       this.filename = filename;
-    } else if (type === RoutineType.Instruction) {
-      this.filename = '<repl>';
+    } else if (type === RoutineType.Input) {
+      this.filename = '<input>';
     } else if (type === RoutineType.Program) {
       this.filename = '<main>';
     } else {
@@ -49,8 +49,8 @@ export class Routine implements Formattable {
 
     if (typeof name === 'string') {
       this.name = name;
-    } else if (type == RoutineType.Instruction) {
-      this.name = '<instr>';
+    } else if (type == RoutineType.Input) {
+      this.name = '<input>';
     } else if (type === RoutineType.Program) {
       this.name = '<main>';
     } else {

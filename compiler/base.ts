@@ -12,7 +12,6 @@ import { showChunk } from '../debug';
 //#endif
 import { errorType } from '../errors';
 import {
-  AssertionError,
   SyntaxError,
   ParseError,
   ParseWarning,
@@ -110,28 +109,16 @@ class ProgramBlock extends Block {
   kind = 'program';
 }
 
-class InstructionBlock extends Block {
+class InputBlock extends Block {
   kind = 'command';
 }
 
 export function isRootBlock(block: Block): boolean {
   return (
     block instanceof ProgramBlock ||
-    block instanceof InstructionBlock ||
+    block instanceof InputBlock ||
     block instanceof GlobalBlock
   );
-}
-
-//
-// Functions
-//
-
-class _DefBlock extends Block {
-  kind = 'def';
-
-  visitReturnInstr(_ret: Return): void {}
-
-  visitEndDefInstr(_endDef: EndDef): void {}
 }
 
 //
@@ -283,11 +270,36 @@ class RepeatBlock extends Block {
 }
 
 //
+// Functions
+//
+
+class FunctionBlock extends Block {
+  kind = 'def';
+
+  _parentRoutine: Routine;
+
+  constructor() {
+    super();
+  }
+
+  visitReturnInstr(ret: Return): void {
+    super.visitReturnInstr(ret);
+    this.compiler.endFunction();
+  }
+
+  visitEndDefInstr(_endDef: EndDef): void {
+    this.compiler.emitReturn();
+    this.compiler.endFunction();
+  }
+}
+
+//
 // Compile a series of lines. These lines may be from an entire program,
 // or a single line in the context of a compiled instruction.
 //
 export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
-  private routine: Routine;
+  public routine: Routine;
+  private parents: Routine[];
   private lines: Line[] = [];
   private currentInstrNo: number = -1;
   private currentLine: number = 0;
@@ -297,7 +309,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   // Set to true whenever an expression command is compiled. In the case of
   // Instrs, this will signal that the result of the single expression
   // should be returned. In Program cases, it's ignored.
-  private isReturningInstruction: boolean = false;
+  private _isReturningInstruction: boolean = false;
 
   private isError: boolean = false;
   private errors: SyntaxError[] = [];
@@ -311,8 +323,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     routineType: RoutineType,
     { filename }: CompilerOptions,
   ) {
-    this.lines = lines;
     this.routine = new Routine(routineType, filename || null);
+    this.parents = [];
+    this.lines = lines;
     this.isError = false;
     this.errors = [];
 
@@ -323,12 +336,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
     if (routineType === RoutineType.Program) {
       this.block = new ProgramBlock();
-    } else if (routineType === RoutineType.Instruction) {
-      this.block = new InstructionBlock();
+    } else if (routineType === RoutineType.Input) {
+      this.block = new InputBlock();
     } else {
-      throw new AssertionError(
-        'Line compiler must be initialized with a program or instruction',
-      );
+      this.block = new FunctionBlock();
     }
 
     this.block.init(this, null, null, this.global);
@@ -375,12 +386,15 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     }
 
     this.emitReturn();
+    this.showChunk();
 
-    // TODO: Return routine, not chunk
+    return [this.routine, null];
+  }
+
+  private showChunk(): void {
     //#if _DEBUG_SHOW_CHUNK
     showChunk(this.routine.chunk);
     //#endif
-    return [this.routine, null];
   }
 
   private get routineType(): RoutineType {
@@ -391,9 +405,6 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return this.routine.filename;
   }
 
-  /**
-   * Get the current chunk.
-   **/
   get chunk(): Chunk {
     return this.routine.chunk;
   }
@@ -455,9 +466,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return new SyntaxError(message, {
       filename: this.filename,
       row: this.rowNo,
-      isLine: this.routineType !== RoutineType.Instruction,
+      isLine: this.routineType !== RoutineType.Input,
       lineNo: this.lineNo,
-      cmdNo: this.routineType === RoutineType.Instruction ? null : this.lineNo,
+      cmdNo: this.routineType === RoutineType.Input ? null : this.lineNo,
       offsetStart: instr.offsetStart,
       offsetEnd: instr.offsetEnd,
       source: this.lineSource,
@@ -552,18 +563,26 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.emitBytes(first, second);
   }
 
+  private get isReturningInstruction(): boolean {
+    return (
+      this.routineType === RoutineType.Input && this._isReturningInstruction
+    );
+  }
+
   // NOTE: This is only used to emit implicit and bare returns. Valued
   // returns would be handled in visitReturnStmt.
-  private emitReturn(): void {
+  public emitReturn(): void {
     // NOTE: If/when implementing classes, I would need to detect when
     // compiling a constructor and return "this", not nil.
 
-    if (
-      this.routineType !== RoutineType.Instruction ||
-      !this.isReturningInstruction
-    ) {
-      this.emitByte(OpCode.Undef);
+    if (!this.isReturningInstruction) {
+      if (this.routineType === RoutineType.Function) {
+        this.emitByte(OpCode.Nil);
+      } else {
+        this.emitByte(OpCode.Undef);
+      }
     }
+
     this.emitByte(OpCode.Return);
   }
 
@@ -591,7 +610,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitExpressionInstr(expr: Expression): void {
-    this.isReturningInstruction = true;
+    this._isReturningInstruction = true;
     expr.expression.accept(this);
 
     // NOTE: In commands, save the result to return later.
@@ -851,20 +870,43 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.block.handle(onward);
   }
 
-  visitDefInstr(_def: Def): void {
-    throw new NotImplementedError('def');
+  visitDefInstr(def: Def): void {
+    this.beginFunction(def);
+    this.block.begin(def, new FunctionBlock());
   }
 
-  visitShortDefInstr(_def: ShortDef): void {
-    throw new NotImplementedError('def');
+  visitShortDefInstr(def: ShortDef): void {
+    this.beginFunction(def);
+    def.body.accept(this);
+    this.emitByte(OpCode.Return);
+    this.endFunction();
   }
 
-  visitReturnInstr(_ret: Return): void {
-    throw new NotImplementedError('return');
+  public beginFunction(def: Def | ShortDef | Lambda): void {
+    const routine = new Routine(
+      RoutineType.Function,
+      this.filename,
+      def.name ? def.name.text : null,
+      def.params.length,
+    );
+
+    this.parents.push(this.routine);
+    this.routine = routine;
   }
 
-  visitEndDefInstr(_endDef: EndDef): void {
-    throw new NotImplementedError('enddef');
+  public endFunction(): void {
+    this.showChunk();
+    const routine = this.routine;
+    this.routine = this.parents.pop()!;
+    this.emitConstant(routine);
+  }
+
+  visitReturnInstr(ret: Return): void {
+    this.block.handle(ret);
+  }
+
+  visitEndDefInstr(endDef: EndDef): void {
+    this.block.handle(endDef);
   }
 
   visitCommandInstr(command: Command): void {
@@ -978,8 +1020,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.scope.get(variable.ident);
   }
 
-  visitLambdaExpr(_lambda: Lambda): void {
-    throw new NotImplementedError('lambda');
+  visitLambdaExpr(lambda: Lambda): void {
+    this.beginFunction(lambda);
+    lambda.body.accept(this);
+    this.emitByte(OpCode.Return);
+    this.endFunction();
   }
 
   visitIntLiteralExpr(int: IntLiteral): void {
@@ -1027,7 +1072,7 @@ export function compileInstruction(
     const lines = [
       new Line(cmdNo || 100, 1, cmdSource || Source.unknown(), [instr]),
     ];
-    const compiler = new LineCompiler(lines, RoutineType.Instruction, options);
+    const compiler = new LineCompiler(lines, RoutineType.Input, options);
     return compiler.compile();
 
     //#if _MATBAS_BUILD == 'debug'

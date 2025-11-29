@@ -852,7 +852,7 @@ export class Parser {
   }
 
   private return(): Instr {
-    const expr = this.expression();
+    const expr = this.optionalExpression();
     return new Return(expr);
   }
 

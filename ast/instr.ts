@@ -413,7 +413,7 @@ export class ShortDef extends Instr {
 
 export class Return extends Instr {
   constructor(
-    public value: Expr,
+    public value: Expr | null,
     offsetStart: number = -1,
     offsetEnd: number = -1,
   ) {

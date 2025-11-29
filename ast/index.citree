@@ -50,7 +50,7 @@ type Instr in './instr' {
   Command    => name: Expr, params: Expr[]
   Def        => name: Token, params: Token[]
   ShortDef   => name: Token, params: Token[], body: Expr
-  Return     => value: Expr
+  Return     => value: Expr | null
   EndDef!
 }
 
