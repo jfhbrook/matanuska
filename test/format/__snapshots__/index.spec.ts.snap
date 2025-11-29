@@ -2,7 +2,7 @@
 
 exports[`exceptions > given a DefaultFormatter > it formats a BaseException 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 BaseException: message"
 `;
 
@@ -12,20 +12,20 @@ exports[`exceptions > given a DefaultFormatter > it formats a BaseWarning withou
 
 exports[`exceptions > given a DefaultFormatter > it formats a Exception 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 Exception: message"
 `;
 
 exports[`exceptions > given a DefaultFormatter > it formats a FileError with one file 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 FileError EACCES: message
   Input File: /home/josh/script.bas"
 `;
 
 exports[`exceptions > given a DefaultFormatter > it formats a FileError with two files 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 FileError EACCES: message
   Source File: /home/josh/script.bas
   Destination File: another.bas"
@@ -33,19 +33,19 @@ FileError EACCES: message
 
 exports[`exceptions > given a DefaultFormatter > it formats a NotImplementedError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 NotImplementedError: message"
 `;
 
 exports[`exceptions > given a DefaultFormatter > it formats a RuntimeError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 RuntimeError: message"
 `;
 
 exports[`exceptions > given a DefaultFormatter > it formats a TypeError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 TypeError: message
   Value: 123
   From: integer
@@ -54,25 +54,25 @@ TypeError: message
 
 exports[`exceptions > given a DefaultFormatter > it formats a ZeroDivisionError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 ZeroDivisionError: Cannot divide 1 by 0"
 `;
 
 exports[`exceptions > given a DefaultFormatter > it formats an AssertionError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 AssertionError: message"
 `;
 
 exports[`exceptions > given a DefaultFormatter > it formats an OsError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 OsError EADDRINUSE: message"
 `;
 
 exports[`exceptions > given a Inspector > it formats a BaseException 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 BaseException: message"
 `;
 
@@ -82,20 +82,20 @@ exports[`exceptions > given a Inspector > it formats a BaseWarning without a tra
 
 exports[`exceptions > given a Inspector > it formats a Exception 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 Exception: message"
 `;
 
 exports[`exceptions > given a Inspector > it formats a FileError with one file 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 FileError EACCES: message
   Input File: /home/josh/script.bas"
 `;
 
 exports[`exceptions > given a Inspector > it formats a FileError with two files 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 FileError EACCES: message
   Source File: /home/josh/script.bas
   Destination File: another.bas"
@@ -103,19 +103,19 @@ FileError EACCES: message
 
 exports[`exceptions > given a Inspector > it formats a NotImplementedError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 NotImplementedError: message"
 `;
 
 exports[`exceptions > given a Inspector > it formats a RuntimeError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 RuntimeError: message"
 `;
 
 exports[`exceptions > given a Inspector > it formats a TypeError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 TypeError: message
   Value: [33m123[39m
   From: integer
@@ -124,19 +124,19 @@ TypeError: message
 
 exports[`exceptions > given a Inspector > it formats a ZeroDivisionError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 ZeroDivisionError: Cannot divide 1 by 0"
 `;
 
 exports[`exceptions > given a Inspector > it formats an AssertionError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 AssertionError: message"
 `;
 
 exports[`exceptions > given a Inspector > it formats an OsError 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 OsError EADDRINUSE: message"
 `;
 
@@ -237,7 +237,7 @@ AssertionError [ERR_ASSERTION]: underlying assertion
 
 --- Traceback ---
 Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 
 --- Versions ---
 Matanuska BASIC: v0.0.1
@@ -293,7 +293,7 @@ AssertionError [ERR_ASSERTION]: underlying assertion
 
 --- Traceback ---
 Traceback:
-  File '/home/josh/script.bas', line 100
+  File '/home/josh/script.bas', line 100, routine '<test>'
 
 --- Versions ---
 Matanuska BASIC: v0.0.1
@@ -602,12 +602,12 @@ exports[`token > given a Inspector > it formats a Token 1`] = `
 
 exports[`traceback > given a DefaultFormatter > it formats a Traceback 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100"
+  File '/home/josh/script.bas', line 100, routine '<test>'"
 `;
 
 exports[`traceback > given a Inspector > it formats a Traceback 1`] = `
 "Traceback:
-  File '/home/josh/script.bas', line 100"
+  File '/home/josh/script.bas', line 100, routine '<test>'"
 `;
 
 exports[`tree > given a DefaultFormatter > it formats a Line 1`] = `

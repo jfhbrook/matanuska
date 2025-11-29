@@ -132,6 +132,7 @@ export class Runtime {
     return new Traceback(
       null,
       this.chunk.filename,
+      this.chunk.routine,
       this.chunk.lines[this.frame.pc - 1],
     );
   }

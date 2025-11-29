@@ -5,6 +5,7 @@ import { OpCode } from './opcodes';
 
 export class Chunk {
   public filename: string = '<unknown>';
+  public routine: string = '<unknown>';
   public constants: Value[] = [];
   // TODO: In a C implementation, this would be an array of bytes. In clox,
   // the values are either opcodes, indexes to constants, or 16 byte offsets.

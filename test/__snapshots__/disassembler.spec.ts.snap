@@ -1,12 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`command 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 100  1  CMD  6"
 `;
 
 exports[`expressions > "hello world" 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  hello world
 -1  3  POP
 -1  4  NIL
@@ -14,7 +14,7 @@ exports[`expressions > "hello world" 1`] = `
 `;
 
 exports[`expressions > (1) 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  1
 -1  3  POP
 -1  4  NIL
@@ -22,7 +22,7 @@ exports[`expressions > (1) 1`] = `
 `;
 
 exports[`expressions > -1 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  1
 -1  3  NEG
 -1  4  POP
@@ -31,7 +31,7 @@ exports[`expressions > -1 1`] = `
 `;
 
 exports[`expressions > 1 + 1 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  1
 -1  3  CONSTANT  1
 -1  5  ADD
@@ -41,7 +41,7 @@ exports[`expressions > 1 + 1 1`] = `
 `;
 
 exports[`expressions > 1 : 1 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  1
 -1  3  POP
 -1  4  CONSTANT  1
@@ -51,7 +51,7 @@ exports[`expressions > 1 : 1 1`] = `
 `;
 
 exports[`expressions > 123.456 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  123.456
 -1  3  POP
 -1  4  NIL
@@ -59,7 +59,7 @@ exports[`expressions > 123.456 1`] = `
 `;
 
 exports[`expressions > 255 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  255
 -1  3  POP
 -1  4  NIL
@@ -67,7 +67,7 @@ exports[`expressions > 255 1`] = `
 `;
 
 exports[`expressions > false 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  false
 -1  3  POP
 -1  4  NIL
@@ -75,7 +75,7 @@ exports[`expressions > false 1`] = `
 `;
 
 exports[`expressions > nil 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  NIL
 -1  2  POP
 -1  3  NIL
@@ -83,7 +83,7 @@ exports[`expressions > nil 1`] = `
 `;
 
 exports[`expressions > true 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  true
 -1  3  POP
 -1  4  NIL
@@ -91,7 +91,7 @@ exports[`expressions > true 1`] = `
 `;
 
 exports[`malformed lines 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 undefined  1  CONSTANT  hello world
 undefined  3  POP
 undefined  4  NIL
@@ -99,7 +99,7 @@ undefined  5  RETURN"
 `;
 
 exports[`missing constants 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  undefined
 -1  3  POP
 -1  4  NIL
@@ -107,7 +107,7 @@ exports[`missing constants 1`] = `
 `;
 
 exports[`print > i% = 1 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 100  1  CONSTANT    i%
 100  3  CONSTANT    1
 100  5  SET_GLOBAL  i%
@@ -116,7 +116,7 @@ exports[`print > i% = 1 1`] = `
 `;
 
 exports[`print > if true then print "true" else print "false" endif 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 100  1   CONSTANT       true
 100  3   JUMP_IF_FALSE  3 -> 13
 100  6   POP
@@ -131,7 +131,7 @@ exports[`print > if true then print "true" else print "false" endif 1`] = `
 `;
 
 exports[`print > let i% = 1 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 100  1  CONSTANT       i%
 100  3  CONSTANT       1
 100  5  DEFINE_GLOBAL  i%
@@ -140,7 +140,7 @@ exports[`print > let i% = 1 1`] = `
 `;
 
 exports[`print > print "hello world" 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  hello world
 -1  3  PRINT
 -1  4  NIL
@@ -148,7 +148,7 @@ exports[`print > print "hello world" 1`] = `
 `;
 
 exports[`print > print (1) 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  1
 -1  3  PRINT
 -1  4  NIL
@@ -156,7 +156,7 @@ exports[`print > print (1) 1`] = `
 `;
 
 exports[`print > print 1 + 1 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  1
 -1  3  CONSTANT  1
 -1  5  ADD
@@ -166,7 +166,7 @@ exports[`print > print 1 + 1 1`] = `
 `;
 
 exports[`print > print 123.456 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  123.456
 -1  3  PRINT
 -1  4  NIL
@@ -174,7 +174,7 @@ exports[`print > print 123.456 1`] = `
 `;
 
 exports[`print > print 255 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  255
 -1  3  PRINT
 -1  4  NIL
@@ -182,7 +182,7 @@ exports[`print > print 255 1`] = `
 `;
 
 exports[`print > print false 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  false
 -1  3  PRINT
 -1  4  NIL
@@ -190,7 +190,7 @@ exports[`print > print false 1`] = `
 `;
 
 exports[`print > print i% + 1 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 100  1  CONSTANT    i%
 100  3  GET_GLOBAL  i%
 100  5  CONSTANT    1
@@ -198,7 +198,7 @@ exports[`print > print i% + 1 1`] = `
 `;
 
 exports[`print > print nil 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  NIL
 -1  2  PRINT
 -1  3  NIL
@@ -206,7 +206,7 @@ exports[`print > print nil 1`] = `
 `;
 
 exports[`print > print true 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  CONSTANT  true
 -1  3  PRINT
 -1  4  NIL
@@ -214,7 +214,7 @@ exports[`print > print true 1`] = `
 `;
 
 exports[`simple program 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 100  1  CONSTANT  hello world
 100  3  PRINT
 200  4  CONSTANT  goodbye
@@ -224,6 +224,6 @@ exports[`simple program 1`] = `
 `;
 
 exports[`unknown opcode 1`] = `
-"=== Disassembly of <unknown>: ===
+"=== Disassembly of <unknown>:<unknown>: ===
 -1  1  Unknown opcode  0x2329"
 `;

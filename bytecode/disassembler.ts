@@ -11,7 +11,7 @@ type Code = string;
 type Row = [LineNo, Offset, Code, string];
 
 function chunkName(chunk: Chunk): string {
-  return chunk.filename;
+  return `${chunk.filename}:${chunk.routine}`;
 }
 
 function toHex(value?: number): string {

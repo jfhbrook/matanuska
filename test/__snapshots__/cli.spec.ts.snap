@@ -66,7 +66,7 @@ exports[`examples > 007-for.bas 1`] = `
 {
   "exitCode": 70,
   "stderr": "Traceback:
-  File '/home/josh/matanuska/examples/007-for.bas', line 20
+  File '/home/josh/matanuska/examples/007-for.bas', line 20, routine '<main>'
 TypeError: Invalid operand for <= on undef: integer
   Value: 10
   From: integer

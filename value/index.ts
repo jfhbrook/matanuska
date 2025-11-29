@@ -59,6 +59,7 @@ export class Routine implements Formattable {
 
     this.chunk = new Chunk();
     this.chunk.filename = this.filename;
+    this.chunk.routine = this.name;
   }
 
   format(formatter: Formatter): string {

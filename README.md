@@ -65,10 +65,11 @@ For more information, check out the backlog...
   - [x] Add basic support to parser
   - [x] Parser tests for functions
   - [x] Implement frames
-  - [ ] Add support to compiler
-  - [ ] Disassembler should show function name, not filename
+  - [x] Compile functions
   - [ ] Should uninitialized variables emit undef?
-  - [ ] Compiler tests
+  - [ ] Test compile functions
+  - [ ] Compile calls
+  - [ ] Test compile calls
   - [ ] Runtime tests
   - [ ] Functions ADR
   - [ ] Examples

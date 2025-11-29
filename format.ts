@@ -324,7 +324,9 @@ export class DefaultFormatter extends Formatter {
     // TODO: Python also prints the module name
     while (tb) {
       // TODO: inspect string, quotes etc
-      report += `  File ${inspectString(tb.filename)}, line ${tb.lineNo}`;
+      report += `  File ${inspectString(tb.filename)}, `;
+      report += `line ${tb.lineNo}, `;
+      report += `routine ${inspectString(tb.routine)}`;
       tb = tb.next;
     }
     return report;
