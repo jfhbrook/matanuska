@@ -70,6 +70,7 @@ For more information, check out the backlog...
   - [x] Execute calls
   - [x] Support Routine type in value type checking
   - [ ] Update stack traces
+  - [ ] traceExec stack should render routine objects
   - [ ] Handle "this" argument
   - [ ] Examples
   - [ ] Tests

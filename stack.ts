@@ -23,6 +23,15 @@ export class Stack<V> implements Formattable {
     return this.stack[this.stack.length - n - 1];
   }
 
+  // TODO: I added this to fix an immediate bug. Does this mean peek is no
+  // longer needed? Is this entirely correct, even?
+  get(n: number = 0): V | null {
+    if (this.empty) {
+      return null;
+    }
+    return this.stack[n];
+  }
+
   set(n: number, value: V): void {
     this.stack[n] = value;
   }

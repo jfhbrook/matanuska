@@ -64,15 +64,19 @@ exports[`examples > 006-open-block.bas 1`] = `
 
 exports[`examples > 007-for.bas 1`] = `
 {
-  "exitCode": 70,
-  "stderr": "Traceback:
-  File '/home/josh/matanuska/examples/007-for.bas', line 20, routine '<main>'
-TypeError: Invalid operand for <= on undef: integer
-  Value: 10
-  From: integer
-  To: invalid
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "1
+2
+3
+4
+5
+6
+7
+8
+9
+10
 ",
-  "stdout": "",
 }
 `;
 
