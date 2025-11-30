@@ -98,8 +98,6 @@ export class Runtime {
     this.call(routine, 0);
 
     const rv = await this.run();
-    // TODO: clox does not seem to do this
-    this.frames.pop();
     return rv;
   }
 
@@ -374,7 +372,7 @@ export class Runtime {
                 this.stack.push(this.acc.a);
               } else {
                 // TODO: This causes a cascading failure later. Why?
-                // this.frames.pop();
+                this.frames.pop();
                 return this.acc.a;
               }
               break;
