@@ -69,14 +69,15 @@ For more information, check out the backlog...
   - [x] Compile calls
   - [x] Execute calls
   - [x] Support Routine type in value type checking
-  - [ ] Update stack traces
-  - [ ] traceExec stack should render routine objects
+  - [x] Update stack traces
+  - [ ] Test stack formatting with routines
   - [ ] Handle "this" argument
   - [ ] Examples
   - [ ] Tests
     - [ ] Compile functions
     - [ ] Compile calls
     - [ ] Runtime calls
+    - [ ] Stack traces
   - [ ] `this` doesn't seem to be working
   - [ ] Functions ADR
   - [ ] Native function support

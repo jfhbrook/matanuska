@@ -129,13 +129,21 @@ export class Runtime {
     return value as string;
   }
 
-  private createTraceback(): Traceback | null {
-    return new Traceback(
-      null,
-      this.chunk.filename,
-      this.chunk.routine,
-      this.chunk.lines[this.frame.pc - 1],
-    );
+  private createTraceback(): Traceback {
+    let traceback: Traceback | null = null;
+    for (let i = 0; i < this.frames.size - 1; i++) {
+      const { pc, routine } = this.frames.get(i)!;
+      const chunk = routine.chunk;
+
+      traceback = new Traceback(
+        traceback,
+        chunk.filename,
+        chunk.routine,
+        chunk.lines[pc - 1],
+      );
+    }
+
+    return traceback!;
   }
 
   private async command(): Promise<void> {
