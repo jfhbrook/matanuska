@@ -22,7 +22,7 @@ import { RuntimeFault } from './faults';
 import { Host } from './host';
 import { Stack } from './stack';
 import { Traceback } from './traceback';
-import { Routine, Value, nil, undef } from './value';
+import { Routine, RoutineType, Value, nil, undef } from './value';
 import { falsey } from './value/truthiness';
 import { nullish } from './value/nullness';
 
@@ -70,8 +70,12 @@ export class Runtime {
     return this.frames.peek(0)!;
   }
 
+  public get routine(): Routine {
+    return this.frame.routine;
+  }
+
   public get chunk(): Chunk {
-    return this.frame.routine.chunk;
+    return this.routine.chunk;
   }
 
   public get registers(): Record<RegisterName, Value> {
@@ -365,9 +369,15 @@ export class Runtime {
               break;
             case OpCode.Return:
               this.acc.a = this.stack.pop();
-              // TODO: Clean up the current frame, and only return if we're
-              // done with the main program.
-              return this.acc.a;
+              if (this.routine.type === RoutineType.Function) {
+                this.frames.pop();
+                this.stack.push(this.acc.a);
+              } else {
+                // TODO: This causes a cascading failure later. Why?
+                // this.frames.pop();
+                return this.acc.a;
+              }
+              break;
             default:
               if (this.frame.pc >= this.chunk.code.length) {
                 throw new AssertionError('Program counter out of bounds');

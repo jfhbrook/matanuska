@@ -100,9 +100,11 @@ exports[`examples > 009-repeat.bas 1`] = `
 
 exports[`examples > 010-functions.bas 1`] = `
 {
-  "exitCode": 70,
-  "stderr": "RuntimeError: Expected 0 arguments, received 2
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "2
+hello world!
+1
 ",
-  "stdout": "",
 }
 `;
