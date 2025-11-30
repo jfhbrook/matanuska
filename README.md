@@ -72,11 +72,9 @@ For more information, check out the backlog...
   - [x] Update stack traces
   - [x] Handle "this" argument
   - [x] Example
-  - [ ] RuntimeError does not have traceback?
-  - [ ] Compiler test
-  - [ ] Passing example test
-  - [ ] Functions ADR
+  - [x] Passing example test
   - [ ] Native function support
+  - [ ] Functions ADR
 - [ ] Format AST more like code
 - [ ] Implement QT entry point
   - [ ] Shim in `node:buffer` with `@matanuska/buffer`
