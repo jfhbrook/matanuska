@@ -586,8 +586,7 @@ exports[`stack > given a DefaultFormatter > it formats a stack 1`] = `
     Traceback:
       File '/home/josh/script.bas', line 100, routine 'foo'
     BaseException: oops,
-    Routine(2, name=foo, filename=/home/josh/script.bas),
-    nil,
+    Function(foo, 0),
     nil,
 ]"
 `;
@@ -600,8 +599,7 @@ exports[`stack > given a Inspector > it formats a stack 1`] = `
     Traceback:
       File '/home/josh/script.bas', line 100, routine 'foo'
     BaseException: oops,
-    Routine(2, name=foo, filename=/home/josh/script.bas),
-    nil,
+    Function(foo, 0),
     nil,
 ]"
 `;

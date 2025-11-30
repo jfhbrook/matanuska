@@ -61,7 +61,19 @@ export class Routine implements Formattable {
   }
 
   format(_formatter: Formatter): string {
-    return `Routine(${this.type}, name=${this.name}, filename=${this.filename})`;
+    let type = 'Routine';
+    switch (this.type) {
+      case RoutineType.Input:
+        type = 'Input';
+        break;
+      case RoutineType.Program:
+        type = 'Program';
+        break;
+      case RoutineType.Function:
+        type = 'Function';
+        break;
+    }
+    return `${type}(${this.name}, ${this.arity})`;
   }
 }
 

@@ -71,12 +71,10 @@ For more information, check out the backlog...
   - [x] Support Routine type in value type checking
   - [x] Update stack traces
   - [x] Handle "this" argument
-  - [ ] Examples
-  - [ ] Tests
-    - [ ] Compile functions
-    - [ ] Compile calls
-    - [ ] Runtime calls
-    - [x] Stack traces
+  - [x] Example
+  - [ ] RuntimeError does not have traceback?
+  - [ ] Compiler test
+  - [ ] Passing example test
   - [ ] Functions ADR
   - [ ] Native function support
 - [ ] Format AST more like code
