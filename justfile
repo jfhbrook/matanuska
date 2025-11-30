@@ -16,10 +16,6 @@ ast:
 build: 
   make MATBAS_BUILD="${MATBAS_BUILD}"
 
-# Build test dependencies
-testdeps:
-  npm run build:testdeps
-
 # Run a release build
 release:
   make MATBAS_BUILD=release
@@ -44,13 +40,13 @@ lint:
 
 # Run top-level JavaScript tests
 test:
-  make testdeps
+  npm run build:testdeps
   npm run test:env
   npm test
 
 # Run top-level JavaScript tests, taking snapshots
 snap:
-  make testdeps
+  npm run build:testdeps
   npm run test:env
   npm run snap
 

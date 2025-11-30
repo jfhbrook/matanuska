@@ -70,15 +70,13 @@ For more information, check out the backlog...
   - [x] Execute calls
   - [x] Support Routine type in value type checking
   - [x] Update stack traces
-  - [ ] Test stack formatting with routines
-  - [ ] Handle "this" argument
+  - [x] Handle "this" argument
   - [ ] Examples
   - [ ] Tests
     - [ ] Compile functions
     - [ ] Compile calls
     - [ ] Runtime calls
-    - [ ] Stack traces
-  - [ ] `this` doesn't seem to be working
+    - [x] Stack traces
   - [ ] Functions ADR
   - [ ] Native function support
 - [ ] Format AST more like code

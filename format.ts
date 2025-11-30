@@ -811,12 +811,12 @@ export class DefaultFormatter extends Formatter {
   }
 
   formatStack<V>(stack: Stack<V>): string {
-    let formatted = '{ ';
+    let formatted = '[\n';
     for (const v of stack.stack) {
-      formatted += this.format(v);
-      formatted += ', ';
+      formatted += indent(2, this.format(v));
+      formatted += ',\n';
     }
-    return formatted + '}';
+    return formatted + ']';
   }
 
   formatArray(array: any[]): string {
