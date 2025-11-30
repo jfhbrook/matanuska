@@ -36,7 +36,9 @@ export async function testChunk(
   runtime.stack.stack = stackBefore;
 
   const routine = new Routine(RoutineType.Program);
+  const chunkName = routine.chunk.routine;
   routine.chunk = chunk;
+  routine.chunk.routine = chunkName;
 
   if (tests.throws) {
     t.throws(() => {
@@ -66,7 +68,7 @@ export async function testChunk(
       return {
         type: value.type,
         filename: value.filename,
-        name: value.name,
+        name: value.chunk.routine,
         arity: value.arity,
       };
     }

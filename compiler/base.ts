@@ -687,10 +687,14 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   // NOTE: Corresponds to varDeclaration() in clox
-  private let_(ident: Token, value: Expr | null): void {
+  private let_(ident: Token, value: Expr | Value | null): void {
     const target = this.scope.ident(ident);
     if (value) {
-      value.accept(this);
+      if (value instanceof Expr) {
+        value.accept(this);
+      } else {
+        this.emitConstant(value);
+      }
     } else {
       this.emitByte(OpCode.Undef);
     }
@@ -886,7 +890,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     const routine = new Routine(
       RoutineType.Function,
       this.filename,
-      def.name ? def.name.text : null,
+      def.name,
       def.params.length,
     );
 
@@ -908,7 +912,12 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
     const routine = this.routine;
     this.routine = this.parents.pop()!;
+
     this.emitConstant(routine);
+
+    if (routine.name) {
+      this.let_(routine.name, routine);
+    }
   }
 
   visitReturnInstr(ret: Return): void {
@@ -1019,9 +1028,12 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitCallExpr(call: Call): void {
+    call.callee.accept(this);
+
     for (const arg of call.args) {
       arg.accept(this);
     }
+
     this.emitBytes(OpCode.Call, call.args.length);
   }
 

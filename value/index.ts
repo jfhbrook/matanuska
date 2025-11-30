@@ -2,6 +2,7 @@ import { Chunk } from '../bytecode/chunk';
 import { SHOW_UNDEF } from '../debug';
 import { BaseException } from '../exceptions';
 import { Formattable, Formatter } from '../format';
+import { Token } from '../tokens';
 
 export class Nil implements Formattable {
   format(_formatter: Formatter): string {
@@ -26,16 +27,15 @@ export enum RoutineType {
 
 export class Routine implements Formattable {
   public filename: string;
-  public name: string;
   public chunk: Chunk;
 
   constructor(
     public type: RoutineType,
     filename: string | null = null,
-    name: string | null = null,
+    public name: Token | null = null,
     public arity: number = 0,
   ) {
-    if (typeof filename === 'string') {
+    if (filename) {
       this.filename = filename;
     } else if (type === RoutineType.Input) {
       this.filename = '<input>';
@@ -45,19 +45,18 @@ export class Routine implements Formattable {
       this.filename = '<none>';
     }
 
-    if (typeof name === 'string') {
-      this.name = name;
-    } else if (type == RoutineType.Input) {
-      this.name = '<input>';
+    let chunkName = '<anonymous>';
+    if (name) {
+      chunkName = name.text;
+    } else if (type === RoutineType.Input) {
+      chunkName = '<input>';
     } else if (type === RoutineType.Program) {
-      this.name = '<main>';
-    } else {
-      this.name = '<anonymous>';
+      chunkName = '<main>';
     }
 
     this.chunk = new Chunk();
     this.chunk.filename = this.filename;
-    this.chunk.routine = this.name;
+    this.chunk.routine = chunkName;
   }
 
   format(_formatter: Formatter): string {
@@ -73,7 +72,7 @@ export class Routine implements Formattable {
         type = 'Function';
         break;
     }
-    return `${type}(${this.name}, ${this.arity})`;
+    return `${type}(${this.chunk.routine}, ${this.arity})`;
   }
 }
 

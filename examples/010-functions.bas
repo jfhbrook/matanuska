@@ -1,7 +1,7 @@
 10  rem Some example functions
 20
 30  rem "Short" function
-40  def add(a%, b%) a + b enddef
+40  def add(a%, b%) a% + b% enddef
 50
 60  rem Multi-line function
 70  def hello()
