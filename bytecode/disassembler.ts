@@ -186,6 +186,7 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
       break;
     case OpCode.Call:
       row = byte('CALL');
+      break;
     case OpCode.Return:
       row = simple('RETURN');
       break;
