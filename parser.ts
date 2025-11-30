@@ -863,6 +863,11 @@ export class Parser {
   }
 
   private checkPrimaryStart(): boolean {
+    // A bare call
+    if (this.checkIdent() && this.checkNext(TokenKind.LParen)) {
+      return true;
+    }
+
     return (
       this.check(TokenKind.DecimalLiteral) ||
       this.check(TokenKind.HexLiteral) ||

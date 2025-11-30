@@ -289,6 +289,7 @@ class FunctionBlock extends Block {
   visitEndDefInstr(_endDef: EndDef): void {
     this.compiler.emitReturn();
     this.compiler.endFunction();
+    this.end();
   }
 }
 
