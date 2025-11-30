@@ -1,5 +1,4 @@
 import { Chunk } from '../bytecode/chunk';
-import type { Instr } from '../ast/instr';
 import { SHOW_UNDEF } from '../debug';
 import { BaseException } from '../exceptions';
 import { Formattable, Formatter } from '../format';
@@ -35,7 +34,6 @@ export class Routine implements Formattable {
     filename: string | null = null,
     name: string | null = null,
     public arity: number = 0,
-    public definition: Instr[] = [],
   ) {
     if (typeof filename === 'string') {
       this.filename = filename;
@@ -62,8 +60,8 @@ export class Routine implements Formattable {
     this.chunk.routine = this.name;
   }
 
-  format(formatter: Formatter): string {
-    return formatter.format(this.definition);
+  format(_formatter: Formatter): string {
+    return `Routine(${this.type}, name=${this.name}, filename=${this.filename})`;
   }
 }
 

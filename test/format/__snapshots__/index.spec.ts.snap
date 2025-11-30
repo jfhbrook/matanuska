@@ -578,6 +578,18 @@ exports[`parser exceptions > given a Inspector > when it is not a line > it form
                         ^"
 `;
 
+exports[`stack > given a DefaultFormatter > it formats a stack 1`] = `
+"{ 12, true, foo, Traceback:
+  File '/home/josh/script.bas', line 100, routine 'foo'
+BaseException: oops, Routine(2, name=foo, filename=/home/josh/script.bas), nil, nil, }"
+`;
+
+exports[`stack > given a Inspector > it formats a stack 1`] = `
+"{ [33m12[39m, [33mtrue[39m, [32m'foo'[39m, Traceback:
+  File '/home/josh/script.bas', line 100, routine 'foo'
+BaseException: oops, Routine(2, name=foo, filename=/home/josh/script.bas), nil, nil, }"
+`;
+
 exports[`token > given a DefaultFormatter > it formats a Token 1`] = `
 "Token(<string>) {
   index: 0,

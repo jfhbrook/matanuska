@@ -16,6 +16,10 @@ ast:
 build: 
   make MATBAS_BUILD="${MATBAS_BUILD}"
 
+# Build test dependencies
+testdeps:
+  npm run build:testdeps
+
 # Run a release build
 release:
   make MATBAS_BUILD=release
