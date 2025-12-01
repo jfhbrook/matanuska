@@ -108,3 +108,12 @@ hello world!
 ",
 }
 `;
+
+exports[`examples > 011-datetime.bas 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "1577869200000
+",
+}
+`;

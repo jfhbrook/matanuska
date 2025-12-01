@@ -73,7 +73,7 @@ For more information, check out the backlog...
   - [x] Handle "this" argument
   - [x] Example
   - [x] Passing example test
-  - [ ] Native function support
+  - [x] Native function support
   - [ ] Functions ADR
 - [ ] Format AST more like code
 - [ ] Implement QT entry point

@@ -36,6 +36,20 @@ export class Stack<V> implements Formattable {
     this.stack[n] = value;
   }
 
+  slice(start: number, end?: number): V[] {
+    return this.stack.slice(start, end);
+  }
+
+  drop(n: number): void {
+    this.stack = this.stack.slice(0, this.stack.length - n);
+  }
+
+  take(n: number): V[] {
+    const values = this.slice(this.stack.length - n);
+    this.drop(n);
+    return values;
+  }
+
   get empty(): boolean {
     return this.stack.length === 0;
   }

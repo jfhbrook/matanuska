@@ -22,7 +22,15 @@ import { RuntimeFault } from './faults';
 import { Host } from './host';
 import { Stack } from './stack';
 import { Traceback } from './traceback';
-import { Routine, RoutineType, Value, nil, undef } from './value';
+import {
+  BaseRoutine,
+  NativeRoutine,
+  Routine,
+  RoutineType,
+  Value,
+  nil,
+  undef,
+} from './value';
 import { falsey } from './value/truthiness';
 import { nullish } from './value/nullness';
 
@@ -45,7 +53,6 @@ export interface Frame {
 export class Runtime {
   public stack: Stack<Value>;
   public frames: Stack<Frame>;
-  public globals: Globals = {};
   public acc: Record<RegisterName, Value> = {
     a: undef,
     b: undef,
@@ -54,6 +61,7 @@ export class Runtime {
   constructor(
     private host: Host,
     private executor: Executor,
+    private globals: Globals = {},
   ) {
     this.stack = new Stack();
     this.frames = new Stack();
@@ -160,23 +168,45 @@ export class Runtime {
     await this.executor.command(name as string, args);
   }
 
-  private call(callee: Value, argCount: number): void {
-    if (!(callee instanceof Routine)) {
+  private async call(callee: Value, argCount: number): Promise<void> {
+    if (callee instanceof NativeRoutine) {
+      await this._callNative(callee, argCount);
+    } else if (callee instanceof Routine) {
+      this._call(callee, argCount);
+    } else {
       throw new RuntimeError('Value is not callable');
     }
+  }
 
+  private _call(callee: Routine, argCount: number): void {
+    this._checkArity(callee, argCount);
+    this.frames.push({
+      routine: callee,
+      pc: 0,
+      slot: this.stack.size - argCount - 1,
+    });
+  }
+
+  private async _callNative(
+    callee: NativeRoutine,
+    argCount: number,
+  ): Promise<void> {
+    this._checkArity(callee, argCount);
+
+    const args: Value[] = this.stack.take(argCount);
+    const rv = await callee.call(...args);
+
+    this.stack.pop();
+    this.stack.push(rv);
+  }
+
+  private _checkArity(callee: BaseRoutine, argCount: number): void {
     // TODO: How do I want to handle arity? This is copied from lox
     if (argCount !== callee.arity) {
       throw new RuntimeError(
         `Expected ${callee.arity} arguments, received ${argCount}`,
       );
     }
-
-    this.frames.push({
-      routine: callee,
-      pc: 0,
-      slot: this.stack.size - argCount - 1,
-    });
   }
 
   private async run(): Promise<Value> {
@@ -363,7 +393,7 @@ export class Runtime {
             case OpCode.Call:
               // arg count
               this.acc.a = this.readByte();
-              this.call(this.stack.peek(this.acc.a)!, this.acc.a);
+              await this.call(this.stack.peek(this.acc.a)!, this.acc.a);
               break;
             case OpCode.Return:
               this.acc.a = this.stack.pop();

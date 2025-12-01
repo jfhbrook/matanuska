@@ -17,6 +17,7 @@ import {
 import { RuntimeFault } from './faults';
 import { inspector } from './format';
 import type { Host } from './host';
+import { NATIVE_ROUTINES } from './native';
 import { Parser, ParseResult } from './parser';
 import { Runtime } from './runtime';
 import { Routine, Value, Undef } from './value';
@@ -37,7 +38,7 @@ export class Executor {
     public readline: Readline,
   ) {
     this.parser = new Parser();
-    this.runtime = new Runtime(host, this);
+    this.runtime = new Runtime(host, this, { ...NATIVE_ROUTINES });
     this.interactive = false;
     this.commands = { ...BUILTINS };
   }

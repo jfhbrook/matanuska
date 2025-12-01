@@ -25,7 +25,12 @@ export enum RoutineType {
   Function,
 }
 
-export class Routine implements Formattable {
+export interface BaseRoutine extends Formattable {
+  type: RoutineType;
+  arity: number;
+}
+
+export class Routine implements BaseRoutine {
   public filename: string;
   public chunk: Chunk;
 
@@ -76,11 +81,24 @@ export class Routine implements Formattable {
   }
 }
 
+export abstract class NativeRoutine implements BaseRoutine {
+  type: RoutineType = RoutineType.Function;
+  name: string;
+  arity: number;
+
+  public abstract call(...args: Value[]): Promise<Value>;
+
+  format(_formatter: Formatter): string {
+    return `NativeFunction(${this.name}, ${this.arity})`;
+  }
+}
+
 export type Value =
   | number
   | boolean
   | string
   | BaseException
   | Routine
+  | NativeRoutine
   | Nil
   | Undef;
