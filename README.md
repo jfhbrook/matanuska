@@ -62,12 +62,22 @@ For more information, check out the backlog...
   - [x] Throw if attempting to compile non-root routine type
   - [x] Remove type from native routines
   - [x] Remove stale comments in parser and runtime
-  - [ ] Clean up compiler API
   - [ ] Refactor compiler test helper
   - [ ] Refactor runtime test helper
   - [ ] Inject globals in the container
   - [ ] Investigate stack peeking issue
   - [ ] Sort out the empty local declaration issue
+- [ ] Refactor command input
+  - `Cmd` in AST references a list of Instructions, not a "command" as in ADR 024
+    - Should probably just use a `Line`
+    - If using a line, `cmdNo` is spread across a bunch of stuff
+      - compiler
+      - readline
+      - shell
+      - exceptions (including formatting)
+      - executor
+  - The compiler considers `Input` as a routine type, but chooses this based on context-less instructions
+  - Note, separate methods are sensible because they're type safe
 - [ ] Implement QT entry point
   - [ ] Shim in `node:buffer` with `@matanuska/buffer`
   - [ ] Implement `@matanuska/host`
