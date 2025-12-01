@@ -58,23 +58,7 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
-- [ ] Functions
-  - [x] Add keywords to tokens/scanner
-  - [x] Add `Fn` value type
-  - [x] Add def/call/etc to AST
-  - [x] Add basic support to parser
-  - [x] Parser tests for functions
-  - [x] Implement frames
-  - [x] Compile functions
-  - [x] Compile calls
-  - [x] Execute calls
-  - [x] Support Routine type in value type checking
-  - [x] Update stack traces
-  - [x] Handle "this" argument
-  - [x] Example
-  - [x] Passing example test
-  - [x] Native function support
-  - [ ] Functions ADR
+- [x] Functions
 - [ ] Format AST more like code
 - [ ] Implement QT entry point
   - [ ] Shim in `node:buffer` with `@matanuska/buffer`
