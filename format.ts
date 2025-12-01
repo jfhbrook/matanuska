@@ -25,8 +25,10 @@ import {
   Binary,
   Logical,
   Unary,
+  Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -63,6 +65,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  ShortDef,
+  Return,
+  EndDef,
   Command,
 } from './ast/instr';
 import { Tree, TreeVisitor, Cmd, Line, Input, Program } from './ast';
@@ -171,8 +177,10 @@ export abstract class Formatter
   abstract visitBinaryExpr(binary: Binary): string;
   abstract visitLogicalExpr(logical: Logical): string;
   abstract visitUnaryExpr(unary: Unary): string;
+  abstract visitCallExpr(call: Call): string;
   abstract visitGroupExpr(group: Group): string;
   abstract visitVariableExpr(variable: Variable): string;
+  abstract visitLambdaExpr(fn: Lambda): string;
   abstract visitIntLiteralExpr(int: IntLiteral): string;
   abstract visitRealLiteralExpr(real: RealLiteral): string;
   abstract visitBoolLiteralExpr(bool: BoolLiteral): string;
@@ -206,7 +214,10 @@ export abstract class Formatter
   abstract visitEndWhileInstr(endWhile: EndWhile): string;
   abstract visitRepeatInstr(repeat: Repeat): string;
   abstract visitUntilInstr(until: Until): string;
-
+  abstract visitDefInstr(fn: Def): string;
+  abstract visitShortDefInstr(fn: ShortDef): string;
+  abstract visitReturnInstr(ret: Return): string;
+  abstract visitEndDefInstr(end: EndDef): string;
   abstract visitCommandInstr(node: Command): string;
 
   abstract visitCmdTree(node: Cmd): string;
@@ -313,7 +324,9 @@ export class DefaultFormatter extends Formatter {
     // TODO: Python also prints the module name
     while (tb) {
       // TODO: inspect string, quotes etc
-      report += `  File ${inspectString(tb.filename)}, line ${tb.lineNo}`;
+      report += `  File ${inspectString(tb.filename)}, `;
+      report += `line ${tb.lineNo}, `;
+      report += `routine ${inspectString(tb.routine)}`;
       tb = tb.next;
     }
     return report;
@@ -342,7 +355,7 @@ export class DefaultFormatter extends Formatter {
     report += `: ${warn.constructor.name}: ${warn.message}`;
     // TODO: Python also prints the line like so:
     //
-    //  100 print someFn(ident);
+    //  100 print someDef(ident);
 
     return report;
   }
@@ -598,12 +611,24 @@ export class DefaultFormatter extends Formatter {
     return formatted;
   }
 
+  visitCallExpr(call: Call): string {
+    let formatted = call.callee.accept(this) + '(';
+    formatted += call.args.map((arg) => arg.accept(this)).join(', ');
+    formatted += ')';
+    return formatted;
+  }
+
   visitGroupExpr(group: Group): string {
     return `(${this.format(group.expr)})`;
   }
 
   visitVariableExpr(variable: Variable): string {
     return variable.ident.text;
+  }
+
+  visitLambdaExpr(fn: Lambda): string {
+    const args = fn.params.map((param: Token) => param.text).join(',');
+    return `Lambda(${args}) { ${formatter.format(fn.body)} }`;
   }
 
   visitIntLiteralExpr(int: IntLiteral): string {
@@ -740,11 +765,11 @@ export class DefaultFormatter extends Formatter {
   }
 
   visitEndWhileInstr(_endWhile: EndWhile): string {
-    return `EndWhile`;
+    return 'EndWhile';
   }
 
   visitRepeatInstr(_repeat: Repeat): string {
-    return `Repeat`;
+    return 'Repeat';
   }
 
   visitUntilInstr(until: Until): string {
@@ -762,17 +787,36 @@ export class DefaultFormatter extends Formatter {
       .join(' ');
   }
 
+  visitDefInstr(def: Def): string {
+    const args = def.params.map((param: Token) => param.text).join(', ');
+    return `Def(${args})`;
+  }
+
+  visitShortDefInstr(def: ShortDef): string {
+    const args = def.params.map((param: Token) => param.text).join(', ');
+    const body = def.body.accept(this);
+    return `ShortDef(${args}) { ${body} }`;
+  }
+
+  visitReturnInstr(ret: Return): string {
+    return `Return { ${this.format(ret.value)} }`;
+  }
+
+  visitEndDefInstr(_endDef: EndDef): string {
+    return 'EndDef';
+  }
+
   visitCommandInstr(command: Command): string {
     return `Command (${this.format(command.name)}, ${this.formatArgv(command.params)})`;
   }
 
   formatStack<V>(stack: Stack<V>): string {
-    let formatted = '{ ';
+    let formatted = '[\n';
     for (const v of stack.stack) {
-      formatted += this.format(v);
-      formatted += ', ';
+      formatted += indent(2, this.format(v));
+      formatted += ',\n';
     }
-    return formatted + '}';
+    return formatted + ']';
   }
 
   formatArray(array: any[]): string {

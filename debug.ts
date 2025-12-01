@@ -88,7 +88,7 @@ export function traceExec(rt: Runtime): void {
   //#if _DEBUG_TRACE_RUNTIME
   if (!NO_TRACE) {
     console.log('> stack:', formatter.format(rt.stack));
-    console.log('>', disassembleInstruction(rt.chunk, rt.pc));
+    console.log('>', disassembleInstruction(rt.chunk, rt.frame.pc));
   }
   //#endif
 }

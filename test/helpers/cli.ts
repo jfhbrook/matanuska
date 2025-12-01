@@ -6,6 +6,7 @@ import { ExitCode } from '../../exit';
 import { Host } from '../../host';
 
 import { mockConsoleHost, MockConsoleHostOptions } from './host';
+import { patchDateTime, resetDateTime } from './datetime';
 
 export interface RunResult {
   exitCode: ExitCode;
@@ -28,8 +29,9 @@ export async function run(
   options?: MockConsoleHostOptions,
 ): Promise<RunResult> {
   const host = mockConsoleHost(options?.files);
+  patchDateTime();
 
-  return await new Promise((resolve, reject) => {
+  const rv: RunResult = await new Promise((resolve, reject) => {
     const exitFn = async (exitCode: number): Promise<void> => {
       resolve({
         exitCode,
@@ -41,4 +43,8 @@ export async function run(
     const main = container.translator();
     return main.start().catch((err) => reject(err));
   });
+
+  resetDateTime();
+
+  return rv;
 }

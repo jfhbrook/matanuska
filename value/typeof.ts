@@ -1,6 +1,6 @@
 import { BaseException } from '../exceptions';
 import { Type } from './types';
-import { Value, Nil, Undef } from './index';
+import { Value, Nil, Undef, Routine, RoutineType } from './index';
 
 export function typeOf(value: Value): Type {
   const type = typeof value;
@@ -21,6 +21,18 @@ export function typeOf(value: Value): Type {
   }
   if (value instanceof Undef) {
     return Type.Undef;
+  }
+  if (value instanceof Routine) {
+    switch (value.type) {
+      case RoutineType.Input:
+        return Type.Input;
+      case RoutineType.Program:
+        return Type.Program;
+      case RoutineType.Function:
+        return Type.Function;
+      default:
+        return Type.Unknown;
+    }
   }
   if (value instanceof BaseException) {
     return Type.Exception;

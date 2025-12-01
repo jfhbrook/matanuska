@@ -1,3 +1,4 @@
+import { Token } from '../tokens';
 import { Expr, Variable } from './expr';
 
 export interface InstrVisitor<R> {
@@ -27,6 +28,10 @@ export interface InstrVisitor<R> {
   visitRepeatInstr(node: Repeat): R;
   visitUntilInstr(node: Until): R;
   visitCommandInstr(node: Command): R;
+  visitDefInstr(node: Def): R;
+  visitShortDefInstr(node: ShortDef): R;
+  visitReturnInstr(node: Return): R;
+  visitEndDefInstr(node: EndDef): R;
 }
 
 export abstract class Instr {
@@ -372,5 +377,60 @@ export class Command extends Instr {
 
   accept<R>(visitor: InstrVisitor<R>): R {
     return visitor.visitCommandInstr(this);
+  }
+}
+
+export class Def extends Instr {
+  constructor(
+    public name: Token,
+    public params: Token[],
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitDefInstr(this);
+  }
+}
+
+export class ShortDef extends Instr {
+  constructor(
+    public name: Token,
+    public params: Token[],
+    public body: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitShortDefInstr(this);
+  }
+}
+
+export class Return extends Instr {
+  constructor(
+    public value: Expr | null,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitReturnInstr(this);
+  }
+}
+
+export class EndDef extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitEndDefInstr(this);
   }
 }

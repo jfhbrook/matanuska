@@ -1,3 +1,4 @@
+import { OpCode } from '../bytecode/opcodes';
 import { AssertionError, RuntimeError } from '../exceptions';
 import { RuntimeFault } from '../faults';
 import { formatter } from '../format';
@@ -29,6 +30,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  ShortDef,
+  Return,
+  EndDef,
   Command,
 } from '../ast/instr';
 
@@ -54,9 +59,9 @@ export abstract class Block implements InstrVisitor<void> {
 
   public init(
     compiler: LineCompiler,
-    instr: Instr | null,
-    previous: Block | null,
-    parent: Block | null,
+    instr: Instr | null = null,
+    previous: Block | null = null,
+    parent: Block | null = null,
   ) {
     this._compiler = compiler;
     this.instr = instr;
@@ -74,7 +79,7 @@ export abstract class Block implements InstrVisitor<void> {
   }
 
   // Open a new block, maintaining a reference to the parent block.
-  public begin(instr: Instr, block: Block): void {
+  public begin(instr: Instr | null, block: Block): void {
     block.init(this.compiler, instr, null, this.compiler.block);
     this.compiler.block = block;
   }
@@ -214,6 +219,27 @@ export abstract class Block implements InstrVisitor<void> {
 
   visitUntilInstr(until: Until): void {
     this.mismatched(until, 'until');
+  }
+
+  visitDefInstr(def: Def): void {
+    this.invalid(def, 'def');
+  }
+
+  visitShortDefInstr(def: ShortDef): void {
+    this.invalid(def, 'def');
+  }
+
+  visitReturnInstr(ret: Return): void {
+    if (ret.value) {
+      ret.value.accept(this.compiler);
+      this.compiler.emitByte(OpCode.Return);
+    } else {
+      this.compiler.emitReturn();
+    }
+  }
+
+  visitEndDefInstr(endDef: EndDef): void {
+    this.invalid(endDef, 'enddef');
   }
 
   visitCommandInstr(command: Command): void {

@@ -12,8 +12,10 @@ import {
   Unary,
   Binary,
   Logical,
+  Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -50,6 +52,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  ShortDef,
+  Return,
+  EndDef,
   Command,
 } from './ast/instr';
 
@@ -224,6 +230,31 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
     until.condition.accept(this);
   }
 
+  visitDefInstr(fn: Def): void {
+    this.shiftInstr(fn);
+    this.shiftToken(fn.name);
+    for (const param of fn.params) {
+      this.shiftToken(param);
+    }
+  }
+
+  visitShortDefInstr(fn: ShortDef): void {
+    this.shiftInstr(fn);
+    this.shiftToken(fn.name);
+    for (const param of fn.params) {
+      this.shiftToken(param);
+    }
+    fn.body.accept(this);
+  }
+
+  visitReturnInstr(ret: Return): void {
+    this.shiftInstr(ret);
+  }
+
+  visitEndDefInstr(endDef: EndDef): void {
+    this.shiftInstr(endDef);
+  }
+
   visitCommandInstr(command: Command): void {
     this.shiftInstr(command);
     for (const expr of command.params) {
@@ -245,12 +276,26 @@ class InstrShifter implements InstrVisitor<void>, ExprVisitor<void> {
     logical.right.accept(this);
   }
 
+  visitCallExpr(call: Call): void {
+    call.callee.accept(this);
+    for (const arg of call.args) {
+      arg.accept(this);
+    }
+  }
+
   visitGroupExpr(group: Group): void {
     group.expr.accept(this);
   }
 
   visitVariableExpr(variable: Variable): void {
     this.shiftToken(variable.ident);
+  }
+
+  visitLambdaExpr(lambda: Lambda): void {
+    for (const param of lambda.params) {
+      this.shiftToken(param);
+    }
+    lambda.body.accept(this);
   }
 
   visitIntLiteralExpr(_int: IntLiteral): void {}

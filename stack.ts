@@ -23,8 +23,31 @@ export class Stack<V> implements Formattable {
     return this.stack[this.stack.length - n - 1];
   }
 
+  // TODO: I added this to fix an immediate bug. Does this mean peek is no
+  // longer needed? Is this entirely correct, even?
+  get(n: number = 0): V | null {
+    if (this.empty) {
+      return null;
+    }
+    return this.stack[n];
+  }
+
   set(n: number, value: V): void {
     this.stack[n] = value;
+  }
+
+  slice(start: number, end?: number): V[] {
+    return this.stack.slice(start, end);
+  }
+
+  drop(n: number): void {
+    this.stack = this.stack.slice(0, this.stack.length - n);
+  }
+
+  take(n: number): V[] {
+    const values = this.slice(this.stack.length - n);
+    this.drop(n);
+    return values;
   }
 
   get empty(): boolean {

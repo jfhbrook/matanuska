@@ -27,6 +27,10 @@ export function truthy(value: Value, type: Type = Type.Any): boolean {
     case Type.Nil:
     case Type.Undef:
       return false;
+    case Type.Input:
+    case Type.Program:
+    case Type.Function:
+      return true;
     default:
       throw new TypeError(
         `Cannot determine if ${formatter.format(value)} is truthy`,
@@ -55,6 +59,10 @@ export function falsey(value: Value, type: Type = Type.Any): boolean {
     case Type.Nil:
     case Type.Undef:
       return true;
+    case Type.Input:
+    case Type.Program:
+    case Type.Function:
+      return false;
     default:
       throw new TypeError(
         `Cannot determine if ${formatter.format(value)} is truthy`,

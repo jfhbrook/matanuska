@@ -4,8 +4,10 @@ type Expr in './expr' {
   Unary          => op: TokenKind, expr: Expr
   Binary         => left: Expr, op: TokenKind, right: Expr
   Logical        => left: Expr, op: TokenKind, right: Expr
+  Call           => callee: Expr, end: Token, args: Expr[]
   Group          => expr: Expr
   Variable       => ident: Token
+  Lambda         => name: Token | null, params: Token[], body: Expr
   IntLiteral     => value: number
   RealLiteral    => value: number
   BoolLiteral    => value: boolean
@@ -16,6 +18,7 @@ type Expr in './expr' {
 }
 
 type Instr in './instr' {
+  import { Token } from '../tokens'
   import { Expr, Variable } from './expr'
 
   Instr      => offsetStart: number = -1, offsetEnd: number = -1
@@ -45,6 +48,10 @@ type Instr in './instr' {
   Repeat!
   Until      => condition: Expr
   Command    => name: Expr, params: Expr[]
+  Def        => name: Token, params: Token[]
+  ShortDef   => name: Token, params: Token[], body: Expr
+  Return     => value: Expr | null
+  EndDef!
 }
 
 type Tree in './index' {

@@ -58,6 +58,26 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
+- [ ] Functions
+  - [x] Throw if attempting to compile non-root routine type
+  - [x] Remove type from native routines
+  - [x] Remove stale comments in parser and runtime
+  - [ ] Refactor compiler test helper
+  - [ ] Refactor runtime test helper
+  - [ ] Inject globals in the container
+  - [ ] Investigate stack peeking issue
+  - [ ] Sort out the empty local declaration issue
+- [ ] Refactor command input
+  - `Cmd` in AST references a list of Instructions, not a "command" as in ADR 024
+    - Should probably just use a `Line`
+    - If using a line, `cmdNo` is spread across a bunch of stuff
+      - compiler
+      - readline
+      - shell
+      - exceptions (including formatting)
+      - executor
+  - The compiler considers `Input` as a routine type, but chooses this based on context-less instructions
+  - Note, separate methods are sensible because they're type safe
 - [ ] Implement QT entry point
   - [ ] Shim in `node:buffer` with `@matanuska/buffer`
   - [ ] Implement `@matanuska/host`
@@ -77,25 +97,13 @@ For more information, check out the backlog...
   - [ ] use jobs to implement `pwd`
   - [ ] support \j in prompt rendering
   - `./adrs/draft/processes.md`
-- [ ] Functions
-  - [ ] Function syntax ADR
-  - [ ] Add keywords to tokens/scanner
-  - [ ] Add support to parser
-  - [ ] Parser tests for functions
-  - [ ] Add new op codes
-  - [ ] Add support in runtime
-  - [ ] Add support to disassembler
-  - [ ] Add support to compiler
-  - [ ] Compiler tests for functions
-  - [ ] Runtime tests
-  - [ ] Examples
-  - [ ] Native function support
 - [ ] Tests for `InstrShifter` in editor
 - [ ] Support entering multiple lines in REPL
   - [ ] ADR
   - Probably track block nesting
 - [ ] PS1/PS2 support
   - `SET PS1` and `SET PS2`?
+
 ### Up Next
 
 - Test Shenanigans

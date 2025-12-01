@@ -45,5 +45,7 @@ export enum OpCode {
   JumpIfFalse,
   Loop,
 
+  // Functions
+  Call,
   Return,
 }

@@ -28,8 +28,10 @@ import {
   Binary,
   Logical,
   Unary,
+  Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -65,6 +67,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  ShortDef,
+  Return,
+  EndDef,
   Command,
 } from './ast/instr';
 import { Cmd, Line, Input, Program } from './ast';
@@ -72,6 +78,28 @@ import { sortLines } from './ast/util';
 
 export type ParseResult<T> = [T, ParseWarning | null];
 export type Row = Line | Cmd;
+
+export abstract class DefKind<T> {
+  abstract create(name: Token | null, params: Token[], body: Expr | null): T;
+}
+
+export class FunctionKind extends DefKind<Instr> {
+  create(name: Token | null, params: Token[], body: Expr | null): Instr {
+    if (body) {
+      return new ShortDef(name!, params, body);
+    }
+    return new Def(name!, params);
+  }
+}
+
+export class LambdaKind extends DefKind<Expr> {
+  create(name: Token | null, params: Token[], body: Expr | null): Expr {
+    return new Lambda(name, params, body!);
+  }
+}
+
+const FUNCTION = new FunctionKind();
+const LAMBDA = new LambdaKind();
 
 // The alternative to using exceptions is to set a panicMode flag to ignore
 // emitted errors until we can synchronize. This might be worth trying out
@@ -195,7 +223,9 @@ export class Parser {
         warning = new ParseWarning(warnings);
       }
 
+      //#if _DEBUG_SHOW_TREE
       showTree(program);
+      //#endif
 
       return [program, warning];
 
@@ -270,6 +300,10 @@ export class Parser {
     if (this.check(kind)) return this.advance() as Token;
     this.syntaxError(this.current, message);
   }
+
+  //
+  // Errors and Warnings
+  //
 
   private syntaxError(token: Token, message: string): never {
     const exc = new SyntaxError(message, {
@@ -400,14 +434,7 @@ export class Parser {
 
   private syncNextInstr() {
     // Remarks can be handled in the next attempt at parsing a command
-    while (
-      ![
-        TokenKind.Colon,
-        TokenKind.LineEnding,
-        TokenKind.Eof,
-        TokenKind.Rem,
-      ].includes(this.current.kind)
-    ) {
+    while (!this.isInstrBoundary) {
       // TODO: Illegal, UnterminatedString
       this.advance();
     }
@@ -430,6 +457,16 @@ export class Parser {
     return this.done || this.current.kind === TokenKind.LineEnding;
   }
 
+  private get isInstrBoundary(): boolean {
+    return (
+      this.isLineEnding ||
+      [TokenKind.Colon, TokenKind.Eof, TokenKind.Rem].reduce(
+        (check, tok) => check || this.check(tok),
+        false,
+      )
+    );
+  }
+
   //
   // Instruction parsing
   //
@@ -442,8 +479,8 @@ export class Parser {
     let instr: Instr | null = this.instruction();
     const instrs: Instr[] = instr ? [instr] : [];
 
-    // A remark doesn't need to be separated from a prior command by a
-    // colon
+    // Less strict than isInstrBoundary, since that check includes end-of-input
+    // scenarios
     while (this.match(TokenKind.Colon) || this.check(TokenKind.Rem)) {
       try {
         instr = this.instruction();
@@ -512,6 +549,12 @@ export class Parser {
       instr = this.repeat();
     } else if (this.match(TokenKind.Until)) {
       instr = this.until();
+    } else if (this.match(TokenKind.Def)) {
+      instr = this.def(FUNCTION);
+    } else if (this.match(TokenKind.Return)) {
+      instr = this.return();
+    } else if (this.match(TokenKind.EndDef)) {
+      instr = this.endDef();
     } else {
       const assign = this.assign();
       if (assign) {
@@ -541,7 +584,7 @@ export class Parser {
   }
 
   private load(): Instr {
-    const params = this.params();
+    const params = this.commandParams();
     return new Load(params);
   }
 
@@ -592,18 +635,41 @@ export class Parser {
     return new Expression(this.expression());
   }
 
+  //
+  // Check, match or consume identifiers. Type checking will occur in the
+  // compiler.
+  //
+
+  private checkIdent(): boolean {
+    return [
+      TokenKind.Ident,
+      TokenKind.IntIdent,
+      TokenKind.RealIdent,
+      TokenKind.BoolIdent,
+      TokenKind.StringIdent,
+    ].reduce((check, tok) => check || this.check(tok), false);
+  }
+
+  private matchIdent(): boolean {
+    return this.match(
+      TokenKind.Ident,
+      TokenKind.IntIdent,
+      TokenKind.RealIdent,
+      TokenKind.BoolIdent,
+      TokenKind.StringIdent,
+    );
+  }
+
+  private consumeIdent(message: string): Token {
+    if (this.checkIdent()) return this.advance() as Token;
+    this.syntaxError(this.current, message);
+  }
+
   // NOTE: Corresponds to parsing declaration()/varDeclaration() in clox.
   private let(): Instr {
     // NOTE: Corresponds to `global` in global-only clox
     let variable: Variable;
-    if (
-      this.match(
-        TokenKind.IntIdent,
-        TokenKind.RealIdent,
-        TokenKind.BoolIdent,
-        TokenKind.StringIdent,
-      )
-    ) {
+    if (this.matchIdent()) {
       // NOTE: Roughly corresponds to parseVariable, though see also
       // emitIdent in compiler/base.ts
       variable = this.variable();
@@ -621,13 +687,7 @@ export class Parser {
   private assign(): Instr | null {
     // We can't match here because we need to check the *next* token
     // before advancing...
-    if (
-      (this.check(TokenKind.IntIdent) ||
-        this.check(TokenKind.RealIdent) ||
-        this.check(TokenKind.BoolIdent) ||
-        this.check(TokenKind.StringIdent)) &&
-      this.checkNext(TokenKind.Eq)
-    ) {
+    if (this.checkIdent() && this.checkNext(TokenKind.Eq)) {
       // ...and so we advance here.
       this.advance();
       const variable = this.variable();
@@ -643,7 +703,7 @@ export class Parser {
     const condition = this.ifCondition();
 
     // A bare "if" with a multi-line block
-    if (!this.isShortIf && this.isLineEnding) {
+    if (!this.isShortIf && this.isInstrBoundary) {
       const if_ = new If(condition);
       return if_;
     }
@@ -745,7 +805,64 @@ export class Parser {
     return new Until(condition);
   }
 
+  private def<T>(kind: DefKind<T>): T {
+    const name = this.defName(kind);
+    const params = this.defParams(kind);
+    let body: Expr | null = null;
+
+    if (!this.isInstrBoundary) {
+      // Optional return
+      this.match(TokenKind.Return);
+      body = this.expression();
+      this.consume(TokenKind.EndDef, "Expected 'enddef' after function body");
+    }
+
+    return kind.create(name, params, body);
+  }
+
+  private requiresDefName(kind: DefKind<any>): boolean {
+    return kind instanceof FunctionKind;
+  }
+
+  private defName(kind: DefKind<any>): Token | null {
+    if (this.requiresDefName(kind)) {
+      return this.consumeIdent(`Expect ${kind} name`);
+    }
+
+    if (this.matchIdent()) {
+      return this.previous!;
+    }
+
+    return null;
+  }
+
+  private defParams(kind: DefKind<any>): Token[] {
+    this.consume(TokenKind.LParen, `Expect '(' after ${kind} name`);
+    const params: Token[] = [];
+    if (!this.check(TokenKind.RParen)) {
+      do {
+        params.push(this.consumeIdent('Expect parameter name'));
+      } while (this.match(TokenKind.Comma));
+    }
+    this.consume(TokenKind.RParen, "Expect ')' after parameters");
+    return params;
+  }
+
+  private return(): Instr {
+    const expr = this.optionalExpression();
+    return new Return(expr);
+  }
+
+  private endDef(): Instr {
+    return new EndDef();
+  }
+
   private checkPrimaryStart(): boolean {
+    // A bare call
+    if (this.checkIdent() && this.checkNext(TokenKind.LParen)) {
+      return true;
+    }
+
     return (
       this.check(TokenKind.DecimalLiteral) ||
       this.check(TokenKind.HexLiteral) ||
@@ -775,7 +892,7 @@ export class Parser {
   }
 
   private command(): Instr {
-    const cmd = this.param();
+    const cmd = this.commandParam();
     if (!cmd) {
       const token = this.current;
       this.syntaxError(
@@ -783,8 +900,30 @@ export class Parser {
         `Unexpected token ${token.text.length ? token.text : token.kind}`,
       );
     }
-    const params = this.params();
+    const params = this.commandParams();
     return new Command(cmd, params);
+  }
+
+  private commandParams(): Expr[] {
+    const exprs: Expr[] = [];
+
+    let current = this.commandParam();
+
+    while (current) {
+      exprs.push(current);
+      current = this.commandParam();
+    }
+
+    return exprs;
+  }
+
+  private commandParam(): Expr | null {
+    // Parse literals and groups as expressions
+    if (this.checkPrimaryStart()) {
+      return this.primary();
+    }
+
+    return this.shellLiteral();
   }
 
   //
@@ -792,10 +931,8 @@ export class Parser {
   //
 
   private optionalExpression(): Expr | null {
-    for (const tok of [TokenKind.Colon, TokenKind.LineEnding, TokenKind.Eof]) {
-      if (this.check(tok)) {
-        return null;
-      }
+    if (this.isInstrBoundary) {
+      return null;
     }
     return this.expression();
   }
@@ -912,13 +1049,42 @@ export class Parser {
   private unary(): Expr {
     return this.prefixOperator(
       [TokenKind.Minus, TokenKind.Plus],
-      this.primary.bind(this),
+      this.call.bind(this),
       (o, e) => new Unary(o, e),
     );
   }
 
+  private call(): Expr {
+    let expr = this.primary();
+
+    while (true) {
+      if (this.match(TokenKind.LParen)) {
+        expr = this._call(expr);
+      } else {
+        break;
+      }
+    }
+
+    return expr;
+  }
+
+  private _call(callee: Expr): Expr {
+    const args: Expr[] = [];
+    if (!this.check(TokenKind.RParen)) {
+      do {
+        args.push(this.expression());
+      } while (this.match(TokenKind.Comma));
+    }
+
+    const end = this.consume(TokenKind.RParen, "Expect ')' after arguments.");
+
+    return new Call(callee, end, args);
+  }
+
   private primary(): Expr {
-    if (
+    if (this.match(TokenKind.Def)) {
+      return this.def(LAMBDA);
+    } else if (
       this.match(
         TokenKind.DecimalLiteral,
         TokenKind.HexLiteral,
@@ -937,14 +1103,7 @@ export class Parser {
       return this.string();
     } else if (this.match(TokenKind.NilLiteral)) {
       return new NilLiteral();
-    } else if (
-      this.match(
-        TokenKind.IntIdent,
-        TokenKind.RealIdent,
-        TokenKind.BoolIdent,
-        TokenKind.StringIdent,
-      )
-    ) {
+    } else if (this.matchIdent()) {
       return this.variable();
     } else if (this.match(TokenKind.LParen)) {
       return this.group();
@@ -1072,32 +1231,6 @@ export class Parser {
     }
 
     return value;
-  }
-
-  //
-  // Command-style parameter parsing
-  //
-
-  private params(): Expr[] {
-    const exprs: Expr[] = [];
-
-    let current = this.param();
-
-    while (current) {
-      exprs.push(current);
-      current = this.param();
-    }
-
-    return exprs;
-  }
-
-  private param(): Expr | null {
-    // Parse literals and groups as expressions
-    if (this.checkPrimaryStart()) {
-      return this.primary();
-    }
-
-    return this.shellLiteral();
   }
 
   private shellLiteral(): Expr | null {

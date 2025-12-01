@@ -56,7 +56,7 @@ export const FOR_PROGRAMS: TestCase[] = [
         0,
         // Loop start
         OpCode.GetLocal,
-        0,
+        1,
         OpCode.Constant,
         1,
         OpCode.Le,
@@ -69,19 +69,19 @@ export const FOR_PROGRAMS: TestCase[] = [
         ...shortToBytes(11),
         // Increment
         OpCode.GetLocal,
-        0,
+        1,
         OpCode.Constant,
         2,
         OpCode.Add,
         OpCode.SetLocal,
-        0,
+        1,
         OpCode.Pop,
         // Loop to start
         OpCode.Loop,
         ...shortToBytes(23),
         // Body
         OpCode.GetLocal,
-        0,
+        1,
         OpCode.Print,
         // Loop to increment
         OpCode.Loop,
