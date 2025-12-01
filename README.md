@@ -58,8 +58,16 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
-- [x] Functions
-- [ ] Format AST more like code
+- [ ] Functions
+  - [ ] Throw if attempting to compile non-root routine type
+  - [ ] Clean up compiler API
+  - [ ] Refactor compiler test helper
+  - [ ] Refactor runtime test helper
+  - [ ] Remove type from native routines
+  - [ ] Inject globals in the container
+  - [ ] Remove stale comments in parser and runtime
+  - [ ] Investigate stack peeking issue
+  - [ ] Sort out the empty local declaration issue
 - [ ] Implement QT entry point
   - [ ] Shim in `node:buffer` with `@matanuska/buffer`
   - [ ] Implement `@matanuska/host`
