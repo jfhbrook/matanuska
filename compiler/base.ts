@@ -12,6 +12,7 @@ import { showChunk } from '../debug';
 //#endif
 import { errorType } from '../errors';
 import {
+  AssertionError,
   SyntaxError,
   ParseError,
   ParseWarning,
@@ -339,7 +340,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     } else if (routineType === RoutineType.Input) {
       this.block = new InputBlock();
     } else {
-      this.block = new FunctionBlock();
+      throw new AssertionError('Must compile either a program or input');
     }
 
     this.block.init(this, null, null, this.global);

@@ -401,7 +401,6 @@ export class Runtime {
                 this.frames.pop();
                 this.stack.push(this.acc.a);
               } else {
-                // TODO: This causes a cascading failure later. Why?
                 this.frames.pop();
                 return this.acc.a;
               }

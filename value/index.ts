@@ -26,7 +26,6 @@ export enum RoutineType {
 }
 
 export interface BaseRoutine extends Formattable {
-  type: RoutineType;
   arity: number;
 }
 
@@ -82,7 +81,6 @@ export class Routine implements BaseRoutine {
 }
 
 export abstract class NativeRoutine implements BaseRoutine {
-  type: RoutineType = RoutineType.Function;
   name: string;
   arity: number;
 

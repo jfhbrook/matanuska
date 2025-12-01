@@ -805,11 +805,6 @@ export class Parser {
     return new Until(condition);
   }
 
-  //
-  // Currently this only parses functions, but is written to potentially
-  // support methods later.
-  //
-
   private def<T>(kind: DefKind<T>): T {
     const name = this.defName(kind);
     const params = this.defParams(kind);

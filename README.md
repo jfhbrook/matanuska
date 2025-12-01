@@ -59,13 +59,13 @@ For more information, check out the backlog...
 ### Prioritized Backlog
 
 - [ ] Functions
-  - [ ] Throw if attempting to compile non-root routine type
+  - [x] Throw if attempting to compile non-root routine type
+  - [x] Remove type from native routines
+  - [x] Remove stale comments in parser and runtime
   - [ ] Clean up compiler API
   - [ ] Refactor compiler test helper
   - [ ] Refactor runtime test helper
-  - [ ] Remove type from native routines
   - [ ] Inject globals in the container
-  - [ ] Remove stale comments in parser and runtime
   - [ ] Investigate stack peeking issue
   - [ ] Sort out the empty local declaration issue
 - [ ] Implement QT entry point
