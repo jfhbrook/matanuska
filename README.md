@@ -64,7 +64,7 @@ For more information, check out the backlog...
   - [x] Remove stale comments in parser and runtime
   - [x] Refactor tests
   - [x] Inject globals in the container
-  - [ ] Investigate stack peeking issue
+  - [x] Investigate stack peeking issue
   - [ ] Sort out the empty local declaration issue
 - [ ] Refactor command input
   - `Cmd` in AST references a list of Instructions, not a "command" as in ADR 024
