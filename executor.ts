@@ -17,9 +17,8 @@ import {
 import { RuntimeFault } from './faults';
 import { inspector } from './format';
 import type { Host } from './host';
-import { NATIVE_ROUTINES } from './native';
 import { Parser, ParseResult } from './parser';
-import { Runtime } from './runtime';
+import { Globals, Runtime } from './runtime';
 import { Routine, Value, Undef } from './value';
 
 import { Line, Cmd, Program } from './ast';
@@ -36,9 +35,10 @@ export class Executor {
     private editor: Editor,
     private host: Host,
     public readline: Readline,
+    globals: Globals,
   ) {
     this.parser = new Parser();
-    this.runtime = new Runtime(host, this, { ...NATIVE_ROUTINES });
+    this.runtime = new Runtime(host, this, globals);
     this.interactive = false;
     this.commands = { ...BUILTINS };
   }

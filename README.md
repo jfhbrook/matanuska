@@ -63,7 +63,7 @@ For more information, check out the backlog...
   - [x] Remove type from native routines
   - [x] Remove stale comments in parser and runtime
   - [x] Refactor tests
-  - [ ] Inject globals in the container
+  - [x] Inject globals in the container
   - [ ] Investigate stack peeking issue
   - [ ] Sort out the empty local declaration issue
 - [ ] Refactor command input

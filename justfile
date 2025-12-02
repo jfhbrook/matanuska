@@ -2,7 +2,7 @@ set dotenv-load := true
 
 # Start the pure Node.js implementation of Matanuska BASIC
 start *argv: build
-  npm start -- {{ argv }}
+  npm start {{ argv }}
 
 # Start the burgeoning QT based implementation of Matanuska BASIC
 start-qt:

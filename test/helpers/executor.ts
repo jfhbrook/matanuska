@@ -24,7 +24,7 @@ class MockContainer extends Container {
 
   public executor(): Executor {
     const readline: any = null;
-    return new MockExecutor(this.editor(), this.host, readline);
+    return new MockExecutor(this.editor(), this.host, readline, this.globals);
   }
 }
 
