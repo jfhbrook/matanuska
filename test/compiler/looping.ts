@@ -18,8 +18,9 @@ import { Program, Line } from '../../ast';
 import { shortToBytes } from '../../bytecode/short';
 import { OpCode } from '../../bytecode/opcodes';
 import { Token, TokenKind } from '../../tokens';
+import { RoutineType } from '../../value';
 
-import { chunk } from '../helpers/bytecode';
+import { routine } from '../helpers/bytecode';
 import type { TestCase } from '../helpers/compiler';
 import { FILENAME } from '../helpers/files';
 
@@ -48,7 +49,9 @@ export const FOR_PROGRAMS: TestCase[] = [
       new Line(30, 3, new Source('', '30', ' ', 'next'), [new Next()]),
     ]),
 
-    chunk({
+    routine({
+      type: RoutineType.Program,
+      filename: FILENAME,
       constants: [1, 10, 1],
       code: [
         // Define i%
@@ -111,7 +114,9 @@ export const WHILE_PROGRAMS: TestCase[] = [
       ]),
       new Line(30, 3, new Source('', '30', ' ', 'endwhile'), [new EndWhile()]),
     ]),
-    chunk({
+    routine({
+      type: RoutineType.Program,
+      filename: FILENAME,
       constants: [false, 'loop'],
       code: [
         // Test conditional
@@ -149,7 +154,9 @@ export const REPEAT_PROGRAMS: TestCase[] = [
         new Until(new BoolLiteral(true)),
       ]),
     ]),
-    chunk({
+    routine({
+      type: RoutineType.Program,
+      filename: FILENAME,
       constants: ['loop', true],
       code: [
         // Body

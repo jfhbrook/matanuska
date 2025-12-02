@@ -3,7 +3,7 @@ import { Variable, IntLiteral } from '../../ast/expr';
 import { OpCode } from '../../bytecode/opcodes';
 import { Token, TokenKind } from '../../tokens';
 
-import { chunk } from '../helpers/bytecode';
+import { routine } from '../helpers/bytecode';
 import type { TestCase } from '../helpers/compiler';
 
 export const VARIABLE_INSTRUCTIONS: TestCase[] = [
@@ -23,7 +23,7 @@ export const VARIABLE_INSTRUCTIONS: TestCase[] = [
       ),
       new IntLiteral(1),
     ),
-    chunk({
+    routine({
       constants: ['i%', 1],
       code: [
         OpCode.Constant,
@@ -52,7 +52,7 @@ export const VARIABLE_INSTRUCTIONS: TestCase[] = [
       ),
       new IntLiteral(1),
     ),
-    chunk({
+    routine({
       constants: [1, 'i%'],
       code: [
         OpCode.Constant,

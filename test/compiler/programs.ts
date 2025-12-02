@@ -3,8 +3,9 @@ import { Instr, Expression } from '../../ast/instr';
 import { IntLiteral } from '../../ast/expr';
 import { Program, Line } from '../../ast';
 import { OpCode } from '../../bytecode/opcodes';
+import { RoutineType } from '../../value';
 
-import { chunk } from '../helpers/bytecode';
+import { routine } from '../helpers/bytecode';
 import type { TestCase } from '../helpers/compiler';
 import { FILENAME } from '../helpers/files';
 
@@ -13,13 +14,21 @@ import { SIMPLE_INSTRUCTIONS } from './instr';
 
 export const SIMPLE_PROGRAMS: TestCase[] = [
   ...EXPRESSION_STATEMENTS.map(
-    ([source, ast, { constants, code, lines }]): TestCase => {
+    ([
+      source,
+      ast,
+      {
+        chunk: { constants, code, lines },
+      },
+    ]): TestCase => {
       return [
         `100 ${source}`,
         new Program(FILENAME, [
           new Line(100, 1, new Source('', '100', ' ', source), [ast as Instr]),
         ]),
-        chunk({
+        routine({
+          type: RoutineType.Program,
+          filename: FILENAME,
           constants,
           code: code.concat([OpCode.Pop, OpCode.Undef, OpCode.Return]),
           lines: lines.concat([100, 100, 100]),
@@ -28,13 +37,21 @@ export const SIMPLE_PROGRAMS: TestCase[] = [
     },
   ),
   ...SIMPLE_INSTRUCTIONS.map(
-    ([source, ast, { constants, code, lines }]): TestCase => {
+    ([
+      source,
+      ast,
+      {
+        chunk: { constants, code, lines },
+      },
+    ]): TestCase => {
       return [
         `100 ${source}`,
         new Program(FILENAME, [
           new Line(100, 1, new Source('', '100', ' ', source), [ast as Instr]),
         ]),
-        chunk({
+        routine({
+          type: RoutineType.Program,
+          filename: FILENAME,
           constants,
           code,
           lines,
@@ -50,7 +67,9 @@ export const SIMPLE_PROGRAMS: TestCase[] = [
         new Expression(new IntLiteral(255)),
       ]),
     ]),
-    chunk({
+    routine({
+      type: RoutineType.Program,
+      filename: FILENAME,
       constants: [1, 255],
       code: [
         OpCode.Constant,

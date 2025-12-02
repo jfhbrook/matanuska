@@ -1,30 +1,30 @@
 import { t } from './tap';
 
 import { Exit } from '../../exit';
-import { Chunk } from '../../bytecode/chunk';
 import { Executor } from '../../executor';
 import { formatter } from '../../format';
 import { Runtime } from '../../runtime';
 import { Routine, RoutineType, Value } from '../../value';
 
 import { mockConsoleHost } from './host';
+import { FILENAME } from './files';
 
-export interface ChunkTests {
+export interface RoutineTests {
   effect?: [Value[], Value[]];
   throws?: any;
   exitCode?: number;
 }
 
-export async function testChunk(
-  chunk: Chunk,
-  tests: ChunkTests = {},
+export async function testRoutine(
+  routine: Routine,
+  tests: RoutineTests = {},
 ): Promise<void> {
   const [stackBefore, stackAfter] = tests.effect || [
     [],
     [
       {
         arity: 0,
-        filename: '<main>',
+        filename: FILENAME,
         name: '<main>',
         type: 1,
       },
@@ -35,10 +35,16 @@ export async function testChunk(
 
   runtime.stack.stack = stackBefore;
 
+  routine.type = RoutineType.Program;
+  routine.filename = FILENAME;
+  routine.chunk.filename = FILENAME;
+  routine.chunk.routine = '<main>';
+  /*
   const routine = new Routine(RoutineType.Program);
   const chunkName = routine.chunk.routine;
   routine.chunk = chunk;
   routine.chunk.routine = chunkName;
+  */
 
   if (tests.throws) {
     t.throws(() => {

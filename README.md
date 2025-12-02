@@ -62,8 +62,7 @@ For more information, check out the backlog...
   - [x] Throw if attempting to compile non-root routine type
   - [x] Remove type from native routines
   - [x] Remove stale comments in parser and runtime
-  - [ ] Refactor compiler test helper
-  - [ ] Refactor runtime test helper
+  - [x] Refactor tests
   - [ ] Inject globals in the container
   - [ ] Investigate stack peeking issue
   - [ ] Sort out the empty local declaration issue

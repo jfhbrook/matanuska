@@ -2,7 +2,6 @@ import { describe, expect, test } from 'vitest';
 
 import { Instr } from '../../ast/instr';
 import { Program } from '../../ast';
-import { Chunk } from '../../bytecode/chunk';
 import { disassemble } from '../../bytecode/disassembler';
 import {
   compileInstruction,
@@ -23,24 +22,34 @@ export function compile(
   }
 }
 
-export type TestCase = [string, Instr | Program, Chunk];
+export type TestCase = [string, Instr | Program, Routine];
 
 export function runCompilerTest([source, ast, expected]: TestCase): void {
   test(source, () => {
-    const actual = compile(ast)[0].chunk;
+    const actual = compile(ast, { filename: expected.filename })[0];
 
+    /*
     // NOTE: Test chunks typically do not have an initialized filename or routine
     expected.filename = actual.filename;
     expected.routine = actual.routine;
+    */
 
     expect({
-      constants: actual.constants,
-      code: disassemble(actual),
-      lines: actual.lines,
+      filename: actual.filename,
+      name: actual.name,
+      chunk: {
+        constants: actual.chunk.constants,
+        code: disassemble(actual.chunk),
+        lines: actual.chunk.lines,
+      },
     }).toEqual({
-      constants: expected.constants,
-      code: disassemble(expected),
-      lines: expected.lines,
+      filename: expected.filename,
+      name: expected.name,
+      chunk: {
+        constants: expected.chunk.constants,
+        code: disassemble(expected.chunk),
+        lines: expected.chunk.lines,
+      },
     });
   });
 }

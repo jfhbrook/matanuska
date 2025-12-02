@@ -4,8 +4,9 @@ import { BoolLiteral, StringLiteral } from '../../ast/expr';
 import { Program, Line } from '../../ast';
 import { shortToBytes } from '../../bytecode/short';
 import { OpCode } from '../../bytecode/opcodes';
+import { RoutineType } from '../../value';
 
-import { chunk } from '../helpers/bytecode';
+import { routine } from '../helpers/bytecode';
 import type { TestCase } from '../helpers/compiler';
 import { FILENAME } from '../helpers/files';
 
@@ -17,7 +18,7 @@ export const CONDITIONAL_INSTRUCTIONS: TestCase[] = [
       [new Print(new StringLiteral('true'))],
       [new Print(new StringLiteral('false'))],
     ),
-    chunk({
+    routine({
       constants: [true, 'true', 'false'],
       code: [
         OpCode.Constant,
@@ -71,7 +72,9 @@ export const CONDITIONAL_PROGRAMS: TestCase[] = [
       ]),
       new Line(50, 5, new Source('', '50', ' ', 'endif'), [new EndIf()]),
     ]),
-    chunk({
+    routine({
+      type: RoutineType.Program,
+      filename: FILENAME,
       constants: [true, 'true', 'false'],
       code: [
         OpCode.Constant,
@@ -123,7 +126,9 @@ export const CONDITIONAL_PROGRAMS: TestCase[] = [
       ]),
       new Line(50, 5, new Source('', '50', ' ', 'endif'), [new EndIf()]),
     ]),
-    chunk({
+    routine({
+      type: RoutineType.Program,
+      filename: FILENAME,
       constants: [true, 'true', false, 'false'],
       code: [
         OpCode.Constant,
