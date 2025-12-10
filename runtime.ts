@@ -44,10 +44,12 @@ import * as op from './operations';
 export type Globals = Record<string, Value>;
 export type RegisterName = string;
 
-export interface Frame {
-  routine: Routine;
-  pc: number;
-  slot: number;
+export class Frame {
+  constructor(
+    public routine: Routine,
+    public pc: number,
+    public slot: number,
+  ) {}
 }
 
 export class Runtime {
@@ -88,10 +90,10 @@ export class Runtime {
 
   public get registers(): Record<RegisterName, Value> {
     return {
-      PC: this.frame.pc,
-      SP: this.frames.size - 1,
-      A: this.acc.a,
-      B: this.acc.b,
+      pc: this.frame.pc,
+      sp: this.frame.slot,
+      a: this.acc.a,
+      b: this.acc.b,
     };
   }
 
@@ -180,11 +182,7 @@ export class Runtime {
 
   private _call(callee: Routine, argCount: number): void {
     this._checkArity(callee, argCount);
-    this.frames.push({
-      routine: callee,
-      pc: 0,
-      slot: this.stack.size - argCount - 1,
-    });
+    this.frames.push(new Frame(callee, 0, this.stack.size - argCount - 1));
   }
 
   private async _callNative(

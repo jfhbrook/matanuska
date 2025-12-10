@@ -81,14 +81,36 @@ export function startTraceExec(): void {
 };
 
 /**
+ * Show the runtime's state. This is the stack, plus the locations of
+ * relevant pointers.
+ */
+export function showStack(rt: Runtime): void {
+  const { sp } = rt.registers;
+
+  let stack = formatter.format(rt.stack).split('\n');
+  const top = stack.shift();
+  const bottom = stack.pop();
+  stack = stack.map((line, i) => {
+    if (i === sp) {
+      return `->${line}`;
+    }
+    return `  ${line}`;
+  });
+  stack.unshift(top);
+  stack.push(bottom);
+  return stack.join('\n');
+}
+
+/**
  * Trace a step in execution.
  * @param rt The runtime.
  */
 export function traceExec(rt: Runtime): void {
   //#if _DEBUG_TRACE_RUNTIME
   if (!NO_TRACE) {
-    console.log('> stack:', formatter.format(rt.stack));
     console.log('>', disassembleInstruction(rt.chunk, rt.frame.pc));
+    console.log('>', showStack(rt));
+    console.log('---');
   }
   //#endif
 }
