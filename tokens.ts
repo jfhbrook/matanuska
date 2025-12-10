@@ -182,15 +182,3 @@ export class Token implements Formattable {
     return formatter.formatToken(this);
   }
 }
-
-export function emptyToken(): Token {
-  return new Token({
-    kind: TokenKind.Empty,
-    index: -1,
-    row: -1,
-    offsetStart: -1,
-    offsetEnd: -1,
-    text: '',
-    value: null,
-  });
-}

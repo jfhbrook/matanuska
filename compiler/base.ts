@@ -19,7 +19,7 @@ import {
   mergeParseErrors,
 } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
-import { emptyToken, Token, TokenKind } from '../tokens';
+import { Token, TokenKind } from '../tokens';
 import { nil, Routine, RoutineType, Value } from '../value';
 // import { Type } from './value/types';
 // import { Stack } from './stack';
@@ -346,9 +346,29 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.block.init(this, null, null, this.global);
 
     this.scope = new Scope(this);
+    this.addRoutineToScope();
+  }
 
-    // Add local for executing routine
-    this.scope.addLocal(emptyToken());
+  private addRoutineToScope() {
+    //
+    // We add routines to their own scope. This is so we can refAdd routines to their own scope
+    // Routines encountered during compilation are added to the scope
+    // through the process of them being defined and called. But the root
+    // routine (ie, the Program) also needs to be added to scope. In this
+    // case, it doesn't have a reference useful to the programmer, so we use
+    // an empty token for the name.
+
+    this.scope.addLocal(
+      new Token({
+        kind: TokenKind.Empty,
+        index: -1,
+        row: -1,
+        offsetStart: -1,
+        offsetEnd: -1,
+        text: '',
+        value: null,
+      }),
+    );
   }
 
   /**
@@ -898,6 +918,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.parents.push(this.routine);
     this.routine = routine;
 
+    // TODO: Why does this break?
+    // this.addRoutineToScope();
     this.scope.begin();
 
     // These variables are initialized to null, and will get filled in later.

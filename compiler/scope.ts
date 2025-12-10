@@ -63,7 +63,7 @@ export class Scope {
 
   private initialize(index: number): void {
     // Protect against trying to initialize the current routine's reference
-    if (this.depth === 0) {
+    if (!this.depth) {
       return;
     }
     this.locals[index].depth = this.depth;
