@@ -59,13 +59,11 @@ For more information, check out the backlog...
 ### Prioritized Backlog
 
 - [ ] Functions
-  - [x] Throw if attempting to compile non-root routine type
-  - [x] Remove type from native routines
-  - [x] Remove stale comments in parser and runtime
-  - [x] Refactor tests
-  - [x] Inject globals in the container
-  - [x] Investigate stack peeking issue
+  - [ ] `param` instruction, so we don't show undef in the compiled output
+  - [ ] Test for nested function compilation
+  - [ ] Test for nested function runtime
   - [ ] Sort out the empty local declaration issue
+- [ ] Implement `onward` in loops
 - [ ] Refactor command input
   - `Cmd` in AST references a list of Instructions, not a "command" as in ADR 024
     - Should probably just use a `Line`
