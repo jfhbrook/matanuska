@@ -936,10 +936,12 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     const routine = this.routine;
     this.routine = this.parents.pop()!;
 
-    this.emitConstant(routine);
-
     if (routine.name) {
+      // Define the named routine
       this.let_(routine.name, routine);
+    } else {
+      // Anonymous routine, push as a constant
+      this.emitConstant(routine);
     }
   }
 
