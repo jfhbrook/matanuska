@@ -358,7 +358,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // case, it doesn't have a reference useful to the programmer, so we use
     // an empty token for the name.
 
-    this.scope.addLocal(
+    const local = this.scope.addLocal(
       new Token({
         kind: TokenKind.Empty,
         index: -1,
@@ -369,6 +369,8 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
         value: null,
       }),
     );
+
+    local.depth = this.scope.depth;
   }
 
   /**
