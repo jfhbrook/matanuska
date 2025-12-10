@@ -349,7 +349,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.addRoutineToScope();
   }
 
-  private addRoutineToScope() {
+  private addRoutineToScope(subroutine: boolean = false) {
     //
     // We add routines to their own scope. This is so we can refAdd routines to their own scope
     // Routines encountered during compilation are added to the scope
@@ -358,19 +358,27 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     // case, it doesn't have a reference useful to the programmer, so we use
     // an empty token for the name.
 
-    const local = this.scope.addLocal(
-      new Token({
-        kind: TokenKind.Empty,
-        index: -1,
-        row: -1,
-        offsetStart: -1,
-        offsetEnd: -1,
-        text: '',
-        value: null,
-      }),
-    );
+    const ident = new Token({
+      kind: TokenKind.Empty,
+      index: -1,
+      row: -1,
+      offsetStart: -1,
+      offsetEnd: -1,
+      text: '',
+      value: null,
+    });
 
-    local.depth = this.scope.depth;
+    if (subroutine) {
+      // TODO: When a routine is called, slot 0 is dedicated to "this". In the
+      // case of subroutines, the behavior appears mostly correct, even when
+      // we don't declare the routine itself as a local. There is likely a bug
+      // in scope. But debugging this will take some effort, and may not be
+      // relevant until we have a use case for referencing "this".
+      // this.let_(ident, null);
+    } else {
+      const local = this.scope.addLocal(ident);
+      local.depth = this.scope.depth;
+    }
   }
 
   /**
@@ -920,8 +928,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.parents.push(this.routine);
     this.routine = routine;
 
-    // TODO: Why does this break?
-    // this.addRoutineToScope();
+    this.addRoutineToScope(true);
     this.scope.begin();
 
     // These variables are initialized to null, and will get filled in later.
