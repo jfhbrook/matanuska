@@ -294,6 +294,16 @@ class FunctionBlock extends Block {
   }
 }
 
+const THIS = new Token({
+  kind: TokenKind.Empty,
+  index: -1,
+  row: -1,
+  offsetStart: -1,
+  offsetEnd: -1,
+  text: '',
+  value: null,
+});
+
 //
 // Compile a series of lines. These lines may be from an entire program,
 // or a single line in the context of a compiled instruction.
@@ -570,16 +580,16 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return this.makeConstant(ident.value as Value);
   }
 
-  private _beginRoutine(params: Token[]): void {
+  private _beginRoutine(routine: Routine, params: Token[]): void {
     // Populate implicit "this" param
-    this.param(null);
+    this.param(THIS);
 
-    // Populate function params
-    if (params.length) {
+    if (routine.type === RoutineType.Function) {
       this.scope.begin();
-      for (const param of params) {
-        this.param(param);
-      }
+    }
+
+    for (const param of params) {
+      this.param(param);
     }
   }
 
@@ -615,7 +625,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.scope = new Scope(this);
 
     // Populate params
-    this._beginRoutine([]);
+    this._beginRoutine(routine, []);
   }
 
   private endParentRoutine(): void {
@@ -646,7 +656,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.scope = new Scope(this);
 
     // Populate params
-    this._beginRoutine(params);
+    this._beginRoutine(routine, params);
   }
 
   private endSubroutine(): Routine {
@@ -769,18 +779,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.scope.define(target);
   }
 
-  private param(ident: Token | null): void {
-    if (ident === null) {
-      const ident = new Token({
-        kind: TokenKind.Empty,
-        index: -1,
-        row: -1,
-        offsetStart: -1,
-        offsetEnd: -1,
-        text: '',
-        value: null,
-      });
-
+  private param(ident: Token): void {
+    if (ident === THIS) {
+      // This is defined as a local at the current scope depth, even at the
+      // global depth.
       const local = this.scope.addLocal(ident);
       local.depth = this.scope.depth;
       return;

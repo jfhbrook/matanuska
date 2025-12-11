@@ -49,6 +49,7 @@ export class Frame {
     public routine: Routine,
     public pc: number,
     public slot: number,
+    public argCount: number,
   ) {}
 }
 
@@ -182,7 +183,9 @@ export class Runtime {
 
   private _call(callee: Routine, argCount: number): void {
     this._checkArity(callee, argCount);
-    this.frames.push(new Frame(callee, 0, this.stack.size - argCount - 1));
+    this.frames.push(
+      new Frame(callee, 0, this.stack.size - argCount - 1, argCount),
+    );
   }
 
   private async _callNative(
@@ -396,7 +399,11 @@ export class Runtime {
             case OpCode.Return:
               this.acc.a = this.stack.pop();
               if (this.routine.type === RoutineType.Function) {
-                this.frames.pop();
+                const frame = this.frames.pop();
+
+                // Clean up the call args from the frame
+                this.stack.take(frame.argCount + 1);
+
                 this.stack.push(this.acc.a);
               } else {
                 this.frames.pop();
