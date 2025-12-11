@@ -58,11 +58,7 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
-- [ ] Functions
-  - [ ] `param` instruction, so we don't show undef in the compiled output
-  - [ ] Test for nested function compilation
-  - [ ] Test for nested function runtime
-  - [ ] Sort out the empty local declaration issue
+- [x] Functions
 - [ ] Implement `onward` in loops
 - [ ] Refactor command input
   - `Cmd` in AST references a list of Instructions, not a "command" as in ADR 024

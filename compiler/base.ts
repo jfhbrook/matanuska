@@ -300,7 +300,7 @@ class FunctionBlock extends Block {
 //
 export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   public routine: Routine;
-  private parents: Routine[];
+  private parents: [Routine, Scope][];
   private lines: Line[] = [];
   private currentInstrNo: number = -1;
   private currentLine: number = 0;
@@ -324,61 +324,17 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     routineType: RoutineType,
     { filename }: CompilerOptions,
   ) {
-    this.routine = new Routine(routineType, filename || null);
+    const routine = new Routine(routineType, filename || null);
     this.parents = [];
     this.lines = lines;
     this.isError = false;
     this.errors = [];
-
     this.global = new GlobalBlock();
     this.global.init(this, null, null, null);
 
     this.block = new GlobalBlock();
 
-    if (routineType === RoutineType.Program) {
-      this.block = new ProgramBlock();
-    } else if (routineType === RoutineType.Input) {
-      this.block = new InputBlock();
-    } else {
-      throw new AssertionError('Must compile either a program or input');
-    }
-
-    this.block.init(this, null, null, this.global);
-
-    this.scope = new Scope(this);
-    this.addRoutineToScope();
-  }
-
-  private addRoutineToScope(subroutine: boolean = false) {
-    //
-    // We add routines to their own scope. This is so we can refAdd routines to their own scope
-    // Routines encountered during compilation are added to the scope
-    // through the process of them being defined and called. But the root
-    // routine (ie, the Program) also needs to be added to scope. In this
-    // case, it doesn't have a reference useful to the programmer, so we use
-    // an empty token for the name.
-
-    const ident = new Token({
-      kind: TokenKind.Empty,
-      index: -1,
-      row: -1,
-      offsetStart: -1,
-      offsetEnd: -1,
-      text: '',
-      value: null,
-    });
-
-    if (subroutine) {
-      // TODO: When a routine is called, slot 0 is dedicated to "this". In the
-      // case of subroutines, the behavior appears mostly correct, even when
-      // we don't declare the routine itself as a local. There is likely a bug
-      // in scope. But debugging this will take some effort, and may not be
-      // relevant until we have a use case for referencing "this".
-      // this.let_(ident, null);
-    } else {
-      const local = this.scope.addLocal(ident);
-      local.depth = this.scope.depth;
-    }
+    this.beginParentRoutine(routine);
   }
 
   /**
@@ -404,20 +360,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
       }
     }
 
-    try {
-      this.checkBlocksClosed();
-    } catch (err) {
-      if (!(err instanceof Synchronize)) {
-        throw err;
-      }
-    }
-
-    if (this.isError) {
-      throw new ParseError(this.errors);
-    }
-
-    this.emitReturn();
-    this.showChunk();
+    this.endParentRoutine();
 
     return [this.routine, null];
   }
@@ -627,6 +570,101 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return this.makeConstant(ident.value as Value);
   }
 
+  private _beginRoutine(params: Token[]): void {
+    // Populate implicit "this" param
+    this.param(null);
+
+    // Populate function params
+    if (params.length) {
+      this.scope.begin();
+      for (const param of params) {
+        this.param(param);
+      }
+    }
+  }
+
+  private _endRoutine(): void {
+    // Emit a return for implicit cases
+    this.emitReturn();
+
+    // Display the chunk
+    this.showChunk();
+  }
+
+  /**
+   * Begin the parent routine.
+   *
+   * @param routine The routine to begin.
+   */
+  private beginParentRoutine(routine: Routine): void {
+    // Set the current routine
+    this.routine = routine;
+
+    // Init the top level block
+    if (routine.type === RoutineType.Program) {
+      this.block = new ProgramBlock();
+    } else if (routine.type === RoutineType.Input) {
+      this.block = new InputBlock();
+    } else {
+      throw new AssertionError('Must compile either a program or input');
+    }
+
+    this.block.init(this, null, null, this.global);
+
+    // Initialize scope
+    this.scope = new Scope(this);
+
+    // Populate params
+    this._beginRoutine([]);
+  }
+
+  private endParentRoutine(): void {
+    // Close out the routine
+    this._endRoutine();
+
+    // Make sure blocks within the routine are all closed
+    try {
+      this.checkBlocksClosed();
+    } catch (err) {
+      if (!(err instanceof Synchronize)) {
+        throw err;
+      }
+    }
+
+    // Throw any parse errors
+    if (this.isError) {
+      throw new ParseError(this.errors);
+    }
+  }
+
+  private beginSubroutine(routine: Routine, params: Token[]): void {
+    // Save the parent routine and scope
+    this.parents.push([this.routine, this.scope]);
+
+    // Set the subroutine's routine and scope
+    this.routine = routine;
+    this.scope = new Scope(this);
+
+    // Populate params
+    this._beginRoutine(params);
+  }
+
+  private endSubroutine(): Routine {
+    // Close out the routine
+    this._endRoutine();
+
+    // Pop off the parent routine and scope
+    // Note that we don't need to close scope, since we're throwing it
+    // out completely
+    const routine = this.routine;
+    const [parentRoutine, parentScope] = this.parents.pop()!;
+    this.routine = parentRoutine;
+    this.scope = parentScope;
+
+    // Return the routine for further processing
+    return routine;
+  }
+
   //
   // Instructions
   //
@@ -714,11 +752,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitLetInstr(let_: Let): void {
-    this.let_(let_.variable.ident, let_.value);
+    this.let_(let_.variable.ident, let_.value || nil);
   }
 
-  // NOTE: Corresponds to varDeclaration() in clox
-  private let_(ident: Token, value: Expr | Value | null): void {
+  private let_(ident: Token, value: Expr | Value): void {
     const target = this.scope.ident(ident);
     if (value) {
       if (value instanceof Expr) {
@@ -729,6 +766,29 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     } else {
       this.emitByte(OpCode.Undef);
     }
+    this.scope.define(target);
+  }
+
+  private param(ident: Token | null): void {
+    if (ident === null) {
+      const ident = new Token({
+        kind: TokenKind.Empty,
+        index: -1,
+        row: -1,
+        offsetStart: -1,
+        offsetEnd: -1,
+        text: '',
+        value: null,
+      });
+
+      const local = this.scope.addLocal(ident);
+      local.depth = this.scope.depth;
+      return;
+    }
+
+    // Params are not initialized, as they are populated by the call
+    // expression
+    const target = this.scope.ident(ident);
     this.scope.define(target);
   }
 
@@ -925,25 +985,11 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
       def.params.length,
     );
 
-    this.parents.push(this.routine);
-    this.routine = routine;
-
-    this.addRoutineToScope(true);
-    this.scope.begin();
-
-    // These variables are initialized to null, and will get filled in later.
-    for (const param of def.params) {
-      this.let_(param, null);
-    }
+    this.beginSubroutine(routine, def.params);
   }
 
   public endFunction(): void {
-    this.showChunk();
-
-    this.scope.end();
-
-    const routine = this.routine;
-    this.routine = this.parents.pop()!;
+    const routine = this.endSubroutine();
 
     if (routine.name) {
       // Define the named routine
