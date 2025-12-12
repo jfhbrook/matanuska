@@ -58,7 +58,8 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
-- [x] Functions
+- [ ] Date/Time/Duration/TZData functions
+- [ ] Closures
 - [ ] Implement `onward` in loops
 - [ ] Refactor command input
   - `Cmd` in AST references a list of Instructions, not a "command" as in ADR 024
@@ -90,7 +91,6 @@ For more information, check out the backlog...
   - [ ] use jobs to implement `pwd`
   - [ ] support \j in prompt rendering
   - `./adrs/draft/processes.md`
-- [ ] Tests for `InstrShifter` in editor
 - [ ] Support entering multiple lines in REPL
   - [ ] ADR
   - Probably track block nesting
@@ -99,6 +99,7 @@ For more information, check out the backlog...
 
 ### Up Next
 
+- Tests for `InstrShifter` in editor
 - Test Shenanigans
   - Proper assert module
   - `test` and `assert` commands
@@ -115,9 +116,6 @@ For more information, check out the backlog...
   - Dust off `./adrs/draft/cmdlets.md`
   - Import cmdlets from some directory
   - Probably move `.matbas_history` and existing files
-- Closures
-  - Closures ADR
-  - ???
 - More robust citree parser
   - Setting defaults in List instr is no bueno
 - Complete Print/Format syntax
@@ -126,10 +124,6 @@ For more information, check out the backlog...
   - Complete ADR
   - Print can take a channel config
 - Shell variable export
-- Date/Time/Duration/TZData types
-  - Core library
-  - Host support
-  - (Language support can come later)
 - Consider using `end` keyword as general purpose block end keyword
   - [ ] Finalize ADR
 - Support `next` and `continue` keywords in loops
