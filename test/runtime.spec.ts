@@ -3,13 +3,13 @@ import { describe, test } from 'vitest';
 import { NotImplementedError } from '../exceptions';
 import { OpCode } from '../bytecode/opcodes';
 
-import { chunk } from './helpers/bytecode';
-import { testChunk } from './helpers/runtime';
+import { routine } from './helpers/bytecode';
+import { testRoutine } from './helpers/runtime';
 
 describe('expressions', () => {
   test('255', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [255],
         code: [OpCode.Constant, 0, OpCode.Return],
         lines: [-1, -1, -1],
@@ -18,8 +18,8 @@ describe('expressions', () => {
   });
 
   test('123.456', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [123.456],
         code: [OpCode.Constant, 0, OpCode.Pop, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -29,8 +29,8 @@ describe('expressions', () => {
 
   for (const bool of [true, false]) {
     test(`${bool}`, () => {
-      testChunk(
-        chunk({
+      testRoutine(
+        routine({
           constants: [bool],
           code: [OpCode.Constant, 0, OpCode.Pop, OpCode.Nil, OpCode.Return],
           lines: [-1, -1, -1, -1, -1],
@@ -40,8 +40,8 @@ describe('expressions', () => {
   }
 
   test('nil', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [],
         code: [OpCode.Nil, OpCode.Pop, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -50,8 +50,8 @@ describe('expressions', () => {
   });
 
   test('"hello world"', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: ['hello world'],
         code: [OpCode.Constant, 0, OpCode.Pop, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -60,8 +60,8 @@ describe('expressions', () => {
   });
 
   test('(1)', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1],
         code: [OpCode.Constant, 0, OpCode.Pop, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1],
@@ -70,8 +70,8 @@ describe('expressions', () => {
   });
 
   test('1 + 1', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1, 1],
         code: [
           OpCode.Constant,
@@ -89,8 +89,8 @@ describe('expressions', () => {
   });
 
   test('-1', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1],
         code: [
           OpCode.Constant,
@@ -106,8 +106,8 @@ describe('expressions', () => {
   });
 
   test('1 : 1', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1, 1],
         code: [
           OpCode.Constant,
@@ -125,8 +125,8 @@ describe('expressions', () => {
 
 describe('print', () => {
   test('print 255', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [255],
         code: [OpCode.Constant, 0, OpCode.Print, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -135,8 +135,8 @@ describe('print', () => {
   });
 
   test('print 123.456', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [123.456],
         code: [OpCode.Constant, 0, OpCode.Print, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1, -1],
@@ -146,8 +146,8 @@ describe('print', () => {
 
   for (const bool of [true, false]) {
     test(`print ${bool}`, () => {
-      testChunk(
-        chunk({
+      testRoutine(
+        routine({
           constants: [bool],
           code: [OpCode.Constant, 0, OpCode.Print, OpCode.Nil, OpCode.Return],
           lines: [-1, -1, -1, -1, -1],
@@ -157,8 +157,8 @@ describe('print', () => {
   }
 
   test('print nil', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [],
         code: [OpCode.Nil, OpCode.Print, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -167,8 +167,8 @@ describe('print', () => {
   });
 
   test('print "hello world"', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: ['hello world'],
         code: [OpCode.Constant, 0, OpCode.Print, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -177,8 +177,8 @@ describe('print', () => {
   });
 
   test('print (1)', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1],
         code: [OpCode.Constant, 0, OpCode.Print, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -187,8 +187,8 @@ describe('print', () => {
   });
 
   test('print 1 + 1', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1, 1],
         code: [
           OpCode.Constant,
@@ -208,8 +208,8 @@ describe('print', () => {
 
 describe('exit', () => {
   test('exit 1', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1],
         code: [OpCode.Constant, 0, OpCode.Exit, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -221,8 +221,8 @@ describe('exit', () => {
   });
 
   test('exit 100', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [100],
         code: [OpCode.Constant, 0, OpCode.Exit, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -234,8 +234,8 @@ describe('exit', () => {
   });
 
   test('exit "banana"', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: ['banana'],
         code: [OpCode.Constant, 0, OpCode.Exit, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -247,8 +247,8 @@ describe('exit', () => {
   });
 
   test('exit 123.456', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [123.456],
         code: [OpCode.Constant, 0, OpCode.Exit, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1, -1],
@@ -260,8 +260,8 @@ describe('exit', () => {
   });
 
   test('exit true', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [true],
         code: [OpCode.Constant, 0, OpCode.Exit, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1, -1],
@@ -273,8 +273,8 @@ describe('exit', () => {
   });
 
   test('exit false', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [false],
         code: [OpCode.Constant, 0, OpCode.Exit, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1, -1],
@@ -286,8 +286,8 @@ describe('exit', () => {
   });
 
   test('exit nil', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [],
         code: [OpCode.Nil, OpCode.Exit, OpCode.Nil, OpCode.Return],
         lines: [-1, -1, -1, -1, -1],
@@ -299,8 +299,8 @@ describe('exit', () => {
   });
 
   test('exit 1 + 1', () => {
-    testChunk(
-      chunk({
+    testRoutine(
+      routine({
         constants: [1, 1],
         code: [
           OpCode.Constant,
@@ -322,8 +322,8 @@ describe('exit', () => {
 });
 
 test('simple program', () => {
-  testChunk(
-    chunk({
+  testRoutine(
+    routine({
       constants: ['hello world', 'goodbye'],
       code: [
         OpCode.Constant,
@@ -341,8 +341,8 @@ test('simple program', () => {
 });
 
 test.skip('something not implemented', () => {
-  testChunk(
-    chunk({
+  testRoutine(
+    routine({
       constants: [],
       code: [OpCode.Loop, 0xff, 0xff],
       lines: [100],

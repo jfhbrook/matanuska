@@ -1,7 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`integration 1`] = `
-"import { Expr, Variable } from './expr';
+"import { Token } from '../tokens';
+import { Expr, Variable } from './expr';
 
 export interface InstrVisitor<R> {
   visitRemInstr(node: Rem): R;
@@ -30,6 +31,10 @@ export interface InstrVisitor<R> {
   visitRepeatInstr(node: Repeat): R;
   visitUntilInstr(node: Until): R;
   visitCommandInstr(node: Command): R;
+  visitDefInstr(node: Def): R;
+  visitShortDefInstr(node: ShortDef): R;
+  visitReturnInstr(node: Return): R;
+  visitEndDefInstr(node: EndDef): R;
 }
 
 export abstract class Instr {
@@ -377,6 +382,61 @@ export class Command extends Instr {
     return visitor.visitCommandInstr(this);
   }
 }
+
+export class Def extends Instr {
+  constructor(
+    public name: Token,
+    public params: Token[],
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitDefInstr(this);
+  }
+}
+
+export class ShortDef extends Instr {
+  constructor(
+    public name: Token,
+    public params: Token[],
+    public body: Expr,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitShortDefInstr(this);
+  }
+}
+
+export class Return extends Instr {
+  constructor(
+    public value: Expr | null,
+    offsetStart: number = -1,
+    offsetEnd: number = -1,
+  ) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitReturnInstr(this);
+  }
+}
+
+export class EndDef extends Instr {
+  constructor(offsetStart: number = -1, offsetEnd: number = -1) {
+    super(offsetStart, offsetEnd);
+  }
+
+  accept<R>(visitor: InstrVisitor<R>): R {
+    return visitor.visitEndDefInstr(this);
+  }
+}
 "
 `;
 
@@ -387,8 +447,10 @@ export interface ExprVisitor<R> {
   visitUnaryExpr(node: Unary): R;
   visitBinaryExpr(node: Binary): R;
   visitLogicalExpr(node: Logical): R;
+  visitCallExpr(node: Call): R;
   visitGroupExpr(node: Group): R;
   visitVariableExpr(node: Variable): R;
+  visitLambdaExpr(node: Lambda): R;
   visitIntLiteralExpr(node: IntLiteral): R;
   visitRealLiteralExpr(node: RealLiteral): R;
   visitBoolLiteralExpr(node: BoolLiteral): R;
@@ -443,6 +505,20 @@ export class Logical extends Expr {
   }
 }
 
+export class Call extends Expr {
+  constructor(
+    public callee: Expr,
+    public end: Token,
+    public args: Expr[],
+  ) {
+    super();
+  }
+
+  accept<R>(visitor: ExprVisitor<R>): R {
+    return visitor.visitCallExpr(this);
+  }
+}
+
 export class Group extends Expr {
   constructor(public expr: Expr) {
     super();
@@ -460,6 +536,20 @@ export class Variable extends Expr {
 
   accept<R>(visitor: ExprVisitor<R>): R {
     return visitor.visitVariableExpr(this);
+  }
+}
+
+export class Lambda extends Expr {
+  constructor(
+    public name: Token | null,
+    public params: Token[],
+    public body: Expr,
+  ) {
+    super();
+  }
+
+  accept<R>(visitor: ExprVisitor<R>): R {
+    return visitor.visitLambdaExpr(this);
   }
 }
 

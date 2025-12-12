@@ -12,6 +12,7 @@ import { showChunk } from '../debug';
 //#endif
 import { errorType } from '../errors';
 import {
+  AssertionError,
   SyntaxError,
   ParseError,
   ParseWarning,
@@ -19,7 +20,7 @@ import {
 } from '../exceptions';
 import { RuntimeFault, runtimeMethod } from '../faults';
 import { Token, TokenKind } from '../tokens';
-import { nil, Value } from '../value';
+import { nil, Routine, RoutineType, Value } from '../value';
 // import { Type } from './value/types';
 // import { Stack } from './stack';
 import { Line, Program } from '../ast';
@@ -30,8 +31,10 @@ import {
   Unary,
   Binary,
   Logical,
+  Call,
   Group,
   Variable,
+  Lambda,
   IntLiteral,
   RealLiteral,
   BoolLiteral,
@@ -68,6 +71,10 @@ import {
   EndWhile,
   Repeat,
   Until,
+  Def,
+  ShortDef,
+  Return,
+  EndDef,
   Command,
 } from '../ast/instr';
 
@@ -77,11 +84,6 @@ import { Scope } from './scope';
 import { Short, shortToBytes } from '../bytecode/short';
 import { Chunk } from '../bytecode/chunk';
 import { OpCode } from '../bytecode/opcodes';
-
-export enum RoutineType {
-  Instruction,
-  Program,
-}
 
 @errorType('Synchronize')
 class Synchronize extends Error {
@@ -107,14 +109,14 @@ class ProgramBlock extends Block {
   kind = 'program';
 }
 
-class CommandBlock extends Block {
+class InputBlock extends Block {
   kind = 'command';
 }
 
 export function isRootBlock(block: Block): boolean {
   return (
     block instanceof ProgramBlock ||
-    block instanceof CommandBlock ||
+    block instanceof InputBlock ||
     block instanceof GlobalBlock
   );
 }
@@ -268,24 +270,57 @@ class RepeatBlock extends Block {
 }
 
 //
+// Functions
+//
+
+class FunctionBlock extends Block {
+  kind = 'def';
+
+  _parentRoutine: Routine;
+
+  constructor() {
+    super();
+  }
+
+  visitReturnInstr(ret: Return): void {
+    super.visitReturnInstr(ret);
+    this.compiler.endFunction();
+  }
+
+  visitEndDefInstr(_endDef: EndDef): void {
+    this.compiler.emitReturn();
+    this.compiler.endFunction();
+    this.end();
+  }
+}
+
+const THIS = new Token({
+  kind: TokenKind.Empty,
+  index: -1,
+  row: -1,
+  offsetStart: -1,
+  offsetEnd: -1,
+  text: '',
+  value: null,
+});
+
+//
 // Compile a series of lines. These lines may be from an entire program,
 // or a single line in the context of a compiled instruction.
 //
 export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
-  private currentChunk: Chunk;
+  public routine: Routine;
+  private parents: [Routine, Scope][];
   private lines: Line[] = [];
   private currentInstrNo: number = -1;
   private currentLine: number = 0;
-
-  private filename: string;
-  private routineType: RoutineType = RoutineType.Instruction;
 
   // private stack: Stack<Type> = new Stack();
 
   // Set to true whenever an expression command is compiled. In the case of
   // Instrs, this will signal that the result of the single expression
   // should be returned. In Program cases, it's ignored.
-  private isReturningInstruction: boolean = false;
+  private _isReturningInstruction: boolean = false;
 
   private isError: boolean = false;
   private errors: SyntaxError[] = [];
@@ -299,25 +334,17 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     routineType: RoutineType,
     { filename }: CompilerOptions,
   ) {
+    const routine = new Routine(routineType, filename || null);
+    this.parents = [];
     this.lines = lines;
-    this.routineType = routineType;
-    this.currentChunk = new Chunk();
-    this.filename = filename || '<unknown>';
-    this.currentChunk.filename = this.filename;
-    this.routineType = routineType;
     this.isError = false;
     this.errors = [];
-
     this.global = new GlobalBlock();
     this.global.init(this, null, null, null);
 
-    this.block =
-      routineType === RoutineType.Program
-        ? new ProgramBlock()
-        : new CommandBlock();
-    this.block.init(this, null, null, this.global);
+    this.block = new GlobalBlock();
 
-    this.scope = new Scope(this);
+    this.beginParentRoutine(routine);
   }
 
   /**
@@ -327,7 +354,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
    * @param filename The source filename.
    */
   @runtimeMethod
-  compile(): CompileResult<Chunk> {
+  compile(): CompileResult<Routine> {
     let instr: Instr | null = this.advance();
     while (instr) {
       try {
@@ -343,31 +370,27 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
       }
     }
 
-    try {
-      this.checkBlocksClosed();
-    } catch (err) {
-      if (!(err instanceof Synchronize)) {
-        throw err;
-      }
-    }
+    this.endParentRoutine();
 
-    if (this.isError) {
-      throw new ParseError(this.errors);
-    }
-
-    this.emitReturn();
-
-    //#if _DEBUG_SHOW_CHUNK
-    showChunk(this.chunk);
-    //#endif
-    return [this.chunk, null];
+    return [this.routine, null];
   }
 
-  /**
-   * Get the current chunk.
-   **/
+  private showChunk(): void {
+    //#if _DEBUG_SHOW_CHUNK
+    showChunk(this.routine.chunk);
+    //#endif
+  }
+
+  private get routineType(): RoutineType {
+    return this.routine.type;
+  }
+
+  private get filename(): string {
+    return this.routine.filename;
+  }
+
   get chunk(): Chunk {
-    return this.currentChunk;
+    return this.routine.chunk;
   }
 
   // Parsing navigation methods. These are only used when compiling a full
@@ -427,9 +450,9 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     return new SyntaxError(message, {
       filename: this.filename,
       row: this.rowNo,
-      isLine: this.routineType !== RoutineType.Instruction,
+      isLine: this.routineType !== RoutineType.Input,
       lineNo: this.lineNo,
-      cmdNo: this.routineType === RoutineType.Instruction ? null : this.lineNo,
+      cmdNo: this.routineType === RoutineType.Input ? null : this.lineNo,
       offsetStart: instr.offsetStart,
       offsetEnd: instr.offsetEnd,
       source: this.lineSource,
@@ -487,7 +510,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   public emitByte(byte: number): void {
-    this.currentChunk.writeOp(byte, this.lineNo);
+    this.chunk.writeOp(byte, this.lineNo);
   }
 
   public emitBytes(...bytes: number[]): void {
@@ -524,29 +547,132 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.emitBytes(first, second);
   }
 
+  private get isReturningInstruction(): boolean {
+    return (
+      this.routineType === RoutineType.Input && this._isReturningInstruction
+    );
+  }
+
   // NOTE: This is only used to emit implicit and bare returns. Valued
   // returns would be handled in visitReturnStmt.
-  private emitReturn(): void {
+  public emitReturn(): void {
     // NOTE: If/when implementing classes, I would need to detect when
     // compiling a constructor and return "this", not nil.
 
-    if (
-      this.routineType !== RoutineType.Instruction ||
-      !this.isReturningInstruction
-    ) {
-      this.emitByte(OpCode.Undef);
+    if (!this.isReturningInstruction) {
+      if (this.routineType === RoutineType.Function) {
+        this.emitByte(OpCode.Nil);
+      } else {
+        this.emitByte(OpCode.Undef);
+      }
     }
+
     this.emitByte(OpCode.Return);
   }
 
   private makeConstant(value: Value): number {
     // TODO: clox validates that the return value is byte sized.
-    return this.currentChunk.addConstant(value);
+    return this.chunk.addConstant(value);
   }
 
   public makeIdent(ident: Token): Short {
     // NOTE: Called "identifierConstant" in clox
     return this.makeConstant(ident.value as Value);
+  }
+
+  private _beginRoutine(routine: Routine, params: Token[]): void {
+    // Populate implicit "this" param
+    this.param(THIS);
+
+    if (routine.type === RoutineType.Function) {
+      this.scope.begin();
+    }
+
+    for (const param of params) {
+      this.param(param);
+    }
+  }
+
+  private _endRoutine(): void {
+    // Emit a return for implicit cases
+    this.emitReturn();
+
+    // Display the chunk
+    this.showChunk();
+  }
+
+  /**
+   * Begin the parent routine.
+   *
+   * @param routine The routine to begin.
+   */
+  private beginParentRoutine(routine: Routine): void {
+    // Set the current routine
+    this.routine = routine;
+
+    // Init the top level block
+    if (routine.type === RoutineType.Program) {
+      this.block = new ProgramBlock();
+    } else if (routine.type === RoutineType.Input) {
+      this.block = new InputBlock();
+    } else {
+      throw new AssertionError('Must compile either a program or input');
+    }
+
+    this.block.init(this, null, null, this.global);
+
+    // Initialize scope
+    this.scope = new Scope(this);
+
+    // Populate params
+    this._beginRoutine(routine, []);
+  }
+
+  private endParentRoutine(): void {
+    // Close out the routine
+    this._endRoutine();
+
+    // Make sure blocks within the routine are all closed
+    try {
+      this.checkBlocksClosed();
+    } catch (err) {
+      if (!(err instanceof Synchronize)) {
+        throw err;
+      }
+    }
+
+    // Throw any parse errors
+    if (this.isError) {
+      throw new ParseError(this.errors);
+    }
+  }
+
+  private beginSubroutine(routine: Routine, params: Token[]): void {
+    // Save the parent routine and scope
+    this.parents.push([this.routine, this.scope]);
+
+    // Set the subroutine's routine and scope
+    this.routine = routine;
+    this.scope = new Scope(this);
+
+    // Populate params
+    this._beginRoutine(routine, params);
+  }
+
+  private endSubroutine(): Routine {
+    // Close out the routine
+    this._endRoutine();
+
+    // Pop off the parent routine and scope
+    // Note that we don't need to close scope, since we're throwing it
+    // out completely
+    const routine = this.routine;
+    const [parentRoutine, parentScope] = this.parents.pop()!;
+    this.routine = parentRoutine;
+    this.scope = parentScope;
+
+    // Return the routine for further processing
+    return routine;
   }
 
   //
@@ -563,7 +689,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitExpressionInstr(expr: Expression): void {
-    this.isReturningInstruction = true;
+    this._isReturningInstruction = true;
     expr.expression.accept(this);
 
     // NOTE: In commands, save the result to return later.
@@ -636,17 +762,35 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
   }
 
   visitLetInstr(let_: Let): void {
-    this.let_(let_.variable, let_.value);
+    this.let_(let_.variable.ident, let_.value || nil);
   }
 
-  // NOTE: Corresponds to varDeclaration() in clox
-  private let_(variable: Variable, value: Expr | null): void {
-    const target = this.scope.ident(variable.ident);
+  private let_(ident: Token, value: Expr | Value): void {
+    const target = this.scope.ident(ident);
     if (value) {
-      value.accept(this);
+      if (value instanceof Expr) {
+        value.accept(this);
+      } else {
+        this.emitConstant(value);
+      }
     } else {
-      this.emitByte(OpCode.Nil);
+      this.emitByte(OpCode.Undef);
     }
+    this.scope.define(target);
+  }
+
+  private param(ident: Token): void {
+    if (ident === THIS) {
+      // This is defined as a local at the current scope depth, even at the
+      // global depth.
+      const local = this.scope.addLocal(ident);
+      local.depth = this.scope.depth;
+      return;
+    }
+
+    // Params are not initialized, as they are populated by the call
+    // expression
+    const target = this.scope.ident(ident);
     this.scope.define(target);
   }
 
@@ -732,7 +876,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.scope.begin();
 
     // Define the variable
-    this.let_(variable, value);
+    this.let_(variable.ident, value);
 
     // Loop starts here
     const loopStart = this.chunk.code.length;
@@ -821,6 +965,49 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   visitOnwardInstr(onward: Onward): void {
     this.block.handle(onward);
+  }
+
+  visitDefInstr(def: Def): void {
+    this.beginFunction(def);
+    this.block.begin(def, new FunctionBlock());
+  }
+
+  visitShortDefInstr(def: ShortDef): void {
+    this.beginFunction(def);
+    def.body.accept(this);
+    this.emitByte(OpCode.Return);
+    this.endFunction();
+  }
+
+  public beginFunction(def: Def | ShortDef | Lambda): void {
+    const routine = new Routine(
+      RoutineType.Function,
+      this.filename,
+      def.name,
+      def.params.length,
+    );
+
+    this.beginSubroutine(routine, def.params);
+  }
+
+  public endFunction(): void {
+    const routine = this.endSubroutine();
+
+    if (routine.name) {
+      // Define the named routine
+      this.let_(routine.name, routine);
+    } else {
+      // Anonymous routine, push as a constant
+      this.emitConstant(routine);
+    }
+  }
+
+  visitReturnInstr(ret: Return): void {
+    this.block.handle(ret);
+  }
+
+  visitEndDefInstr(endDef: EndDef): void {
+    this.block.handle(endDef);
   }
 
   visitCommandInstr(command: Command): void {
@@ -922,12 +1109,29 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.patchJump(endJump);
   }
 
+  visitCallExpr(call: Call): void {
+    call.callee.accept(this);
+
+    for (const arg of call.args) {
+      arg.accept(this);
+    }
+
+    this.emitBytes(OpCode.Call, call.args.length);
+  }
+
   visitGroupExpr(group: Group): void {
     group.expr.accept(this);
   }
 
   visitVariableExpr(variable: Variable): void {
     this.scope.get(variable.ident);
+  }
+
+  visitLambdaExpr(lambda: Lambda): void {
+    this.beginFunction(lambda);
+    lambda.body.accept(this);
+    this.emitByte(OpCode.Return);
+    this.endFunction();
   }
 
   visitIntLiteralExpr(int: IntLiteral): void {
@@ -967,15 +1171,15 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 export function compileInstruction(
   instr: Instr,
   options: CompilerOptions = {},
-): CompileResult<Chunk> {
+): CompileResult<Routine> {
   //#if _MATBAS_BUILD == 'debug'
-  return startSpan('compileInstruction', (_: Span): CompileResult<Chunk> => {
+  return startSpan('compileInstruction', (_: Span): CompileResult<Routine> => {
     //#endif
     const { cmdNo, cmdSource } = options;
     const lines = [
       new Line(cmdNo || 100, 1, cmdSource || Source.unknown(), [instr]),
     ];
-    const compiler = new LineCompiler(lines, RoutineType.Instruction, options);
+    const compiler = new LineCompiler(lines, RoutineType.Input, options);
     return compiler.compile();
 
     //#if _MATBAS_BUILD == 'debug'
@@ -993,13 +1197,13 @@ export function compileInstruction(
 export function compileInstructions(
   cmds: Instr[],
   options: CompilerOptions = {},
-): CompileResult<Chunk[]> {
-  const results: CompileResult<Chunk>[] = cmds.map((cmd) => {
-    const [chunk, warning] = compileInstruction(cmd, options);
-    return [chunk, warning];
+): CompileResult<Routine[]> {
+  const results: CompileResult<Routine>[] = cmds.map((cmd) => {
+    const [routine, warning] = compileInstruction(cmd, options);
+    return [routine, warning];
   });
 
-  const commands: Chunk[] = results.map(([chunk, _]) => chunk);
+  const commands: Routine[] = results.map(([routine, _]) => routine);
   const warnings: Array<ParseWarning | null> = results.reduce(
     (acc, [_, warns]) => (warns ? acc.concat(warns) : acc),
     [] as Array<ParseWarning | null>,
@@ -1017,9 +1221,9 @@ export function compileInstructions(
 export function compileProgram(
   program: Program,
   options: CompilerOptions = {},
-): CompileResult<Chunk> {
+): CompileResult<Routine> {
   //#if _MATBAS_BUILD == 'debug'
-  return startSpan('compileProgram', (_: Span): CompileResult<Chunk> => {
+  return startSpan('compileProgram', (_: Span): CompileResult<Routine> => {
     //#endif
     const compiler = new LineCompiler(
       program.lines,

@@ -49,6 +49,11 @@ export const KEYWORDS: Record<string, TokenKind> = {
   repeat: TokenKind.Repeat,
   until: TokenKind.Until,
 
+  // functions
+  def: TokenKind.Def,
+  return: TokenKind.Return,
+  enddef: TokenKind.EndDef,
+
   // TODO: error handling
   // TODO: datetime
   // TODO: array operations

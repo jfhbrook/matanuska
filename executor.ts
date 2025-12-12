@@ -1,6 +1,5 @@
 import type { Readline } from '@matanuska/readline';
 
-import { Chunk } from './bytecode/chunk';
 import { BUILTINS, Command, CommandIndex, Context, Deferred } from './commands';
 import { compileInstructions, compileProgram } from './compiler';
 //#if _MATBAS_BUILD == 'debug'
@@ -19,8 +18,8 @@ import { RuntimeFault } from './faults';
 import { inspector } from './format';
 import type { Host } from './host';
 import { Parser, ParseResult } from './parser';
-import { Runtime } from './runtime';
-import { Value, Undef } from './value';
+import { Globals, Runtime } from './runtime';
+import { Routine, Value, Undef } from './value';
 
 import { Line, Cmd, Program } from './ast';
 
@@ -36,9 +35,10 @@ export class Executor {
     private editor: Editor,
     private host: Host,
     public readline: Readline,
+    globals: Globals,
   ) {
     this.parser = new Parser();
-    this.runtime = new Runtime(host, this);
+    this.runtime = new Runtime(host, this, globals);
     this.interactive = false;
     this.commands = { ...BUILTINS };
   }
@@ -100,12 +100,12 @@ export class Executor {
       const parseWarning = this.editor.warning;
       const filename = program.filename;
 
-      let chunk: Chunk;
+      let routine: Routine;
       let warning: ParseWarning | null;
 
       try {
         const result = compileProgram(program, { filename });
-        chunk = result[0];
+        routine = result[0];
         warning = result[1];
       } catch (err) {
         let exc = err;
@@ -126,12 +126,7 @@ export class Executor {
         this.host.writeWarn(warning);
       }
 
-      await this.runtime.using(async () => {
-        const interactive = this.interactive;
-        this.interactive = false;
-        await this.runtime.interpret(chunk);
-        this.interactive = interactive;
-      });
+      await this.runtime.interpret(routine);
 
       //#if _MATBAS_BUILD == 'debug'
     });

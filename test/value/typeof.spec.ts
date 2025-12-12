@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { BaseException } from '../../exceptions';
 
-import { nil, undef, Value } from '../../value';
+import { nil, undef, Routine, RoutineType, Value } from '../../value';
 import { Type } from '../../value/types';
 import { typeOf } from '../../value/typeof';
 
@@ -19,6 +19,9 @@ const CASES: TestCase[] = [
   [undef, Type.Undef],
   [new BaseException('test'), Type.Exception],
   [UNKNOWN, Type.Unknown],
+  [new Routine(RoutineType.Input), Type.Input],
+  [new Routine(RoutineType.Program), Type.Program],
+  [new Routine(RoutineType.Function), Type.Function],
 ];
 
 describe('typeof', () => {

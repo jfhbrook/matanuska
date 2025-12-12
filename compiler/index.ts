@@ -1,5 +1,4 @@
 export {
-  RoutineType,
   CompilerOptions,
   CompileResult,
   LineCompiler,

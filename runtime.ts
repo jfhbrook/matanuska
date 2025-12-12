@@ -13,6 +13,7 @@ import {
   BaseException,
   AssertionError,
   NameError,
+  RuntimeError,
   NotImplementedError,
 } from './exceptions';
 import type { Executor } from './executor';
@@ -21,7 +22,15 @@ import { RuntimeFault } from './faults';
 import { Host } from './host';
 import { Stack } from './stack';
 import { Traceback } from './traceback';
-import { Value, nil, undef } from './value';
+import {
+  BaseRoutine,
+  NativeRoutine,
+  Routine,
+  RoutineType,
+  Value,
+  nil,
+  undef,
+} from './value';
 import { falsey } from './value/truthiness';
 import { nullish } from './value/nullness';
 
@@ -35,11 +44,18 @@ import * as op from './operations';
 export type Globals = Record<string, Value>;
 export type RegisterName = string;
 
+export class Frame {
+  constructor(
+    public routine: Routine,
+    public pc: number,
+    public slot: number,
+    public argCount: number,
+  ) {}
+}
+
 export class Runtime {
   public stack: Stack<Value>;
-  public pc: number = -1;
-  public chunk: Chunk = new Chunk();
-  public globals: Globals = {};
+  public frames: Stack<Frame>;
   public acc: Record<RegisterName, Value> = {
     a: undef,
     b: undef,
@@ -48,44 +64,52 @@ export class Runtime {
   constructor(
     private host: Host,
     private executor: Executor,
+    private globals: Globals = {},
   ) {
     this.stack = new Stack();
+    this.frames = new Stack();
+
+    this.reset();
   }
 
   public reset(): void {
     this.stack = new Stack();
-    this.chunk = new Chunk();
-    this.pc = 0;
+    this.frames = new Stack();
+  }
+
+  public get frame(): Frame {
+    return this.frames.peek(0)!;
+  }
+
+  public get routine(): Routine {
+    return this.frame.routine;
+  }
+
+  public get chunk(): Chunk {
+    return this.routine.chunk;
   }
 
   public get registers(): Record<RegisterName, Value> {
     return {
-      PC: this.pc,
-      SP: -1,
-      A: this.acc.a,
-      B: this.acc.b,
+      pc: this.frame.pc,
+      sp: this.frame.slot,
+      a: this.acc.a,
+      b: this.acc.b,
     };
   }
 
-  /**
-   * Create a context under which it is safe to interpret a new chunk while
-   * another program is executing.
-   *
-   * TODO: I'm not satisfied with this naming...
-   */
-  public async using<R>(fn: () => Promise<R>): Promise<R> {
-    const chunk = this.chunk;
-    const pc = this.pc;
-    const ret = await fn();
-    this.chunk = chunk;
-    this.pc = pc;
-    return ret;
+  private slot(n: number): number {
+    return this.frame.slot + n;
   }
 
-  public async interpret(chunk: Chunk): Promise<Value> {
-    this.chunk = chunk;
-    this.pc = 0;
-    return await this.run();
+  public async interpret(routine: Routine): Promise<Value> {
+    // "this"
+    this.stack.push(routine);
+
+    this.call(routine, 0);
+
+    const rv = await this.run();
+    return rv;
   }
 
   // TODO: Using templates can help decrease boilerplate while increasing the
@@ -93,8 +117,8 @@ export class Runtime {
   // consider porting this to C++ anyway.
 
   private readByte(): Byte {
-    const byte = this.chunk.code[this.pc];
-    this.pc++;
+    const byte = this.chunk.code[this.frame.pc];
+    this.frame.pc++;
     return byte;
   }
 
@@ -118,12 +142,21 @@ export class Runtime {
     return value as string;
   }
 
-  private createTraceback(): Traceback | null {
-    return new Traceback(
-      null,
-      this.chunk.filename,
-      this.chunk.lines[this.pc - 1],
-    );
+  private createTraceback(): Traceback {
+    let traceback: Traceback | null = null;
+    for (let i = 0; i < this.frames.size - 1; i++) {
+      const { pc, routine } = this.frames.get(i)!;
+      const chunk = routine.chunk;
+
+      traceback = new Traceback(
+        traceback,
+        chunk.filename,
+        chunk.routine,
+        chunk.lines[pc - 1],
+      );
+    }
+
+    return traceback!;
   }
 
   private async command(): Promise<void> {
@@ -136,6 +169,45 @@ export class Runtime {
     const name = this.stack.pop();
 
     await this.executor.command(name as string, args);
+  }
+
+  private async call(callee: Value, argCount: number): Promise<void> {
+    if (callee instanceof NativeRoutine) {
+      await this._callNative(callee, argCount);
+    } else if (callee instanceof Routine) {
+      this._call(callee, argCount);
+    } else {
+      throw new RuntimeError('Value is not callable');
+    }
+  }
+
+  private _call(callee: Routine, argCount: number): void {
+    this._checkArity(callee, argCount);
+    this.frames.push(
+      new Frame(callee, 0, this.stack.size - argCount - 1, argCount),
+    );
+  }
+
+  private async _callNative(
+    callee: NativeRoutine,
+    argCount: number,
+  ): Promise<void> {
+    this._checkArity(callee, argCount);
+
+    const args: Value[] = this.stack.take(argCount);
+    const rv = await callee.call(...args);
+
+    this.stack.pop();
+    this.stack.push(rv);
+  }
+
+  private _checkArity(callee: BaseRoutine, argCount: number): void {
+    // TODO: How do I want to handle arity? This is copied from lox
+    if (argCount !== callee.arity) {
+      throw new RuntimeError(
+        `Expected ${callee.arity} arguments, received ${argCount}`,
+      );
+    }
   }
 
   private async run(): Promise<Value> {
@@ -175,11 +247,11 @@ export class Runtime {
               break;
             case OpCode.GetLocal:
               this.acc.a = this.readByte();
-              this.stack.push(this.stack.peek(this.acc.a) || undef);
+              this.stack.push(this.stack.get(this.slot(this.acc.a)) || undef);
               break;
             case OpCode.SetLocal:
               this.acc.a = this.readByte();
-              this.stack.set(this.acc.a, this.stack.peek() || undef);
+              this.stack.set(this.slot(this.acc.a), this.stack.peek() || undef);
               break;
             case OpCode.GetGlobal:
               // Reads the constant, does not operate on the stack
@@ -304,28 +376,42 @@ export class Runtime {
               // Note: readShort increments the pc. If we didn't assign before,
               // we would need to add extra to skip over those bytes!
               this.acc.a = this.readShort();
-              this.pc += this.acc.a;
+              this.frame.pc += this.acc.a;
               break;
             case OpCode.JumpIfFalse:
               this.acc.a = this.readShort();
               this.acc.b = this.stack.peek() || undef;
 
               if (falsey(this.acc.b!)) {
-                this.pc += this.acc.a;
+                this.frame.pc += this.acc.a;
               }
               break;
             case OpCode.Loop:
               // Note: Same caveat as Jump
               this.acc.a = this.readShort();
-              this.pc -= this.acc.a;
+              this.frame.pc -= this.acc.a;
+              break;
+            case OpCode.Call:
+              // arg count
+              this.acc.a = this.readByte();
+              await this.call(this.stack.peek(this.acc.a)!, this.acc.a);
               break;
             case OpCode.Return:
               this.acc.a = this.stack.pop();
-              // TODO: Clean up the current frame, and only return if we're
-              // done with the main program.
-              return this.acc.a;
+              if (this.routine.type === RoutineType.Function) {
+                const frame = this.frames.pop();
+
+                // Clean up the call args from the frame
+                this.stack.take(frame.argCount + 1);
+
+                this.stack.push(this.acc.a);
+              } else {
+                this.frames.pop();
+                return this.acc.a;
+              }
+              break;
             default:
-              if (this.pc >= this.chunk.code.length) {
+              if (this.frame.pc >= this.chunk.code.length) {
                 throw new AssertionError('Program counter out of bounds');
               }
               this.notImplemented(`Unknown opcode: ${instruction}`);

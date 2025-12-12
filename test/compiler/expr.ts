@@ -15,14 +15,14 @@ import { OpCode } from '../../bytecode/opcodes';
 import { shortToBytes } from '../../bytecode/short';
 import { Token, TokenKind } from '../../tokens';
 
-import { chunk } from '../helpers/bytecode';
+import { routine } from '../helpers/bytecode';
 import type { TestCase } from '../helpers/compiler';
 
 export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     '255',
     new Expression(new IntLiteral(255)),
-    chunk({
+    routine({
       constants: [255],
       code: [OpCode.Constant, 0],
       lines: [100, 100],
@@ -31,7 +31,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     '123.456',
     new Expression(new RealLiteral(123.456)),
-    chunk({
+    routine({
       constants: [123.456],
       code: [OpCode.Constant, 0],
       lines: [100, 100],
@@ -40,7 +40,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     'true',
     new Expression(new BoolLiteral(true)),
-    chunk({
+    routine({
       constants: [true],
       code: [OpCode.Constant, 0],
       lines: [100, 100],
@@ -49,7 +49,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     'false',
     new Expression(new BoolLiteral(false)),
-    chunk({
+    routine({
       constants: [false],
       code: [OpCode.Constant, 0],
       lines: [100, 100],
@@ -58,7 +58,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     'nil',
     new Expression(new NilLiteral()),
-    chunk({
+    routine({
       constants: [],
       code: [OpCode.Nil],
       lines: [100],
@@ -67,7 +67,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     '"hello world"',
     new Expression(new StringLiteral('hello world')),
-    chunk({
+    routine({
       constants: ['hello world'],
       code: [OpCode.Constant, 0],
       lines: [100, 100],
@@ -76,7 +76,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     '(1)',
     new Expression(new Group(new IntLiteral(1))),
-    chunk({
+    routine({
       constants: [1],
       code: [OpCode.Constant, 0],
       lines: [100, 100],
@@ -88,7 +88,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
     new Expression(
       new Binary(new IntLiteral(1), TokenKind.Plus, new IntLiteral(1)),
     ),
-    chunk({
+    routine({
       constants: [1, 1],
       code: [OpCode.Constant, 0, OpCode.Constant, 1, OpCode.Add],
       lines: [100, 100, 100, 100, 100],
@@ -100,7 +100,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
     new Expression(
       new Logical(new BoolLiteral(true), TokenKind.And, new BoolLiteral(false)),
     ),
-    chunk({
+    routine({
       constants: [true, false],
       code: [
         OpCode.Constant,
@@ -120,7 +120,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
     new Expression(
       new Logical(new BoolLiteral(true), TokenKind.Or, new BoolLiteral(false)),
     ),
-    chunk({
+    routine({
       constants: [true, false],
       code: [
         OpCode.Constant,
@@ -140,7 +140,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     '-1',
     new Expression(new Unary(TokenKind.Minus, new IntLiteral(1))),
-    chunk({
+    routine({
       constants: [1],
       code: [OpCode.Constant, 0, OpCode.Neg],
       lines: [100, 100, 100],
@@ -150,7 +150,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
   [
     '+1',
     new Expression(new Unary(TokenKind.Plus, new IntLiteral(1))),
-    chunk({
+    routine({
       constants: [1],
       code: [OpCode.Constant, 0],
       lines: [100, 100],
@@ -176,7 +176,7 @@ export const EXPRESSION_STATEMENTS: TestCase[] = [
         new IntLiteral(1),
       ),
     ),
-    chunk({
+    routine({
       constants: ['i%', 1],
       code: [OpCode.GetGlobal, 0, OpCode.Constant, 1, OpCode.Add],
       lines: [100, 100, 100, 100, 100],

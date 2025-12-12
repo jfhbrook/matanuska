@@ -11,7 +11,7 @@ import {
 import { OpCode } from '../../bytecode/opcodes';
 import { TokenKind } from '../../tokens';
 
-import { chunk } from '../helpers/bytecode';
+import { routine } from '../helpers/bytecode';
 import type { TestCase } from '../helpers/compiler';
 
 import { EXPRESSION_STATEMENTS } from './expr';
@@ -27,7 +27,7 @@ function instructionExpr1Cases<C extends Instr>(
     [
       `${name} 225`,
       new instr(new IntLiteral(255)),
-      chunk({
+      routine({
         constants: [255],
         code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
@@ -36,7 +36,7 @@ function instructionExpr1Cases<C extends Instr>(
     [
       `${name} 123.456`,
       new instr(new IntLiteral(123.456)),
-      chunk({
+      routine({
         constants: [123.456],
         code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
@@ -45,7 +45,7 @@ function instructionExpr1Cases<C extends Instr>(
     [
       `${name} true`,
       new instr(new BoolLiteral(true)),
-      chunk({
+      routine({
         constants: [true],
         code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
@@ -54,7 +54,7 @@ function instructionExpr1Cases<C extends Instr>(
     [
       `${name} false`,
       new instr(new BoolLiteral(false)),
-      chunk({
+      routine({
         constants: [false],
         code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
@@ -63,7 +63,7 @@ function instructionExpr1Cases<C extends Instr>(
     [
       `${name} nil`,
       new instr(new NilLiteral()),
-      chunk({
+      routine({
         constants: [],
         code: [OpCode.Nil, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100],
@@ -72,7 +72,7 @@ function instructionExpr1Cases<C extends Instr>(
     [
       `${name} "hello world"`,
       new instr(new StringLiteral('hello world')),
-      chunk({
+      routine({
         constants: ['hello world'],
         code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
@@ -81,7 +81,7 @@ function instructionExpr1Cases<C extends Instr>(
     [
       `${name} (1)`,
       new instr(new Group(new IntLiteral(1))),
-      chunk({
+      routine({
         constants: [1],
         code: [OpCode.Constant, 0, code, OpCode.Undef, OpCode.Return],
         lines: [100, 100, 100, 100, 100],
@@ -93,7 +93,7 @@ function instructionExpr1Cases<C extends Instr>(
       new instr(
         new Binary(new IntLiteral(1), TokenKind.Plus, new IntLiteral(1)),
       ),
-      chunk({
+      routine({
         constants: [1, 1],
         code: [
           OpCode.Constant,
@@ -115,11 +115,17 @@ function instructionExpr1Cases<C extends Instr>(
 // so we leave them off when building out programs from the other commands,
 // and append them to COMMANDS afterwards.
 export const EXPRESSION_INSTRUCTIONS = EXPRESSION_STATEMENTS.map(
-  ([source, ast, { constants, code, lines }]): TestCase => {
+  ([
+    source,
+    ast,
+    {
+      chunk: { constants, code, lines },
+    },
+  ]): TestCase => {
     return [
       source,
       ast,
-      chunk({
+      routine({
         constants,
         code: code.concat([OpCode.Return]),
         lines: lines.concat([100]),

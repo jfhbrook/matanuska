@@ -11,7 +11,7 @@ type Code = string;
 type Row = [LineNo, Offset, Code, string];
 
 function chunkName(chunk: Chunk): string {
-  return chunk.filename;
+  return `${chunk.filename}:${chunk.routine}`;
 }
 
 function toHex(value?: number): string {
@@ -183,6 +183,9 @@ function _disassembleInstruction(chunk: Chunk, offset: number): [number, Row] {
       break;
     case OpCode.Loop:
       row = jump('LOOP', BACKWARD);
+      break;
+    case OpCode.Call:
+      row = byte('CALL');
       break;
     case OpCode.Return:
       row = simple('RETURN');

@@ -9,6 +9,7 @@ export class Traceback implements Formattable {
   constructor(
     public readonly next: Traceback | null,
     public filename: string,
+    public routine: string,
     public lineNo: number,
   ) {}
 

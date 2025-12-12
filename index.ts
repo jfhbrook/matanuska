@@ -7,6 +7,8 @@ import { Host } from './host';
 import { host as consoleHost } from './host';
 import { Editor } from './editor';
 import { Executor } from './executor';
+import { NATIVE_ROUTINES } from './native';
+import { Globals } from './runtime';
 import { Prompt } from './shell';
 
 type ExitFn = (code: number) => Promise<any>;
@@ -16,10 +18,6 @@ async function exit(code: number): Promise<any> {
 }
 
 export class Container {
-  public argv: Argv;
-  public env: Env;
-  public exitFn: (code: number) => Promise<any>;
-  public host: Host;
   public _ps1: Prompt | null = null;
   private _config: Config | null = null;
   private _editor: Editor | null = null;
@@ -28,16 +26,12 @@ export class Container {
   private _translator: Translator | null = null;
 
   constructor(
-    argv: string[] = process.argv.slice(2),
-    env: Record<string, string | undefined> = process.env,
-    exitFn: ExitFn = exit,
-    host: Host = consoleHost,
-  ) {
-    this.argv = argv;
-    this.env = env;
-    this.exitFn = exitFn;
-    this.host = host;
-  }
+    public argv: Argv = process.argv.slice(2),
+    public env: Env = process.env,
+    public exitFn: ExitFn = exit,
+    public host: Host = consoleHost,
+    public globals: Globals = { ...NATIVE_ROUTINES },
+  ) {}
 
   public config(): Config {
     if (this._config) {
@@ -104,7 +98,12 @@ export class Container {
     if (this._executor) {
       return this._executor;
     }
-    const executor = new Executor(this.editor(), this.host, this.readline());
+    const executor = new Executor(
+      this.editor(),
+      this.host,
+      this.readline(),
+      this.globals,
+    );
     this._executor = executor;
     return executor;
   }

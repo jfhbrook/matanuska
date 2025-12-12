@@ -62,6 +62,10 @@ export class Scope {
   }
 
   private initialize(index: number): void {
+    // Protect against trying to initialize the current routine's reference
+    if (!this.depth) {
+      return;
+    }
     this.locals[index].depth = this.depth;
   }
 
@@ -90,13 +94,15 @@ export class Scope {
     this.addLocal(ident);
   }
 
-  private addLocal(ident: Token): void {
+  public addLocal(ident: Token): Local {
     const local: Local = {
       name: ident,
       depth: UNINITIALIZED,
     };
 
     this.locals.push(local);
+
+    return local;
   }
 
   // NOTE: Corresponds to namedVariable when not assigning

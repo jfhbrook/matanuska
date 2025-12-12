@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-make testdeps
+npm run build:testdeps
 npm run check
 npm test
 npm run lint:staged

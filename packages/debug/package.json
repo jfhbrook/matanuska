@@ -10,7 +10,7 @@
     "lint": "eslint '**.ts' --fix",
     "build": "tsc -p tsconfig.build.json",
     "test": "tests-of-the-sierra-madre",
-    "clean": "rm -f *.js *.js.map *.d.ts"
+    "clean": "rm -f *.js *.js.map *.d.ts *.tsbuildinfo"
   },
   "author": "Josh Holbrook",
   "license": "MPL 2.0",

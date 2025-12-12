@@ -1,12 +1,16 @@
 set dotenv-load := true
 
 # Start the pure Node.js implementation of Matanuska BASIC
-start: build
-  npm start
+start *argv: build
+  npm start {{ argv }}
 
 # Start the burgeoning QT based implementation of Matanuska BASIC
 start-qt:
   PATH="${PATH}:$(pwd)/bin" bin/matbas
+
+# Build the AST
+ast:
+  npm run build:ast
 
 # Run a development build
 build: 
@@ -22,7 +26,6 @@ dist:
 
 # Run TypeScript type checks
 check:
-  make testdeps
   npm run check
 
 # Format code with prettier and clang-format
@@ -37,13 +40,13 @@ lint:
 
 # Run top-level JavaScript tests
 test:
-  make testdeps
+  npm run build:testdeps
   npm run test:env
   npm test
 
 # Run top-level JavaScript tests, taking snapshots
 snap:
-  make testdeps
+  npm run build:testdeps
   npm run test:env
   npm run snap
 
