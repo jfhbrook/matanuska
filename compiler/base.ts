@@ -219,9 +219,8 @@ class ForBlock extends Block {
     super();
   }
 
-  // TODO
-  visitOnwardInstr(onward: Onward): void {
-    super.visitOnwardInstr(onward);
+  visitOnwardInstr(_onward: Onward): void {
+    this.compiler.continueFor(this.incrStart);
   }
 
   visitNextInstr(_next: Next): void {
@@ -240,9 +239,8 @@ class WhileBlock extends Block {
     super();
   }
 
-  // TODO
-  visitOnwardInstr(onward: Onward): void {
-    super.visitOnwardInstr(onward);
+  visitOnwardInstr(_onward: Onward): void {
+    this.compiler.continueWhile(this.loopStart);
   }
 
   visitEndWhileInstr(_endWhile: EndWhile): void {
@@ -254,17 +252,19 @@ class WhileBlock extends Block {
 class RepeatBlock extends Block {
   kind = 'repeat';
 
+  continues: Short[];
+
   constructor(public startJump: Short) {
     super();
+    this.continues = [];
   }
 
-  // TODO
-  visitOnwardInstr(onward: Onward): void {
-    super.visitOnwardInstr(onward);
+  visitOnwardInstr(_onward: Onward): void {
+    this.compiler.continueRepeat(this.continues);
   }
 
   visitUntilInstr(until: Until): void {
-    this.compiler.endRepeat(until, this.startJump);
+    this.compiler.endRepeat(until, this.startJump, this.continues);
     this.end();
   }
 }
@@ -918,6 +918,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.patchJump(exitJump);
   }
 
+  continueFor(incrStart: Short): void {
+    this.emitLoop(incrStart);
+  }
+
   visitWhileInstr(while_: While): void {
     const [loopStart, exitJump] = this.beginWhile(while_.condition);
     this.block.begin(while_, new WhileBlock(loopStart, exitJump));
@@ -943,6 +947,10 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.patchJump(exitJump);
   }
 
+  continueWhile(loopStart: Short): void {
+    this.emitLoop(loopStart);
+  }
+
   visitRepeatInstr(repeat: Repeat): void {
     const loopStart = this.chunk.code.length;
     this.block.begin(repeat, new RepeatBlock(loopStart));
@@ -952,15 +960,32 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
     this.block.handle(until);
   }
 
-  endRepeat(until: Until, start: Short): void {
+  endRepeat(until: Until, start: Short, continues: Short[]): void {
+    // Continues jump to the bottom
+    for (let cont of continues) {
+      this.patchJump(cont);
+    }
+
+    // Check the condition
     until.condition.accept(this);
 
+    // Exit if false
     const exitJump = this.emitJump(OpCode.JumpIfFalse);
 
+    // Finnegan begin again
     this.emitByte(OpCode.Pop);
     this.emitLoop(start);
 
+    // Exit here
     this.patchJump(exitJump);
+    // Pop the conditional check
+    this.emitByte(OpCode.Pop);
+  }
+
+  continueRepeat(continues: Short[]): void {
+    // We'll jump to the conditional check later
+    const jump = this.emitJump(OpCode.Jump);
+    continues.push(jump);
   }
 
   visitOnwardInstr(onward: Onward): void {

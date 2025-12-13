@@ -3,7 +3,7 @@ import { expect } from 'vitest';
 import { host } from '../../host';
 import { mockHost, MockConsoleHost } from '@matanuska/mock';
 
-import { EXAMPLES } from './files';
+import { EXAMPLES, FIXTURES } from './files';
 
 export interface MockConsoleHostOptions {
   files?: Record<string, string>;
@@ -13,7 +13,10 @@ const FILES: Record<string, string> = Object.assign(
   {
     '/home/josh/.matbas_history': '',
   },
-  EXAMPLES,
+  {
+    ...EXAMPLES,
+    ...FIXTURES,
+  },
 );
 
 export function mockConsoleHost(
