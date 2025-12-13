@@ -145,6 +145,44 @@ exports[`fixtures > 002-while-onward.bas 1`] = `
 }
 `;
 
+exports[`fixtures > 003-repeat-onward.bas 1`] = `
+{
+  "exitCode": 70,
+  "stderr": "=== RUNTIME FAULT ===
+
+--- Internal Stack Trace ---
+RuntimeFault: Cannot cast nil to unknown
+    at castFault (/Users/josh/code/jfhbrook/matanuska/value/cast.ts:29:11)
+    at castNil (/Users/josh/code/jfhbrook/matanuska/value/cast.ts:260:10)
+    at cast (/Users/josh/code/jfhbrook/matanuska/value/cast.ts:368:14)
+    at Module.add (/Users/josh/code/jfhbrook/matanuska/operations.ts:76:24)
+    at Runtime.<anonymous> (/Users/josh/code/jfhbrook/matanuska/runtime.ts:335:34)
+    at Generator.next (<anonymous>)
+    at asyncGeneratorStep (/Users/josh/code/jfhbrook/matanuska/runtime.ts:18:28)
+    at _next (/Users/josh/code/jfhbrook/matanuska/runtime.ts:36:17)
+    at /Users/josh/code/jfhbrook/matanuska/runtime.ts:41:13
+    at new Promise (<anonymous>)
+
+--- Versions ---
+Matanuska BASIC: v0.0.1
+swc: v1.7.26
+vite: v1.7.26
+Node.js: v25.2.1
+
+This is a bug in Matanuska BASIC. If you copy this entire message and post it
+to the issues tracker:
+
+    https://github.com/jfhbrook/matanuska/issues
+
+the developers will do their best to fix it - and more importantly, they will
+owe you a beer, coffee or beverage of your choice. 🍻
+
+
+",
+  "stdout": "",
+}
+`;
+
 exports[`fixtures > 009-repeat-onward.bas 1`] = `
 {
   "exitCode": 0,

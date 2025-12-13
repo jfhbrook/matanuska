@@ -1,5 +1,9 @@
 import { OpCode } from '../bytecode/opcodes';
-import { AssertionError, RuntimeError } from '../exceptions';
+import {
+  AssertionError,
+  NotImplementedError,
+  RuntimeError,
+} from '../exceptions';
 import { RuntimeFault } from '../faults';
 import { formatter } from '../format';
 import {
@@ -102,6 +106,12 @@ export abstract class Block implements InstrVisitor<void> {
     }
     this.compiler.block = this.parent;
   }
+
+  /*
+  public unwind(): void {
+    throw new NotImplementedError(`unwind for ${this.constructor.name}`);
+  }
+  */
 
   public handle(instr: Instr): void {
     instr.accept(this);

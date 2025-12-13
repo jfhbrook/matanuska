@@ -167,7 +167,10 @@ class _ElseBlock extends Block {
   visitEndIfInstr(_endIf: EndIf): void {
     this.compiler.endIf(this.endJump);
     this.end();
+    this.unwind();
+  }
 
+  private unwind(): void {
     let block: any = this.previous;
     while (block instanceof ElseIfBlock) {
       block.compiler.endIf(block.endJump);
@@ -190,7 +193,10 @@ class _ElseIfBlock extends IfBlock {
   visitEndIfInstr(_endIf: EndIf): void {
     const endJump = this.compiler.beginElse(this.elseJump);
     this.compiler.endIf(endJump);
+    this.unwind();
+  }
 
+  private unwind(): void {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let block: any = this;
     while (block instanceof ElseIfBlock) {
