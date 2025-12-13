@@ -1,0 +1,100 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`fixtures > 10 let i% = 0
+20
+30 while i% < 10
+40   i% = i% + 1
+50   if i% > 5 then onward endif
+60   print "loop"
+70 endwhile
+ 1`] = `
+{
+  "chunk": {
+    "code": "=== Disassembly of test.bas:<main>: ===
+10  1   CONSTANT       0
+10  3   DEFINE_GLOBAL  i%
+30  5   GET_GLOBAL     i%
+30  7   CONSTANT       10
+30  9   LT
+30  10  JUMP_IF_FALSE  10 -> 43
+30  13  POP
+40  14  GET_GLOBAL     i%
+40  16  CONSTANT       1
+40  18  ADD
+40  19  SET_GLOBAL     i%
+50  21  GET_GLOBAL     i%
+50  23  CONSTANT       5
+50  25  GT
+50  26  JUMP_IF_FALSE  26 -> 36
+50  29  POP
+50  30  LOOP           30 -> 5
+50  33  JUMP           33 -> 37
+50  36  POP
+60  37  CONSTANT       loop
+60  39  PRINT
+70  40  LOOP           40 -> 5
+70  43  UNDEF
+70  44  RETURN",
+    "constants": [
+      "i%",
+      0,
+      "i%",
+      10,
+      "i%",
+      1,
+      "i%",
+      "i%",
+      5,
+      "loop",
+    ],
+    "lines": [
+      10,
+      10,
+      10,
+      10,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      60,
+      60,
+      60,
+      70,
+      70,
+      70,
+      70,
+      70,
+    ],
+  },
+  "filename": "test.bas",
+  "name": null,
+}
+`;

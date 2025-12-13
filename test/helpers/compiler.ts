@@ -11,6 +11,8 @@ import {
 } from '../../compiler';
 import { Routine } from '../../value';
 
+import { parseProgram } from './parser';
+
 export function compile(
   ast: Program | Instr,
   options: CompilerOptions = {},
@@ -22,27 +24,36 @@ export function compile(
   }
 }
 
-export type TestCase = [string, Instr | Program, Routine];
+export type TestCase = [string, Instr | Program | null, Routine | null];
+
+function parse(source: string, filename: string): Program {
+  const result = parseProgram(source, filename);
+  expect(result[1]).toBe(null);
+  return result[0];
+}
 
 export function runCompilerTest([source, ast, expected]: TestCase): void {
   test(source, () => {
-    const actual = compile(ast, { filename: expected.filename })[0];
+    const filename = expected ? expected.filename : 'test.bas';
+    const _ast = ast ? ast : parse(source, filename);
+    const compiled = compile(_ast, { filename })[0];
 
-    /*
-    // NOTE: Test chunks typically do not have an initialized filename or routine
-    expected.filename = actual.filename;
-    expected.routine = actual.routine;
-    */
-
-    expect({
-      filename: actual.filename,
-      name: actual.name,
+    const actual = {
+      filename: compiled.filename,
+      name: compiled.name,
       chunk: {
-        constants: actual.chunk.constants,
-        code: disassemble(actual.chunk),
-        lines: actual.chunk.lines,
+        constants: compiled.chunk.constants,
+        code: disassemble(compiled.chunk),
+        lines: compiled.chunk.lines,
       },
-    }).toEqual({
+    };
+
+    if (!expected) {
+      expect(actual).toMatchSnapshot();
+      return;
+    }
+
+    expect(actual).toEqual({
       filename: expected.filename,
       name: expected.name,
       chunk: {
