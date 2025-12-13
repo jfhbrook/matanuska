@@ -13,6 +13,7 @@ import { showChunk } from '../debug';
 import { errorType } from '../errors';
 import {
   AssertionError,
+  NotImplementedError,
   SyntaxError,
   ParseError,
   ParseWarning,
@@ -149,6 +150,10 @@ class IfBlock extends Block {
     this.next(elseIf, new ElseIfBlock(elseJump, endJump));
   }
 
+  visitOnwardInstr(_onward: Onward): void {
+    throw new NotImplementedError('onward');
+  }
+
   visitEndIfInstr(_endIf: EndIf): void {
     // TODO: Optimize for no 'else'
     const endJump = this.compiler.beginElse(this.elseJump);
@@ -162,6 +167,10 @@ class _ElseBlock extends Block {
 
   constructor(public endJump: Short) {
     super();
+  }
+
+  visitOnwardInstr(_onward: Onward): void {
+    throw new NotImplementedError('onward');
   }
 
   visitEndIfInstr(_endIf: EndIf): void {
@@ -188,6 +197,10 @@ class _ElseIfBlock extends IfBlock {
     public endJump: Short,
   ) {
     super(elseJump);
+  }
+
+  visitOnwardInstr(_onward: Onward): void {
+    throw new NotImplementedError('onward');
   }
 
   visitEndIfInstr(_endIf: EndIf): void {
@@ -274,6 +287,20 @@ class RepeatBlock extends Block {
     this.end();
   }
 }
+
+/*
+function isConditionalBlock(block: Block) {
+  return [IfBlock, ElseBlock, ElseIfBlock].some(
+    (cls) => block instanceof cls,
+  );
+}
+
+function isLoopBlock(block: Block) {
+  return [ForBlock, WhileBlock, RepeatBlock].some(
+    (cls) => block instanceof cls,
+  );
+}
+*/
 
 //
 // Functions
@@ -968,7 +995,7 @@ export class LineCompiler implements InstrVisitor<void>, ExprVisitor<void> {
 
   endRepeat(until: Until, start: Short, continues: Short[]): void {
     // Continues jump to the bottom
-    for (let cont of continues) {
+    for (const cont of continues) {
       this.patchJump(cont);
     }
 

@@ -59,8 +59,12 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
-- [x] Implement `onward` in loops
-- [ ] Non-example tests
+- [ ] Implement `onward` in loops
+  - [x] Initial implementation
+  - [x] Fixture CLI tests
+  - [ ] Fixture/snapshot compiler tests
+  - [ ] Implement visiting `onward` inside conditionals
+  - [ ] Get fixture tests working
 - [ ] Date/Time/Duration/TZData functions
 - [ ] Closures
 - [ ] Refactor command input
