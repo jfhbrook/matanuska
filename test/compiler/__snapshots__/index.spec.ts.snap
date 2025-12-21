@@ -1,5 +1,113 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`fixtures > 10 for i% = 1 to 10
+20   print i%
+30   if i% > 5 then
+40     print "biggers"
+50     onward
+60   endif
+70 next
+ 1`] = `
+{
+  "chunk": {
+    "code": "=== Disassembly of test.bas:<main>: ===
+10  1   CONSTANT       1
+10  3   GET_LOCAL      1
+10  5   CONSTANT       10
+10  7   LE
+10  8   JUMP_IF_FALSE  8 -> 52
+10  11  POP
+10  12  JUMP           12 -> 26
+10  15  GET_LOCAL      1
+10  17  CONSTANT       1
+10  19  ADD
+10  20  SET_LOCAL      1
+10  22  POP
+10  23  LOOP           23 -> 3
+20  26  GET_LOCAL      1
+20  28  PRINT
+30  29  GET_LOCAL      1
+30  31  CONSTANT       5
+30  33  GT
+30  34  JUMP_IF_FALSE  34 -> 47
+30  37  POP
+40  38  CONSTANT       biggers
+40  40  PRINT
+50  41  LOOP           41 -> 15
+60  44  JUMP           44 -> 48
+60  47  POP
+70  48  LOOP           48 -> 15
+70  51  POP
+70  52  UNDEF
+70  53  RETURN",
+    "constants": [
+      1,
+      10,
+      1,
+      5,
+      "biggers",
+    ],
+    "lines": [
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      20,
+      20,
+      20,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      40,
+      40,
+      40,
+      50,
+      50,
+      50,
+      60,
+      60,
+      60,
+      60,
+      70,
+      70,
+      70,
+      70,
+      70,
+      70,
+    ],
+  },
+  "filename": "test.bas",
+  "name": null,
+}
+`;
+
 exports[`fixtures > 10 let i% = 0
 20
 30 while i% < 10
@@ -92,6 +200,108 @@ exports[`fixtures > 10 let i% = 0
       70,
       70,
       70,
+    ],
+  },
+  "filename": "test.bas",
+  "name": null,
+}
+`;
+
+exports[`fixtures > 10 let i% = 0
+20 repeat
+30   i% = i% + 1
+40   if i% > 5 then
+50     onward
+60   endif
+70   print "loop"
+80 until i% >= 10
+ 1`] = `
+{
+  "chunk": {
+    "code": "=== Disassembly of test.bas:<main>: ===
+10  1   CONSTANT       0
+10  3   DEFINE_GLOBAL  i%
+30  5   GET_GLOBAL     i%
+30  7   CONSTANT       1
+30  9   ADD
+30  10  SET_GLOBAL     i%
+40  12  GET_GLOBAL     i%
+40  14  CONSTANT       5
+40  16  GT
+40  17  JUMP_IF_FALSE  17 -> 27
+40  20  POP
+50  21  JUMP           21 -> 31
+60  24  JUMP           24 -> 28
+60  27  POP
+70  28  CONSTANT       loop
+70  30  PRINT
+80  31  GET_GLOBAL     i%
+80  33  CONSTANT       10
+80  35  GE
+80  36  JUMP_IF_FALSE  36 -> 43
+80  39  POP
+80  40  LOOP           40 -> 5
+80  43  POP
+80  44  UNDEF
+80  45  RETURN",
+    "constants": [
+      "i%",
+      0,
+      "i%",
+      1,
+      "i%",
+      "i%",
+      5,
+      "loop",
+      "i%",
+      10,
+    ],
+    "lines": [
+      10,
+      10,
+      10,
+      10,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      50,
+      50,
+      50,
+      60,
+      60,
+      60,
+      60,
+      70,
+      70,
+      70,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
     ],
   },
   "filename": "test.bas",

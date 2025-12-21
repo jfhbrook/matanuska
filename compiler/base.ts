@@ -131,8 +131,23 @@ export function isRootBlock(block: Block): boolean {
 // relevant blocks are defined.
 let ElseBlock: any = null;
 let ElseIfBlock: any = null;
+let ForBlock: any = null;
+let WhileBlock: any = null;
+let RepeatBlock: any = null;
 
-class IfBlock extends Block {
+class ConditionalBlock extends Block {
+  visitOnwardInstr(onward: Onward): void {
+    const block = this.find(ForBlock, WhileBlock, RepeatBlock);
+    if (!block) {
+      this.mismatched(onward, 'onward');
+      return;
+    }
+
+    block.visitOnwardInstr(onward);
+  }
+}
+
+class IfBlock extends ConditionalBlock {
   kind = 'if';
 
   constructor(public elseJump: Short) {
@@ -150,10 +165,6 @@ class IfBlock extends Block {
     this.next(elseIf, new ElseIfBlock(elseJump, endJump));
   }
 
-  visitOnwardInstr(_onward: Onward): void {
-    throw new NotImplementedError('onward');
-  }
-
   visitEndIfInstr(_endIf: EndIf): void {
     // TODO: Optimize for no 'else'
     const endJump = this.compiler.beginElse(this.elseJump);
@@ -162,15 +173,11 @@ class IfBlock extends Block {
   }
 }
 
-class _ElseBlock extends Block {
+class _ElseBlock extends ConditionalBlock {
   kind = 'else';
 
   constructor(public endJump: Short) {
     super();
-  }
-
-  visitOnwardInstr(_onward: Onward): void {
-    throw new NotImplementedError('onward');
   }
 
   visitEndIfInstr(_endIf: EndIf): void {
@@ -199,10 +206,6 @@ class _ElseIfBlock extends IfBlock {
     super(elseJump);
   }
 
-  visitOnwardInstr(_onward: Onward): void {
-    throw new NotImplementedError('onward');
-  }
-
   visitEndIfInstr(_endIf: EndIf): void {
     const endJump = this.compiler.beginElse(this.elseJump);
     this.compiler.endIf(endJump);
@@ -220,15 +223,11 @@ class _ElseIfBlock extends IfBlock {
   }
 }
 
-// Update the references here
-ElseBlock = _ElseBlock;
-ElseIfBlock = _ElseIfBlock;
-
 //
-// For, while, and repeat/until
+// Looping blocks
 //
 
-class ForBlock extends Block {
+class _ForBlock extends Block {
   kind = 'for';
 
   constructor(
@@ -248,7 +247,7 @@ class ForBlock extends Block {
   }
 }
 
-class WhileBlock extends Block {
+class _WhileBlock extends Block {
   kind = 'while';
 
   constructor(
@@ -268,7 +267,7 @@ class WhileBlock extends Block {
   }
 }
 
-class RepeatBlock extends Block {
+class _RepeatBlock extends Block {
   kind = 'repeat';
 
   continues: Short[];
@@ -288,19 +287,12 @@ class RepeatBlock extends Block {
   }
 }
 
-/*
-function isConditionalBlock(block: Block) {
-  return [IfBlock, ElseBlock, ElseIfBlock].some(
-    (cls) => block instanceof cls,
-  );
-}
-
-function isLoopBlock(block: Block) {
-  return [ForBlock, WhileBlock, RepeatBlock].some(
-    (cls) => block instanceof cls,
-  );
-}
-*/
+// Update the references here
+ElseBlock = _ElseBlock;
+ElseIfBlock = _ElseIfBlock;
+ForBlock = _ForBlock;
+WhileBlock = _WhileBlock;
+RepeatBlock = _RepeatBlock;
 
 //
 // Functions

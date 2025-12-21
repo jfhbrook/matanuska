@@ -107,11 +107,18 @@ export abstract class Block implements InstrVisitor<void> {
     this.compiler.block = this.parent;
   }
 
-  /*
-  public unwind(): void {
-    throw new NotImplementedError(`unwind for ${this.constructor.name}`);
+  public find(...types: any[]): Block | null {
+    let block: Block | null = this;
+    while (true) {
+      if (block === null) {
+        return block;
+      }
+      if (types.some((t) => block instanceof t)) {
+        return block;
+      }
+      block = block.parent || null;
+    }
   }
-  */
 
   public handle(instr: Instr): void {
     instr.accept(this);
