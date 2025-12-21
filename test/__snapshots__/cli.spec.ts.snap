@@ -118,7 +118,7 @@ exports[`examples > 011-datetime.bas 1`] = `
 }
 `;
 
-exports[`fixtures > 001-for-onward.bas 1`] = `
+exports[`fixtures > for-onward.bas 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
@@ -136,19 +136,7 @@ biggers
 }
 `;
 
-exports[`fixtures > 002-while-onward.bas 1`] = `
-{
-  "exitCode": 70,
-  "stderr": "TypeError: Invalid operand for < on undef: integer
-  Value: 10
-  From: integer
-  To: invalid
-",
-  "stdout": "",
-}
-`;
-
-exports[`fixtures > 003-repeat-onward.bas 1`] = `
+exports[`fixtures > repeat-onward.bas 1`] = `
 {
   "exitCode": 70,
   "stderr": "=== RUNTIME FAULT ===
@@ -181,6 +169,18 @@ the developers will do their best to fix it - and more importantly, they will
 owe you a beer, coffee or beverage of your choice. 🍻
 
 
+",
+  "stdout": "",
+}
+`;
+
+exports[`fixtures > while-onward.bas 1`] = `
+{
+  "exitCode": 70,
+  "stderr": "TypeError: Invalid operand for < on undef: integer
+  Value: 10
+  From: integer
+  To: invalid
 ",
   "stdout": "",
 }
