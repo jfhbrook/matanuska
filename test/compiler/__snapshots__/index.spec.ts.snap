@@ -1,11 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`fixtures > 10 for i% = 1 to 10
-20   print i%
-30   if i% > 5 then
-40     print "biggers"
-50     onward
-60   endif
+20   if i% > 5 then
+30     print "biggers"
+40     onward
+50   endif
+60   print i%
 70 next
  1`] = `
 {
@@ -25,17 +25,17 @@ exports[`fixtures > 10 for i% = 1 to 10
 10  22  POP
 10  23  LOOP           23 -> 3
 20  26  GET_LOCAL      1
-20  28  PRINT
-30  29  GET_LOCAL      1
-30  31  CONSTANT       5
-30  33  GT
-30  34  JUMP_IF_FALSE  34 -> 47
-30  37  POP
-40  38  CONSTANT       biggers
-40  40  PRINT
-50  41  LOOP           41 -> 15
-60  44  JUMP           44 -> 48
-60  47  POP
+20  28  CONSTANT       5
+20  30  GT
+20  31  JUMP_IF_FALSE  31 -> 44
+20  34  POP
+30  35  CONSTANT       biggers
+30  37  PRINT
+40  38  LOOP           38 -> 15
+50  41  JUMP           41 -> 45
+50  44  POP
+60  45  GET_LOCAL      1
+60  47  PRINT
 70  48  LOOP           48 -> 15
 70  51  POP
 70  52  UNDEF
@@ -76,12 +76,12 @@ exports[`fixtures > 10 for i% = 1 to 10
       20,
       20,
       20,
-      30,
-      30,
-      30,
-      30,
-      30,
-      30,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
       30,
       30,
       30,
@@ -91,7 +91,7 @@ exports[`fixtures > 10 for i% = 1 to 10
       50,
       50,
       50,
-      60,
+      50,
       60,
       60,
       60,
