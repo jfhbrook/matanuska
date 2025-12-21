@@ -62,8 +62,8 @@ For more information, check out the backlog...
 - [ ] Implement `onward` in loops
   - [x] Initial implementation
   - [x] Fixture CLI tests
-  - [ ] Fixture/snapshot compiler tests
-  - [ ] Implement visiting `onward` inside conditionals
+  - [x] Fixture/snapshot compiler tests
+  - [x] Implement visiting `onward` inside conditionals
   - [ ] Get fixture tests working
 - [ ] Date/Time/Duration/TZData functions
 - [ ] Closures
