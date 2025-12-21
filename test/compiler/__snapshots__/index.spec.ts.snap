@@ -110,6 +110,56 @@ exports[`fixtures > 10 for i% = 1 to 10
 
 exports[`fixtures > 10 let i% = 0
 20
+30 i% = i% + 1
+40 print i%
+ 1`] = `
+{
+  "chunk": {
+    "code": "=== Disassembly of test.bas:<main>: ===
+10  1   CONSTANT       0
+10  3   DEFINE_GLOBAL  i%
+30  5   GET_GLOBAL     i%
+30  7   CONSTANT       1
+30  9   ADD
+30  10  SET_GLOBAL     i%
+40  12  GET_GLOBAL     i%
+40  14  PRINT
+40  15  UNDEF
+40  16  RETURN",
+    "constants": [
+      "i%",
+      0,
+      "i%",
+      1,
+      "i%",
+      "i%",
+    ],
+    "lines": [
+      10,
+      10,
+      10,
+      10,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      40,
+      40,
+      40,
+      40,
+      40,
+    ],
+  },
+  "filename": "test.bas",
+  "name": null,
+}
+`;
+
+exports[`fixtures > 10 let i% = 0
+20
 30 while i% < 10
 40   i% = i% + 1
 50   if i% > 5 then onward endif
