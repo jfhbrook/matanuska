@@ -13,7 +13,6 @@ import { showChunk } from '../debug';
 import { errorType } from '../errors';
 import {
   AssertionError,
-  NotImplementedError,
   SyntaxError,
   ParseError,
   ParseWarning,
@@ -139,7 +138,10 @@ class ConditionalBlock extends Block {
   visitOnwardInstr(onward: Onward): void {
     const block = this.find(ForBlock, WhileBlock, RepeatBlock);
     if (!block) {
-      this.mismatched(onward, 'onward');
+      this.compiler.syntaxFault(
+        onward,
+        'onward must be used inside a for, while, or repeat block',
+      );
       return;
     }
 
