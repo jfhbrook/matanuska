@@ -174,10 +174,11 @@ export const REPEAT_PROGRAMS: TestCase[] = [
         OpCode.Loop,
         ...shortToBytes(12),
         // Exit
+        OpCode.Pop,
         OpCode.Undef,
         OpCode.Return,
       ],
-      lines: [20, 20, 20, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+      lines: [20, 20, 20, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
     }),
   ],
 ];

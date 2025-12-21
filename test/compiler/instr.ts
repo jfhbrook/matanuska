@@ -114,7 +114,7 @@ function instructionExpr1Cases<C extends Instr>(
 // Expressions are handled differently in Programs versus other commands,
 // so we leave them off when building out programs from the other commands,
 // and append them to COMMANDS afterwards.
-export const EXPRESSION_INSTRUCTIONS = EXPRESSION_STATEMENTS.map(
+export const EXPRESSION_INSTRUCTIONS = (EXPRESSION_STATEMENTS as any).map(
   ([
     source,
     ast,

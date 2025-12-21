@@ -44,12 +44,13 @@ Matanuska can do the following:
 2. Define variables
 3. Check conditionals
 4. Run loops
-5. Edit files in a BASIC style REPL
+5. Define functions
+6. Edit files in a BASIC style REPL
 
 However, some important capabilities are still missing, including (but not limited to):
 
 1. System commands and shell jobs
-2. Functions
+2. Define closures
 3. Arrays and other higher level types
 4. Compiler level type assertions
 5. Multi-line instructions
@@ -58,9 +59,10 @@ For more information, check out the backlog...
 
 ### Prioritized Backlog
 
+- [ ] Fix variable self-assignment
+  - [ ] Debug variable test
 - [ ] Date/Time/Duration/TZData functions
 - [ ] Closures
-- [ ] Implement `onward` in loops
 - [ ] Refactor command input
   - `Cmd` in AST references a list of Instructions, not a "command" as in ADR 024
     - Should probably just use a `Line`

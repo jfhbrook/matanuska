@@ -1,5 +1,9 @@
 import { OpCode } from '../bytecode/opcodes';
-import { AssertionError, RuntimeError } from '../exceptions';
+import {
+  AssertionError,
+  NotImplementedError,
+  RuntimeError,
+} from '../exceptions';
 import { RuntimeFault } from '../faults';
 import { formatter } from '../format';
 import {
@@ -101,6 +105,19 @@ export abstract class Block implements InstrVisitor<void> {
       throw new AssertionError('Must have parent');
     }
     this.compiler.block = this.parent;
+  }
+
+  public find(...types: any[]): Block | null {
+    let block: Block | null = this;
+    while (true) {
+      if (block === null) {
+        return block;
+      }
+      if (types.some((t) => block instanceof t)) {
+        return block;
+      }
+      block = block.parent || null;
+    }
   }
 
   public handle(instr: Instr): void {

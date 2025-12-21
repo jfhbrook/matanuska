@@ -13,7 +13,7 @@ import { EXPRESSION_STATEMENTS } from './expr';
 import { SIMPLE_INSTRUCTIONS } from './instr';
 
 export const SIMPLE_PROGRAMS: TestCase[] = [
-  ...EXPRESSION_STATEMENTS.map(
+  ...(EXPRESSION_STATEMENTS as any).map(
     ([
       source,
       ast,
@@ -36,7 +36,7 @@ export const SIMPLE_PROGRAMS: TestCase[] = [
       ];
     },
   ),
-  ...SIMPLE_INSTRUCTIONS.map(
+  ...(SIMPLE_INSTRUCTIONS as any).map(
     ([
       source,
       ast,
